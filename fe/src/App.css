@@ -1,6 +1,24 @@
+.App {
+  display: flex;
+  flex-direction: column;
+}
+
 #date {
   text-align: center;
   padding: 15px;
   font-size: 2em;
   font-weight: bold;
+}
+
+#body {
+  height: 100%;
+  overflow-y: scroll;
+}
+
+#save {
+  width: 100%;
+  padding: 15px 0;
+  background-color: black;
+  color: white;
+  text-align: center;
 }

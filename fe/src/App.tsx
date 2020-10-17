@@ -6,9 +6,9 @@ function App() {
   
   return (
     <div className="App">
-      <header className="App-header">
-        <div id="date">{date.toLocaleDateString()}</div>
-      </header>
+      <div id="date">{date.toLocaleDateString()}</div>
+      <div id="body" contentEditable="true"></div>
+      <div id="save">Save</div>
     </div>
   );
 }
