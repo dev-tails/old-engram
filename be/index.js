@@ -1,6 +1,7 @@
 const express = require("express");
 const MongoClient = require("mongodb").MongoClient;
 const dotenv = require("dotenv");
+const moment = require("moment");
 dotenv.config();
 
 const url = process.env.DB_URL;
@@ -15,8 +16,11 @@ async function run() {
 
   const app = express();
 
-  app.get("/", function (req, res) {
-    res.send("Hello World");
+  app.get("/", async function (req, res) {
+    const currentDateString = moment().format("YYYY-MM-DD")
+
+    const note = await db.collection('notes').findOne({date: currentDateString})
+    return res.json(note)
   });
 
   app.listen(3000);
