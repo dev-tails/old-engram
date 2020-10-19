@@ -19,7 +19,7 @@ async function run() {
   const app = express();
   app.use(bodyParser.json());
 
-  app.get("/", async function (req, res) {
+  app.get("/api/notes", async function (req, res) {
     const currentDateString = moment().format("YYYY-MM-DD");
 
     const note = await db
@@ -28,7 +28,7 @@ async function run() {
     return res.json(note);
   });
 
-  app.post("/", async function (req, res) {
+  app.post("/api/notes", async function (req, res) {
     const currentDateString = moment().format("YYYY-MM-DD");
 
     const note = await db
