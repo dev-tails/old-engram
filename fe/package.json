@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@types/react": "^16.9.53",
+    "axios": "^0.20.0",
     "cra-template-typescript": "1.0.3",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
