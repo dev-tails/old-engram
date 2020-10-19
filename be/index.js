@@ -17,7 +17,7 @@ async function run() {
   console.log(`Connected to ${dbName}`);
 
   const app = express();
-  app.use(bodyParser);
+  app.use(bodyParser.json());
 
   app.get("/", async function (req, res) {
     const currentDateString = moment().format("YYYY-MM-DD");
@@ -35,11 +35,11 @@ async function run() {
       .collection("notes")
       .updateOne(
         { date: currentDateString },
-        { body: req.body.body },
+        { $set: { body: req.body.body } },
         { upsert: true }
       );
     return res.json(note);
   });
 
-  app.listen(3000);
+  app.listen(4000);
 }
