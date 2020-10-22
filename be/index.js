@@ -26,9 +26,14 @@ async function run() {
       .collection("notes")
       .find({ date: currentDateString })
       .limit(5)
-      .sort({_id: -1})
+      .sort({ _id: -1 })
       .toArray();
-    return res.json(notes);
+
+    const sortedNotes = notes.sort((note1, note2) => {
+      return note1._id < note2;
+    });
+
+    return res.json(sortedNotes);
   });
 
   app.post("/api/notes", async function (req, res) {
@@ -36,9 +41,7 @@ async function run() {
 
     await db
       .collection("notes")
-      .insertOne(
-        { date: currentDateString, body: req.body.body }
-      );
+      .insertOne({ date: currentDateString, body: req.body.body });
     return res.json({ success: true });
   });
 
