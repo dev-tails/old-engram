@@ -1,5 +1,6 @@
 import React, {
   ChangeEvent,
+  createRef,
   FormEvent,
   FormEventHandler,
   useEffect,
@@ -18,6 +19,8 @@ function App() {
   const [note, setNote] = useState("");
   const [notes, setNotes] = useState<Note[]>([]);
   const [state, setState] = useState("initial");
+
+  const inputRef = createRef<HTMLInputElement>();
 
   useEffect(() => {
     setState("loading");
@@ -39,6 +42,9 @@ function App() {
       newNote
     ]);
     setNote("");
+    if(inputRef.current) {
+      inputRef.current.focus();
+    }
     axios.post("/api/notes", newNote);
   };
 
@@ -59,7 +65,7 @@ function App() {
         })}
       </div>
       <div id="textbox">
-        <input value={note} onChange={handleNoteChanged}/>
+        <input ref={inputRef} autoFocus={true} value={note} onChange={handleNoteChanged}/>
         <div id="submit" onClick={handleSaveClicked}>
           🧠
         </div>
