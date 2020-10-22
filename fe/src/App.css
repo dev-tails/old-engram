@@ -25,7 +25,8 @@
   font-size: 1.5em;
 }
 
-#submit {
+button {
+  border: none;
   background-color: green;
   padding: 8px;
   font-size: 2em;

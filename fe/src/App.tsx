@@ -3,6 +3,7 @@ import React, {
   createRef,
   FormEvent,
   FormEventHandler,
+  ReactEventHandler,
   useEffect,
   useRef,
   useState,
@@ -33,7 +34,9 @@ function App() {
     }
   });
 
-  const handleSaveClicked = () => {
+  const handleSaveClicked: ReactEventHandler = (event) => {
+    event?.preventDefault()
+
     const newNote: Note = {
       body: note
     }
@@ -64,12 +67,12 @@ function App() {
           )
         })}
       </div>
-      <div id="textbox">
+      <form id="textbox" onSubmit={handleSaveClicked}>
         <input ref={inputRef} autoFocus={true} value={note} onChange={handleNoteChanged}/>
-        <div id="submit" onClick={handleSaveClicked}>
+        <button type="submit">
           🧠
-        </div>
-      </div>
+        </button>
+      </form>
     </div>
   );
 }
