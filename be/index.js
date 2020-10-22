@@ -22,23 +22,22 @@ async function run() {
   app.get("/api/notes", async function (req, res) {
     const currentDateString = moment().format("YYYY-MM-DD");
 
-    const note = await db
+    const notes = await db
       .collection("notes")
-      .findOne({ date: currentDateString });
-    return res.json(note);
+      .find({ date: currentDateString })
+      .toArray();
+    return res.json(notes);
   });
 
   app.post("/api/notes", async function (req, res) {
     const currentDateString = moment().format("YYYY-MM-DD");
 
-    const note = await db
+    await db
       .collection("notes")
-      .updateOne(
-        { date: currentDateString },
-        { $set: { body: req.body.body } },
-        { upsert: true }
+      .insertOne(
+        { date: currentDateString, body: req.body.body }
       );
-    return res.json(note);
+    return res.json({ success: true });
   });
 
   app.listen(4000);
