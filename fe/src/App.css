@@ -10,11 +10,6 @@
   font-weight: bold;
 }
 
-#body {
-  height: 100%;
-  overflow-y: scroll;
-}
-
 #textbox {
   width: 100%;
   display: flex;

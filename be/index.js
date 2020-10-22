@@ -25,6 +25,8 @@ async function run() {
     const notes = await db
       .collection("notes")
       .find({ date: currentDateString })
+      .limit(5)
+      .sort({_id: -1})
       .toArray();
     return res.json(notes);
   });
