@@ -33,8 +33,11 @@ function App() {
     <div className="App">
       <div id="date">{date.toLocaleDateString()}</div>
       <div id="body" ref={bodyDivRef} contentEditable="true"></div>
-      <div id="save" onClick={handleSaveClicked}>
-        Save
+      <div id="textbox">
+        <input/>
+        <div id="submit" onClick={handleSaveClicked}>
+          🧠
+        </div>
       </div>
     </div>
   );
