@@ -1,11 +1,7 @@
 import React, {
-  ChangeEvent,
   createRef,
-  FormEvent,
-  FormEventHandler,
   ReactEventHandler,
   useEffect,
-  useRef,
   useState,
 } from "react";
 import axios from "axios";
@@ -32,7 +28,7 @@ function App() {
         setNotes(res.data);
       });
     }
-  });
+  }, [state]);
 
   const handleSaveClicked: ReactEventHandler = (event) => {
     event?.preventDefault()
@@ -70,7 +66,7 @@ function App() {
       <form id="textbox" onSubmit={handleSaveClicked}>
         <input ref={inputRef} autoFocus={true} value={note} onChange={handleNoteChanged}/>
         <button type="submit">
-          🧠
+          <span role="img" aria-label="brain">🧠</span>
         </button>
       </form>
     </div>
