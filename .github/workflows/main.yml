@@ -26,5 +26,8 @@ jobs:
         uses: actions/setup-node@v2.1.2
 
       # Runs a single command using the runners shell
-      - name: Build the production code
+      - name: Install dependencies
+        run: yarn --cwd fe
+        
+      - name: Build production app
         run: yarn --cwd fe build
