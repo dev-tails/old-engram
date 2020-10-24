@@ -28,6 +28,13 @@ jobs:
       # Runs a single command using the runners shell
       - name: Install dependencies
         run: yarn --cwd fe
+      
+      - name: Cache multiple paths
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
         
       - name: Build production app
         run: yarn --cwd fe build
