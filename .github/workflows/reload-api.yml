@@ -3,8 +3,6 @@ name: Reload API
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
 jobs:
   deploy:
@@ -29,4 +27,4 @@ jobs:
           SSH_HOST: ${{ secrets.REMOTE_HOST }}
 
       - name: Reload the Api
-        run: ssh production 'pm2 reload all'
+        run: ssh production '. ./nvm/nvm.sh; pm2 reload all'
