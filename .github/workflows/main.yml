@@ -44,7 +44,9 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: be
-          path: be/
+          path: | 
+            be/
+            !be/node_modules
       
       - uses: actions/upload-artifact@v2
         with:
