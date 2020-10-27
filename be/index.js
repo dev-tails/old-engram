@@ -22,7 +22,7 @@ async function run() {
   app.get("/api/notes", async function (req, res) {
     const notes = await db
       .collection("notes")
-      .find()
+      .find({body: {$ne: ""}})
       .limit(8)
       .sort({ _id: -1 })
       .toArray();

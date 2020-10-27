@@ -53,11 +53,10 @@ function App() {
 
   return (
     <div className="App">
-      <div id="date">{date.toLocaleDateString()}</div>
       <div id="notes">
         {notes.map((note) => {
           return (
-            <div>
+            <div className="note">
               {note.body}
             </div>
           )
