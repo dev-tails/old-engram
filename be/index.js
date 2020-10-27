@@ -20,20 +20,14 @@ async function run() {
   app.use(bodyParser.json());
 
   app.get("/api/notes", async function (req, res) {
-    const currentDateString = moment().format("YYYY-MM-DD");
-
     const notes = await db
       .collection("notes")
-      .find({ date: currentDateString })
-      .limit(5)
+      .find()
+      .limit(8)
       .sort({ _id: -1 })
       .toArray();
 
-    const sortedNotes = notes.sort((note1, note2) => {
-      return note1._id < note2;
-    });
-
-    return res.json(sortedNotes);
+    return res.json(notes.reverse());
   });
 
   app.post("/api/notes", async function (req, res) {
