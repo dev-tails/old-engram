@@ -12,7 +12,6 @@ type Note = {
 }
 
 function App() {
-  const date = new Date();
   const [note, setNote] = useState("");
   const [notes, setNotes] = useState<Note[]>([]);
   const [state, setState] = useState("initial");
@@ -62,12 +61,14 @@ function App() {
           )
         })}
       </div>
-      <form id="textbox" onSubmit={handleSaveClicked}>
-        <input ref={inputRef} autoFocus={true} value={note} onChange={handleNoteChanged}/>
-        <button type="submit">
-          <span role="img" aria-label="brain">🧠</span>
-        </button>
-      </form>
+      <div id="textbox">
+        <form onSubmit={handleSaveClicked}>
+          <input ref={inputRef} autoFocus={true} value={note} onChange={handleNoteChanged}/>
+          <button type="submit">
+            <span role="img" aria-label="brain">🧠</span>
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

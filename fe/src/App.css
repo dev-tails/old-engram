@@ -14,6 +14,12 @@
 
 #textbox {
   width: 100%;
+  position: fixed;
+  bottom: 0;
+}
+
+#textbox form {
+  width: 100%;
   display: flex;
 }
 
