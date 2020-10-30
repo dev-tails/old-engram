@@ -22,7 +22,6 @@ async function run() {
     const notes = await db
       .collection("notes")
       .find({body: {$ne: ""}})
-      .limit(8)
       .sort({ _id: -1 })
       .toArray();
 
