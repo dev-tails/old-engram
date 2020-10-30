@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 dotenv.config();
 
 const url = process.env.DB_URL;
+const port = Number(process.env.PORT) || 4000;
 
 run();
 
@@ -41,5 +42,5 @@ async function run() {
     }
   });
 
-  app.listen(4000);
+  app.listen(port);
 }
