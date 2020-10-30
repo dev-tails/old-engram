@@ -17,7 +17,15 @@ function App() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [state, setState] = useState("initial");
 
+  const notesRef = createRef<HTMLDivElement>();
   const inputRef = createRef<HTMLInputElement>();
+
+  useEffect(() => {
+    if (!notesRef.current) {
+      return;
+    }
+    window.scrollTo({top: notesRef.current.scrollHeight});
+  });
 
   useEffect(() => {
     setState("loading");
@@ -51,7 +59,7 @@ function App() {
 
   return (
     <div className="App">
-      <div id="notes">
+      <div id="notes" ref={notesRef}>
         {notes.map((note) => {
           return (
             <div key={note._id} className="note">
