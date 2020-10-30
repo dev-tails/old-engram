@@ -21,7 +21,7 @@ async function run() {
   app.get("/api/notes", async function (req, res) {
     const notes = await db
       .collection("notes")
-      .find({body: {$ne: ""}})
+      .find({ body: { $ne: "" } })
       .sort({ _id: -1 })
       .toArray();
 
@@ -29,12 +29,16 @@ async function run() {
   });
 
   app.post("/api/notes", async function (req, res) {
-    const currentDateString = moment().format("YYYY-MM-DD");
+    try {
+      const insertOpResult = await db
+        .collection("notes")
+        .insertOne({ body: req.body.body });
 
-    await db
-      .collection("notes")
-      .insertOne({ date: currentDateString, body: req.body.body });
-    return res.json({ success: true });
+      return res.json({ _id: insertOpResult.insertedId, body: req.body.body });
+    } catch (err) {
+      console.error(err);
+      res.json({ errors: [err] });
+    }
   });
 
   app.listen(4000);

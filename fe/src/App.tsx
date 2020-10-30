@@ -30,21 +30,19 @@ function App() {
     }
   }, [state]);
 
-  const handleSaveClicked: ReactEventHandler = (event) => {
+  const handleSaveClicked: ReactEventHandler = async (event) => {
     event?.preventDefault()
-
-    const newNote: Note = {
-      body: note
+    
+    if(inputRef.current) {
+      inputRef.current.focus();
     }
+    const res = await axios.post("/api/notes", { body: note});
+    const newNote = res.data;
     setNotes([
       ...notes,
       newNote
     ]);
     setNote("");
-    if(inputRef.current) {
-      inputRef.current.focus();
-    }
-    axios.post("/api/notes", newNote);
   };
 
   const handleNoteChanged = (event: any) => {
