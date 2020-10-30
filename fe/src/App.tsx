@@ -8,6 +8,7 @@ import axios from "axios";
 import "./App.css";
 
 type Note = {
+  _id?: string;
   body: string;
 }
 
@@ -55,7 +56,7 @@ function App() {
       <div id="notes">
         {notes.map((note) => {
           return (
-            <div className="note">
+            <div key={note._id} className="note">
               {note.body}
             </div>
           )
