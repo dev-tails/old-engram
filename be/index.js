@@ -7,14 +7,13 @@ const bodyParser = require("body-parser");
 dotenv.config();
 
 const url = process.env.DB_URL;
-const dbName = process.env.DB_NAME;
 
 run();
 
 async function run() {
   const client = await MongoClient.connect(url);
-  const db = client.db(dbName);
-  console.log(`Connected to ${dbName}`);
+  const db = client.db();
+  console.log(`Connected`);
 
   const app = express();
   app.use(bodyParser.json());
