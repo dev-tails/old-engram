@@ -107,6 +107,7 @@ Secrets and configuration are managed in be/.env and loaded using the [dotenv](h
 ## Environment Variables
 
 - DB_URL - [MongoDB connection string](https://docs.mongodb.com/manual/reference/connection-string/)
+- PORT - Port to run API on (Default: 4000)
 
 ## Sample .env File
 
