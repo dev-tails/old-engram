@@ -1,6 +1,6 @@
 # Brainstorm
 
-A MongoDB, Express, React, Node (MERN) stack application for quickly gathering thoughts. Check out the demo app at brainstorm.xyzdigital.com.
+A MongoDB, Express, React, Node (MERN) stack application for quickly gathering thoughts. Check out the demo app at [brainstorm.xyzdigital.com](http://brainstorm.xyzdigital.com).
 
 ![Brainstorm App](images/brainstorm-app.png)
 
