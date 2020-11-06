@@ -63,7 +63,7 @@ function App() {
         {notes.map((note) => {
           return (
             <div key={note._id} className="note">
-              {note.body}
+              <span className="note-body">{note.body}</span>
             </div>
           )
         })}

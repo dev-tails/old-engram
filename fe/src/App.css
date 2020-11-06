@@ -1,16 +1,21 @@
 #notes {
-  margin: 10px;
   padding-bottom: 60px;
 }
 
 .note {
+  max-width: 100%;
+  word-break: break-word;
+  word-wrap: break-word;
+}
+
+.note-body {
+  box-sizing: border-box;
+  padding: 6px;
   display: inline-block;
-  margin: 5px;
   background-color: #fff;
-	padding: 1.125em 1.5em;
-	font-size: 1.25em;
-	border-radius: 1rem;
-  box-shadow:	0 0.125rem 0.5rem rgba(0, 0, 0, .3), 0 0.0625rem 0.125rem rgba(0, 0, 0, .2);
+  font-size: 1.25em;
+  border-bottom: 1px solid black;
+  width: 100%;
 }
 
 #textbox {
