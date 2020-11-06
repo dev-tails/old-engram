@@ -10,7 +10,7 @@ import "./App.css";
 type Note = {
   _id?: string;
   body: string;
-}
+};
 
 function App() {
   const [note, setNote] = useState("");
@@ -24,7 +24,7 @@ function App() {
     if (!notesRef.current) {
       return;
     }
-    window.scrollTo({top: notesRef.current.scrollHeight});
+    window.scrollTo({ top: notesRef.current.scrollHeight });
   });
 
   useEffect(() => {
@@ -39,23 +39,20 @@ function App() {
   }, [state]);
 
   const handleSaveClicked: ReactEventHandler = async (event) => {
-    event?.preventDefault()
-    
-    if(inputRef.current) {
+    event?.preventDefault();
+
+    if (inputRef.current) {
       inputRef.current.focus();
     }
-    const res = await axios.post("/api/notes", { body: note});
+    const res = await axios.post("/api/notes", { body: note });
     const newNote = res.data;
-    setNotes([
-      ...notes,
-      newNote
-    ]);
+    setNotes([...notes, newNote]);
     setNote("");
   };
 
   const handleNoteChanged = (event: any) => {
     setNote(event?.target?.value);
-  }
+  };
 
   return (
     <div className="App">
@@ -65,15 +62,18 @@ function App() {
             <div key={note._id} className="note">
               <span className="note-body">{note.body}</span>
             </div>
-          )
+          );
         })}
       </div>
       <div id="textbox">
         <form onSubmit={handleSaveClicked}>
-          <input ref={inputRef} autoFocus={true} value={note} onChange={handleNoteChanged}/>
-          <button type="submit">
-            <span role="img" aria-label="brain">🧠</span>
-          </button>
+          <input
+            ref={inputRef}
+            autoFocus={true}
+            value={note}
+            onChange={handleNoteChanged}
+          />
+          <button type="submit" hidden={true}></button>
         </form>
       </div>
     </div>
