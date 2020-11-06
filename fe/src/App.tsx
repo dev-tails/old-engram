@@ -24,7 +24,7 @@ function App() {
     if (!notesRef.current) {
       return;
     }
-    window.scrollTo({ top: notesRef.current.scrollHeight });
+    notesRef.current.scrollTo({ top: notesRef.current.scrollHeight });
   });
 
   useEffect(() => {

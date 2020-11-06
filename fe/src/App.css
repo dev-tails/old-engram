@@ -1,5 +1,18 @@
+* {
+  box-sizing: border-box;
+}
+
+input:focus {
+  outline: none;
+}
+
+.App {
+  height: 100vh;
+}
+
 #notes {
-  padding-bottom: 60px;
+  height: calc(100% - 50px);
+  overflow-y: scroll;
 }
 
 .note {
@@ -9,11 +22,9 @@
 }
 
 .note-body {
-  box-sizing: border-box;
   padding: 6px;
   display: inline-block;
   background-color: #fff;
-  font-size: 1.25em;
   border-bottom: 1px solid black;
   width: 100%;
 }
@@ -22,6 +33,8 @@
   width: 100%;
   position: fixed;
   bottom: 0;
+  padding: 10px;
+  background-color: #1C1C1E;
 }
 
 #textbox form {
@@ -31,12 +44,6 @@
 
 #textbox input {
   width: 100%;
-  font-size: 1.5em;
-}
-
-button {
-  border: none;
-  background-color: green;
-  padding: 8px;
-  font-size: 2em;
+  border-radius: 20px;
+  padding: 4px 8px;
 }
