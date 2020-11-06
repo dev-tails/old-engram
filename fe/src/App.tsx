@@ -44,10 +44,12 @@ function App() {
     if (inputRef.current) {
       inputRef.current.focus();
     }
-    const res = await axios.post("/api/notes", { body: note });
-    const newNote = res.data;
+
+    const newNote = { body: note };
     setNotes([...notes, newNote]);
     setNote("");
+
+    await axios.post("/api/notes", newNote);
   };
 
   const handleNoteChanged = (event: any) => {
@@ -57,9 +59,9 @@ function App() {
   return (
     <div className="App">
       <div id="notes" ref={notesRef}>
-        {notes.map((note) => {
+        {notes.map((note, index) => {
           return (
-            <div key={note._id} className="note">
+            <div key={index} className="note">
               <span className="note-body">{note.body}</span>
             </div>
           );
