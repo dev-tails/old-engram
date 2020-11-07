@@ -1,13 +1,20 @@
 const express = require("express");
-const MongoClient = require("mongodb").MongoClient;
+const mongodb = require("mongodb");
+const MongoClient = mongodb.MongoClient;
+const ObjectId = mongodb.ObjectId
 const dotenv = require("dotenv");
-const moment = require("moment");
 const bodyParser = require("body-parser");
+const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
 
 dotenv.config();
 
 const url = process.env.DB_URL;
 const port = Number(process.env.PORT) || 4000;
+const jwtSecret = process.env.JWT_SECRET;
+if (!jwtSecret) {
+  throw new Error("Please set JWT_SECRET in .env file");
+}
 
 run();
 
@@ -18,15 +25,53 @@ async function run() {
 
   const app = express();
   app.use(bodyParser.json());
+  app.use(cookieParser());
 
-  app.get("/api/notes", async function (req, res) {
-    const notes = await db
+  app.post("/api/login", async function (req, res) {
+    const { username, password } = req.body;
+    const user = await db.collection("users").findOne({
+      username,
+    });
+
+    if (user && user.password === password) {
+      jwt.sign(
+        {
+          exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
+          user: String(user._id),
+        },
+        jwtSecret,
+        function (err, token) {
+          if (err) {
+            return res.json({ errors: [err] });
+          }
+          res.cookie("token", token, { maxAge: new Date(Date.now() + (1000 * 60 * 60 * 24)) });
+          res.json({
+            success: true,
+          });
+        }
+      );
+    } else {
+      return res.sendStatus(400);
+    }
+  });
+
+  app.get("/api/notes", function (req, res) {
+    const { token } = req.cookies;
+    jwt.verify(token, jwtSecret, async function(err, decoded) {
+      if (err) {
+        return res.sendStatus(400);
+      }
+
+      const { user } = decoded;
+
+      const notes = await db
       .collection("notes")
-      .find({ body: { $ne: "" } })
+      .find({ user: ObjectId(user), body: { $ne: "" } })
       .sort({ _id: -1 })
       .toArray();
 
-    return res.json(notes.reverse());
+      return res.json(notes.reverse());
+    });
   });
 
   app.post("/api/notes", async function (req, res) {

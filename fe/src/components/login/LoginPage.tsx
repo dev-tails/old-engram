@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import TextBox from "../textbox/TextBox";
+import axios from "axios";
 import "./LoginPage.scss";
 
 export default function LoginPage() {
@@ -9,15 +10,17 @@ export default function LoginPage() {
 
   const handleSubmit = (body: string) => {
     if (isPassword) {
-      // TODO: Hit login API
+      axios.post("/api/login", { username, password: body }).then((res) => {
+        console.log(res);
+      });
     } else {
       setUsername(body);
     }
-  }
+  };
 
   return (
     <div className="login-page">
-      <TextBox hidden={isPassword} onSubmit={handleSubmit}/>
+      <TextBox hidden={isPassword} onSubmit={handleSubmit} />
     </div>
   );
 }
