@@ -1,0 +1,38 @@
+
+#notes {
+  height: calc(100% - 50px);
+  overflow-y: scroll;
+}
+
+.note {
+  max-width: 100%;
+  word-break: break-word;
+  word-wrap: break-word;
+}
+
+.note-body {
+  padding: 6px;
+  display: inline-block;
+  background-color: #fff;
+  border-bottom: 1px solid black;
+  width: 100%;
+}
+
+#textbox {
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  padding: 10px;
+  background-color: #1C1C1E;
+}
+
+#textbox form {
+  width: 100%;
+  display: flex;
+}
+
+#textbox input {
+  width: 100%;
+  border-radius: 20px;
+  padding: 4px 8px;
+}
