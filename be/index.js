@@ -1,7 +1,7 @@
 const express = require("express");
 const mongodb = require("mongodb");
 const MongoClient = mongodb.MongoClient;
-const ObjectId = mongodb.ObjectId
+const ObjectId = mongodb.ObjectId;
 const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
@@ -44,7 +44,9 @@ async function run() {
           if (err) {
             return res.json({ errors: [err] });
           }
-          res.cookie("token", token, { maxAge: new Date(Date.now() + (1000 * 60 * 60 * 24)) });
+          res.cookie("token", token, {
+            maxAge: new Date(Date.now() + 1000 * 60 * 60 * 24),
+          });
           res.json({
             success: true,
           });
@@ -55,37 +57,58 @@ async function run() {
     }
   });
 
-  app.get("/api/notes", function (req, res) {
-    const { token } = req.cookies;
-    jwt.verify(token, jwtSecret, async function(err, decoded) {
-      if (err) {
-        return res.sendStatus(400);
-      }
-
-      const { user } = decoded;
+  app.get("/api/notes", async function (req, res) {
+    try {
+      const { user } = await getDecodedToken(req.cookies.token);
 
       const notes = await db
-      .collection("notes")
-      .find({ user: ObjectId(user), body: { $ne: "" } })
-      .sort({ _id: -1 })
-      .toArray();
+        .collection("notes")
+        .find({ user: ObjectId(user), body: { $ne: "" } })
+        .sort({ _id: -1 })
+        .toArray();
 
       return res.json(notes.reverse());
-    });
+    } catch (err) {
+      console.error(err);
+      if (err instanceof JWTVerifyError) {
+        res.sendStatus(401);
+      } else {
+        res.json({ errors: [err] });
+      }
+    }
   });
 
   app.post("/api/notes", async function (req, res) {
     try {
+      const { user } = await getDecodedToken(req.cookies.token);
+
       const insertOpResult = await db
         .collection("notes")
-        .insertOne({ body: req.body.body });
+        .insertOne({ user: ObjectId(user), body: req.body.body });
 
       return res.json({ _id: insertOpResult.insertedId, body: req.body.body });
     } catch (err) {
       console.error(err);
-      res.json({ errors: [err] });
+      if (err instanceof JWTVerifyError) {
+        res.sendStatus(401);
+      } else {
+        res.json({ errors: [err] });
+      }
     }
   });
 
   app.listen(port);
+}
+
+class JWTVerifyError extends Error {}
+
+function getDecodedToken(token) {
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, jwtSecret, function (err, decoded) {
+      if (err) {
+        reject(new JWTVerifyError());
+      }
+      resolve(decoded);
+    });
+  });
 }
