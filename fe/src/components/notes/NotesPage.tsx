@@ -1,11 +1,11 @@
 import React, {
   createRef,
-  ReactEventHandler,
   useEffect,
   useState,
 } from "react";
 import axios from "axios";
 import "./NotesPage.css";
+import TextBox from "../textbox/TextBox";
 
 type Note = {
   _id?: string;
@@ -13,12 +13,10 @@ type Note = {
 };
 
 export default function NotesPage() {
-  const [note, setNote] = useState("");
   const [notes, setNotes] = useState<Note[]>([]);
   const [state, setState] = useState("initial");
 
   const notesRef = createRef<HTMLDivElement>();
-  const inputRef = createRef<HTMLInputElement>();
 
   useEffect(() => {
     if (!notesRef.current) {
@@ -38,22 +36,11 @@ export default function NotesPage() {
     }
   }, [state]);
 
-  const handleSaveClicked: ReactEventHandler = async (event) => {
-    event?.preventDefault();
-
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-
+  const handleSubmit = async (note: string) => {
     const newNote = { body: note };
     setNotes([...notes, newNote]);
-    setNote("");
 
     await axios.post("/api/notes", newNote);
-  };
-
-  const handleNoteChanged = (event: any) => {
-    setNote(event?.target?.value);
   };
 
   return (
@@ -67,17 +54,7 @@ export default function NotesPage() {
           );
         })}
       </div>
-      <div id="textbox">
-        <form onSubmit={handleSaveClicked}>
-          <input
-            ref={inputRef}
-            autoFocus={true}
-            value={note}
-            onChange={handleNoteChanged}
-          />
-          <button type="submit" hidden={true}></button>
-        </form>
-      </div>
+      <TextBox onSubmit={handleSubmit}/>
     </div>
   );
 }
