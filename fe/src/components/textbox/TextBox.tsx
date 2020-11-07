@@ -7,6 +7,7 @@ import React, {
 
 type TextBoxProps = {
   hidden?: boolean;
+  hint?: string;
   onSubmit: (body: string) => void;
 };
 
@@ -31,7 +32,13 @@ export default function TextBox(props: TextBoxProps) {
   return (
     <div id="textbox">
       <form onSubmit={handleSaveClicked}>
-        <input autoFocus={true} type={inputType} value={note} onChange={handleNoteChanged} />
+        <input
+          autoFocus={true}
+          type={inputType}
+          placeholder={props.hint}
+          value={note}
+          onChange={handleNoteChanged}
+        />
         <button type="submit" hidden={true}></button>
       </form>
     </div>

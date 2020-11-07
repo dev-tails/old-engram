@@ -13,7 +13,7 @@ export default function LoginPage() {
   const handleSubmit = (body: string) => {
     if (isPassword) {
       axios.post("/api/login", { username, password: body }).then((res) => {
-        history.push('/notes');
+        history.push("/notes");
       });
     } else {
       setUsername(body);
@@ -22,7 +22,11 @@ export default function LoginPage() {
 
   return (
     <div className="login-page">
-      <TextBox hidden={isPassword} onSubmit={handleSubmit} />
+      <TextBox
+        hidden={isPassword}
+        hint={isPassword ? "password" : "username"}
+        onSubmit={handleSubmit}
+      />
     </div>
   );
 }
