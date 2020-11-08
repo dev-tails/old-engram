@@ -1,13 +1,20 @@
 const express = require("express");
-const MongoClient = require("mongodb").MongoClient;
+const mongodb = require("mongodb");
+const MongoClient = mongodb.MongoClient;
+const ObjectId = mongodb.ObjectId;
 const dotenv = require("dotenv");
-const moment = require("moment");
 const bodyParser = require("body-parser");
+const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
 
 dotenv.config();
 
 const url = process.env.DB_URL;
 const port = Number(process.env.PORT) || 4000;
+const jwtSecret = process.env.JWT_SECRET;
+if (!jwtSecret) {
+  throw new Error("Please set JWT_SECRET in .env file");
+}
 
 run();
 
@@ -18,11 +25,44 @@ async function run() {
 
   const app = express();
   app.use(bodyParser.json());
+  app.use(cookieParser());
+
+  app.post("/api/login", async function (req, res) {
+    const { username, password } = req.body;
+    const user = await db.collection("users").findOne({
+      username,
+    });
+
+    if (user && user.password === password) {
+      jwt.sign(
+        {
+          exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
+          user: String(user._id),
+        },
+        jwtSecret,
+        function (err, token) {
+          if (err) {
+            return res.json({ errors: [err] });
+          }
+          res.cookie("token", token, {
+            maxAge: new Date(Date.now() + 1000 * 60 * 60 * 24),
+          });
+          res.json({
+            success: true,
+          });
+        }
+      );
+    } else {
+      return res.sendStatus(400);
+    }
+  });
 
   app.get("/api/notes", async function (req, res) {
+    const { user } = await getDecodedToken(req.cookies.token);
+
     const notes = await db
       .collection("notes")
-      .find({ body: { $ne: "" } })
+      .find({ user: ObjectId(user), body: { $ne: "" } })
       .sort({ _id: -1 })
       .toArray();
 
@@ -31,16 +71,49 @@ async function run() {
 
   app.post("/api/notes", async function (req, res) {
     try {
+      const { user } = await getDecodedToken(req.cookies.token);
+
       const insertOpResult = await db
         .collection("notes")
-        .insertOne({ body: req.body.body });
+        .insertOne({ user: ObjectId(user), body: req.body.body });
 
       return res.json({ _id: insertOpResult.insertedId, body: req.body.body });
     } catch (err) {
       console.error(err);
-      res.json({ errors: [err] });
+      if (err instanceof UnauthorizedError) {
+        res.sendStatus(401);
+      } else {
+        res.json({ errors: [err] });
+      }
     }
   });
 
+  app.use(function (err, req, res, next) {
+    console.log(err.name);
+    if (err.name === "UnauthorizedError") {
+      res.clearCookie("token");
+      return res.sendStatus(401);
+    }
+    res.status(500).json({ errors: [err] });
+  });
+
   app.listen(port);
+}
+
+class UnauthorizedError extends Error {
+  constructor() {
+    super();
+    this.name = "UnauthorizedError";
+  }
+}
+
+function getDecodedToken(token) {
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, jwtSecret, function (err, decoded) {
+      if (err) {
+        reject(new UnauthorizedError());
+      }
+      resolve(decoded);
+    });
+  });
 }
