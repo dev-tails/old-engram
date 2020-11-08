@@ -6,11 +6,7 @@ import React, {
 import axios from "axios";
 import "./NotesPage.css";
 import TextBox from "../textbox/TextBox";
-
-type Note = {
-  _id?: string;
-  body: string;
-};
+import { Note, getNotes } from "./NotesApi";
 
 export default function NotesPage() {
   const [notes, setNotes] = useState<Note[]>([]);
@@ -29,9 +25,9 @@ export default function NotesPage() {
     setState("loading");
 
     if (state === "initial") {
-      axios.get("/api/notes").then((res) => {
+      getNotes().then((notes) => {
         setState("loaded");
-        setNotes(res.data);
+        setNotes(notes);
       });
     }
   }, [state]);

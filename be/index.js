@@ -58,24 +58,15 @@ async function run() {
   });
 
   app.get("/api/notes", async function (req, res) {
-    try {
-      const { user } = await getDecodedToken(req.cookies.token);
+    const { user } = await getDecodedToken(req.cookies.token);
 
-      const notes = await db
-        .collection("notes")
-        .find({ user: ObjectId(user), body: { $ne: "" } })
-        .sort({ _id: -1 })
-        .toArray();
+    const notes = await db
+      .collection("notes")
+      .find({ user: ObjectId(user), body: { $ne: "" } })
+      .sort({ _id: -1 })
+      .toArray();
 
-      return res.json(notes.reverse());
-    } catch (err) {
-      console.error(err);
-      if (err instanceof JWTVerifyError) {
-        res.sendStatus(401);
-      } else {
-        res.json({ errors: [err] });
-      }
-    }
+    return res.json(notes.reverse());
   });
 
   app.post("/api/notes", async function (req, res) {
@@ -89,7 +80,7 @@ async function run() {
       return res.json({ _id: insertOpResult.insertedId, body: req.body.body });
     } catch (err) {
       console.error(err);
-      if (err instanceof JWTVerifyError) {
+      if (err instanceof UnauthorizedError) {
         res.sendStatus(401);
       } else {
         res.json({ errors: [err] });
@@ -97,16 +88,30 @@ async function run() {
     }
   });
 
+  app.use(function (err, req, res, next) {
+    console.log(err.name);
+    if (err.name === "UnauthorizedError") {
+      res.clearCookie("token");
+      return res.sendStatus(401);
+    }
+    res.status(500).json({ errors: [err] });
+  });
+
   app.listen(port);
 }
 
-class JWTVerifyError extends Error {}
+class UnauthorizedError extends Error {
+  constructor() {
+    super();
+    this.name = "UnauthorizedError";
+  }
+}
 
 function getDecodedToken(token) {
   return new Promise((resolve, reject) => {
     jwt.verify(token, jwtSecret, function (err, decoded) {
       if (err) {
-        reject(new JWTVerifyError());
+        reject(new UnauthorizedError());
       }
       resolve(decoded);
     });
