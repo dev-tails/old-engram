@@ -4,7 +4,11 @@ import TextBox from "../textbox/TextBox";
 import axios from "axios";
 import "./LoginPage.scss";
 
-export default function LoginPage() {
+export type LoginPageProps = {
+  onLoggedIn: () => void;
+}
+
+export default function LoginPage(props: LoginPageProps) {
   const history = useHistory();
   const [username, setUsername] = useState("");
 
@@ -14,6 +18,7 @@ export default function LoginPage() {
     if (isPassword) {
       axios.post("/api/login", { username, password: body }).then((res) => {
         history.push("/notes");
+        props.onLoggedIn();
       });
     } else {
       setUsername(body);
