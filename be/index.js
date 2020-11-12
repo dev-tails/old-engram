@@ -6,6 +6,7 @@ const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
+const bcrypt = require("bcrypt");
 
 dotenv.config();
 
@@ -26,6 +27,34 @@ async function run() {
   const app = express();
   app.use(bodyParser.json());
   app.use(cookieParser());
+
+  app.post("/api/signup", async function (req, res) {
+    const { username, password } = req.body;
+
+    const User = db.collection("users");
+    const existingUser = await User.findOne({
+      username,
+    });
+    if (existingUser) {
+      return res.status(409).json({
+        errors: [
+          new Error("username already exists")
+        ]
+      });
+    }
+
+    const numberOfRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, numberOfRounds);
+    
+    await User.insertOne({
+      username,
+      hashedPassword
+    });
+
+    res.json({
+      success: true
+    });
+  });
 
   app.post("/api/login", async function (req, res) {
     const { username, password } = req.body;
@@ -89,11 +118,11 @@ async function run() {
   });
 
   app.use(function (err, req, res, next) {
-    console.log(err.name);
     if (err.name === "UnauthorizedError") {
       res.clearCookie("token");
       return res.sendStatus(401);
     }
+    console.error(err);
     res.status(500).json({ errors: [err] });
   });
 
