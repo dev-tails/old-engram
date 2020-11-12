@@ -62,7 +62,17 @@ async function run() {
       username,
     });
 
-    if (user && user.password === password) {
+    if (!user) {
+      return res.sendStatus(400);
+    }
+
+    let passwordsMatch = false;
+
+    if(user.hashedPassword) {
+      passwordsMatch = await bcrypt.compare(password, user.hashedPassword);
+    }
+
+    if (passwordsMatch) {
       jwt.sign(
         {
           exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
