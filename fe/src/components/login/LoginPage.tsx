@@ -6,32 +6,37 @@ import "./LoginPage.scss";
 
 export type LoginPageProps = {
   onLoggedIn: () => void;
-}
+};
 
 export default function LoginPage(props: LoginPageProps) {
   const history = useHistory();
+  const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
 
-  const isPassword = !!username;
-
-  const handleSubmit = (body: string) => {
-    if (isPassword) {
-      axios.post("/api/login", { username, password: body }, { withCredentials: true }).then((res) => {
-        history.push("/notes");
-        props.onLoggedIn();
-      });
-    } else {
-      setUsername(body);
-    }
+  const handleSubmit = () => {
+    axios.post("/api/login", { username, password }).then((res) => {
+      history.push("/notes");
+      props.onLoggedIn();
+    });
   };
 
   return (
     <div className="login-page">
-      <TextBox
-        hidden={isPassword}
-        hint={isPassword ? "password" : "username"}
-        onSubmit={handleSubmit}
-      />
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          autoComplete="false"
+          autoCapitalize="false"
+          autoFocus={true}
+          placeholder="Username"
+        ></input>
+        <input
+          type="password"
+          autoComplete="false"
+          autoCapitalize="false"
+          placeholder="Password"
+        ></input>
+      </form>
     </div>
   );
 }
