@@ -20,6 +20,27 @@ if (!jwtSecret) {
 
 run();
 
+async function setToken(res, user) {
+  return new Promise((resolve, reject) => {
+    jwt.sign(
+      {
+        exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30,
+        user,
+      },
+      jwtSecret,
+      function (err, token) {
+        if (err) {
+          return reject(err);
+        }
+        res.cookie("token", token, {
+          maxAge: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+        });
+        resolve();
+      }
+    );
+  });
+}
+
 async function run() {
   const client = await MongoClient.connect(url);
   const db = client.db();
@@ -60,10 +81,12 @@ async function run() {
     const numberOfRounds = 10;
     const hashedPassword = await bcrypt.hash(password, numberOfRounds);
 
-    await User.insertOne({
+    const insertOpResult = await User.insertOne({
       username,
       hashedPassword,
     });
+
+    await setToken(res, String(insertOpResult.insertedId));
 
     res.json({
       success: true,
@@ -87,24 +110,11 @@ async function run() {
     }
 
     if (passwordsMatch) {
-      jwt.sign(
-        {
-          exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
-          user: String(user._id),
-        },
-        jwtSecret,
-        function (err, token) {
-          if (err) {
-            return res.json({ errors: [err] });
-          }
-          res.cookie("token", token, {
-            maxAge: new Date(Date.now() + 1000 * 60 * 60 * 24),
-          });
-          res.json({
-            success: true,
-          });
-        }
-      );
+      await setToken(res, String(user._id));
+
+      res.json({
+        success: true,
+      });
     } else {
       return res.sendStatus(400);
     }
