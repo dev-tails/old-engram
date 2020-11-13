@@ -27,10 +27,17 @@ async function run() {
 
   const app = express();
 
-  app.use(function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', origin);
-    res.header('Access-Control-Allow-Credentials', true);
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  if (app.get("env") === "production") {
+    app.set("trust proxy", 1); // trust first proxy
+  }
+
+  app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", origin);
+    res.header("Access-Control-Allow-Credentials", true);
+    res.header(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept"
+    );
     next();
   });
 
@@ -46,22 +53,20 @@ async function run() {
     });
     if (existingUser) {
       return res.status(409).json({
-        errors: [
-          new Error("username already exists")
-        ]
+        errors: [new Error("username already exists")],
       });
     }
 
     const numberOfRounds = 10;
     const hashedPassword = await bcrypt.hash(password, numberOfRounds);
-    
+
     await User.insertOne({
       username,
-      hashedPassword
+      hashedPassword,
     });
 
     res.json({
-      success: true
+      success: true,
     });
   });
 
@@ -77,7 +82,7 @@ async function run() {
 
     let passwordsMatch = false;
 
-    if(user.hashedPassword) {
+    if (user.hashedPassword) {
       passwordsMatch = await bcrypt.compare(password, user.hashedPassword);
     }
 
