@@ -1,44 +1,35 @@
-import React, {
-  ReactEventHandler,
-  useState,
-} from "react";
+import React, { useState } from "react";
 
 type TextBoxProps = {
-  hidden?: boolean;
-  hint?: string;
   onSubmit: (body: string) => void;
 };
 
 export default function TextBox(props: TextBoxProps) {
   const [note, setNote] = useState("");
 
-  const handleSaveClicked: ReactEventHandler = (event) => {
-    event?.preventDefault();
-    props.onSubmit(note);
-    setNote("");
-  };
-
   const handleNoteChanged = (event: any) => {
     setNote(event?.target?.value);
   };
 
-  let inputType = "text";
-  if (props.hidden) {
-    inputType = "password";
-  }
+  const handleKeyDown: React.DOMAttributes<HTMLTextAreaElement>["onKeyDown"] = (
+    event
+  ) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      props.onSubmit(note);
+      setNote("");
+    }
+  };
 
   return (
     <div id="textbox">
-      <form onSubmit={handleSaveClicked}>
-        <input
-          autoFocus={true}
-          type={inputType}
-          placeholder={props.hint}
-          value={note}
-          onChange={handleNoteChanged}
-        />
-        <button type="submit" hidden={true}></button>
-      </form>
+      <textarea
+        autoFocus={true}
+        value={note}
+        onKeyDown={handleKeyDown}
+        onChange={handleNoteChanged}
+        rows={1}
+      />
     </div>
   );
 }

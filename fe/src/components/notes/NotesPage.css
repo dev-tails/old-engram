@@ -16,6 +16,7 @@
   background-color: #fff;
   border-bottom: 1px solid black;
   width: 100%;
+  white-space: pre-wrap;
 }
 
 #textbox {
@@ -31,8 +32,9 @@
   display: flex;
 }
 
-#textbox input {
+#textbox textarea {
   width: 100%;
   border-radius: 20px;
   padding: 4px 8px;
+  resize: none;
 }
