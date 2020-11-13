@@ -32,8 +32,19 @@ export default function LoginPage(props: LoginPageProps) {
     setPassword(event.target.value);
   };
 
+  const notes = ["Welcome to BrainStorm"];
+
   return (
     <div className="login-page">
+      <div id="notes">
+        {notes.map((note, index) => {
+          return (
+            <div key={index} className="note">
+              <span className="note-body">{note}</span>
+            </div>
+          );
+        })}
+      </div>
       <div className="bottom-box">
         <input
           type="text"
