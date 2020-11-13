@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import TextBox from "../textbox/TextBox";
 import axios from "axios";
 import "./LoginPage.scss";
 
@@ -13,30 +12,53 @@ export default function LoginPage(props: LoginPageProps) {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
 
-  const handleSubmit = () => {
+  const handleSignIn = () => {
     axios.post("/api/login", { username, password }).then((res) => {
       history.push("/notes");
       props.onLoggedIn();
     });
   };
 
+  const handleSignUp = () => {
+    axios.post("/api/signup", { username, password }).then((res) => {
+      history.push("/notes");
+      props.onLoggedIn();
+    });
+  };
+
+  const handleUsernameChanged: React.InputHTMLAttributes<
+    HTMLInputElement
+  >["onChange"] = (event) => {
+    setUsername(event.target.value);
+  };
+
+  const handlePasswordChanged: React.InputHTMLAttributes<
+    HTMLInputElement
+  >["onChange"] = (event) => {
+    setPassword(event.target.value);
+  };
+
   return (
     <div className="login-page">
-      <form onSubmit={handleSubmit}>
+      <div className="bottom-box">
         <input
           type="text"
           autoComplete="false"
           autoCapitalize="false"
           autoFocus={true}
-          placeholder="Username"
+          placeholder="username"
+          onChange={handleUsernameChanged}
         ></input>
         <input
           type="password"
           autoComplete="false"
           autoCapitalize="false"
-          placeholder="Password"
+          placeholder="password"
+          onChange={handlePasswordChanged}
         ></input>
-      </form>
+        <button onClick={handleSignUp}>Sign Up</button>
+        <button onClick={handleSignIn}>Sign In</button>
+      </div>
     </div>
   );
 }

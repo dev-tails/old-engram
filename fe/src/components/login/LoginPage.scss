@@ -1,0 +1,25 @@
+.login-page {
+  .bottom-box {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    padding: 10px;
+    background-color: #1C1C1E;
+    text-align: center;
+  }
+
+  form {
+    width: 100%;
+    display: flex;
+  }
+
+  input {
+    width: 100%;
+    border-radius: 20px;
+    padding: 4px 8px;
+  }
+
+  button {
+    margin: 4px;
+  }
+}
