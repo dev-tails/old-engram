@@ -16,7 +16,7 @@ export default function LoginPage(props: LoginPageProps) {
 
   const handleSubmit = (body: string) => {
     if (isPassword) {
-      axios.post("/api/login", { username, password: body }).then((res) => {
+      axios.post("/api/login", { username, password: body }, { withCredentials: true }).then((res) => {
         history.push("/notes");
         props.onLoggedIn();
       });

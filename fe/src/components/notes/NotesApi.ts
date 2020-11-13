@@ -6,6 +6,6 @@ export type Note = {
 };
 
 export async function getNotes(): Promise<Note[]> {
-  const res = await axios.get("/api/notes");
+  const res = await axios.get("/api/notes", { withCredentials: true });
   return res.data;
 }

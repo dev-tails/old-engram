@@ -36,7 +36,7 @@ export default function NotesPage() {
     const newNote = { body: note };
     setNotes([...notes, newNote]);
 
-    await axios.post("/api/notes", newNote);
+    await axios.post("/api/notes", newNote, { withCredentials: true });
   };
 
   return (
