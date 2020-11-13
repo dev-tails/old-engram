@@ -1,28 +1,22 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
 import axios from "axios";
 import "./LoginPage.scss";
 
-export type LoginPageProps = {
-  onLoggedIn: () => void;
-};
+export type LoginPageProps = {};
 
 export default function LoginPage(props: LoginPageProps) {
-  const history = useHistory();
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
 
   const handleSignIn = () => {
     axios.post("/api/login", { username, password }).then((res) => {
-      history.push("/notes");
-      props.onLoggedIn();
+      window.location.href = "/notes";
     });
   };
 
   const handleSignUp = () => {
     axios.post("/api/signup", { username, password }).then((res) => {
-      history.push("/notes");
-      props.onLoggedIn();
+      window.location.href = "/notes";
     });
   };
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom";
 import LoginPage from "../components/login/LoginPage";
 import NotesPage from "../components/notes/NotesPage";
@@ -9,11 +9,7 @@ export function isLoggedIn() {
 }
 
 export default function Routes() {
-  const [loggedIn, setLoggedIn] = useState(isLoggedIn());
-
-  const handleLogin = () => {
-    setLoggedIn(true);
-  }
+  const loggedIn = isLoggedIn();
 
   return (
     <Router>
@@ -22,7 +18,7 @@ export default function Routes() {
           <Redirect to={loggedIn ? "/notes" : "/login"}/>
         </Route>
         <Route exact path="/login">
-          <LoginPage onLoggedIn={handleLogin}></LoginPage>
+          <LoginPage></LoginPage>
         </Route>
         <Route exact path="/notes">
           { loggedIn ? <NotesPage/> : <Redirect to="/login"/> }
