@@ -4,7 +4,7 @@ import React, {
   useState,
 } from "react";
 import axios from "axios";
-import "./NotesPage.css";
+import "./NotesPage.scss";
 import TextBox from "../textbox/TextBox";
 import { Note, getNotes } from "./NotesApi";
 
@@ -12,13 +12,13 @@ export default function NotesPage() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [state, setState] = useState("initial");
 
-  const notesRef = createRef<HTMLDivElement>();
+  const notesPageRef = createRef<HTMLDivElement>();
 
   useEffect(() => {
-    if (!notesRef.current) {
+    if (!notesPageRef.current) {
       return;
     }
-    notesRef.current.scrollTo({ top: notesRef.current.scrollHeight });
+    notesPageRef.current.scrollTo({ top: notesPageRef.current.scrollHeight });
   });
 
   useEffect(() => {
@@ -40,8 +40,8 @@ export default function NotesPage() {
   };
 
   return (
-    <div className="App">
-      <div id="notes" ref={notesRef}>
+    <div className="notes-page" ref={notesPageRef}>
+      <div id="notes">
         {notes.map((note, index) => {
           return (
             <div key={index} className="note">
