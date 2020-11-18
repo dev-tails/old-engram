@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./TextBox.scss";
 
 type TextBoxProps = {
   onSubmit: (body: string) => void;
@@ -22,7 +23,7 @@ export default function TextBox(props: TextBoxProps) {
   };
 
   return (
-    <div id="textbox">
+    <div className="textbox">
       <textarea
         autoFocus={true}
         value={note}

@@ -9,7 +9,6 @@ import LoginPage from "../components/login/LoginPage";
 import NotesPage from "../components/notes/NotesPage";
 import Cookies from "js-cookie";
 import { Header } from "../components/header/Header";
-import { ListWidget } from "../components/widgets/ListWidget/ListWidget";
 import { ViewWidgetPage } from "../components/ViewWidgetPage";
 
 export function isLoggedIn() {
