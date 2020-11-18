@@ -175,6 +175,26 @@ async function run() {
     }
   });
 
+  app.get("/api/widgets/:id", async function (req, res) {
+    const { user } = await getDecodedToken(req.cookies.token);
+    const { id } = req.params;
+
+    const widget = await db
+      .collection("widgets")
+      .findOne({ _id: ObjectId(id), user: ObjectId(user) });
+
+    const notes = await db
+      .collection("notes")
+      .find(widget.filter)
+      .sort({ _id: -1 })
+      .toArray();
+
+    return res.json({
+      widget,
+      items: notes.reverse(),
+    });
+  });
+
   app.use(function (err, req, res, next) {
     if (err.name === "UnauthorizedError") {
       res.clearCookie("token");

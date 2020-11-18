@@ -22,7 +22,7 @@ export const ViewWidgetPage: React.FC<ViewWidgetPageProps> = (props) => {
 
   useEffect(() => {
     loadWidgetData();
-  });
+  }, [widgetId]);
 
   if (!widgetData) {
     return null;
