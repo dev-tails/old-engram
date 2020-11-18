@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { updateNote } from "./notes/NotesApi";
 import TextBox from "./textbox/TextBox";
-import { ListWidget } from "./widgets/ListWidget/ListWidget";
+import { ListWidget, ListWidgetProps } from "./widgets/ListWidget/ListWidget";
 import { getWidget, submitWidgetNote, WidgetData } from "./widgets/WidgetsApi";
 
-type ViewWidgetPageProps = {};
+export type ViewWidgetPageProps = {};
 
-type ViewWidgetPageParams = {
+export type ViewWidgetPageParams = {
   widgetId: string;
 };
 
@@ -27,13 +28,17 @@ export const ViewWidgetPage: React.FC<ViewWidgetPageProps> = (props) => {
     return null;
   }
 
+  const handleItemChanged: ListWidgetProps["onItemChanged"] = (item) => {
+    updateNote(item);
+  };
+
   const handleSubmit = (body: string) => {
     submitWidgetNote(widgetId, body);
   };
 
   return (
     <div className="view-widget-page">
-      <ListWidget items={widgetData.items} />
+      <ListWidget items={widgetData.items} onItemChanged={handleItemChanged} />
       <TextBox onSubmit={handleSubmit} />
     </div>
   );
