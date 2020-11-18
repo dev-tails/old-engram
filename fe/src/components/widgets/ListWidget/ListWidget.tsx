@@ -11,7 +11,7 @@ export const ListWidget: React.FC<ListWidgetProps> = (props) => {
     <div className="list-widget">
       {props.items.map((item) => {
         return (
-          <div className="list-item">
+          <div key={item._id} className="list-item">
             <div className="checkbox">
               <input type="checkbox" checked={item.checked} />
             </div>

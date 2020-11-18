@@ -20,3 +20,5 @@ export async function getWidget(id: string): Promise<WidgetData> {
     ],
   };
 }
+
+export async function submitWidgetNote(widgetId: string, note: string) {}
