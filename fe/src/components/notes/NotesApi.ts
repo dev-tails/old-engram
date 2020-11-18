@@ -12,7 +12,7 @@ export async function getNotes(): Promise<Note[]> {
 }
 
 export async function updateNote(note: Partial<Note>): Promise<Note> {
-  const res = await axios.put(`/api/notes/${note._id}`, {
+  const res = await axios.put(`/api/notes/${note._id}`, note, {
     withCredentials: true,
   });
   return res.data;
