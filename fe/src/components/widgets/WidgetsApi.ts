@@ -10,7 +10,7 @@ export async function getWidget(id: string): Promise<WidgetData> {
     _id: "1",
     items: [
       {
-        _id: "1",
+        _id: "5fb027d8a0c0ebd283add8ae",
         body: "This is item 1",
       },
       {

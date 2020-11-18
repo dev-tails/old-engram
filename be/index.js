@@ -132,6 +132,30 @@ async function run() {
     return res.json(notes.reverse());
   });
 
+  app.put("/api/notes/:id", async function (req, res) {
+    const { id } = req.params;
+    const { user } = await getDecodedToken(req.cookies.token);
+    const update = req.body;
+    console.log(update);
+
+    const Note = db.collection("notes");
+    const note = Note.findOne({
+      _id: ObjectId(id),
+    });
+
+    if (!note || note.user !== user._id) {
+      throw new UnauthorizedError();
+    }
+
+    const updatedNote = await Note.updateOne(
+      {
+        _id: ObjectId(id),
+      },
+      update
+    );
+    return res.json(updatedNote);
+  });
+
   app.post("/api/notes", async function (req, res) {
     try {
       const { user } = await getDecodedToken(req.cookies.token);
