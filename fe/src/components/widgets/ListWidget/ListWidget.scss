@@ -1,0 +1,22 @@
+.list-widget {
+  .list-item {
+    display: grid;
+    grid-template-columns: auto 100%;
+
+    .checkbox {
+      display: inline-block;
+
+      input {
+        height: 24px;
+        width: 24px;
+        margin: 4px;
+      }
+    }
+
+    .item-body {
+      display: inline-block;
+      border-bottom: 1px solid black;
+      line-height: 32px;
+    }
+  }
+}

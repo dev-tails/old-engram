@@ -7,10 +7,15 @@ textarea:focus, input:focus {
 }
 
 .App {
-  /* height: 100vh; */
+  height: 100vh;
   overflow: hidden;
 }
 
 body {
   overflow: hidden;
+}
+
+.content {
+  margin-top: 32px;
+  height: calc(100% - 32px);
 }
