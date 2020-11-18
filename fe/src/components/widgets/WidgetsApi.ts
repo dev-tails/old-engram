@@ -9,9 +9,20 @@ export type WidgetData = {
   items: Note[];
 };
 
-export async function getWidget(id: string): Promise<WidgetData> {
-  const res = await axios.get(`/api/widgets/${id}`);
+export async function getWidget(widgetId: string): Promise<WidgetData> {
+  const res = await axios.get(`/api/widgets/${widgetId}`, {
+    withCredentials: true,
+  });
   return res.data;
 }
 
-export async function submitWidgetNote(widgetId: string, note: string) {}
+export async function submitWidgetNote(widgetId: string, body: string) {
+  const res = await axios.post(
+    `/api/widgets/${widgetId}`,
+    {
+      body,
+    },
+    { withCredentials: true }
+  );
+  return res.data;
+}

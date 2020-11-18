@@ -136,14 +136,13 @@ async function run() {
     const { id } = req.params;
     const { user } = await getDecodedToken(req.cookies.token);
     const update = req.body;
-    console.log(update);
 
     const Note = db.collection("notes");
-    const note = Note.findOne({
+    const note = await Note.findOne({
       _id: ObjectId(id),
     });
 
-    if (!note || note.user !== user._id) {
+    if (!note || String(note.user) !== user) {
       throw new UnauthorizedError();
     }
 
@@ -151,7 +150,11 @@ async function run() {
       {
         _id: ObjectId(id),
       },
-      update
+      {
+        $set: {
+          checked: update.checked,
+        },
+      }
     );
     return res.json(updatedNote);
   });
@@ -185,7 +188,10 @@ async function run() {
 
     const notes = await db
       .collection("notes")
-      .find(widget.filter)
+      .find({
+        ...widget.filter,
+        user: ObjectId(user),
+      })
       .sort({ _id: -1 })
       .toArray();
 
@@ -193,6 +199,23 @@ async function run() {
       widget,
       items: notes.reverse(),
     });
+  });
+
+  app.post("/api/widgets/:id", async function (req, res) {
+    const { user } = await getDecodedToken(req.cookies.token);
+    const { id } = req.params;
+
+    const widget = await db
+      .collection("widgets")
+      .findOne({ _id: ObjectId(id), user: ObjectId(user) });
+
+    const insertOpResult = await db.collection("notes").insertOne({
+      user: ObjectId(user),
+      ...widget.filter,
+      body: req.body.body,
+    });
+
+    return res.json({});
   });
 
   app.use(function (err, req, res, next) {
