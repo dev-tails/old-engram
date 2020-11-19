@@ -1,13 +1,11 @@
-# Brainstorm
+# Engram
 
-A MongoDB, Express, React, Node (MERN) stack application for quickly gathering thoughts. Check out the demo app at [brainstorm.xyzdigital.com](http://brainstorm.xyzdigital.com).
+engram - a hypothetical permanent change in the brain accounting for the existence of memory; a memory trace.
 
-![Brainstorm App](images/brainstorm-app.png)
+A MongoDB, Express, React, Node (MERN) stack application for quickly gathering thoughts.
 
 # Table of Contents
 
-- [Brainstorm](#brainstorm)
-- [Table of Contents](#table-of-contents)
 - [Installation](#installation)
   - [Local Development](#local-development)
   - [Self Hosted](#self-hosted)
