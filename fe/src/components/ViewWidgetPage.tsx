@@ -15,12 +15,12 @@ export const ViewWidgetPage: React.FC<ViewWidgetPageProps> = (props) => {
   const { widgetId } = useParams<ViewWidgetPageParams>();
   const [widgetData, setWidgetData] = useState<WidgetData | null>(null);
 
-  const loadWidgetData = async () => {
-    const widget = await getWidget(widgetId);
-    setWidgetData(widget);
-  };
-
   useEffect(() => {
+    async function loadWidgetData() {
+      const widget = await getWidget(widgetId);
+      setWidgetData(widget);
+    }
+
     loadWidgetData();
   }, [widgetId]);
 
