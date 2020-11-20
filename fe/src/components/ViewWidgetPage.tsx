@@ -59,6 +59,7 @@ export const ViewWidgetPage: React.FC<ViewWidgetPageProps> = (props) => {
         items={widgetData.items}
         onItemChanged={handleItemChanged}
         onItemDeleted={handleItemDeleted}
+        checkboxes={widgetData.widget.checkboxes}
       />
       <TextBox onSubmit={handleSubmit} />
     </div>

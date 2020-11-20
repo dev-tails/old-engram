@@ -5,6 +5,7 @@ export type WidgetData = {
   widget: {
     _id: string;
     name: string;
+    checkboxes?: boolean;
   };
   items: Note[];
 };
