@@ -1,4 +1,5 @@
 import React from "react";
+import { CheckboxList } from "../../CheckboxList/CheckboxList";
 import { Note } from "../../notes/NotesApi";
 import "./ListWidget.scss";
 
@@ -17,20 +18,7 @@ export const ListWidget: React.FC<ListWidgetProps> = (props) => {
 
   return (
     <div className="list-widget">
-      {props.items.map((item) => {
-        return (
-          <div key={item._id} className="list-item">
-            <div className="checkbox">
-              <input
-                type="checkbox"
-                checked={item.checked}
-                onChange={handleItemChecked.bind(this, item)}
-              />
-            </div>
-            <div className="item-body">{item.body}</div>
-          </div>
-        );
-      })}
+      <CheckboxList onChecked={handleItemChecked} items={props.items} />
     </div>
   );
 };

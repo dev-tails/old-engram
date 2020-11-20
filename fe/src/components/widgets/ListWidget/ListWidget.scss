@@ -1,4 +1,10 @@
 .list-widget {
+  position: absolute;
+  top: 64px;
+  bottom: 52px;
+  overflow-y: scroll;
+  width: 100%;
+
   .list-item {
     display: grid;
     grid-template-columns: auto 100%;
