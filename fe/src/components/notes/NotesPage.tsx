@@ -1,12 +1,9 @@
-import React, {
-  createRef,
-  useEffect,
-  useState,
-} from "react";
+import React, { createRef, useEffect, useState } from "react";
 import axios from "axios";
 import "./NotesPage.scss";
 import TextBox from "../textbox/TextBox";
 import { Note, getNotes } from "./NotesApi";
+import { Header } from "../header/Header";
 
 export default function NotesPage() {
   const [notes, setNotes] = useState<Note[]>([]);
@@ -41,7 +38,8 @@ export default function NotesPage() {
 
   return (
     <div className="notes-page" ref={notesPageRef}>
-      <div id="notes">
+      <Header title={"All"} />
+      <div className="notes">
         {notes.map((note, index) => {
           return (
             <div key={index} className="note">
@@ -50,7 +48,7 @@ export default function NotesPage() {
           );
         })}
       </div>
-      <TextBox onSubmit={handleSubmit}/>
+      <TextBox onSubmit={handleSubmit} />
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { Header } from "./header/Header";
 import { updateNote } from "./notes/NotesApi";
 import TextBox from "./textbox/TextBox";
 import { ListWidget, ListWidgetProps } from "./widgets/ListWidget/ListWidget";
@@ -38,6 +39,7 @@ export const ViewWidgetPage: React.FC<ViewWidgetPageProps> = (props) => {
 
   return (
     <div className="view-widget-page">
+      <Header title={widgetData.widget.name} />
       <ListWidget items={widgetData.items} onItemChanged={handleItemChanged} />
       <TextBox onSubmit={handleSubmit} />
     </div>

@@ -1,4 +1,10 @@
-#notes {
+.notes {
+  position: absolute;
+  top: 64px;
+  bottom: 52px;
+  width: 100%;
+  overflow-y: scroll;
+
   .note {
     max-width: 100%;
     word-break: break-word;
@@ -16,9 +22,5 @@
 }
 
 .notes-page {
-  position: absolute;
-  top: 64px;
-  bottom: 52px;
   width: 100%;
-  overflow-y: scroll;
 }

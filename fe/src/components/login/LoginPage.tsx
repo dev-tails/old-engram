@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./LoginPage.scss";
+import { Header } from "../header/Header";
 
 export type LoginPageProps = {};
 
@@ -34,6 +35,7 @@ export default function LoginPage(props: LoginPageProps) {
 
   return (
     <div className="login-page">
+      <Header title="Engram" />
       <div className="bottom-box">
         <input
           type="text"

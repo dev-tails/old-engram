@@ -14,8 +14,3 @@ textarea:focus, input:focus {
 body {
   overflow: hidden;
 }
-
-.content {
-  margin-top: 32px;
-  height: calc(100% - 32px);
-}

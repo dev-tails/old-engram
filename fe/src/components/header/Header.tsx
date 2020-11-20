@@ -1,9 +1,10 @@
 import { AppBar, Toolbar, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
-import { useLocation } from "react-router";
 
-type HeaderProps = {};
+type HeaderProps = {
+  title: string;
+};
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -12,17 +13,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const Header: React.FC<HeaderProps> = (props) => {
+export const Header: React.FC<HeaderProps> = ({ title }) => {
   const classes = useStyles();
-  const location = useLocation();
-
-  let title = "BrainStorm";
-  if (location.pathname === "/notes") {
-    title = "All";
-  }
 
   return (
-    <AppBar position="static">
+    <AppBar position="fixed">
       <Toolbar>
         <Typography variant="h6" className={classes.title}>
           {title}

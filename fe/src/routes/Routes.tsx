@@ -8,7 +8,6 @@ import {
 import LoginPage from "../components/login/LoginPage";
 import NotesPage from "../components/notes/NotesPage";
 import Cookies from "js-cookie";
-import { Header } from "../components/header/Header";
 import { ViewWidgetPage } from "../components/ViewWidgetPage";
 
 export function isLoggedIn() {
@@ -19,23 +18,20 @@ export default function Routes() {
   const loggedIn = isLoggedIn();
   return (
     <Router>
-      <Header />
-      <div className="content">
-        <Switch>
-          <Route exact path="/">
-            <Redirect to={loggedIn ? "/notes" : "/login"} />
-          </Route>
-          <Route exact path="/login">
-            <LoginPage></LoginPage>
-          </Route>
-          <Route exact path="/widgets/:widgetId">
-            <ViewWidgetPage />
-          </Route>
-          <Route exact path="/notes">
-            {loggedIn ? <NotesPage /> : <Redirect to="/login" />}
-          </Route>
-        </Switch>
-      </div>
+      <Switch>
+        <Route exact path="/">
+          <Redirect to={loggedIn ? "/notes" : "/login"} />
+        </Route>
+        <Route exact path="/login">
+          <LoginPage></LoginPage>
+        </Route>
+        <Route exact path="/widgets/:widgetId">
+          <ViewWidgetPage />
+        </Route>
+        <Route exact path="/notes">
+          {loggedIn ? <NotesPage /> : <Redirect to="/login" />}
+        </Route>
+      </Switch>
     </Router>
   );
 }
