@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
@@ -25,17 +25,31 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
   onChecked,
   onDelete,
 }) => {
+  const lastItemRef = useRef<any>();
+  useEffect(() => {
+    if (!lastItemRef || !lastItemRef.current) {
+      return;
+    }
+    lastItemRef.current?.scrollIntoView({ behaviour: "auto" });
+  }, [items]);
+
   const handleToggle = (item: CheckboxItem) => () => {
     onChecked(item);
   };
 
   return (
     <List>
-      {items.map((item) => {
+      {items.map((item, index) => {
         const labelId = `checkbox-list-label-${item._id}`;
 
         return (
-          <ListItem key={item._id} role={undefined} dense button>
+          <ListItem
+            key={item._id}
+            role={undefined}
+            dense
+            button
+            ref={index === items.length - 1 ? lastItemRef : null}
+          >
             <ListItemIcon>
               <Checkbox
                 edge="start"
