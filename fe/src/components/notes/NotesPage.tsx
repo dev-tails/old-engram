@@ -9,13 +9,13 @@ export default function NotesPage() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [state, setState] = useState("initial");
 
-  const notesPageRef = createRef<HTMLDivElement>();
+  const notesRef = createRef<HTMLDivElement>();
 
   useEffect(() => {
-    if (!notesPageRef.current) {
+    if (!notesRef.current) {
       return;
     }
-    notesPageRef.current.scrollTo({ top: notesPageRef.current.scrollHeight });
+    notesRef.current.scrollTo({ top: notesRef.current.scrollHeight });
   });
 
   useEffect(() => {
@@ -37,9 +37,9 @@ export default function NotesPage() {
   };
 
   return (
-    <div className="notes-page" ref={notesPageRef}>
+    <div className="notes-page">
       <Header title={"All"} />
-      <div className="notes">
+      <div className="notes" ref={notesRef}>
         {notes.map((note, index) => {
           return (
             <div key={index} className="note">
