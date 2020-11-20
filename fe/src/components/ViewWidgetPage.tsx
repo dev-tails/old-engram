@@ -44,8 +44,12 @@ export const ViewWidgetPage: React.FC<ViewWidgetPageProps> = (props) => {
     });
   };
 
-  const handleSubmit = (body: string) => {
-    submitWidgetNote(widgetId, body);
+  const handleSubmit = async (body: string) => {
+    const newNote = await submitWidgetNote(widgetId, body);
+    setWidgetData({
+      ...widgetData,
+      items: [...widgetData.items, newNote],
+    });
   };
 
   return (

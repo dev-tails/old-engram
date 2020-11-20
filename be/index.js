@@ -226,7 +226,11 @@ async function run() {
       body: req.body.body,
     });
 
-    return res.json({});
+    const newNote = await db.collection("notes").findOne({
+      _id: insertOpResult.insertedId,
+    });
+
+    return res.json(newNote);
   });
 
   app.use(function (err, req, res, next) {

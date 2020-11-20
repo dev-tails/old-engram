@@ -16,7 +16,10 @@ export async function getWidget(widgetId: string): Promise<WidgetData> {
   return res.data;
 }
 
-export async function submitWidgetNote(widgetId: string, body: string) {
+export async function submitWidgetNote(
+  widgetId: string,
+  body: string
+): Promise<Note> {
   const res = await axios.post(
     `/api/widgets/${widgetId}`,
     {
