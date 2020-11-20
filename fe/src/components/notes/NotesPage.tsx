@@ -1,22 +1,14 @@
-import React, { createRef, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./NotesPage.scss";
 import TextBox from "../textbox/TextBox";
-import { Note, getNotes } from "./NotesApi";
+import { Note, getNotes, removeNote, updateNote } from "./NotesApi";
 import { Header } from "../header/Header";
+import { ListWidget } from "../widgets/ListWidget/ListWidget";
 
 export default function NotesPage() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [state, setState] = useState("initial");
-
-  const notesRef = createRef<HTMLDivElement>();
-
-  useEffect(() => {
-    if (!notesRef.current) {
-      return;
-    }
-    notesRef.current.scrollTo({ top: notesRef.current.scrollHeight });
-  });
 
   useEffect(() => {
     setState("loading");
@@ -36,18 +28,22 @@ export default function NotesPage() {
     await axios.post("/api/notes", newNote, { withCredentials: true });
   };
 
+  const handleItemDeleted = (itemId?: string) => {
+    removeNote(itemId);
+    const notesCopy = Array.from(notes);
+    const index = notesCopy.findIndex((item) => item._id === itemId);
+    notesCopy.splice(index, 1);
+    setNotes(notesCopy);
+  };
+
   return (
     <div className="notes-page">
       <Header title={"All"} />
-      <div className="notes" ref={notesRef}>
-        {notes.map((note, index) => {
-          return (
-            <div key={index} className="note">
-              <span className="note-body">{note.body}</span>
-            </div>
-          );
-        })}
-      </div>
+      <ListWidget
+        items={notes}
+        onItemChanged={updateNote}
+        onItemDeleted={handleItemDeleted}
+      />
       <TextBox onSubmit={handleSubmit} />
     </div>
   );
