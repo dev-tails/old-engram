@@ -35,6 +35,13 @@ export const ViewWidgetPage: React.FC<ViewWidgetPageProps> = (props) => {
 
   const handleItemDeleted = (itemId?: string) => {
     removeNote(itemId);
+    const widgetItemsCopy = Array.from(widgetData.items);
+    const index = widgetItemsCopy.findIndex((item) => item._id === itemId);
+    widgetItemsCopy.splice(index, 1);
+    setWidgetData({
+      ...widgetData,
+      items: widgetItemsCopy,
+    });
   };
 
   const handleSubmit = (body: string) => {
