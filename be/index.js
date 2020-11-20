@@ -178,6 +178,17 @@ async function run() {
     }
   });
 
+  app.delete("/api/notes/:id", async function (req, res) {
+    const { id } = req.params;
+    const { user } = await getDecodedToken(req.cookies.token);
+
+    await db
+      .collection("notes")
+      .deleteOne({ _id: ObjectId(id), user: ObjectId(user) });
+
+    return res.json();
+  });
+
   app.get("/api/widgets/:id", async function (req, res) {
     const { user } = await getDecodedToken(req.cookies.token);
     const { id } = req.params;
