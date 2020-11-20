@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Header } from "./header/Header";
-import { updateNote } from "./notes/NotesApi";
+import { removeNote, updateNote } from "./notes/NotesApi";
 import TextBox from "./textbox/TextBox";
 import { ListWidget, ListWidgetProps } from "./widgets/ListWidget/ListWidget";
 import { getWidget, submitWidgetNote, WidgetData } from "./widgets/WidgetsApi";
@@ -33,6 +33,10 @@ export const ViewWidgetPage: React.FC<ViewWidgetPageProps> = (props) => {
     updateNote(item);
   };
 
+  const handleItemDeleted = (itemId?: string) => {
+    removeNote(itemId);
+  };
+
   const handleSubmit = (body: string) => {
     submitWidgetNote(widgetId, body);
   };
@@ -40,7 +44,11 @@ export const ViewWidgetPage: React.FC<ViewWidgetPageProps> = (props) => {
   return (
     <div className="view-widget-page">
       <Header title={widgetData.widget.name} />
-      <ListWidget items={widgetData.items} onItemChanged={handleItemChanged} />
+      <ListWidget
+        items={widgetData.items}
+        onItemChanged={handleItemChanged}
+        onItemDeleted={handleItemDeleted}
+      />
       <TextBox onSubmit={handleSubmit} />
     </div>
   );

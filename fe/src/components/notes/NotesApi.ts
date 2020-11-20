@@ -17,3 +17,10 @@ export async function updateNote(note: Partial<Note>): Promise<Note> {
   });
   return res.data;
 }
+
+export async function removeNote(noteId?: string) {
+  if (!noteId) {
+    return;
+  }
+  await axios.delete(`/api/notes/${noteId}`);
+}

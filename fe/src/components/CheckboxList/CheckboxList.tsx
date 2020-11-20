@@ -1,5 +1,4 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
@@ -18,11 +17,13 @@ export type CheckboxItem = {
 export type CheckboxListProps = {
   items: CheckboxItem[];
   onChecked: (item: CheckboxItem) => void;
+  onDelete: (itemId?: string) => void;
 };
 
 export const CheckboxList: React.FC<CheckboxListProps> = ({
   items,
   onChecked,
+  onDelete,
 }) => {
   const handleToggle = (item: CheckboxItem) => () => {
     onChecked(item);
@@ -34,13 +35,7 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
         const labelId = `checkbox-list-label-${item._id}`;
 
         return (
-          <ListItem
-            key={item._id}
-            role={undefined}
-            dense
-            button
-            onClick={handleToggle(item)}
-          >
+          <ListItem key={item._id} role={undefined} dense button>
             <ListItemIcon>
               <Checkbox
                 edge="start"
@@ -48,11 +43,18 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
                 tabIndex={-1}
                 disableRipple
                 inputProps={{ "aria-labelledby": labelId }}
+                onClick={handleToggle(item)}
               />
             </ListItemIcon>
             <ListItemText id={labelId} primary={item.body} />
             <ListItemSecondaryAction>
-              <IconButton edge="end" aria-label="delete">
+              <IconButton
+                edge="end"
+                aria-label="delete"
+                onClick={() => {
+                  onDelete(item._id);
+                }}
+              >
                 <DeleteIcon />
               </IconButton>
             </ListItemSecondaryAction>

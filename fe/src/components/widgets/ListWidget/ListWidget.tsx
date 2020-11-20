@@ -6,6 +6,7 @@ import "./ListWidget.scss";
 export type ListWidgetProps = {
   items: Note[];
   onItemChanged: (item: Partial<Note>) => void;
+  onItemDeleted: (itemId?: string) => void;
 };
 
 export const ListWidget: React.FC<ListWidgetProps> = (props) => {
@@ -18,7 +19,11 @@ export const ListWidget: React.FC<ListWidgetProps> = (props) => {
 
   return (
     <div className="list-widget">
-      <CheckboxList onChecked={handleItemChecked} items={props.items} />
+      <CheckboxList
+        onChecked={handleItemChecked}
+        onDelete={props.onItemDeleted}
+        items={props.items}
+      />
     </div>
   );
 };
