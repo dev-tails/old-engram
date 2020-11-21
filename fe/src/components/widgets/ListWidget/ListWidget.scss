@@ -12,6 +12,10 @@
     .list-item-content {
       display: table-cell;
       width: 100%;
+
+      .list-item-text {
+        word-break: break-all;
+      }
     }
 
     .list-item-secondary {
