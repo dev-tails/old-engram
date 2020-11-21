@@ -11,13 +11,14 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     flexGrow: 1,
   },
+  toolbar: theme.mixins.toolbar,
 }));
 
 export const Header: React.FC<HeaderProps> = ({ title }) => {
   const classes = useStyles();
 
   return (
-    <AppBar position="fixed">
+    <AppBar>
       <Toolbar>
         <Typography variant="h6" className={classes.title}>
           {title}

@@ -1,26 +1,6 @@
-.notes {
-  position: absolute;
+.notes-page {
+  position: fixed;
   top: 64px;
   bottom: 52px;
-  width: 100%;
-  overflow-y: scroll;
-
-  .note {
-    max-width: 100%;
-    word-break: break-word;
-    word-wrap: break-word;
-  }
-
-  .note-body {
-    padding: 6px;
-    display: inline-block;
-    background-color: #fff;
-    border-bottom: 1px solid black;
-    width: 100%;
-    white-space: pre-wrap;
-  }
-}
-
-.notes-page {
   width: 100%;
 }
