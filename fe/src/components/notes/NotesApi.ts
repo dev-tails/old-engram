@@ -6,6 +6,15 @@ export type Note = {
   checked?: boolean;
 };
 
+export async function createNote(note: Partial<Note>) {
+  const res = await axios.post(
+    "/api/notes",
+    { ...note },
+    { withCredentials: true }
+  );
+  return res.data;
+}
+
 export async function getNotes(): Promise<Note[]> {
   const res = await axios.get("/api/notes", { withCredentials: true });
   return res.data;

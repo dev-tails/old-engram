@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./NotesPage.scss";
 import TextBox from "../textbox/TextBox";
-import { Note, getNotes, removeNote, updateNote } from "./NotesApi";
+import { Note, getNotes, removeNote, updateNote, createNote } from "./NotesApi";
 import { Header } from "../header/Header";
 import { ListWidget } from "../widgets/ListWidget/ListWidget";
 
@@ -22,10 +22,8 @@ export default function NotesPage() {
   }, [state]);
 
   const handleSubmit = async (note: string) => {
-    const newNote = { body: note };
+    const newNote = await createNote({ body: note });
     setNotes([...notes, newNote]);
-
-    await axios.post("/api/notes", newNote, { withCredentials: true });
   };
 
   const handleItemDeleted = (itemId?: string) => {

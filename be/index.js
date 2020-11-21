@@ -167,7 +167,11 @@ async function run() {
         .collection("notes")
         .insertOne({ user: ObjectId(user), body: req.body.body });
 
-      return res.json({ _id: insertOpResult.insertedId, body: req.body.body });
+      const newNote = await db.collection("notes").findOne({
+        _id: insertOpResult.insertedId,
+      });
+
+      return res.json(newNote);
     } catch (err) {
       console.error(err);
       if (err instanceof UnauthorizedError) {
