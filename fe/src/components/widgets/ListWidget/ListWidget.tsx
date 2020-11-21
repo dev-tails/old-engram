@@ -38,7 +38,7 @@ export const ListWidget: React.FC<ListWidgetProps> = ({
 
   return (
     <div className="list-widget">
-      {items.map((item) => {
+      {items.map((item, index) => {
         if (!item.body) {
           return null;
         }
@@ -51,6 +51,7 @@ export const ListWidget: React.FC<ListWidgetProps> = ({
             key={item._id}
             className="list-item"
             onClick={handleItemClicked.bind(this, item)}
+            ref={index === items.length - 1 ? lastItemRef : null}
           >
             <div className="list-item-content">
               <div
