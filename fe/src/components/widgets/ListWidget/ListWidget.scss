@@ -7,10 +7,20 @@
     width: 100%;
     border-bottom: 1px solid black;
     padding: 8px;
+    display: table;
+
+    .list-item-content {
+      display: table-cell;
+      width: 100%;
+    }
 
     .list-item-secondary {
       font-size: 0.75em;
       color: gray;
+    }
+
+    .list-item-actions {
+      display: table-cell;
     }
   }
 }
