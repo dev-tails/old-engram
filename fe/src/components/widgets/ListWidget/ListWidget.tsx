@@ -64,7 +64,13 @@ export const ListWidget: React.FC<ListWidgetProps> = ({
                   />
                 </ListItemIcon>
               )}
-              <ListItemText id={labelId} primary={item.body} />
+              <ListItemText
+                id={labelId}
+                primary={item.body}
+                primaryTypographyProps={{
+                  style: { whiteSpace: "break-spaces" },
+                }}
+              />
               <ListItemSecondaryAction>
                 <IconButton
                   edge="end"
