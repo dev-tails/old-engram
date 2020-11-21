@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import "./NotesPage.scss";
 import TextBox from "../textbox/TextBox";
 import { Note, getNotes, removeNote, updateNote, createNote } from "./NotesApi";
