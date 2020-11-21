@@ -4,6 +4,7 @@ import { dateFromObjectId } from "../../../utils/ObjectId";
 import "./ListWidget.scss";
 import { Delete } from "@material-ui/icons";
 import { IconButton } from "@material-ui/core";
+import Autolinker from "autolinker";
 
 export type ListWidgetProps = {
   items: Note[];
@@ -52,7 +53,10 @@ export const ListWidget: React.FC<ListWidgetProps> = ({
             onClick={handleItemClicked.bind(this, item)}
           >
             <div className="list-item-content">
-              <div className="list-item-text">{item.body}</div>
+              <div
+                className="list-item-text"
+                dangerouslySetInnerHTML={{ __html: Autolinker.link(item.body) }}
+              ></div>
               <div className="list-item-secondary">{itemDateString}</div>
             </div>
             <div

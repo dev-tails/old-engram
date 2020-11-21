@@ -7,6 +7,7 @@
     "@material-ui/icons": "^4.9.1",
     "@types/react": "^16.9.53",
     "@types/react-router-dom": "^5.1.6",
+    "autolinker": "^3.14.2",
     "axios": "^0.20.0",
     "cra-template-typescript": "1.0.3",
     "js-cookie": "^2.2.1",
