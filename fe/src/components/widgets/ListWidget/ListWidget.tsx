@@ -1,13 +1,14 @@
 import React, { useEffect, useRef } from "react";
-import { Note } from "../../notes/NotesApi";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import ListItemText from "@material-ui/core/ListItemText";
-import Checkbox from "@material-ui/core/Checkbox";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItem from "@material-ui/core/ListItem";
+import List from "@material-ui/core/List";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
+import Checkbox from "@material-ui/core/Checkbox";
+import { Note } from "../../notes/NotesApi";
+import { dateFromObjectId } from "../../../utils/ObjectId";
 import "./ListWidget.scss";
 
 export type ListWidgetProps = {
@@ -43,6 +44,8 @@ export const ListWidget: React.FC<ListWidgetProps> = ({
       <List>
         {items.map((item, index) => {
           const labelId = `checkbox-list-label-${item._id}`;
+          const itemDate = dateFromObjectId(item._id);
+          const itemDateString = `${itemDate?.toLocaleDateString()} ${itemDate?.toLocaleTimeString()}`;
 
           return (
             <ListItem
@@ -67,6 +70,7 @@ export const ListWidget: React.FC<ListWidgetProps> = ({
               <ListItemText
                 id={labelId}
                 primary={item.body}
+                secondary={itemDateString}
                 primaryTypographyProps={{
                   style: {
                     whiteSpace: "break-spaces",
