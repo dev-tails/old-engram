@@ -21,15 +21,15 @@ export default function LoginPage(props: LoginPageProps) {
     });
   };
 
-  const handleUsernameChanged: React.InputHTMLAttributes<
-    HTMLInputElement
-  >["onChange"] = (event) => {
+  const handleUsernameChanged: React.InputHTMLAttributes<HTMLInputElement>["onChange"] = (
+    event
+  ) => {
     setUsername(event.target.value);
   };
 
-  const handlePasswordChanged: React.InputHTMLAttributes<
-    HTMLInputElement
-  >["onChange"] = (event) => {
+  const handlePasswordChanged: React.InputHTMLAttributes<HTMLInputElement>["onChange"] = (
+    event
+  ) => {
     setPassword(event.target.value);
   };
 
@@ -39,16 +39,16 @@ export default function LoginPage(props: LoginPageProps) {
       <div className="bottom-box">
         <input
           type="text"
-          autoComplete="false"
-          autoCapitalize="false"
+          autoComplete="off"
+          autoCapitalize="none"
           autoFocus={true}
           placeholder="username"
           onChange={handleUsernameChanged}
         ></input>
         <input
           type="password"
-          autoComplete="false"
-          autoCapitalize="false"
+          autoComplete="off"
+          autoCapitalize="none"
           placeholder="password"
           onChange={handlePasswordChanged}
         ></input>
