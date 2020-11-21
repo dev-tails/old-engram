@@ -2,4 +2,15 @@
   overflow-y: scroll;
   width: 100%;
   height: 100%;
+
+  .list-item {
+    width: 100%;
+    border-bottom: 1px solid black;
+    padding: 8px;
+
+    .list-item-secondary {
+      font-size: 0.75em;
+      color: gray;
+    }
+  }
 }
