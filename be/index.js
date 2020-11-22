@@ -1,14 +1,12 @@
 import express from "express";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
-import {
-  AuthMiddleware,
-  getDecodedToken,
-} from "./middleware/AuthMiddleware.js";
+import { AuthMiddleware } from "./middleware/AuthMiddleware.js";
 import { getEnv } from "./env.js";
 import { initializeUserRouter } from "./routes/UsersRouter.js";
 import { initializeNotesRouter } from "./routes/NotesRouter.js";
-import { initializeDb, ObjectId } from "./Database.js";
+import { initializeWidgetsRouter } from "./routes/WidgetsRouter.js";
+import { initializeDb } from "./Database.js";
 import { DatabaseMiddleware } from "./middleware/DatabaseMiddleware.js";
 
 const { origin, port } = getEnv();
@@ -44,50 +42,7 @@ async function run() {
   app.use("/api", apiRouter);
   apiRouter.use("/users", initializeUserRouter());
   apiRouter.use("/notes", initializeNotesRouter());
-
-  app.get("/api/widgets/:id", async function (req, res) {
-    const { user } = await getDecodedToken(req.cookies.token);
-    const { id } = req.params;
-
-    const widget = await db
-      .collection("widgets")
-      .findOne({ _id: ObjectId(id), user: ObjectId(user) });
-
-    const notes = await db
-      .collection("notes")
-      .find({
-        ...widget.filter,
-        user: ObjectId(user),
-      })
-      .sort({ _id: -1 })
-      .toArray();
-
-    return res.json({
-      widget,
-      items: notes.reverse(),
-    });
-  });
-
-  app.post("/api/widgets/:id", async function (req, res) {
-    const { user } = await getDecodedToken(req.cookies.token);
-    const { id } = req.params;
-
-    const widget = await db
-      .collection("widgets")
-      .findOne({ _id: ObjectId(id), user: ObjectId(user) });
-
-    const insertOpResult = await db.collection("notes").insertOne({
-      user: ObjectId(user),
-      ...widget.filter,
-      body: req.body.body,
-    });
-
-    const newNote = await db.collection("notes").findOne({
-      _id: insertOpResult.insertedId,
-    });
-
-    return res.json(newNote);
-  });
+  apiRouter.use("/widgets", initializeWidgetsRouter());
 
   app.use(function (err, req, res, next) {
     if (err.name === "UnauthorizedError") {
