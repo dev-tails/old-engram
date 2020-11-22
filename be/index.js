@@ -6,6 +6,7 @@ import { getEnv } from "./env.js";
 import { initializeUserRouter } from "./routes/UsersRouter.js";
 import { initializeNotesRouter } from "./routes/NotesRouter.js";
 import { initializeWidgetsRouter } from "./routes/WidgetsRouter.js";
+import { initializeApiKeysRouter } from "./routes/APIKeysRouter.js";
 import { initializeDb } from "./Database.js";
 import { DatabaseMiddleware } from "./middleware/DatabaseMiddleware.js";
 import { ErrorsMiddleware } from "./middleware/ErrorsMiddleware.js";
@@ -44,6 +45,7 @@ async function run() {
   apiRouter.use("/users", initializeUserRouter());
   apiRouter.use("/notes", initializeNotesRouter());
   apiRouter.use("/widgets", initializeWidgetsRouter());
+  apiRouter.use("/keys", initializeApiKeysRouter());
 
   app.use(ErrorsMiddleware);
 
