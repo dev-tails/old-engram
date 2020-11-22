@@ -1,6 +1,8 @@
+import bcrypt from "bcrypt";
 import express from "express";
 import jwt from "jsonwebtoken";
 import { getEnv } from "../env.js";
+import { AuthAPIKeyMiddleware } from "../middleware/AuthAPIKeyMiddleware.js";
 import { AuthRequiredMiddleware } from "../middleware/AuthRequiredMiddleware.js";
 
 async function setToken(res, user) {
@@ -29,6 +31,7 @@ export function initializeUserRouter() {
   const router = express.Router();
 
   router.post("/signup", async function (req, res) {
+    const { db } = req;
     const { username, password } = req.body;
 
     const User = db.collection("users");
@@ -57,6 +60,7 @@ export function initializeUserRouter() {
   });
 
   router.post("/login", async function (req, res) {
+    const { db } = req;
     const { username, password } = req.body;
     const user = await db.collection("users").findOne({
       username,
@@ -83,11 +87,16 @@ export function initializeUserRouter() {
     }
   });
 
-  router.get("/me", AuthRequiredMiddleware, async function (req, res) {
-    res.json({
-      user: req.user,
-    });
-  });
+  router.get(
+    "/me",
+    AuthAPIKeyMiddleware,
+    AuthRequiredMiddleware,
+    async function (req, res) {
+      res.json({
+        user: req.user,
+      });
+    }
+  );
 
   return router;
 }
