@@ -9,6 +9,14 @@ export function initializeZapierRouter() {
   router.use(AuthAPIKeyMiddleware);
   router.use(AuthRequiredMiddleware);
 
+  router.get("/notes", async function (req, res) {
+    res.json([
+      {
+        body: "This is a sample note",
+      },
+    ]);
+  });
+
   router.post("/notes", async function (req, res) {
     const { user, db } = req;
 
@@ -33,7 +41,7 @@ export function initializeZapierRouter() {
       type,
     });
 
-    res.json();
+    res.json({});
   });
 
   router.post("/hooks/unsubscribe", async function (req, res) {
@@ -54,7 +62,7 @@ export function initializeZapierRouter() {
       _id: hook._id,
     });
 
-    res.json();
+    res.json({});
   });
 
   return router;
