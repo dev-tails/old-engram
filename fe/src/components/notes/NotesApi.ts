@@ -1,4 +1,5 @@
 import axios from "axios";
+import * as Api from "../../Api";
 
 export type Note = {
   _id?: string;
@@ -16,7 +17,7 @@ export async function createNote(note: Partial<Note>) {
 }
 
 export async function getNotes(): Promise<Note[]> {
-  const res = await axios.get("/api/notes", { withCredentials: true });
+  const res = await Api.get("/api/notes", { withCredentials: true });
   return res.data;
 }
 
