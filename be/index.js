@@ -8,6 +8,7 @@ import { initializeNotesRouter } from "./routes/NotesRouter.js";
 import { initializeWidgetsRouter } from "./routes/WidgetsRouter.js";
 import { initializeDb } from "./Database.js";
 import { DatabaseMiddleware } from "./middleware/DatabaseMiddleware.js";
+import { ErrorsMiddleware } from "./middleware/ErrorsMiddleware.js";
 
 const { origin, port } = getEnv();
 
@@ -44,14 +45,7 @@ async function run() {
   apiRouter.use("/notes", initializeNotesRouter());
   apiRouter.use("/widgets", initializeWidgetsRouter());
 
-  app.use(function (err, req, res, next) {
-    if (err.name === "UnauthorizedError") {
-      res.clearCookie("token");
-      return res.sendStatus(401);
-    }
-    console.error(err);
-    res.status(500).json({ errors: [err] });
-  });
+  app.use(ErrorsMiddleware);
 
   app.listen(port);
 }
