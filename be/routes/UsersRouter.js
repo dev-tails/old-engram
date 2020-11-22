@@ -8,9 +8,11 @@ import { AuthRequiredMiddleware } from "../middleware/AuthRequiredMiddleware.js"
 async function setToken(res, user) {
   const { jwtSecret } = getEnv();
   return new Promise((resolve, reject) => {
+    const expiresInSeconds = 60 * 60 * 24 * 30; // 30 days
+
     jwt.sign(
       {
-        exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30,
+        expiresIn: expiresInSeconds,
         user,
       },
       jwtSecret,
@@ -19,7 +21,10 @@ async function setToken(res, user) {
           return reject(err);
         }
         res.cookie("token", token, {
-          maxAge: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+          maxAge: expiresInSeconds * 1000,
+          secure: true,
+          httpOnly: true,
+          sameSite: true,
         });
         resolve();
       }
