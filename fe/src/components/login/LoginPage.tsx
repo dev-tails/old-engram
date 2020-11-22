@@ -10,13 +10,13 @@ export default function LoginPage(props: LoginPageProps) {
   const [username, setUsername] = useState("");
 
   const handleSignIn = () => {
-    axios.post("/api/login", { username, password }).then((res) => {
+    axios.post("/api/users/login", { username, password }).then((res) => {
       window.location.href = "/notes";
     });
   };
 
   const handleSignUp = () => {
-    axios.post("/api/signup", { username, password }).then((res) => {
+    axios.post("/api/users/signup", { username, password }).then((res) => {
       window.location.href = "/notes";
     });
   };

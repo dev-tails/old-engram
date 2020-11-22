@@ -11,6 +11,7 @@ import {
   getDecodedToken,
 } from "./middleware/AuthMiddleware.js";
 import { getEnv } from "./env.js";
+import { initializeUserRouter } from "./routes/UsersRouter.js";
 
 const MongoClient = mongodb.MongoClient;
 const ObjectId = mongodb.ObjectId;
@@ -65,66 +66,10 @@ async function run() {
   app.use(cookieParser());
   app.use(AuthMiddleware);
 
-  app.get("/api/users/me", async function (req, res) {
-    res.json({
-      user: req.user,
-    });
-  });
+  const apiRouter = express.Router();
 
-  app.post("/api/signup", async function (req, res) {
-    const { username, password } = req.body;
-
-    const User = db.collection("users");
-    const existingUser = await User.findOne({
-      username,
-    });
-    if (existingUser) {
-      return res.status(409).json({
-        errors: [new Error("username already exists")],
-      });
-    }
-
-    const numberOfRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, numberOfRounds);
-
-    const insertOpResult = await User.insertOne({
-      username,
-      hashedPassword,
-    });
-
-    await setToken(res, String(insertOpResult.insertedId));
-
-    res.json({
-      success: true,
-    });
-  });
-
-  app.post("/api/login", async function (req, res) {
-    const { username, password } = req.body;
-    const user = await db.collection("users").findOne({
-      username,
-    });
-
-    if (!user) {
-      return res.sendStatus(400);
-    }
-
-    let passwordsMatch = false;
-
-    if (user.hashedPassword) {
-      passwordsMatch = await bcrypt.compare(password, user.hashedPassword);
-    }
-
-    if (passwordsMatch) {
-      await setToken(res, String(user._id));
-
-      res.json({
-        success: true,
-      });
-    } else {
-      return res.sendStatus(400);
-    }
-  });
+  app.use("/api", apiRouter);
+  apiRouter.use("/users", initializeUserRouter());
 
   app.get("/api/notes", async function (req, res) {
     const { user } = await getDecodedToken(req.cookies.token);
