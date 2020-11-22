@@ -1,22 +1,21 @@
-const express = require("express");
-const mongodb = require("mongodb");
+import express from "express";
+import mongodb from "mongodb";
+import dotenv from "dotenv";
+import bodyParser from "body-parser";
+import jwt from "jsonwebtoken";
+import cookieParser from "cookie-parser";
+import bcrypt from "bcrypt";
+import {
+  AuthMiddleware,
+  UnauthorizedError,
+  getDecodedToken,
+} from "./middleware/AuthMiddleware.js";
+import { getEnv } from "./env.js";
+
 const MongoClient = mongodb.MongoClient;
 const ObjectId = mongodb.ObjectId;
-const dotenv = require("dotenv");
-const bodyParser = require("body-parser");
-const jwt = require("jsonwebtoken");
-const cookieParser = require("cookie-parser");
-const bcrypt = require("bcrypt");
 
-dotenv.config();
-
-const origin = process.env.ORIGIN;
-const url = process.env.DB_URL;
-const port = Number(process.env.PORT) || 4000;
-const jwtSecret = process.env.JWT_SECRET;
-if (!jwtSecret) {
-  throw new Error("Please set JWT_SECRET in .env file");
-}
+const { origin, url, port, jwtSecret } = getEnv();
 
 run();
 
@@ -64,6 +63,13 @@ async function run() {
 
   app.use(bodyParser.json());
   app.use(cookieParser());
+  app.use(AuthMiddleware);
+
+  app.get("/api/users/me", async function (req, res) {
+    res.json({
+      user: req.user,
+    });
+  });
 
   app.post("/api/signup", async function (req, res) {
     const { username, password } = req.body;
@@ -247,22 +253,4 @@ async function run() {
   });
 
   app.listen(port);
-}
-
-class UnauthorizedError extends Error {
-  constructor() {
-    super();
-    this.name = "UnauthorizedError";
-  }
-}
-
-function getDecodedToken(token) {
-  return new Promise((resolve, reject) => {
-    jwt.verify(token, jwtSecret, function (err, decoded) {
-      if (err) {
-        reject(new UnauthorizedError());
-      }
-      resolve(decoded);
-    });
-  });
 }
