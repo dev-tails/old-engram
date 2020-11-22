@@ -11,13 +11,16 @@ export function initializeZapierRouter() {
 
   router.post("/notes", async function (req, res) {
     const { user, db } = req;
-    const noteBody = req.body.inputData.body;
 
-    await db
+    const insertOpResult = await db
       .collection("notes")
-      .insertOne({ user: ObjectId(user), body: noteBody });
+      .insertOne({ user: ObjectId(user), body: req.body.body });
 
-    res.json();
+    const newNote = await db.collection("notes").findOne({
+      _id: insertOpResult.insertedId,
+    });
+
+    res.json(newNote);
   });
 
   router.post("/hooks/subscribe", async function (req, res) {
