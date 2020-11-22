@@ -7,19 +7,20 @@ export function initializeZapierRouter() {
   const router = express.Router();
   router.use(AuthRequiredMiddleware);
 
-  router.post("/subscribe", async function (req, res) {
+  router.post("/hooks/subscribe", async function (req, res) {
     const { user, db, body } = req;
-    const { hookUrl } = body;
+    const { hookUrl, type } = body;
 
     await db.collection("zapier-hooks").insertOne({
       user: ObjectId(user),
       hookUrl,
+      type,
     });
 
     res.json();
   });
 
-  router.post("/unsubscribe", async function (req, res) {
+  router.post("/hooks/unsubscribe", async function (req, res) {
     const { user, db, body } = req;
     const { hookUrl } = body;
 
