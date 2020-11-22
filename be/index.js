@@ -1,6 +1,7 @@
-import express from "express";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
+import express from "express";
+import morgan from "morgan";
 import { AuthMiddleware } from "./middleware/AuthMiddleware.js";
 import { getEnv } from "./env.js";
 import { initializeUserRouter } from "./routes/UsersRouter.js";
@@ -35,6 +36,7 @@ async function run() {
     next();
   });
 
+  app.use(morgan("combined"));
   app.use(bodyParser.json());
   app.use(cookieParser());
   app.use(AuthMiddleware);
