@@ -1,4 +1,5 @@
 import express from "express";
+import { ObjectId } from "../Database.js";
 import { AuthRequiredMiddleware } from "../middleware/AuthRequiredMiddleware.js";
 import { generateAPIKey } from "../vendor/zapier/Zapier.js";
 
@@ -12,7 +13,7 @@ export function initializeApiKeysRouter() {
     const key = generateAPIKey();
 
     await db.collection("keys").insertOne({
-      user,
+      user: ObjectId(user),
       key,
     });
 

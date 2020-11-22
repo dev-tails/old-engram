@@ -1,14 +1,14 @@
 import { UnauthorizedError } from "./AuthMiddleware.js";
 
-export function AuthAPIKeyMiddleware(req, res, next) {
+export async function AuthAPIKeyMiddleware(req, res, next) {
   const { user, db } = req;
   if (user) {
     return next();
   }
 
-  const apiKey = req.headers["X-API-KEY"];
+  const apiKey = req.headers["x-api-key"];
 
-  const keyDocument = db.collection("keys").findOne({
+  const keyDocument = await db.collection("keys").findOne({
     key: apiKey,
   });
 
