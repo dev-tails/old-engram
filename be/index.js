@@ -1,22 +1,18 @@
 import express from "express";
-import mongodb from "mongodb";
-import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
-import bcrypt from "bcrypt";
 import {
   AuthMiddleware,
-  UnauthorizedError,
   getDecodedToken,
 } from "./middleware/AuthMiddleware.js";
 import { getEnv } from "./env.js";
 import { initializeUserRouter } from "./routes/UsersRouter.js";
+import { initializeNotesRouter } from "./routes/NotesRouter.js";
+import { initializeDb, ObjectId } from "./Database.js";
+import { DatabaseMiddleware } from "./middleware/DatabaseMiddleware.js";
 
-const MongoClient = mongodb.MongoClient;
-const ObjectId = mongodb.ObjectId;
-
-const { origin, url, port, jwtSecret } = getEnv();
+const { origin, port, jwtSecret } = getEnv();
 
 run();
 
@@ -42,9 +38,7 @@ async function setToken(res, user) {
 }
 
 async function run() {
-  const client = await MongoClient.connect(url);
-  const db = client.db();
-  console.log(`Connected`);
+  const db = await initializeDb();
 
   const app = express();
 
@@ -65,84 +59,13 @@ async function run() {
   app.use(bodyParser.json());
   app.use(cookieParser());
   app.use(AuthMiddleware);
+  app.use(DatabaseMiddleware);
 
   const apiRouter = express.Router();
 
   app.use("/api", apiRouter);
   apiRouter.use("/users", initializeUserRouter());
-
-  app.get("/api/notes", async function (req, res) {
-    const { user } = await getDecodedToken(req.cookies.token);
-
-    const notes = await db
-      .collection("notes")
-      .find({ user: ObjectId(user), body: { $ne: "" } })
-      .sort({ _id: -1 })
-      .toArray();
-
-    return res.json(notes.reverse());
-  });
-
-  app.put("/api/notes/:id", async function (req, res) {
-    const { id } = req.params;
-    const { user } = await getDecodedToken(req.cookies.token);
-    const update = req.body;
-
-    const Note = db.collection("notes");
-    const note = await Note.findOne({
-      _id: ObjectId(id),
-    });
-
-    if (!note || String(note.user) !== user) {
-      throw new UnauthorizedError();
-    }
-
-    const updatedNote = await Note.updateOne(
-      {
-        _id: ObjectId(id),
-      },
-      {
-        $set: {
-          checked: update.checked,
-        },
-      }
-    );
-    return res.json(updatedNote);
-  });
-
-  app.post("/api/notes", async function (req, res) {
-    try {
-      const { user } = await getDecodedToken(req.cookies.token);
-
-      const insertOpResult = await db
-        .collection("notes")
-        .insertOne({ user: ObjectId(user), body: req.body.body });
-
-      const newNote = await db.collection("notes").findOne({
-        _id: insertOpResult.insertedId,
-      });
-
-      return res.json(newNote);
-    } catch (err) {
-      console.error(err);
-      if (err instanceof UnauthorizedError) {
-        res.sendStatus(401);
-      } else {
-        res.json({ errors: [err] });
-      }
-    }
-  });
-
-  app.delete("/api/notes/:id", async function (req, res) {
-    const { id } = req.params;
-    const { user } = await getDecodedToken(req.cookies.token);
-
-    await db
-      .collection("notes")
-      .deleteOne({ _id: ObjectId(id), user: ObjectId(user) });
-
-    return res.json();
-  });
+  apiRouter.use("/notes", initializeNotesRouter());
 
   app.get("/api/widgets/:id", async function (req, res) {
     const { user } = await getDecodedToken(req.cookies.token);
