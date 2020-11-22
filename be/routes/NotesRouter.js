@@ -1,11 +1,9 @@
 import express from "express";
 import { ObjectId } from "../Database.js";
-import { AuthAPIKeyMiddleware } from "../middleware/AuthAPIKeyMiddleware.js";
 import { AuthRequiredMiddleware } from "../middleware/AuthRequiredMiddleware.js";
 
 export function initializeNotesRouter() {
   const router = express.Router();
-  router.use(AuthAPIKeyMiddleware);
   router.use(AuthRequiredMiddleware);
 
   router.get("", async function (req, res) {
