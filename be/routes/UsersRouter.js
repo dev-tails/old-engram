@@ -1,5 +1,29 @@
 import express from "express";
+import jwt from "jsonwebtoken";
+import { getEnv } from "../env.js";
 import { AuthRequiredMiddleware } from "../middleware/AuthRequiredMiddleware.js";
+
+async function setToken(res, user) {
+  const { jwtSecret } = getEnv();
+  return new Promise((resolve, reject) => {
+    jwt.sign(
+      {
+        exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30,
+        user,
+      },
+      jwtSecret,
+      function (err, token) {
+        if (err) {
+          return reject(err);
+        }
+        res.cookie("token", token, {
+          maxAge: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+        });
+        resolve();
+      }
+    );
+  });
+}
 
 export function initializeUserRouter() {
   const router = express.Router();

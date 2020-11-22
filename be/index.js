@@ -1,6 +1,5 @@
 import express from "express";
 import bodyParser from "body-parser";
-import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
 import {
   AuthMiddleware,
@@ -12,30 +11,9 @@ import { initializeNotesRouter } from "./routes/NotesRouter.js";
 import { initializeDb, ObjectId } from "./Database.js";
 import { DatabaseMiddleware } from "./middleware/DatabaseMiddleware.js";
 
-const { origin, port, jwtSecret } = getEnv();
+const { origin, port } = getEnv();
 
 run();
-
-async function setToken(res, user) {
-  return new Promise((resolve, reject) => {
-    jwt.sign(
-      {
-        exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30,
-        user,
-      },
-      jwtSecret,
-      function (err, token) {
-        if (err) {
-          return reject(err);
-        }
-        res.cookie("token", token, {
-          maxAge: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
-        });
-        resolve();
-      }
-    );
-  });
-}
 
 async function run() {
   const db = await initializeDb();
