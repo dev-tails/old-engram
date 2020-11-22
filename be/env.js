@@ -17,5 +17,6 @@ export function initializeEnv() {
     url: process.env.DB_URL,
     port: Number(process.env.PORT) || 4000,
     jwtSecret: process.env.JWT_SECRET,
+    production: process.env.NODE_ENV === "production",
   };
 }

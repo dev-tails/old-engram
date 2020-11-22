@@ -6,7 +6,7 @@ import { AuthAPIKeyMiddleware } from "../middleware/AuthAPIKeyMiddleware.js";
 import { AuthRequiredMiddleware } from "../middleware/AuthRequiredMiddleware.js";
 
 async function setToken(res, user) {
-  const { jwtSecret } = getEnv();
+  const { jwtSecret, production } = getEnv();
   return new Promise((resolve, reject) => {
     const expiresInSeconds = 60 * 60 * 24 * 30; // 30 days
 
@@ -22,7 +22,7 @@ async function setToken(res, user) {
         }
         res.cookie("token", token, {
           maxAge: expiresInSeconds * 1000,
-          secure: true,
+          secure: production,
           httpOnly: true,
           sameSite: true,
         });
