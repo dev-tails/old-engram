@@ -1,6 +1,7 @@
 import express from "express";
 import { ObjectId } from "../Database.js";
 import { AuthRequiredMiddleware } from "../middleware/AuthRequiredMiddleware.js";
+import { handleNewNote } from "../vendor/zapier/Zapier.js";
 
 export function initializeNotesRouter() {
   const router = express.Router();
@@ -56,6 +57,8 @@ export function initializeNotesRouter() {
       const newNote = await db.collection("notes").findOne({
         _id: insertOpResult.insertedId,
       });
+
+      await handleNewNote(db, newNote, user);
 
       return res.json(newNote);
     } catch (err) {
