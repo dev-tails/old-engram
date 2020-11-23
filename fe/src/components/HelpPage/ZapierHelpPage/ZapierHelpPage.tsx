@@ -86,11 +86,11 @@ export const ZapierHelpPage: React.FC<ZapierHelpPageProps> = (props) => {
           </li>
           <li>
             Click "Choose Account"
-            <img src={ZapierSignInImage} />
+            <img alt="Zapier Choose Account Page" src={ZapierSignInImage} />
           </li>
           <li>
             Paste API key and click "Yes, continue"
-            <img src={ApiKeyImage} />
+            <img alt="Enter API Key Modal" src={ApiKeyImage} />
           </li>
         </ol>
       </div>
