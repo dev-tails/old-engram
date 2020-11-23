@@ -2,7 +2,8 @@
   box-sizing: border-box;
 }
 
-textarea:focus, input:focus {
+textarea:focus,
+input:focus {
   outline: none;
 }
 
@@ -13,4 +14,10 @@ textarea:focus, input:focus {
 
 body {
   overflow: hidden;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 8px;
 }
