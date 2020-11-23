@@ -1,4 +1,16 @@
 .zapier-help-page {
-  form {
+  .keys {
+    display: table;
+    width: 100%;
+
+    td {
+      padding: 4px;
+    }
+
+    .key {
+      input {
+        width: 100%;
+      }
+    }
   }
 }
