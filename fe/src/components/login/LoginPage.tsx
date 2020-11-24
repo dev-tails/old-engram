@@ -3,6 +3,9 @@ import axios from "axios";
 import "./LoginPage.scss";
 import { Header } from "../header/Header";
 import { useHistory } from "react-router-dom";
+import { ListWidget } from "../widgets/ListWidget/ListWidget";
+import { Note } from "../notes/NotesApi";
+import { objectIdFromDate } from "../../utils/ObjectId";
 
 export type LoginPageProps = {};
 
@@ -10,11 +13,28 @@ export default function LoginPage(props: LoginPageProps) {
   const history = useHistory();
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [errors, setErrors] = useState<Note[]>([]);
 
   const handleSignIn = () => {
-    axios.post("/api/users/login", { username, password }).then((res) => {
-      history.push("/notes");
-    });
+    axios
+      .post("/api/users/login", { username, password })
+      .then((res) => {
+        history.push("/notes");
+      })
+      .catch((err) => {
+        let errorMessage = err.message;
+        if (err.response.status === 400) {
+          errorMessage = "The username or password is incorrect";
+        }
+
+        setErrors([
+          ...errors,
+          {
+            _id: objectIdFromDate(new Date()),
+            body: errorMessage,
+          },
+        ]);
+      });
   };
 
   const handleSignUp = () => {
@@ -38,6 +58,7 @@ export default function LoginPage(props: LoginPageProps) {
   return (
     <div className="login-page">
       <Header title="Engram" />
+      <ListWidget items={errors} hideDelete={true} />
       <div className="bottom-box">
         <input
           type="text"
