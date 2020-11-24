@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import express from "express";
 import jwt from "jsonwebtoken";
+import { ObjectId } from "../Database.js";
 import { getEnv } from "../env.js";
 import { AuthAPIKeyMiddleware } from "../middleware/AuthAPIKeyMiddleware.js";
 import { AuthRequiredMiddleware } from "../middleware/AuthRequiredMiddleware.js";
@@ -97,8 +98,15 @@ export function initializeUserRouter() {
     AuthAPIKeyMiddleware,
     AuthRequiredMiddleware,
     async function (req, res) {
+      const { db, user } = req;
+
+      const userDocument = await db.collection("users").findOne({
+        _id: ObjectId(user),
+      });
+
       res.json({
-        user: req.user,
+        _id: userDocument._id,
+        username: userDocument.username,
       });
     }
   );
