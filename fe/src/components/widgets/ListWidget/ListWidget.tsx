@@ -30,10 +30,12 @@ export const ListWidget: React.FC<ListWidgetProps> = ({
   }, [items]);
 
   const handleToggle = (item: Note) => {
-    onItemChanged({
-      _id: item._id,
-      checked: !item.checked,
-    });
+    if (onItemChanged) {
+      onItemChanged({
+        _id: item._id,
+        checked: !item.checked,
+      });
+    }
   };
 
   return (
