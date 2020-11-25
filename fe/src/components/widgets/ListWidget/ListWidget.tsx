@@ -8,9 +8,10 @@ import Autolinker from "autolinker";
 
 export type ListWidgetProps = {
   items: Note[];
-  onItemChanged: (item: Partial<Note>) => void;
-  onItemDeleted: (itemId?: string) => void;
+  onItemChanged?: (item: Partial<Note>) => void;
+  onItemDeleted?: (itemId?: string) => void;
   checkboxes?: boolean;
+  hideDelete?: boolean;
 };
 
 export const ListWidget: React.FC<ListWidgetProps> = ({
@@ -18,6 +19,7 @@ export const ListWidget: React.FC<ListWidgetProps> = ({
   onItemChanged,
   onItemDeleted,
   checkboxes,
+  hideDelete,
 }) => {
   const lastItemRef = useRef<any>();
   useEffect(() => {
@@ -65,14 +67,18 @@ export const ListWidget: React.FC<ListWidgetProps> = ({
               ></div>
               <div className="list-item-secondary">{itemDateString}</div>
             </div>
-            <div
-              className="list-item-actions"
-              onClick={onItemDeleted.bind(this, item._id)}
-            >
-              <IconButton size="small">
-                <Delete />
-              </IconButton>
-            </div>
+            {hideDelete ?? (
+              <div
+                className="list-item-actions"
+                onClick={
+                  onItemDeleted ? onItemDeleted.bind(this, item._id) : () => {}
+                }
+              >
+                <IconButton size="small">
+                  <Delete />
+                </IconButton>
+              </div>
+            )}
           </div>
         );
       })}
