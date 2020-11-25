@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { Header } from "./header/Header";
-import { removeNote, updateNote } from "./notes/NotesApi";
-import TextBox from "./textbox/TextBox";
-import { ListWidget, ListWidgetProps } from "./widgets/ListWidget/ListWidget";
-import { getWidget, submitWidgetNote, WidgetData } from "./widgets/WidgetsApi";
+import { Header } from "../header/Header";
+import { removeNote, updateNote } from "../notes/NotesApi";
+import TextBox from "../textbox/TextBox";
+import { ListWidget, ListWidgetProps } from "../widgets/ListWidget/ListWidget";
+import { getWidget, submitWidgetNote, WidgetData } from "../widgets/WidgetsApi";
+import "./ViewWidgetPage.scss";
 
 export type ViewWidgetPageProps = {};
 

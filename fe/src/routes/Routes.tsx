@@ -5,7 +5,7 @@ import { ZapierHelpPage } from "../components/HelpPage/ZapierHelpPage/ZapierHelp
 import { HomePage } from "../components/HomePage";
 import LoginPage from "../components/login/LoginPage";
 import NotesPage from "../components/notes/NotesPage";
-import { ViewWidgetPage } from "../components/ViewWidgetPage";
+import { ViewWidgetPage } from "../components/ViewWidgetPage/ViewWidgetPage";
 
 export default function Routes() {
   return (
