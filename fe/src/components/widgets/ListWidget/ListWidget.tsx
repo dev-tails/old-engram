@@ -8,8 +8,8 @@ import Autolinker from "autolinker";
 
 export type ListWidgetProps = {
   items: Note[];
-  onItemChanged?: (item: Partial<Note>) => void;
-  onItemDeleted?: (itemId?: string) => void;
+  onItemChanged?: (item: Partial<Note>, index: number) => void;
+  onItemDeleted?: (itemId: string, index: number) => void;
   checkboxes?: boolean;
   hideDelete?: boolean;
 };
@@ -29,12 +29,15 @@ export const ListWidget: React.FC<ListWidgetProps> = ({
     lastItemRef.current?.scrollIntoView({ behaviour: "auto" });
   }, [items]);
 
-  const handleToggle = (item: Note) => {
+  const handleToggle = (item: Note, index: number) => {
     if (onItemChanged) {
-      onItemChanged({
-        _id: item._id,
-        checked: !item.checked,
-      });
+      onItemChanged(
+        {
+          _id: item._id,
+          checked: !item.checked,
+        },
+        index
+      );
     }
   };
 
@@ -58,7 +61,7 @@ export const ListWidget: React.FC<ListWidgetProps> = ({
               {checkboxes && (
                 <Checkbox
                   checked={item.checked}
-                  onChange={handleToggle.bind(this, item)}
+                  onChange={handleToggle.bind(this, item, index)}
                 />
               )}
             </div>
@@ -73,7 +76,9 @@ export const ListWidget: React.FC<ListWidgetProps> = ({
               <div
                 className="list-item-actions"
                 onClick={
-                  onItemDeleted ? onItemDeleted.bind(this, item._id) : () => {}
+                  onItemDeleted && item._id
+                    ? onItemDeleted.bind(this, item._id, index)
+                    : () => {}
                 }
               >
                 <IconButton size="small">

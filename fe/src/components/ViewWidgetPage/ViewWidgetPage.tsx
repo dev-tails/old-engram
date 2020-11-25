@@ -30,14 +30,24 @@ export const ViewWidgetPage: React.FC<ViewWidgetPageProps> = (props) => {
     return null;
   }
 
-  const handleItemChanged: ListWidgetProps["onItemChanged"] = (item) => {
+  const handleItemChanged: ListWidgetProps["onItemChanged"] = (item, index) => {
     updateNote(item);
+
+    const widgetItemsCopy = Array.from(widgetData.items);
+    const oldNote = widgetData.items[index];
+    widgetItemsCopy.splice(index, 1, {
+      ...oldNote,
+      ...item,
+    });
+    setWidgetData({
+      ...widgetData,
+      items: widgetItemsCopy,
+    });
   };
 
-  const handleItemDeleted = (itemId?: string) => {
+  const handleItemDeleted = (itemId: string, index: number) => {
     removeNote(itemId);
     const widgetItemsCopy = Array.from(widgetData.items);
-    const index = widgetItemsCopy.findIndex((item) => item._id === itemId);
     widgetItemsCopy.splice(index, 1);
     setWidgetData({
       ...widgetData,
