@@ -1,14 +1,23 @@
 import axios from "axios";
 import { Note } from "../notes/NotesApi";
 
+export type Widget = {
+  _id: string;
+  name: string;
+  checkboxes?: boolean;
+};
+
 export type WidgetData = {
-  widget: {
-    _id: string;
-    name: string;
-    checkboxes?: boolean;
-  };
+  widget: Widget;
   items: Note[];
 };
+
+export async function getWidgets(): Promise<Widget[]> {
+  const res = await axios.get(`/api/widgets`, {
+    withCredentials: true,
+  });
+  return res.data;
+}
 
 export async function getWidget(widgetId: string): Promise<WidgetData> {
   const res = await axios.get(`/api/widgets/${widgetId}`, {

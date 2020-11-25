@@ -6,6 +6,17 @@ export function initializeWidgetsRouter() {
   const router = express.Router();
   router.use(AuthRequiredMiddleware);
 
+  router.get("", async function (req, res) {
+    const { user, db } = req;
+
+    const widgets = await db
+      .collection("widgets")
+      .find({ user: ObjectId(user) })
+      .toArray();
+
+    return res.json(widgets);
+  });
+
   router.get("/:id", async function (req, res) {
     const { user, db } = req;
     const { id } = req.params;
