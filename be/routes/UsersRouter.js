@@ -93,6 +93,11 @@ export function initializeUserRouter() {
     }
   });
 
+  router.post("/logout", async function (req, res) {
+    res.cookie("token", "", { maxAge: 0 });
+    res.json({});
+  });
+
   router.get(
     "/me",
     AuthAPIKeyMiddleware,
