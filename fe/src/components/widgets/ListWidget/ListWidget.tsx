@@ -3,7 +3,7 @@ import { Note } from "../../notes/NotesApi";
 import { dateFromObjectId } from "../../../utils/ObjectId";
 import "./ListWidget.scss";
 import { Delete } from "@material-ui/icons";
-import { IconButton } from "@material-ui/core";
+import { Checkbox, IconButton } from "@material-ui/core";
 import Autolinker from "autolinker";
 
 export type ListWidgetProps = {
@@ -27,14 +27,12 @@ export const ListWidget: React.FC<ListWidgetProps> = ({
     lastItemRef.current?.scrollIntoView({ behaviour: "auto" });
   }, [items]);
 
-  // const handleToggle = (item: Note) => () => {
-  //   onItemChanged({
-  //     _id: item._id,
-  //     checked: !item.checked,
-  //   });
-  // };
-
-  const handleItemClicked = (item: Note, event: any) => {};
+  const handleToggle = (item: Note) => {
+    onItemChanged({
+      _id: item._id,
+      checked: !item.checked,
+    });
+  };
 
   return (
     <div className="list-widget">
@@ -50,9 +48,16 @@ export const ListWidget: React.FC<ListWidgetProps> = ({
           <div
             key={item._id}
             className="list-item"
-            onClick={handleItemClicked.bind(this, item)}
             ref={index === items.length - 1 ? lastItemRef : null}
           >
+            <div className="list-item-left-actions">
+              {checkboxes && (
+                <Checkbox
+                  checked={item.checked}
+                  onChange={handleToggle.bind(this, item)}
+                />
+              )}
+            </div>
             <div className="list-item-content">
               <div
                 className="list-item-text"
