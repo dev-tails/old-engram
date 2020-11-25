@@ -8,7 +8,7 @@ import {
   Toolbar,
   Typography,
 } from "@material-ui/core";
-import { Menu } from "@material-ui/icons";
+import { Menu, MoreHoriz } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
 import { getWidgets, Widget } from "../widgets/WidgetsApi";
@@ -28,13 +28,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const Header: React.FC<HeaderProps> = ({ title }) => {
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [leftDrawerOpen, setLeftDrawerOpen] = useState(false);
+  const [rightDrawerOpen, setRightDrawerOpen] = useState(false);
   const [widgets, setWidgets] = useState<Widget[]>([]);
 
   const classes = useStyles();
 
   useEffect(() => {
-    if (!drawerOpen) {
+    if (!leftDrawerOpen) {
       return;
     }
 
@@ -43,10 +44,14 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
       setWidgets(fetchedWidgets);
     }
     getAllWidgets();
-  }, [drawerOpen]);
+  }, [leftDrawerOpen]);
 
-  const handleMenuButtonClicked = () => {
-    setDrawerOpen(true);
+  const handleLeftMenuButtonClicked = () => {
+    setLeftDrawerOpen(true);
+  };
+
+  const handleRightMenuButtonClicked = () => {
+    setRightDrawerOpen(true);
   };
 
   return (
@@ -57,21 +62,29 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
             edge="start"
             color="inherit"
             aria-label="menu"
-            onClick={handleMenuButtonClicked}
+            onClick={handleLeftMenuButtonClicked}
           >
             <Menu />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
             {title}
           </Typography>
+          <IconButton
+            edge="end"
+            color="inherit"
+            aria-label="menu"
+            onClick={handleRightMenuButtonClicked}
+          >
+            <MoreHoriz />
+          </IconButton>
         </Toolbar>
       </AppBar>
       <React.Fragment>
         <SwipeableDrawer
           anchor={"left"}
-          open={drawerOpen}
-          onClose={setDrawerOpen.bind(this, false)}
-          onOpen={setDrawerOpen.bind(this, true)}
+          open={leftDrawerOpen}
+          onClose={setLeftDrawerOpen.bind(this, false)}
+          onOpen={setLeftDrawerOpen.bind(this, true)}
         >
           <div className="drawer-contents">
             <List>
@@ -89,6 +102,24 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
                   </Link>
                 );
               })}
+            </List>
+          </div>
+        </SwipeableDrawer>
+      </React.Fragment>
+      <React.Fragment>
+        <SwipeableDrawer
+          anchor={"right"}
+          open={rightDrawerOpen}
+          onClose={setRightDrawerOpen.bind(this, false)}
+          onOpen={setRightDrawerOpen.bind(this, true)}
+        >
+          <div className="drawer-contents">
+            <List>
+              <Link to={`/logout`}>
+                <ListItem button>
+                  <ListItemText primary={"Logout"} />
+                </ListItem>
+              </Link>
             </List>
           </div>
         </SwipeableDrawer>
