@@ -73,6 +73,10 @@ export const ListWidgetItem: React.FC<ListWidgetItemProps> = ({
     }
   };
 
+  const handleFocus = (event: React.FocusEvent<HTMLTextAreaElement>) => {
+    event.currentTarget.selectionStart = body.length;
+  };
+
   const itemDate = dateFromObjectId(item._id);
   const itemDateString = `${itemDate?.toLocaleDateString()} ${itemDate?.toLocaleTimeString()}`;
 
@@ -97,6 +101,7 @@ export const ListWidgetItem: React.FC<ListWidgetItemProps> = ({
               value={body}
               autoFocus
               onChange={handleTextChanged}
+              onFocus={handleFocus}
               onBlur={handleTextBlurred}
               onKeyDown={handleKeyDown}
             ></textarea>
