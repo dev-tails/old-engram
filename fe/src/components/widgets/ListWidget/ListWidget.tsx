@@ -5,6 +5,7 @@ import "./ListWidget.scss";
 import { Delete } from "@material-ui/icons";
 import { Checkbox, IconButton } from "@material-ui/core";
 import Autolinker from "autolinker";
+import ReactMarkdown from "react-markdown";
 
 export type ListWidgetProps = {
   items: Note[];
@@ -54,10 +55,9 @@ export const ListWidget: React.FC<ListWidgetProps> = ({
               )}
             </div>
             <div className="list-item-content">
-              <div
-                className="list-item-text"
-                dangerouslySetInnerHTML={{ __html: Autolinker.link(item.body) }}
-              ></div>
+              <div className="list-item-text">
+                <ReactMarkdown>{item.body}</ReactMarkdown>
+              </div>
               <div className="list-item-secondary">{itemDateString}</div>
             </div>
             {hideDelete ?? (

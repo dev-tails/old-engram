@@ -15,6 +15,11 @@
 
       .list-item-text {
         word-break: break-all;
+        white-space: pre-wrap;
+
+        p {
+          margin: 0;
+        }
       }
     }
 
