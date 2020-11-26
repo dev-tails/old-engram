@@ -19,7 +19,7 @@ export default function LoginPage(props: LoginPageProps) {
     axios
       .post("/api/users/login", { username, password })
       .then((res) => {
-        history.push("/notes");
+        history.push("/");
       })
       .catch((err) => {
         let errorMessage = err.message;
@@ -39,7 +39,7 @@ export default function LoginPage(props: LoginPageProps) {
 
   const handleSignUp = () => {
     axios.post("/api/users/signup", { username, password }).then((res) => {
-      history.push("/notes");
+      history.push("/");
     });
   };
 

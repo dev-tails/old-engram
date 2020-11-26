@@ -58,7 +58,29 @@ export function initializeUserRouter() {
       hashedPassword,
     });
 
-    await setToken(res, String(insertOpResult.insertedId));
+    const user = String(insertOpResult.insertedId);
+
+    await setToken(res, user);
+
+    const tags = ["Note", "Task", "Event"].map((tagName) => {
+      return {
+        user: ObjectId(user),
+        name: tagName,
+      };
+    });
+    const { insertedIds } = await db.collection("tags").insertMany(tags);
+
+    const widgets = ["Notes", "Tasks", "Events"].map((widgetName, index) => {
+      return {
+        user: ObjectId(user),
+        name: widgetName,
+        checkboxes: widgetName === "Tasks",
+        filter: {
+          tags: [ObjectId(insertedIds[index])],
+        },
+      };
+    });
+    await db.collection("widgets").insertMany(widgets);
 
     res.json({
       success: true,

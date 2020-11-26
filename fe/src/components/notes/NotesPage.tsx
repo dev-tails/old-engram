@@ -47,7 +47,7 @@ export default function NotesPage() {
 
   return (
     <div className="notes-page">
-      <Header title={"Notes"} />
+      <Header title={"Engram"} />
       <ListWidget
         items={notes}
         onItemChanged={handleItemChanged}

@@ -13,7 +13,7 @@ export default function Routes() {
     <Router>
       <Switch>
         <Route exact path="/">
-          <HomePage />
+          <NotesPage />
         </Route>
         <Route exact path="/login">
           <LoginPage />
@@ -23,9 +23,6 @@ export default function Routes() {
         </Route>
         <Route exact path="/widgets/:widgetId">
           <ViewWidgetPage />
-        </Route>
-        <Route exact path="/notes">
-          <NotesPage />
         </Route>
         <Route exact path="/help">
           <HelpPage />
