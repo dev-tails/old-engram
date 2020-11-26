@@ -64,6 +64,15 @@ export const ListWidgetItem: React.FC<ListWidgetItemProps> = ({
     setEditing(true);
   };
 
+  const handleKeyDown: React.DOMAttributes<HTMLTextAreaElement>["onKeyDown"] = (
+    event
+  ) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      handleTextBlurred();
+    }
+  };
+
   const itemDate = dateFromObjectId(item._id);
   const itemDateString = `${itemDate?.toLocaleDateString()} ${itemDate?.toLocaleTimeString()}`;
 
@@ -89,6 +98,7 @@ export const ListWidgetItem: React.FC<ListWidgetItemProps> = ({
               autoFocus
               onChange={handleTextChanged}
               onBlur={handleTextBlurred}
+              onKeyDown={handleKeyDown}
             ></textarea>
           ) : (
             <ReactMarkdown>{item.body}</ReactMarkdown>
