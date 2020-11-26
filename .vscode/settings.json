@@ -1,4 +1,9 @@
 {
   "editor.formatOnSave": true,
-  "editor.tabSize": 2
+  "editor.tabSize": 2,
+  "files.autoSave": "afterDelay",
+  "search.useGlobalIgnoreFiles": true,
+  "files.exclude": {
+    "**/node_modules": true
+  }
 }
