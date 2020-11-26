@@ -104,6 +104,7 @@ export const ListWidgetItem: React.FC<ListWidgetItemProps> = ({
               onFocus={handleFocus}
               onBlur={handleTextBlurred}
               onKeyDown={handleKeyDown}
+              rows={(body.match(/\n/g) || []).length + 1}
             ></textarea>
           ) : (
             <ReactMarkdown>{item.body}</ReactMarkdown>
