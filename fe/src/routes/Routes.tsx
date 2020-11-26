@@ -2,7 +2,6 @@ import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { HelpPage } from "../components/HelpPage/HelpPage";
 import { ZapierHelpPage } from "../components/HelpPage/ZapierHelpPage/ZapierHelpPage";
-import { HomePage } from "../components/HomePage";
 import LoginPage from "../components/login/LoginPage";
 import { LogoutPage } from "../components/LogoutPage/LogoutPage";
 import NotesPage from "../components/notes/NotesPage";
