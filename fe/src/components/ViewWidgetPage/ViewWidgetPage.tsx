@@ -59,7 +59,7 @@ export const ViewWidgetPage: React.FC<ViewWidgetPageProps> = (props) => {
     const newNote = await submitWidgetNote(widgetId, body);
     setWidgetData({
       ...widgetData,
-      items: [...widgetData.items, newNote],
+      items: [newNote, ...widgetData.items],
     });
   };
 
