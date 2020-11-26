@@ -13,7 +13,6 @@ export function initializeNotesRouter() {
     const notes = await db
       .collection("notes")
       .find({ user: ObjectId(user), body: { $ne: "" } })
-      .sort({ _id: -1 })
       .toArray();
 
     return res.json(notes.reverse());
