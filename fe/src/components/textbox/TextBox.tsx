@@ -43,10 +43,6 @@ export default function TextBox(props: TextBoxProps) {
     newLineTimeoutId,
     setNewLinePhraseTimeoutId,
   ] = useState<NodeJS.Timeout | null>(null);
-  const [
-    submitPhraseTimeoutId,
-    setSubmitPhraseTimeoutId,
-  ] = useState<NodeJS.Timeout | null>(null);
   const [virtualMode, setVirtualMode] = useState(false);
   const [note, setNote] = useState("");
   const [virtuallySubmittedNotes, setVirtuallySubmittedNotes] = useState<
