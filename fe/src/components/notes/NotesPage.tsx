@@ -3,7 +3,7 @@ import "./NotesPage.scss";
 import TextBox from "../textbox/TextBox";
 import { Note, getNotes, removeNote, updateNote, createNote } from "./NotesApi";
 import { Header } from "../header/Header";
-import { ListWidget } from "../widgets/ListWidget/ListWidget";
+import { ListWidget, ListWidgetProps } from "../widgets/ListWidget/ListWidget";
 
 export default function NotesPage() {
   const [notes, setNotes] = useState<Note[]>([]);
@@ -25,6 +25,18 @@ export default function NotesPage() {
     setNotes([newNote, ...notes]);
   };
 
+  const handleItemChanged: ListWidgetProps["onItemChanged"] = (item, index) => {
+    updateNote(item);
+
+    const notesCopy = Array.from(notes);
+    const oldNote = notes[index];
+    notesCopy.splice(index, 1, {
+      ...oldNote,
+      ...item,
+    });
+    setNotes(notesCopy);
+  };
+
   const handleItemDeleted = (itemId?: string) => {
     removeNote(itemId);
     const notesCopy = Array.from(notes);
@@ -38,7 +50,7 @@ export default function NotesPage() {
       <Header title={"Notes"} />
       <ListWidget
         items={notes}
-        onItemChanged={updateNote}
+        onItemChanged={handleItemChanged}
         onItemDeleted={handleItemDeleted}
       />
       <TextBox onSubmit={handleSubmit} />

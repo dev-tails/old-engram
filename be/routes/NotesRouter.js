@@ -39,6 +39,7 @@ export function initializeNotesRouter() {
       {
         $set: {
           checked: update.checked,
+          body: update.body,
         },
       }
     );
