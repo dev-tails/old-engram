@@ -21,14 +21,6 @@ export const ListWidget: React.FC<ListWidgetProps> = ({
   checkboxes,
   hideDelete,
 }) => {
-  const lastItemRef = useRef<any>();
-  useEffect(() => {
-    if (!lastItemRef || !lastItemRef.current) {
-      return;
-    }
-    lastItemRef.current?.scrollIntoView({ behaviour: "auto" });
-  }, [items]);
-
   const handleToggle = (item: Note, index: number) => {
     if (onItemChanged) {
       onItemChanged(
@@ -52,11 +44,7 @@ export const ListWidget: React.FC<ListWidgetProps> = ({
         const itemDateString = `${itemDate?.toLocaleDateString()} ${itemDate?.toLocaleTimeString()}`;
 
         return (
-          <div
-            key={item._id}
-            className="list-item"
-            ref={index === items.length - 1 ? lastItemRef : null}
-          >
+          <div key={item._id} className="list-item">
             <div className="list-item-left-actions">
               {checkboxes && (
                 <Checkbox

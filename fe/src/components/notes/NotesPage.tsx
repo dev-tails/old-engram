@@ -22,7 +22,7 @@ export default function NotesPage() {
 
   const handleSubmit = async (note: string) => {
     const newNote = await createNote({ body: note });
-    setNotes([...notes, newNote]);
+    setNotes([newNote, ...notes]);
   };
 
   const handleItemDeleted = (itemId?: string) => {
