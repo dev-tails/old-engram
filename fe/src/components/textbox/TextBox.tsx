@@ -30,6 +30,13 @@ function endsWithSubmitPhrase(textToCheck: string): string {
   return "";
 }
 
+function debug(msg: string) {
+  const debug = false;
+  if (debug) {
+    console.log(msg);
+  }
+}
+
 export default function TextBox(props: TextBoxProps) {
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
   const [
@@ -57,11 +64,11 @@ export default function TextBox(props: TextBoxProps) {
         virtualNote = virtualNote.replace(virtuallySubmittedNote, "");
       }
 
-      console.log(`Virtual Note: ${virtualNote}`);
+      debug(`Virtual Note: ${virtualNote}`);
     }
 
     if (newLineTimeoutId) {
-      console.log("Cleared new line timeout");
+      debug("Cleared new line timeout");
 
       clearTimeout(newLineTimeoutId);
       setNewLinePhraseTimeoutId(null);
@@ -71,7 +78,7 @@ export default function TextBox(props: TextBoxProps) {
     if (submitPhraseDetected) {
       setVirtualMode(true);
 
-      console.log(`Adding virtual note: ${virtualNote}`);
+      debug(`Adding virtual note: ${virtualNote}`);
       setVirtuallySubmittedNotes([...virtuallySubmittedNotes, virtualNote]);
 
       const bodyWithoutSubmitPhrase = virtualNote
@@ -79,7 +86,7 @@ export default function TextBox(props: TextBoxProps) {
         .trimRight();
 
       const submitPhraseDelayMilliseconds = 200;
-      console.log("setNewLinePhraseTimeoutId");
+      debug("setNewLinePhraseTimeoutId");
       setNewLinePhraseTimeoutId(
         setTimeout(() => {
           handleSubmit(bodyWithoutSubmitPhrase, true);
@@ -87,7 +94,7 @@ export default function TextBox(props: TextBoxProps) {
       );
     }
 
-    console.log(`Setting note to ${newNote}`);
+    debug(`Setting note to ${newNote}`);
     setNote(newNote);
   };
 
@@ -104,9 +111,9 @@ export default function TextBox(props: TextBoxProps) {
     props.onSubmit(body);
 
     if (virtualMode) {
-      console.log("submitted virtually");
+      debug("submitted virtually");
     } else {
-      console.log("submitted not virtually");
+      debug("submitted not virtually");
       setNote("");
     }
   };
