@@ -25,13 +25,18 @@ export function initializeWidgetsRouter() {
       .collection("widgets")
       .findOne({ _id: ObjectId(id), user: ObjectId(user) });
 
+    let sort = {};
+    if (widget.checkboxes) {
+      sort.checked = -1;
+    }
+
     const notes = await db
       .collection("notes")
       .find({
         ...widget.filter,
         user: ObjectId(user),
       })
-      .sort({ _id: -1 })
+      .sort(sort)
       .toArray();
 
     return res.json({
