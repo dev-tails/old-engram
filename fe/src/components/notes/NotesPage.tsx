@@ -8,6 +8,8 @@ import { ListWidget, ListWidgetProps } from "../widgets/ListWidget/ListWidget";
 export default function NotesPage() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [state, setState] = useState("initial");
+  const [hasNextPage, setHasNextPage] = useState(false);
+  const [isNextPageLoading, setIsNextPageLoading] = useState(false);
 
   useEffect(() => {
     setState("loading");
@@ -16,6 +18,7 @@ export default function NotesPage() {
       getNotes().then((notes) => {
         setState("loaded");
         setNotes(notes);
+        setHasNextPage(true);
       });
     }
   }, [state]);
@@ -45,10 +48,22 @@ export default function NotesPage() {
     setNotes(notesCopy);
   };
 
+  const loadNextPage = () => {
+    setIsNextPageLoading(true);
+
+    setTimeout(() => {
+      setHasNextPage(false);
+      setNotes([...notes]);
+    }, 100);
+  };
+
   return (
     <div className="notes-page">
       <Header title={"Engram"} />
       <ListWidget
+        hasNextPage={hasNextPage}
+        isNextPageLoading={isNextPageLoading}
+        loadNextPage={loadNextPage}
         items={notes}
         onItemChanged={handleItemChanged}
         onItemDeleted={handleItemDeleted}

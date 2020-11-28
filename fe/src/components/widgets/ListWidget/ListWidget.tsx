@@ -6,10 +6,15 @@ import {
   AutoSizer,
   CellMeasurer,
   CellMeasurerCache,
+  InfiniteLoader,
   List,
 } from "react-virtualized";
+import { objectIdFromDate } from "../../../utils/ObjectId";
 
 export type ListWidgetProps = {
+  hasNextPage: boolean;
+  isNextPageLoading: boolean;
+  loadNextPage: () => void;
   items: Note[];
   onItemChanged?: (item: Partial<Note>, index: number) => void;
   onItemDeleted?: (itemId: string, index: number) => void;
@@ -27,7 +32,14 @@ type RowRendererParams = {
 };
 
 export const ListWidget: React.FC<ListWidgetProps> = (props) => {
-  const listRef = useRef<List | null>(null);
+  const { hasNextPage, isNextPageLoading, loadNextPage, items } = props;
+
+  const rowCount = hasNextPage ? items.length + 1 : items.length;
+
+  const loadMoreRows = isNextPageLoading ? () => {} : loadNextPage;
+  const isRowLoaded = ({ index }: { index: number }) => {
+    return !hasNextPage || index < items.length;
+  };
 
   const cellMeasurerCache = new CellMeasurerCache({
     fixedWidth: true,
@@ -36,22 +48,32 @@ export const ListWidget: React.FC<ListWidgetProps> = (props) => {
   let mostRecentWidth = 0;
 
   const rowRenderer = (params: RowRendererParams) => {
-    const { index } = params;
-    const item = props.items[index];
-    const key = item._id;
+    let content;
+    const { key, index } = params;
+
+    if (!isRowLoaded({ index })) {
+      content = (
+        <ListWidgetItem
+          index={index}
+          item={{ _id: objectIdFromDate(new Date()), body: "Loading..." }}
+          {...props}
+        />
+      );
+    } else {
+      const item = props.items[index];
+      content = <ListWidgetItem index={index} item={item} {...props} />;
+    }
 
     return (
       <CellMeasurer
         cache={cellMeasurerCache}
         columnIndex={0}
-        key={params.key}
+        key={key}
         parent={params.parent}
         rowIndex={params.index}
         width={mostRecentWidth}
       >
-        <div style={params.style}>
-          <ListWidgetItem index={index} item={item} {...props} />
-        </div>
+        <div style={params.style}>{content}</div>
       </CellMeasurer>
     );
   };
@@ -62,17 +84,28 @@ export const ListWidget: React.FC<ListWidgetProps> = (props) => {
         <AutoSizer>
           {({ height, width }: { height: number; width: number }) => {
             mostRecentWidth = width;
+
             return (
-              <List
-                ref={listRef}
-                deferredMeasurementCache={cellMeasurerCache}
-                width={width}
-                height={height}
-                rowCount={props.items.length}
-                rowHeight={cellMeasurerCache.rowHeight}
-                rowRenderer={rowRenderer}
-                scrollToAlignment={"start"}
-              />
+              <InfiniteLoader
+                isRowLoaded={isRowLoaded}
+                loadMoreRows={loadMoreRows}
+                rowCount={rowCount}
+              >
+                {({ onRowsRendered, registerChild }: any) => {
+                  return (
+                    <List
+                      ref={registerChild}
+                      onRowsRendered={onRowsRendered}
+                      deferredMeasurementCache={cellMeasurerCache}
+                      width={width}
+                      height={height}
+                      rowCount={rowCount}
+                      rowHeight={cellMeasurerCache.rowHeight}
+                      rowRenderer={rowRenderer}
+                    />
+                  );
+                }}
+              </InfiniteLoader>
             );
           }}
         </AutoSizer>
