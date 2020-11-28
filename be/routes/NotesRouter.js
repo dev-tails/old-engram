@@ -10,10 +10,25 @@ export function initializeNotesRouter() {
   router.get("", async function (req, res) {
     const { user, db } = req;
 
-    const notes = await db
-      .collection("notes")
-      .find({ user: ObjectId(user), body: { $ne: "" } })
-      .toArray();
+    let count = req.params.count;
+    let sinceId = req.params.since_id;
+
+    let findOptions = {
+      user: ObjectId(user),
+    };
+    if (sinceId) {
+      findOptions._id = {
+        $gt: sinceId,
+      };
+    }
+
+    const query = db.collection("notes").find(findOptions);
+
+    if (count) {
+      query.limit(count);
+    }
+
+    const notes = await query.toArray();
 
     return res.json(notes.reverse());
   });
