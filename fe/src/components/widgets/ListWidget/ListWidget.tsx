@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import { Note } from "../../notes/NotesApi";
 import "./ListWidget.scss";
 import { ListWidgetItem } from "./ListWidgetItem/ListWidgetItem";
@@ -6,10 +6,8 @@ import {
   AutoSizer,
   CellMeasurer,
   CellMeasurerCache,
-  InfiniteLoader,
   List,
 } from "react-virtualized";
-import { objectIdFromDate } from "../../../utils/ObjectId";
 
 export type ListWidgetProps = {
   items: Note[];
