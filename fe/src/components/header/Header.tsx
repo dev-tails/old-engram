@@ -90,7 +90,12 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
             <List>
               <Link to={`/`}>
                 <ListItem button>
-                  <ListItemText primary={"Engram"} />
+                  <ListItemText primary={"All"} />
+                </ListItem>
+              </Link>
+              <Link to={`/daily`}>
+                <ListItem button>
+                  <ListItemText primary={"Daily"} />
                 </ListItem>
               </Link>
               {widgets.map((widget) => {

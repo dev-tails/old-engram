@@ -12,9 +12,6 @@ import {
 import { objectIdFromDate } from "../../../utils/ObjectId";
 
 export type ListWidgetProps = {
-  hasNextPage: boolean;
-  isNextPageLoading: boolean;
-  loadNextPage: () => void;
   items: Note[];
   onItemChanged?: (item: Partial<Note>, index: number) => void;
   onItemDeleted?: (itemId: string, index: number) => void;
@@ -32,14 +29,7 @@ type RowRendererParams = {
 };
 
 export const ListWidget: React.FC<ListWidgetProps> = (props) => {
-  const { hasNextPage, isNextPageLoading, loadNextPage, items } = props;
-
-  const rowCount = hasNextPage ? items.length + 1 : items.length;
-
-  const loadMoreRows = isNextPageLoading ? () => {} : loadNextPage;
-  const isRowLoaded = ({ index }: { index: number }) => {
-    return !hasNextPage || index < items.length;
-  };
+  const { items } = props;
 
   const cellMeasurerCache = new CellMeasurerCache({
     fixedWidth: true,
@@ -48,21 +38,9 @@ export const ListWidget: React.FC<ListWidgetProps> = (props) => {
   let mostRecentWidth = 0;
 
   const rowRenderer = (params: RowRendererParams) => {
-    let content;
     const { key, index } = params;
 
-    if (!isRowLoaded({ index })) {
-      content = (
-        <ListWidgetItem
-          index={index}
-          item={{ _id: objectIdFromDate(new Date()), body: "Loading..." }}
-          {...props}
-        />
-      );
-    } else {
-      const item = props.items[index];
-      content = <ListWidgetItem index={index} item={item} {...props} />;
-    }
+    const item = props.items[index];
 
     return (
       <CellMeasurer
@@ -73,7 +51,9 @@ export const ListWidget: React.FC<ListWidgetProps> = (props) => {
         rowIndex={params.index}
         width={mostRecentWidth}
       >
-        <div style={params.style}>{content}</div>
+        <div style={params.style}>
+          <ListWidgetItem index={index} item={item} {...props} />
+        </div>
       </CellMeasurer>
     );
   };
@@ -86,26 +66,14 @@ export const ListWidget: React.FC<ListWidgetProps> = (props) => {
             mostRecentWidth = width;
 
             return (
-              <InfiniteLoader
-                isRowLoaded={isRowLoaded}
-                loadMoreRows={loadMoreRows}
-                rowCount={rowCount}
-              >
-                {({ onRowsRendered, registerChild }: any) => {
-                  return (
-                    <List
-                      ref={registerChild}
-                      onRowsRendered={onRowsRendered}
-                      deferredMeasurementCache={cellMeasurerCache}
-                      width={width}
-                      height={height}
-                      rowCount={rowCount}
-                      rowHeight={cellMeasurerCache.rowHeight}
-                      rowRenderer={rowRenderer}
-                    />
-                  );
-                }}
-              </InfiniteLoader>
+              <List
+                deferredMeasurementCache={cellMeasurerCache}
+                width={width}
+                height={height}
+                rowCount={items.length}
+                rowHeight={cellMeasurerCache.rowHeight}
+                rowRenderer={rowRenderer}
+              />
             );
           }}
         </AutoSizer>

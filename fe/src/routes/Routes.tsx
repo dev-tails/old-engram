@@ -14,6 +14,9 @@ export default function Routes() {
         <Route exact path="/">
           <NotesPage />
         </Route>
+        <Route exact path="/daily">
+          <NotesPage daily={true} />
+        </Route>
         <Route exact path="/login">
           <LoginPage />
         </Route>
