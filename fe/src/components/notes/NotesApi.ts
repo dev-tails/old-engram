@@ -1,5 +1,6 @@
 import axios from "axios";
 import * as Api from "../../Api";
+import queryString from "query-string";
 
 export type Note = {
   _id?: string;
@@ -16,8 +17,14 @@ export async function createNote(note: Partial<Note>) {
   return res.data;
 }
 
-export async function getNotes(): Promise<Note[]> {
-  const res = await Api.get("/api/notes", { withCredentials: true });
+export type GetNotesParams = {
+  since_id?: string;
+};
+
+export async function getNotes(params: GetNotesParams): Promise<Note[]> {
+  const res = await Api.get(`/api/notes?${queryString.stringify(params)}`, {
+    withCredentials: true,
+  });
   return res.data;
 }
 
