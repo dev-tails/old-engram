@@ -10,15 +10,14 @@ export function initializeNotesRouter() {
   router.get("", async function (req, res) {
     const { user, db } = req;
 
-    let count = req.params.count;
-    let sinceId = req.params.since_id;
+    const { count, since_id: sinceId } = req.query;
 
     let findOptions = {
       user: ObjectId(user),
     };
     if (sinceId) {
       findOptions._id = {
-        $gt: sinceId,
+        $gt: ObjectId(sinceId),
       };
     }
 
