@@ -21,7 +21,7 @@ export function initializeNotesRouter() {
       };
     }
 
-    const query = db.collection("notes").find(findOptions).sort({ _id: -1 });
+    const query = db.collection("notes").find(findOptions);
 
     if (count) {
       query.limit(count);
@@ -52,6 +52,7 @@ export function initializeNotesRouter() {
       },
       {
         $set: {
+          archived: update.archived,
           checked: update.checked,
           body: update.body,
         },

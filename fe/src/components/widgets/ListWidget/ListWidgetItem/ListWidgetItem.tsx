@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { Delete } from "@material-ui/icons";
+import { Archive, Delete } from "@material-ui/icons";
 import { Checkbox, IconButton } from "@material-ui/core";
 import { Note } from "../../../notes/NotesApi";
 import { dateFromObjectId } from "../../../../utils/ObjectId";
 import "./ListWidgetItem.scss";
 
+export type ListAction = "delete" | "archive";
+
 type ListWidgetItemProps = {
+  actions?: ListAction[];
   checkboxes?: boolean;
-  hideDelete?: boolean;
   index: number;
   item: Note;
   onItemChanged?: (item: Partial<Note>, index: number) => void;
@@ -21,7 +23,7 @@ export const ListWidgetItem: React.FC<ListWidgetItemProps> = ({
   onItemChanged,
   onItemDeleted,
   checkboxes,
-  hideDelete,
+  actions,
 }) => {
   const [body, setBody] = useState(item.body);
   const [editing, setEditing] = useState(false);
@@ -34,8 +36,8 @@ export const ListWidgetItem: React.FC<ListWidgetItemProps> = ({
     if (onItemChanged) {
       onItemChanged(
         {
+          ...item,
           ...update,
-          _id: item._id,
         },
         index
       );
@@ -80,6 +82,18 @@ export const ListWidgetItem: React.FC<ListWidgetItemProps> = ({
   const itemDate = dateFromObjectId(item._id);
   const itemDateString = `${itemDate?.toLocaleDateString()} ${itemDate?.toLocaleTimeString()}`;
 
+  const handleAction = (action: ListAction) => {
+    if (action === "delete") {
+      if (item._id && onItemDeleted) {
+        onItemDeleted(item._id, index);
+      }
+    } else if (action === "archive") {
+      dispatchItemChange({
+        archived: true,
+      });
+    }
+  };
+
   return (
     <div key={item._id} className="list-widget-item">
       <div className="list-item-left-actions">
@@ -112,20 +126,20 @@ export const ListWidgetItem: React.FC<ListWidgetItemProps> = ({
         </div>
         <div className="list-item-secondary">{itemDateString}</div>
       </div>
-      {hideDelete ?? (
-        <div
-          className="list-item-actions"
-          onClick={
-            onItemDeleted && item._id
-              ? onItemDeleted.bind(this, item._id, index)
-              : () => {}
-          }
-        >
-          <IconButton size="small">
-            <Delete />
-          </IconButton>
-        </div>
-      )}
+      <div className="list-item-actions">
+        {actions &&
+          actions.map((action) => {
+            return (
+              <IconButton
+                size="small"
+                onClick={handleAction.bind(this, action)}
+              >
+                {action === "delete" && <Delete />}
+                {action === "archive" && <Archive />}
+              </IconButton>
+            );
+          })}
+      </div>
     </div>
   );
 };

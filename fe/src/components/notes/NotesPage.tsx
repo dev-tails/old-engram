@@ -35,10 +35,16 @@ export default function NotesPage(props: NotesPageProps) {
 
     const notesCopy = Array.from(notes);
     const oldNote = notes[index];
-    notesCopy.splice(index, 1, {
+    let newNote: Note = {
       ...oldNote,
       ...item,
-    });
+    };
+    let itemsToReinsert = [newNote];
+    if (props.daily && item.archived) {
+      itemsToReinsert = [];
+    }
+
+    notesCopy.splice(index, 1, ...itemsToReinsert);
     setNotes(notesCopy);
   };
 
@@ -57,6 +63,8 @@ export default function NotesPage(props: NotesPageProps) {
         items={notes}
         onItemChanged={handleItemChanged}
         onItemDeleted={handleItemDeleted}
+        actions={props.daily ? ["archive"] : ["delete"]}
+        showArchived={props.daily ? false : true}
       />
       <TextBox onSubmit={handleSubmit} />
     </div>

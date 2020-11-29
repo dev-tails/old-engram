@@ -6,6 +6,7 @@ export type Note = {
   _id?: string;
   body: string;
   checked?: boolean;
+  archived?: boolean;
 };
 
 export async function createNote(note: Partial<Note>) {
