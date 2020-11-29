@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Note } from "../../notes/NotesApi";
 import "./ListWidget.scss";
 import { ListWidgetItem } from "./ListWidgetItem/ListWidgetItem";
@@ -27,7 +27,17 @@ type RowRendererParams = {
 };
 
 export const ListWidget: React.FC<ListWidgetProps> = (props) => {
+  const listRef = useRef<List | null>(null);
   const { items } = props;
+
+  useEffect(() => {
+    if (listRef.current) {
+      let list = listRef.current;
+      setTimeout(() => {
+        list.scrollToRow(props.items.length - 1);
+      }, 200);
+    }
+  }, [props.items]);
 
   const cellMeasurerCache = new CellMeasurerCache({
     fixedWidth: true,
@@ -65,6 +75,7 @@ export const ListWidget: React.FC<ListWidgetProps> = (props) => {
 
             return (
               <List
+                ref={listRef}
                 deferredMeasurementCache={cellMeasurerCache}
                 width={width}
                 height={height}
