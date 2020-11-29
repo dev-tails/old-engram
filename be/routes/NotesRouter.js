@@ -21,7 +21,7 @@ export function initializeNotesRouter() {
       };
     }
 
-    const query = db.collection("notes").find(findOptions);
+    const query = db.collection("notes").find(findOptions).sort({ _id: -1 });
 
     if (count) {
       query.limit(count);
