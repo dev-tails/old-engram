@@ -88,7 +88,7 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
         >
           <div className="drawer-contents">
             <List>
-              <Link to={`/`}>
+              <Link to={`/all`}>
                 <ListItem button>
                   <ListItemText primary={"All"} />
                 </ListItem>

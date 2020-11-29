@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch,
+} from "react-router-dom";
 import { HelpPage } from "../components/HelpPage/HelpPage";
 import { ZapierHelpPage } from "../components/HelpPage/ZapierHelpPage/ZapierHelpPage";
 import LoginPage from "../components/login/LoginPage";
@@ -12,6 +17,9 @@ export default function Routes() {
     <Router>
       <Switch>
         <Route exact path="/">
+          <Redirect to="/daily" />
+        </Route>
+        <Route exact path="/all">
           <NotesPage />
         </Route>
         <Route exact path="/daily">
