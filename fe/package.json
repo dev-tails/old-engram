@@ -19,8 +19,7 @@
     "react-markdown": "^5.0.3",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.3",
-    "react-virtualized": "^9.22.2"
+    "react-scripts": "3.4.3"
   },
   "scripts": {
     "start": "react-scripts start",
