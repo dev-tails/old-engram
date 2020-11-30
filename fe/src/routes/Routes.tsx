@@ -19,7 +19,7 @@ export default function Routes() {
         <Route exact path="/">
           <Redirect to="/daily" />
         </Route>
-        <Route exact path="/all">
+        <Route exact path="/archive">
           <NotesPage />
         </Route>
         <Route exact path="/daily">
@@ -40,6 +40,7 @@ export default function Routes() {
         <Route exact path="/help/zapier">
           <ZapierHelpPage />
         </Route>
+        <Redirect to="/" />
       </Switch>
     </Router>
   );

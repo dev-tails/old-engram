@@ -67,7 +67,11 @@ export function initializeNotesRouter() {
 
       const insertOpResult = await db
         .collection("notes")
-        .insertOne({ user: ObjectId(user), body: req.body.body });
+        .insertOne({
+          user: ObjectId(user),
+          body: req.body.body,
+          type: req.body.type,
+        });
 
       const newNote = await db.collection("notes").findOne({
         _id: insertOpResult.insertedId,

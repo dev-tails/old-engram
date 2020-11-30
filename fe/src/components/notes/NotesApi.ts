@@ -2,11 +2,14 @@ import axios from "axios";
 import * as Api from "../../Api";
 import queryString from "query-string";
 
+export type NoteType = "note" | "task" | "event";
+
 export type Note = {
   _id?: string;
   body: string;
   checked?: boolean;
   archived?: boolean;
+  type?: NoteType;
 };
 
 export async function createNote(note: Partial<Note>) {
