@@ -39,6 +39,11 @@ export default function TextBox(props: TextBoxProps) {
   const handleKeyDown: React.DOMAttributes<HTMLDivElement>["onKeyDown"] = (
     event
   ) => {
+    if (event.key === "Control") {
+      event.preventDefault();
+      handleToggleType();
+    }
+
     if (event.key === "Enter" && !event.shiftKey && !isMobileUserAgent()) {
       event.preventDefault();
       handleSubmit();
