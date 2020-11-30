@@ -1,18 +1,30 @@
 import React, { useEffect, useState } from "react";
 import "./NotesPage.scss";
 import TextBox from "../textbox/TextBox";
-import { Note, getNotes, removeNote, updateNote, createNote } from "./NotesApi";
+import {
+  Note,
+  NoteType,
+  getNotes,
+  removeNote,
+  updateNote,
+  createNote,
+} from "./NotesApi";
 import { Header } from "../header/Header";
 import { ListWidget, ListWidgetProps } from "../widgets/ListWidget/ListWidget";
 import moment from "moment";
 import { objectIdFromDate } from "../../utils/ObjectId";
+import { BottomNavigation, BottomNavigationAction } from "@material-ui/core";
+import { AllInbox, Notes, Event, Assignment } from "@material-ui/icons";
 
 export type NotesPageProps = {
   daily?: boolean;
 };
 
+const bottomNavIndexToNoteType: NoteType[] = ["note", "note", "task", "event"];
+
 export default function NotesPage(props: NotesPageProps) {
   const [notes, setNotes] = useState<Note[]>([]);
+  const [bottomNavIndex, setBottomNavIndex] = React.useState(0);
 
   useEffect(() => {
     let since_id = "";
@@ -26,7 +38,8 @@ export default function NotesPage(props: NotesPageProps) {
   }, [props.daily]);
 
   const handleSubmit = async (note: string) => {
-    const newNote = await createNote({ body: note });
+    const noteType = bottomNavIndexToNoteType[bottomNavIndex];
+    const newNote = await createNote({ body: note, type: noteType });
     setNotes([newNote, ...notes]);
   };
 
@@ -58,7 +71,7 @@ export default function NotesPage(props: NotesPageProps) {
 
   return (
     <div className="notes-page">
-      <Header title={props.daily ? "Daily" : "All"} />
+      <Header title={props.daily ? "Daily" : "Archive"} />
       <ListWidget
         items={notes}
         onItemChanged={handleItemChanged}
@@ -67,6 +80,16 @@ export default function NotesPage(props: NotesPageProps) {
         showArchived={props.daily ? false : true}
       />
       <TextBox onSubmit={handleSubmit} />
+      <BottomNavigation
+        value={bottomNavIndex}
+        onChange={(event, newValue) => setBottomNavIndex(newValue)}
+        showLabels
+      >
+        <BottomNavigationAction label="All" icon={<AllInbox />} />
+        <BottomNavigationAction label="Notes" icon={<Notes />} />
+        <BottomNavigationAction label="Tasks" icon={<Assignment />} />
+        <BottomNavigationAction label="Events" icon={<Event />} />
+      </BottomNavigation>
     </div>
   );
 }

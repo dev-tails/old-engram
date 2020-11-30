@@ -10,8 +10,7 @@ import {
 } from "@material-ui/core";
 import { Menu, MoreHoriz } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-import React, { useEffect, useState } from "react";
-import { getWidgets, Widget } from "../widgets/WidgetsApi";
+import React, { useState } from "react";
 import "./Header.scss";
 import { Link } from "react-router-dom";
 
@@ -30,21 +29,8 @@ const useStyles = makeStyles((theme) => ({
 export const Header: React.FC<HeaderProps> = ({ title }) => {
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false);
   const [rightDrawerOpen, setRightDrawerOpen] = useState(false);
-  const [widgets, setWidgets] = useState<Widget[]>([]);
 
   const classes = useStyles();
-
-  useEffect(() => {
-    if (!leftDrawerOpen) {
-      return;
-    }
-
-    async function getAllWidgets() {
-      const fetchedWidgets = await getWidgets();
-      setWidgets(fetchedWidgets);
-    }
-    getAllWidgets();
-  }, [leftDrawerOpen]);
 
   const handleLeftMenuButtonClicked = () => {
     setLeftDrawerOpen(true);
@@ -88,25 +74,16 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
         >
           <div className="drawer-contents">
             <List>
-              <Link to={`/all`}>
-                <ListItem button>
-                  <ListItemText primary={"All"} />
-                </ListItem>
-              </Link>
               <Link to={`/daily`}>
                 <ListItem button>
                   <ListItemText primary={"Daily"} />
                 </ListItem>
               </Link>
-              {widgets.map((widget) => {
-                return (
-                  <Link key={widget._id} to={`/widgets/${widget._id}`}>
-                    <ListItem button>
-                      <ListItemText primary={widget.name} />
-                    </ListItem>
-                  </Link>
-                );
-              })}
+              <Link to={`/archive`}>
+                <ListItem button>
+                  <ListItemText primary={"Archive"} />
+                </ListItem>
+              </Link>
             </List>
           </div>
         </SwipeableDrawer>
