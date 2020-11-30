@@ -100,12 +100,15 @@ export const Header: React.FC<HeaderProps> = ({
         >
           <div className="drawer-contents">
             <List>
-              <Link to={`/daily`}>
+              <Link to={`/daily`} onClick={setLeftDrawerOpen.bind(this, false)}>
                 <ListItem button>
                   <ListItemText primary={"Daily"} />
                 </ListItem>
               </Link>
-              <Link to={`/archive`}>
+              <Link
+                to={`/archive`}
+                onClick={setLeftDrawerOpen.bind(this, false)}
+              >
                 <ListItem button>
                   <ListItemText primary={"Archive"} />
                 </ListItem>
