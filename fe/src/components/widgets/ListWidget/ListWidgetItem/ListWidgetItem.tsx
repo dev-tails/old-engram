@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { Archive, Delete } from "@material-ui/icons";
-import { Checkbox, IconButton } from "@material-ui/core";
+import {
+  Archive,
+  Delete,
+  FiberManualRecord,
+  RadioButtonUnchecked,
+  CheckBoxOutlineBlank,
+  CheckBox,
+} from "@material-ui/icons";
+import { IconButton } from "@material-ui/core";
 import { Note } from "../../../notes/NotesApi";
 import { dateFromObjectId } from "../../../../utils/ObjectId";
 import "./ListWidgetItem.scss";
@@ -97,12 +104,20 @@ export const ListWidgetItem: React.FC<ListWidgetItemProps> = ({
   return (
     <div key={item._id} className="list-widget-item">
       <div className="list-item-left-actions">
-        {checkboxes && (
-          <Checkbox
-            checked={item.checked}
-            onChange={handleToggle.bind(this, item, index)}
-          />
-        )}
+        {
+          <IconButton size="small">
+            {(!item.type || item.type === "note") && <FiberManualRecord />}
+            {item.type === "event" && <RadioButtonUnchecked />}
+            {item.type === "task" && !item.checked && (
+              <CheckBoxOutlineBlank
+                onClick={handleToggle.bind(this, item, index)}
+              />
+            )}
+            {item.type === "task" && item.checked && (
+              <CheckBox onClick={handleToggle.bind(this, item, index)} />
+            )}
+          </IconButton>
+        }
       </div>
       <div className="list-item-content">
         <div
