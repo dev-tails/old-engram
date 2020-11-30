@@ -10,7 +10,6 @@ import { ZapierHelpPage } from "../components/HelpPage/ZapierHelpPage/ZapierHelp
 import LoginPage from "../components/login/LoginPage";
 import { LogoutPage } from "../components/LogoutPage/LogoutPage";
 import NotesPage from "../components/notes/NotesPage";
-import { ViewWidgetPage } from "../components/ViewWidgetPage/ViewWidgetPage";
 
 export default function Routes() {
   return (
@@ -30,9 +29,6 @@ export default function Routes() {
         </Route>
         <Route exact path="/logout">
           <LogoutPage />
-        </Route>
-        <Route exact path="/widgets/:widgetId">
-          <ViewWidgetPage />
         </Route>
         <Route exact path="/help">
           <HelpPage />

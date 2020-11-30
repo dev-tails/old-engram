@@ -1,137 +1,79 @@
-import React, { useRef, useState } from "react";
+import { IconButton, TextField } from "@material-ui/core";
+import React, { useState } from "react";
+import {
+  FiberManualRecord,
+  RadioButtonUnchecked,
+  CheckBoxOutlineBlank,
+  ArrowUpward,
+} from "@material-ui/icons";
 import "./TextBox.scss";
+import { Note, NoteType } from "../notes/NotesApi";
+import { isMobileUserAgent } from "../../utils/UserAgentUtils";
 
 type TextBoxProps = {
-  onSubmit: (body: string) => void;
+  onSubmit: (note: Partial<Note>) => void;
 };
 
-function endsWithSubmitPhrase(textToCheck: string): string {
-  const submitPhrases = [
-    "in the ground",
-    "and cram",
-    "in grand",
-    "an gram",
-    "engram",
-    "end gram",
-    "and graham",
-    "in graham",
-  ];
-  for (const submitPhrase of submitPhrases) {
-    const endSubstringToCheck = textToCheck.substr(
-      textToCheck.length - submitPhrase.length
-    );
-    const submitPhraseDetected = endSubstringToCheck
-      .toLowerCase()
-      .includes(submitPhrase);
-    if (submitPhraseDetected) {
-      return submitPhrase;
-    }
-  }
-  return "";
-}
-
-function debug(msg: string) {
-  const debug = false;
-  if (debug) {
-    console.log(msg);
-  }
-}
+const noteTypes: NoteType[] = ["note", "task", "event"];
 
 export default function TextBox(props: TextBoxProps) {
-  const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
-  const [
-    newLineTimeoutId,
-    setNewLinePhraseTimeoutId,
-  ] = useState<NodeJS.Timeout | null>(null);
-  const [virtualMode, setVirtualMode] = useState(false);
   const [note, setNote] = useState("");
-  const [virtuallySubmittedNotes, setVirtuallySubmittedNotes] = useState<
-    string[]
-  >([]);
+  const [noteTypeIndex, setNoteTypeIndex] = React.useState(0);
+  const noteType = noteTypes[noteTypeIndex];
 
   const handleNoteChanged: React.TextareaHTMLAttributes<HTMLTextAreaElement>["onChange"] = (
     event
   ) => {
     let newNote = event?.target?.value;
-    let virtualNote = newNote;
-
-    if (virtualMode) {
-      for (const virtuallySubmittedNote of virtuallySubmittedNotes) {
-        virtualNote = virtualNote.replace(virtuallySubmittedNote, "");
-      }
-
-      debug(`Virtual Note: ${virtualNote}`);
-    }
-
-    if (newLineTimeoutId) {
-      debug("Cleared new line timeout");
-
-      clearTimeout(newLineTimeoutId);
-      setNewLinePhraseTimeoutId(null);
-    }
-
-    const submitPhraseDetected = endsWithSubmitPhrase(virtualNote);
-    if (submitPhraseDetected) {
-      setVirtualMode(true);
-
-      debug(`Adding virtual note: ${virtualNote}`);
-      setVirtuallySubmittedNotes([...virtuallySubmittedNotes, virtualNote]);
-
-      const bodyWithoutSubmitPhrase = virtualNote
-        .substr(0, virtualNote.length - submitPhraseDetected.length)
-        .trimRight();
-
-      const submitPhraseDelayMilliseconds = 200;
-      debug("setNewLinePhraseTimeoutId");
-      setNewLinePhraseTimeoutId(
-        setTimeout(() => {
-          handleSubmit(bodyWithoutSubmitPhrase, true);
-        }, submitPhraseDelayMilliseconds)
-      );
-    }
-
-    debug(`Setting note to ${newNote}`);
     setNote(newNote);
   };
 
-  const handleKeyDown: React.DOMAttributes<HTMLTextAreaElement>["onKeyDown"] = (
+  const handleToggleType = () => {
+    let newNoteTypeIndex = noteTypeIndex + 1;
+    if (newNoteTypeIndex >= noteTypes.length) {
+      newNoteTypeIndex = 0;
+    }
+    setNoteTypeIndex(newNoteTypeIndex);
+  };
+
+  const handleKeyDown: React.DOMAttributes<HTMLDivElement>["onKeyDown"] = (
     event
   ) => {
-    if (event.key === "Enter" && !event.shiftKey) {
+    if (event.key === "Enter" && !event.shiftKey && !isMobileUserAgent()) {
       event.preventDefault();
-      handleSubmit(note);
+      handleSubmit();
     }
   };
 
-  const handleSubmit = (body: string, virtualMode: boolean = false) => {
-    props.onSubmit(body);
+  const handleSubmit = () => {
+    props.onSubmit({
+      body: note,
+      type: noteTypes[noteTypeIndex],
+    });
 
-    if (virtualMode) {
-      debug("submitted virtually");
-    } else {
-      debug("submitted not virtually");
-      setNote("");
-    }
-  };
-
-  const handleBlur = () => {
-    if (virtualMode) {
-      setVirtualMode(false);
-      setNote("");
-    }
+    setNote("");
   };
 
   return (
     <div className="textbox">
-      <textarea
-        autoFocus={true}
+      <IconButton edge="start" size="small" onClick={handleToggleType}>
+        {noteType === "note" && <FiberManualRecord />}
+        {noteType === "task" && <CheckBoxOutlineBlank />}
+        {noteType === "event" && <RadioButtonUnchecked />}
+      </IconButton>
+
+      <TextField
+        multiline
+        rowsMax={2}
         value={note}
         onKeyDown={handleKeyDown}
         onChange={handleNoteChanged}
-        onBlur={handleBlur}
-        rows={1}
-        ref={textAreaRef}
+        fullWidth
       />
+
+      <IconButton edge="end" size="small" onClick={handleSubmit}>
+        <ArrowUpward />
+      </IconButton>
     </div>
   );
 }

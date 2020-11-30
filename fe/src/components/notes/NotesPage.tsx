@@ -3,7 +3,6 @@ import "./NotesPage.scss";
 import TextBox from "../textbox/TextBox";
 import {
   Note,
-  NoteType,
   getNotes,
   removeNote,
   updateNote,
@@ -14,25 +13,14 @@ import { Header } from "../header/Header";
 import { ListWidget, ListWidgetProps } from "../widgets/ListWidget/ListWidget";
 import moment from "moment";
 import { objectIdFromDate } from "../../utils/ObjectId";
-import { BottomNavigation, BottomNavigationAction } from "@material-ui/core";
-import {
-  FiberManualRecord,
-  RadioButtonUnchecked,
-  CheckBoxOutlineBlank,
-} from "@material-ui/icons";
 
 export type NotesPageProps = {
   daily?: boolean;
 };
 
-const bottomNavIndexToNoteType: NoteType[] = ["note", "task", "event"];
-
 export default function NotesPage(props: NotesPageProps) {
   const [date, setDate] = useState<Date>(moment().startOf("day").toDate());
   const [notes, setNotes] = useState<Note[]>([]);
-  const [bottomNavIndex, setBottomNavIndex] = React.useState(0);
-
-  console.log(date);
 
   let title = "Archive";
   if (props.daily) {
@@ -53,9 +41,8 @@ export default function NotesPage(props: NotesPageProps) {
     });
   }, [date, props.daily]);
 
-  const handleSubmit = async (note: string) => {
-    const noteType = bottomNavIndexToNoteType[bottomNavIndex];
-    const newNote = await createNote({ body: note, type: noteType });
+  const handleSubmit = async (note: Partial<Note>) => {
+    const newNote = await createNote(note);
     setNotes([newNote, ...notes]);
   };
 
@@ -96,7 +83,11 @@ export default function NotesPage(props: NotesPageProps) {
 
   return (
     <div className="notes-page">
-      <Header title={title} showArrows onArrowClicked={handleArrowClicked} />
+      <Header
+        title={title}
+        showArrows={props.daily}
+        onArrowClicked={handleArrowClicked}
+      />
       <ListWidget
         items={notes}
         onItemChanged={handleItemChanged}
@@ -105,15 +96,6 @@ export default function NotesPage(props: NotesPageProps) {
         showArchived={props.daily ? false : true}
       />
       <TextBox onSubmit={handleSubmit} />
-      <BottomNavigation
-        value={bottomNavIndex}
-        onChange={(event, newValue) => setBottomNavIndex(newValue)}
-        showLabels
-      >
-        <BottomNavigationAction label="Note" icon={<FiberManualRecord />} />
-        <BottomNavigationAction label="Task" icon={<CheckBoxOutlineBlank />} />
-        <BottomNavigationAction label="Event" icon={<RadioButtonUnchecked />} />
-      </BottomNavigation>
     </div>
   );
 }
