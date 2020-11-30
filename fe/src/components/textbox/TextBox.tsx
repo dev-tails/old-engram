@@ -1,5 +1,5 @@
 import { IconButton, TextField } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   FiberManualRecord,
   RadioButtonUnchecked,
@@ -17,6 +17,7 @@ type TextBoxProps = {
 const noteTypes: NoteType[] = ["note", "task", "event"];
 
 export default function TextBox(props: TextBoxProps) {
+  const textFieldRef = useRef<HTMLInputElement | null>(null);
   const [note, setNote] = useState("");
   const [noteTypeIndex, setNoteTypeIndex] = React.useState(0);
   const noteType = noteTypes[noteTypeIndex];
@@ -34,6 +35,7 @@ export default function TextBox(props: TextBoxProps) {
       newNoteTypeIndex = 0;
     }
     setNoteTypeIndex(newNoteTypeIndex);
+    refocusInput();
   };
 
   const handleKeyDown: React.DOMAttributes<HTMLDivElement>["onKeyDown"] = (
@@ -50,13 +52,23 @@ export default function TextBox(props: TextBoxProps) {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (
+    event?: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     props.onSubmit({
       body: note,
       type: noteTypes[noteTypeIndex],
     });
 
     setNote("");
+
+    refocusInput();
+  };
+
+  const refocusInput = () => {
+    if (textFieldRef.current) {
+      textFieldRef.current.focus();
+    }
   };
 
   return (
@@ -68,12 +80,15 @@ export default function TextBox(props: TextBoxProps) {
       </IconButton>
 
       <TextField
+        inputRef={textFieldRef}
+        autoFocus
         multiline
         rowsMax={2}
         value={note}
         onKeyDown={handleKeyDown}
         onChange={handleNoteChanged}
         fullWidth
+        focused={true}
       />
 
       <IconButton edge="end" size="small" onClick={handleSubmit}>
