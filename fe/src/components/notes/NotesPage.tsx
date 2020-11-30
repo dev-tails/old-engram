@@ -14,13 +14,17 @@ import { ListWidget, ListWidgetProps } from "../widgets/ListWidget/ListWidget";
 import moment from "moment";
 import { objectIdFromDate } from "../../utils/ObjectId";
 import { BottomNavigation, BottomNavigationAction } from "@material-ui/core";
-import { AllInbox, Notes, Event, Assignment } from "@material-ui/icons";
+import {
+  FiberManualRecord,
+  RadioButtonUnchecked,
+  CheckBoxOutlineBlank,
+} from "@material-ui/icons";
 
 export type NotesPageProps = {
   daily?: boolean;
 };
 
-const bottomNavIndexToNoteType: NoteType[] = ["note", "note", "task", "event"];
+const bottomNavIndexToNoteType: NoteType[] = ["note", "task", "event"];
 
 export default function NotesPage(props: NotesPageProps) {
   const [notes, setNotes] = useState<Note[]>([]);
@@ -85,10 +89,9 @@ export default function NotesPage(props: NotesPageProps) {
         onChange={(event, newValue) => setBottomNavIndex(newValue)}
         showLabels
       >
-        <BottomNavigationAction label="All" icon={<AllInbox />} />
-        <BottomNavigationAction label="Notes" icon={<Notes />} />
-        <BottomNavigationAction label="Tasks" icon={<Assignment />} />
-        <BottomNavigationAction label="Events" icon={<Event />} />
+        <BottomNavigationAction label="Note" icon={<FiberManualRecord />} />
+        <BottomNavigationAction label="Task" icon={<CheckBoxOutlineBlank />} />
+        <BottomNavigationAction label="Event" icon={<RadioButtonUnchecked />} />
       </BottomNavigation>
     </div>
   );
