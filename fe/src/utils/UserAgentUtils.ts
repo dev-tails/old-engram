@@ -1,3 +1,4 @@
+/* eslint-disable */
 export function isMobileUserAgent() {
   let check = false;
   (function (a) {
