@@ -30,6 +30,11 @@ export default function NotesPage(props: NotesPageProps) {
   const [notes, setNotes] = useState<Note[]>([]);
   const [bottomNavIndex, setBottomNavIndex] = React.useState(0);
 
+  let title = "Archive";
+  if (props.daily) {
+    title = new Date().toLocaleDateString();
+  }
+
   useEffect(() => {
     let since_id = "";
     if (props.daily) {
@@ -75,7 +80,7 @@ export default function NotesPage(props: NotesPageProps) {
 
   return (
     <div className="notes-page">
-      <Header title={props.daily ? "Daily" : "Archive"} />
+      <Header title={title} />
       <ListWidget
         items={notes}
         onItemChanged={handleItemChanged}
