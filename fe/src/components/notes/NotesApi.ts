@@ -23,6 +23,7 @@ export async function createNote(note: Partial<Note>) {
 
 export type GetNotesParams = {
   since_id?: string;
+  max_id?: string;
 };
 
 export async function getNotes(params: GetNotesParams): Promise<Note[]> {

@@ -10,14 +10,15 @@ export function initializeNotesRouter() {
   router.get("", async function (req, res) {
     const { user, db } = req;
 
-    const { count, since_id: sinceId } = req.query;
+    const { count, since_id: sinceId, max_id: maxId } = req.query;
 
     let findOptions = {
       user: ObjectId(user),
     };
-    if (sinceId) {
+    if (sinceId && maxId) {
       findOptions._id = {
         $gt: ObjectId(sinceId),
+        $lte: ObjectId(maxId),
       };
     }
 
@@ -65,13 +66,11 @@ export function initializeNotesRouter() {
     try {
       const { user, db } = req;
 
-      const insertOpResult = await db
-        .collection("notes")
-        .insertOne({
-          user: ObjectId(user),
-          body: req.body.body,
-          type: req.body.type,
-        });
+      const insertOpResult = await db.collection("notes").insertOne({
+        user: ObjectId(user),
+        body: req.body.body,
+        type: req.body.type,
+      });
 
       const newNote = await db.collection("notes").findOne({
         _id: insertOpResult.insertedId,

@@ -146,6 +146,7 @@ export const ListWidgetItem: React.FC<ListWidgetItemProps> = ({
           actions.map((action) => {
             return (
               <IconButton
+                key={action}
                 size="small"
                 onClick={handleAction.bind(this, action)}
               >

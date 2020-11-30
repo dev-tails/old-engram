@@ -8,7 +8,7 @@ import {
   Toolbar,
   Typography,
 } from "@material-ui/core";
-import { Menu, MoreHoriz } from "@material-ui/icons";
+import { Menu, MoreHoriz, ChevronLeft, ChevronRight } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useState } from "react";
 import "./Header.scss";
@@ -16,6 +16,8 @@ import { Link } from "react-router-dom";
 
 type HeaderProps = {
   title: string;
+  showArrows?: boolean;
+  onArrowClicked?: (direction: string) => void;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -26,7 +28,11 @@ const useStyles = makeStyles((theme) => ({
   toolbar: theme.mixins.toolbar,
 }));
 
-export const Header: React.FC<HeaderProps> = ({ title }) => {
+export const Header: React.FC<HeaderProps> = ({
+  title,
+  showArrows,
+  onArrowClicked,
+}) => {
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false);
   const [rightDrawerOpen, setRightDrawerOpen] = useState(false);
 
@@ -53,7 +59,27 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
             <Menu />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
+            {showArrows && (
+              <IconButton
+                color="inherit"
+                onClick={
+                  onArrowClicked ? onArrowClicked.bind(this, "left") : () => {}
+                }
+              >
+                <ChevronLeft />
+              </IconButton>
+            )}
             {title}
+            {showArrows && (
+              <IconButton
+                color="inherit"
+                onClick={
+                  onArrowClicked ? onArrowClicked.bind(this, "right") : () => {}
+                }
+              >
+                <ChevronRight />
+              </IconButton>
+            )}
           </Typography>
           <IconButton
             edge="end"

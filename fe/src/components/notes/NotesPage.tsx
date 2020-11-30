@@ -8,6 +8,7 @@ import {
   removeNote,
   updateNote,
   createNote,
+  GetNotesParams,
 } from "./NotesApi";
 import { Header } from "../header/Header";
 import { ListWidget, ListWidgetProps } from "../widgets/ListWidget/ListWidget";
@@ -27,24 +28,30 @@ export type NotesPageProps = {
 const bottomNavIndexToNoteType: NoteType[] = ["note", "task", "event"];
 
 export default function NotesPage(props: NotesPageProps) {
+  const [date, setDate] = useState<Date>(moment().startOf("day").toDate());
   const [notes, setNotes] = useState<Note[]>([]);
   const [bottomNavIndex, setBottomNavIndex] = React.useState(0);
 
+  console.log(date);
+
   let title = "Archive";
   if (props.daily) {
-    title = new Date().toLocaleDateString();
+    title = date.toLocaleDateString();
   }
 
   useEffect(() => {
-    let since_id = "";
+    const getNotesParams: GetNotesParams = {};
     if (props.daily) {
-      since_id = objectIdFromDate(moment().startOf("day").toDate());
+      getNotesParams.since_id = objectIdFromDate(date);
+      getNotesParams.max_id = objectIdFromDate(
+        moment(date).endOf("day").toDate()
+      );
     }
 
-    getNotes({ since_id }).then((notes) => {
+    getNotes(getNotesParams).then((notes) => {
       setNotes(notes);
     });
-  }, [props.daily]);
+  }, [date, props.daily]);
 
   const handleSubmit = async (note: string) => {
     const noteType = bottomNavIndexToNoteType[bottomNavIndex];
@@ -78,9 +85,18 @@ export default function NotesPage(props: NotesPageProps) {
     setNotes(notesCopy);
   };
 
+  const handleArrowClicked = (direction: string) => {
+    console.log(direction);
+    if (direction === "left") {
+      setDate(moment(date).subtract(1, "d").toDate());
+    } else {
+      setDate(moment(date).add(1, "d").toDate());
+    }
+  };
+
   return (
     <div className="notes-page">
-      <Header title={title} />
+      <Header title={title} showArrows onArrowClicked={handleArrowClicked} />
       <ListWidget
         items={notes}
         onItemChanged={handleItemChanged}
