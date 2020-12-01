@@ -14,6 +14,7 @@ input:focus {
 
 body {
   overflow: hidden;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
 }
 
 .container {
