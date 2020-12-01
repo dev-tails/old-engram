@@ -57,7 +57,7 @@ export default function LoginPage(props: LoginPageProps) {
 
   return (
     <div className="login-page">
-      <Header title="Engram" />
+      <Header title="engram" />
       <ListWidget items={errors} />
       <div className="bottom-box">
         <input

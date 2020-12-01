@@ -1,4 +1,4 @@
-# Engram
+# engram
 
 engram - a hypothetical permanent change in the brain accounting for the existence of memory; a memory trace.
 
@@ -21,15 +21,15 @@ A MongoDB, Express, React, Node (MERN) stack application for quickly gathering t
 2. Install [Node.js using nvm](https://github.com/nvm-sh/nvm#usage)
 3. Create `.env` file with desired [configuration](#configuration)
 4. Build and serve React App
-    ```
-    npm install --prefix fe/
-    npm start --prefix fe/
-    ```
+   ```
+   npm install --prefix fe/
+   npm start --prefix fe/
+   ```
 5. Run API
-    ```
-    cd be/
-    node index.js
-    ```
+   ```
+   cd be/
+   node index.js
+   ```
 
 ## Self Hosted
 
@@ -38,52 +38,53 @@ A MongoDB, Express, React, Node (MERN) stack application for quickly gathering t
 3. Install [Node.js using nvm](https://github.com/nvm-sh/nvm#usage)
 4. Create `.env` file with desired [configuration](#configuration)
 5. Build Production React App
-    ```
-    npm install --prefix fe/
-    npm build --prefix fe/
-    ```
+   ```
+   npm install --prefix fe/
+   npm build --prefix fe/
+   ```
 6. Install [PM2](https://github.com/Unitech/pm2#installing-pm2)
 7. Start API With PM2
-    ```
-    cd be/
-    pm2 start index.js
-    ```
+   ```
+   cd be/
+   pm2 start index.js
+   ```
 8. [Install Nginx](https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-18-04)
-    ```
-    sudo apt update
-    sudo apt install nginx
-    ```
+   ```
+   sudo apt update
+   sudo apt install nginx
+   ```
 9. Configure Nginx to route traffic to the API and public files
-    
-    ```
-    cd /etc/nginx/sites-available
-    ```
 
-    Using your preferred editor create a file `example.com`.
+   ```
+   cd /etc/nginx/sites-available
+   ```
 
-    e.g. `sudo nano example.com`
+   Using your preferred editor create a file `example.com`.
 
-    Paste the following inside (update the server_name and alias to match what yours actually is)
+   e.g. `sudo nano example.com`
 
-    ```
-    upstream api {
-      server 127.0.0.1:4000;
-    }
+   Paste the following inside (update the server_name and alias to match what yours actually is)
 
-    server {
-      server_name example.com;
+   ```
+   upstream api {
+     server 127.0.0.1:4000;
+   }
 
-      listen 80;
+   server {
+     server_name example.com;
 
-      location /api {
-        proxy_pass http://api;
-      }
+     listen 80;
 
-      location / {
-        alias /home/[user]/brainstorm/fe/build/;
-      }
-    }
-    ```
+     location /api {
+       proxy_pass http://api;
+     }
+
+     location / {
+       alias /home/[user]/brainstorm/fe/build/;
+     }
+   }
+   ```
+
 10. Create a symlink to your new site
     ```
     sudo ln -s /etc/nginx/sites-available/example.com /etc/nginx/sites-enabled/
@@ -93,7 +94,7 @@ A MongoDB, Express, React, Node (MERN) stack application for quickly gathering t
     sudo service nginx reload
     ```
 12. Add a A DNS record that points to the IP address of this server
-    
+
     On Bluehost, this can be found under the **domains** heading and **zone editor** subheading
 
     ![Bluehost Add DNS Record](images/add-dns-bluehost.png)
