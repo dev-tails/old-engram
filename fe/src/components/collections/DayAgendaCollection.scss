@@ -1,0 +1,17 @@
+.agenda-page {
+  .agenda-content {
+    position: fixed;
+    top: 64px;
+    bottom: 0px;
+    width: 100%;
+  }
+
+  .columns {
+    display: flex;
+
+    .column {
+      flex: 1;
+      padding: 0 8px;
+    }
+  }
+}

@@ -1,0 +1,21 @@
+.agenda-view {
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
+
+  .agenda-view-item {
+    padding: 8px;
+    display: flex;
+    .agenda-view-item-left {
+      width: 24px;
+    }
+
+    .agenda-view-item-content {
+      margin: 0 8px;
+      width: 100%;
+
+      .agenda-view-slot {
+      }
+    }
+  }
+}

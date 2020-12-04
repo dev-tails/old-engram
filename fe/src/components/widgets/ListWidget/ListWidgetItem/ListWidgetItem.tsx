@@ -3,13 +3,13 @@ import ReactMarkdown from "react-markdown";
 import {
   Archive,
   Delete,
-  FiberManualRecord,
   RadioButtonUnchecked,
   CheckBoxOutlineBlank,
   CheckBox,
+  Remove,
 } from "@material-ui/icons";
 import { IconButton } from "@material-ui/core";
-import { Note } from "../../../notes/NotesApi";
+import { Note, NoteType } from "../../../notes/NotesApi";
 import { dateFromObjectId } from "../../../../utils/ObjectId";
 import "./ListWidgetItem.scss";
 
@@ -34,10 +34,6 @@ export const ListWidgetItem: React.FC<ListWidgetItemProps> = ({
 }) => {
   const [body, setBody] = useState(item.body);
   const [editing, setEditing] = useState(false);
-
-  if (!item.body) {
-    return null;
-  }
 
   const dispatchItemChange = (update: Partial<Note>) => {
     if (onItemChanged) {
@@ -87,7 +83,21 @@ export const ListWidgetItem: React.FC<ListWidgetItemProps> = ({
   };
 
   const itemDate = dateFromObjectId(item._id);
-  const itemDateString = `${itemDate?.toLocaleDateString()} ${itemDate?.toLocaleTimeString()}`;
+  let itemDateString = "";
+  if (itemDate) {
+    itemDateString = `${itemDate?.toLocaleDateString()} ${itemDate?.toLocaleTimeString()}`;
+  }
+
+  const handleToggleType = () => {
+    let type = item.type || "note";
+
+    const TYPES: NoteType[] = ["note", "task", "event"];
+    const currentTypeIndex = TYPES.indexOf(type);
+    const newType = TYPES[(currentTypeIndex + 1) % TYPES.length];
+    dispatchItemChange({
+      type: newType,
+    });
+  };
 
   const handleAction = (action: ListAction) => {
     if (action === "delete") {
@@ -105,8 +115,8 @@ export const ListWidgetItem: React.FC<ListWidgetItemProps> = ({
     <div key={item._id} className="list-widget-item">
       <div className="list-item-left-actions">
         {
-          <IconButton size="small">
-            {(!item.type || item.type === "note") && <FiberManualRecord />}
+          <IconButton edge="start" size="small" onClick={handleToggleType}>
+            {(!item.type || item.type === "note") && <Remove />}
             {item.type === "event" && <RadioButtonUnchecked />}
             {item.type === "task" && !item.checked && (
               <CheckBoxOutlineBlank
@@ -119,12 +129,12 @@ export const ListWidgetItem: React.FC<ListWidgetItemProps> = ({
           </IconButton>
         }
       </div>
-      <div className="list-item-content">
-        <div
-          className="list-item-text"
-          onClick={handleTextClicked}
-          onBlur={setEditing.bind(this, false)}
-        >
+      <div
+        className="list-item-content"
+        onClick={handleTextClicked}
+        onBlur={setEditing.bind(this, false)}
+      >
+        <div className="list-item-text">
           {editing ? (
             <textarea
               value={body}
@@ -136,10 +146,12 @@ export const ListWidgetItem: React.FC<ListWidgetItemProps> = ({
               rows={(body.match(/\n/g) || []).length + 1}
             ></textarea>
           ) : (
-            <ReactMarkdown>{item.body}</ReactMarkdown>
+            <div>{body || ""}</div>
           )}
         </div>
-        <div className="list-item-secondary">{itemDateString}</div>
+        {itemDateString && (
+          <div className="list-item-secondary">{itemDateString}</div>
+        )}
       </div>
       <div className="list-item-actions">
         {actions &&
