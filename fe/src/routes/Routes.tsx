@@ -5,6 +5,7 @@ import {
   Route,
   Switch,
 } from "react-router-dom";
+import { DayAgendaCollection } from "../components/collections/DayAgendaCollection";
 import { HelpPage } from "../components/HelpPage/HelpPage";
 import { ZapierHelpPage } from "../components/HelpPage/ZapierHelpPage/ZapierHelpPage";
 import LoginPage from "../components/login/LoginPage";
@@ -17,6 +18,9 @@ export default function Routes() {
       <Switch>
         <Route exact path="/">
           <Redirect to="/daily" />
+        </Route>
+        <Route exact path="/collections/agenda">
+          <DayAgendaCollection />
         </Route>
         <Route exact path="/archive">
           <NotesPage />
