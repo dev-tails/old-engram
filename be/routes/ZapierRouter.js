@@ -10,11 +10,16 @@ export function initializeZapierRouter() {
   router.use(AuthRequiredMiddleware);
 
   router.get("/notes", async function (req, res) {
-    res.json([
-      {
-        body: "This is a sample note",
-      },
-    ]);
+    const { user, db } = req;
+    const notes = await db
+      .collection("notes")
+      .find({
+        user: ObjectId(user),
+      })
+      .sort({ _id: -1 })
+      .limit(5)
+      .toArray();
+    return res.json(notes);
   });
 
   router.post("/notes", async function (req, res) {
