@@ -2,8 +2,8 @@ import React from "react";
 import moment from "moment";
 import "./AgendaView.scss";
 import { Note } from "../notes/NotesApi";
-import Icon from "../Icon/Icon.svg";
 import { NoteItem } from "../notes/NoteItem/NoteItem";
+import { Header } from "../header/Header";
 
 type AgendaViewProps = {};
 
@@ -34,6 +34,7 @@ export const AgendaView: React.FC<AgendaViewProps> = (props) => {
 
   return (
     <div className="agenda-view noselect">
+      <Header title="Agenda" />
       {itemsByHour.map((items, index) => {
         const minSlots = 2;
         const itemsCopy = Array.from(items);

@@ -46,6 +46,12 @@ export const Header: React.FC<HeaderProps> = ({
     setRightDrawerOpen(true);
   };
 
+  const links = [
+    { to: "/daily", title: "Daily" },
+    { to: "/collections/agenda", title: "Agenda" },
+    { to: "/archive", title: "Archive" },
+  ];
+
   return (
     <div className="header">
       <AppBar>
@@ -100,19 +106,18 @@ export const Header: React.FC<HeaderProps> = ({
         >
           <div className="drawer-contents">
             <List>
-              <Link to={`/daily`} onClick={setLeftDrawerOpen.bind(this, false)}>
-                <ListItem button>
-                  <ListItemText primary={"Daily"} />
-                </ListItem>
-              </Link>
-              <Link
-                to={`/archive`}
-                onClick={setLeftDrawerOpen.bind(this, false)}
-              >
-                <ListItem button>
-                  <ListItemText primary={"Archive"} />
-                </ListItem>
-              </Link>
+              {links.map((link) => {
+                return (
+                  <Link
+                    to={link.to}
+                    onClick={setLeftDrawerOpen.bind(this, false)}
+                  >
+                    <ListItem button>
+                      <ListItemText primary={link.title} />
+                    </ListItem>
+                  </Link>
+                );
+              })}
             </List>
           </div>
         </SwipeableDrawer>
