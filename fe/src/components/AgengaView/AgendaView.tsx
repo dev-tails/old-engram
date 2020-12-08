@@ -3,6 +3,7 @@ import moment from "moment";
 import "./AgendaView.scss";
 import { Note } from "../notes/NotesApi";
 import Icon from "../Icon/Icon.svg";
+import { NoteItem } from "../notes/NoteItem/NoteItem";
 
 type AgendaViewProps = {};
 
@@ -51,21 +52,7 @@ export const AgendaView: React.FC<AgendaViewProps> = (props) => {
               {itemsCopy.map((item) => {
                 return (
                   <div className="agenda-view-slot">
-                    <div className="icon">
-                      {/* <svg height="16" width="16">
-                        <line
-                          x1="4"
-                          y1="8"
-                          x2="12"
-                          y2="8"
-                          style={{
-                            stroke: "#000000",
-                            strokeWidth: 1,
-                          }}
-                        />
-                      </svg> */}
-                    </div>
-                    <div>{item.body}</div>
+                    <NoteItem />
                   </div>
                 );
               })}
