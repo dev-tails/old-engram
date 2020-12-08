@@ -10,7 +10,13 @@ export function initializeNotesRouter() {
   router.get("", async function (req, res) {
     const { user, db } = req;
 
-    const { count, since_id: sinceId, max_id: maxId } = req.query;
+    const {
+      count,
+      since_id: sinceId,
+      max_id: maxId,
+      since,
+      before,
+    } = req.query;
 
     let findOptions = {
       user: ObjectId(user),
@@ -19,6 +25,12 @@ export function initializeNotesRouter() {
       findOptions._id = {
         $gt: ObjectId(sinceId),
         $lte: ObjectId(maxId),
+      };
+    }
+    if (since && before) {
+      findOptions.start = {
+        $gte: new Date(since),
+        $lte: new Date(before),
       };
     }
 
@@ -53,7 +65,7 @@ export function initializeNotesRouter() {
       },
       {
         $set: {
-          start: update.start,
+          start: new Date(update.start),
           archived: update.archived,
           checked: update.checked,
           body: update.body,
@@ -69,7 +81,7 @@ export function initializeNotesRouter() {
 
       const insertOpResult = await db.collection("notes").insertOne({
         user: ObjectId(user),
-        start: req.body.start,
+        start: new Date(req.body.start),
         body: req.body.body,
         type: req.body.type,
       });
