@@ -6,6 +6,7 @@ import { useHistory } from "react-router-dom";
 import { ListWidget } from "../widgets/ListWidget/ListWidget";
 import { Note } from "../notes/NotesApi";
 import { objectIdFromDate } from "../../utils/ObjectId";
+import { signUp } from "../../UsersApi";
 
 export type LoginPageProps = {};
 
@@ -37,10 +38,20 @@ export default function LoginPage(props: LoginPageProps) {
       });
   };
 
-  const handleSignUp = () => {
-    axios.post("/api/users/signup", { username, password }).then((res) => {
+  const handleSignUp = async () => {
+    try {
+      await signUp({ username, password });
       history.push("/");
-    });
+    } catch (err) {
+      let errorMessage = err.message;
+      setErrors([
+        ...errors,
+        {
+          _id: objectIdFromDate(new Date()),
+          body: errorMessage,
+        },
+      ]);
+    }
   };
 
   const handleUsernameChanged: React.InputHTMLAttributes<HTMLInputElement>["onChange"] = (

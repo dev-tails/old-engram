@@ -1,5 +1,16 @@
 import axios from "axios";
 
+export type SignUpParams = {
+  username: string;
+  password: string;
+};
+
+export async function signUp(params: SignUpParams) {
+  return axios.post("/api/users/signup", params, {
+    validateStatus: (status) => status === 200,
+  });
+}
+
 export async function logout() {
   await axios.post("/api/users/logout");
 }

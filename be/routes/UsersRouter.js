@@ -5,6 +5,7 @@ import { ObjectId } from "../Database.js";
 import { getEnv } from "../env.js";
 import { AuthAPIKeyMiddleware } from "../middleware/AuthAPIKeyMiddleware.js";
 import { AuthRequiredMiddleware } from "../middleware/AuthRequiredMiddleware.js";
+import yup from "yup";
 
 async function setToken(res, user) {
   const { jwtSecret, production } = getEnv();
@@ -37,6 +38,16 @@ export function initializeUserRouter() {
   const router = express.Router();
 
   router.post("/signup", async function (req, res) {
+    const schema = yup.object().shape({
+      username: yup.string().required(),
+      password: yup.string().required().length(8),
+    });
+
+    const isValidRequest = await schema.isValid(req.body);
+    if (!isValidRequest) {
+      return res.sendStatus(400);
+    }
+
     const { db } = req;
     const { username, password } = req.body;
 
