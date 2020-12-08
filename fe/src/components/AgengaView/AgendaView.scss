@@ -1,9 +1,11 @@
 .agenda-view {
-  position: fixed;
-  top: 64px;
-  bottom: 0px;
-  width: 100%;
-  overflow-y: scroll;
+  .agenda-view-content {
+    position: fixed;
+    top: 64px;
+    bottom: 0px;
+    width: 100%;
+    overflow-y: scroll;
+  }
 
   .agenda-view-item {
     padding: 8px;
