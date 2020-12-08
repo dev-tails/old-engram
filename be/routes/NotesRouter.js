@@ -53,6 +53,7 @@ export function initializeNotesRouter() {
       },
       {
         $set: {
+          start: update.start,
           archived: update.archived,
           checked: update.checked,
           body: update.body,
@@ -68,6 +69,7 @@ export function initializeNotesRouter() {
 
       const insertOpResult = await db.collection("notes").insertOne({
         user: ObjectId(user),
+        start: req.body.start,
         body: req.body.body,
         type: req.body.type,
       });
