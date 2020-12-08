@@ -10,7 +10,15 @@ export type Note = {
   checked?: boolean;
   archived?: boolean;
   type?: NoteType;
+  start?: Date;
 };
+
+export async function createOrUpdateNote(note: Partial<Note>) {
+  if (note._id) {
+    return updateNote(note);
+  }
+  return createNote(note);
+}
 
 export async function createNote(note: Partial<Note>) {
   const res = await axios.post(
