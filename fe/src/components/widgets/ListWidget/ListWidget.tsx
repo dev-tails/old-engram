@@ -24,12 +24,6 @@ export const ListWidget: React.FC<ListWidgetProps> = (props) => {
           <ListWidgetItem key={item._id} index={index} item={item} {...props} />
         );
       })}
-      <ListWidgetItem
-        key={"new"}
-        index={props.items.length}
-        item={{ body: "" }}
-        {...props}
-      />
     </div>
   );
 };
