@@ -7,11 +7,12 @@
     padding: 8px;
     display: flex;
     .agenda-view-item-left {
-      width: 24px;
+      text-align: right;
+      width: 18px;
+      margin-right: 4px;
     }
 
     .agenda-view-item-content {
-      margin: 0 8px;
       width: 100%;
 
       .agenda-view-slot {
