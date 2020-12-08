@@ -32,10 +32,19 @@ export async function createNote(note: Partial<Note>) {
 export type GetNotesParams = {
   since_id?: string;
   max_id?: string;
+  since?: Date;
+  before?: Date;
 };
 
 export async function getNotes(params: GetNotesParams): Promise<Note[]> {
-  const res = await Api.get(`/api/notes?${queryString.stringify(params)}`, {
+  const paramsCopy = {
+    since_id: params.since_id,
+    max_id: params.max_id,
+    before: params.before?.toISOString(),
+    since: params.since?.toISOString(),
+  };
+
+  const res = await Api.get(`/api/notes?${queryString.stringify(paramsCopy)}`, {
     withCredentials: true,
   });
   return res.data;

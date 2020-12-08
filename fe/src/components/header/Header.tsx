@@ -109,6 +109,7 @@ export const Header: React.FC<HeaderProps> = ({
               {links.map((link) => {
                 return (
                   <Link
+                    key={link.to}
                     to={link.to}
                     onClick={setLeftDrawerOpen.bind(this, false)}
                   >

@@ -17,6 +17,10 @@ export const NoteItem: React.FC<NoteItemProps> = (props) => {
   };
 
   const handleSave = () => {
+    if (body === props.note.body) {
+      return;
+    }
+
     props.onSave({
       ...props.note,
       body,

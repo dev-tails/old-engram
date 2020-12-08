@@ -10,8 +10,10 @@
     display: flex;
     .agenda-view-item-left {
       text-align: right;
-      width: 18px;
+      margin-top: 4px;
       margin-right: 4px;
+      font-size: 0.8em;
+      width: 40px;
     }
 
     .agenda-view-item-content {
