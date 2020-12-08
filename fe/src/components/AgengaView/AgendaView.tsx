@@ -1,7 +1,7 @@
 import React from "react";
 import moment from "moment";
 import "./AgendaView.scss";
-import { Note } from "../notes/NotesApi";
+import { createOrUpdateNote, Note } from "../notes/NotesApi";
 import { NoteItem } from "../notes/NoteItem/NoteItem";
 import { Header } from "../header/Header";
 
@@ -10,16 +10,14 @@ type AgendaViewProps = {};
 export const AgendaView: React.FC<AgendaViewProps> = (props) => {
   const now = moment();
 
-  const items = [
+  const items: Note[] = [
     {
       body: "Run 1 mile",
-      start: now.hour(9),
-      color: "#FF000",
+      start: now.hour(9).toDate(),
     },
     {
       body: "Make smoothie",
-      start: now.hour(9),
-      color: "#FF000",
+      start: now.hour(9).toDate(),
     },
   ];
 
@@ -29,8 +27,12 @@ export const AgendaView: React.FC<AgendaViewProps> = (props) => {
   }
 
   for (const item of items) {
-    itemsByHour[item.start.hour()].push(item);
+    itemsByHour[moment(item.start).hour()].push(item);
   }
+
+  const handleNoteSaved = async (note: Note) => {
+    await createOrUpdateNote(note);
+  };
 
   return (
     <div className="agenda-view noselect">
@@ -40,8 +42,14 @@ export const AgendaView: React.FC<AgendaViewProps> = (props) => {
         const itemsCopy = Array.from(items);
         if (itemsCopy.length < minSlots) {
           for (let i = 0; i < minSlots; i++) {
+            let startDate = moment()
+              .hour(index)
+              .minutes(i * (60 / minSlots))
+              .toDate();
+
             itemsCopy.push({
               body: "",
+              start: startDate,
             });
           }
         }
@@ -53,7 +61,7 @@ export const AgendaView: React.FC<AgendaViewProps> = (props) => {
               {itemsCopy.map((item) => {
                 return (
                   <div className="agenda-view-slot">
-                    <NoteItem />
+                    <NoteItem note={item} onSave={handleNoteSaved} />
                   </div>
                 );
               })}
