@@ -1,29 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import moment from "moment";
 import "./AgendaView.scss";
-import { createOrUpdateNote, getNotes, Note } from "../notes/NotesApi";
+import { Note } from "../notes/NotesApi";
 import { NoteItem } from "../notes/NoteItem/NoteItem";
-import { Header } from "../header/Header";
 
-type AgendaViewProps = {};
+type AgendaViewProps = {
+  date: Date;
+  items: Note[];
+  onSave: (note: Note) => Promise<void>;
+};
 
-export const AgendaView: React.FC<AgendaViewProps> = (props) => {
-  const [items, setItems] = useState<Note[] | null>(null);
-
-  useEffect(() => {
-    async function fetchNotes() {
-      const now = moment();
-
-      const newItems = await getNotes({
-        since: now.startOf("day").toDate(),
-        before: now.endOf("day").toDate(),
-      });
-      setItems(newItems);
-    }
-
-    fetchNotes();
-  }, []);
-
+export const AgendaView: React.FC<AgendaViewProps> = ({
+  date,
+  items,
+  onSave,
+}) => {
   const itemsByHour: Array<Note[]> = [];
   for (let i = 0; i < 24; i++) {
     itemsByHour.push([]);
@@ -37,56 +28,44 @@ export const AgendaView: React.FC<AgendaViewProps> = (props) => {
     }
   }
 
-  const handleNoteSaved = async (note: Note) => {
-    await createOrUpdateNote(note);
-  };
-
   return (
     <div className="agenda-view">
-      <Header title="Agenda" />
-      <div className="agenda-view-content">
-        {items &&
-          itemsByHour.map((items, index) => {
-            let iterationMoment = moment()
-              .startOf("day")
-              .hour(index)
-              .minutes(0);
-            let timeString = iterationMoment.format("h A");
+      {itemsByHour.map((items, index) => {
+        let iterationMoment = moment().startOf("day").hour(index).minutes(0);
+        let timeString = iterationMoment.format("h A");
 
-            return (
-              <div className="agenda-view-item" key={index}>
-                <div className="agenda-view-item-left">{timeString}</div>
-                <div className="agenda-view-item-content">
-                  {[0, 30].map((minutes) => {
-                    let startDate = moment()
-                      .hour(index)
-                      .minutes(minutes)
-                      .toDate();
-                    let itemForMinutes = items.find((item) => {
-                      return moment(item.start).isSame(startDate, "minute");
-                    });
-                    console.log(itemForMinutes);
-                    if (!itemForMinutes) {
-                      itemForMinutes = {
-                        body: "",
-                        start: startDate,
-                      };
-                    }
+        return (
+          <div className="agenda-view-item" key={`${date}-${index}`}>
+            <div className="agenda-view-item-left">{timeString}</div>
+            <div className="agenda-view-item-content">
+              {[0, 30].map((minutes) => {
+                let startDate = moment(date)
+                  .hour(index)
+                  .minutes(minutes)
+                  .toDate();
+                let itemForMinutes = items.find((item) => {
+                  return moment(item.start).isSame(startDate, "minute");
+                });
+                if (!itemForMinutes) {
+                  itemForMinutes = {
+                    body: "",
+                    start: startDate,
+                  };
+                }
 
-                    return (
-                      <div className="agenda-view-slot" key={minutes}>
-                        <NoteItem
-                          note={itemForMinutes}
-                          onSave={handleNoteSaved}
-                        />
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            );
-          })}
-      </div>
+                return (
+                  <div
+                    className="agenda-view-slot"
+                    key={`${date}-${index}-${minutes}`}
+                  >
+                    <NoteItem note={itemForMinutes} onSave={onSave} />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 };

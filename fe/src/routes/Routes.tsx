@@ -5,7 +5,7 @@ import {
   Route,
   Switch,
 } from "react-router-dom";
-import { AgendaView } from "../components/AgengaView/AgendaView";
+import { AgendaViewPage } from "../components/AgendaViewPage/AgendaViewPage";
 import { HelpPage } from "../components/HelpPage/HelpPage";
 import { ZapierHelpPage } from "../components/HelpPage/ZapierHelpPage/ZapierHelpPage";
 import LoginPage from "../components/login/LoginPage";
@@ -20,7 +20,7 @@ export default function Routes() {
           <Redirect to="/daily" />
         </Route>
         <Route exact path="/collections/agenda">
-          <AgendaView />
+          <AgendaViewPage />
         </Route>
         <Route exact path="/archive">
           <NotesPage />
