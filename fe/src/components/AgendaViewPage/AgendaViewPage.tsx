@@ -28,7 +28,18 @@ export const AgendaViewPage: React.FC<AgendaViewProps> = (props) => {
   }, [date]);
 
   const handleNoteSaved = async (note: Note) => {
-    await createOrUpdateNote(note);
+    const updatedNote = await createOrUpdateNote(note);
+    const itemsCopy = Array.from(items);
+
+    const indexInItemsArray = itemsCopy.findIndex(
+      (item) => item._id === updatedNote._id
+    );
+    if (indexInItemsArray >= 0) {
+      itemsCopy[indexInItemsArray] = updatedNote;
+    } else {
+      itemsCopy.push(updatedNote);
+    }
+    setItems(itemsCopy);
   };
 
   const handleArrowClicked = (direction: string) => {

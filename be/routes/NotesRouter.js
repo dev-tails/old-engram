@@ -59,7 +59,7 @@ export function initializeNotesRouter() {
       throw new UnauthorizedError();
     }
 
-    const updatedNote = await Note.updateOne(
+    const updateResultOp = await Note.updateOne(
       {
         _id: ObjectId(id),
       },
@@ -73,6 +73,11 @@ export function initializeNotesRouter() {
         },
       }
     );
+
+    const updatedNote = await db.collection("notes").findOne({
+      _id: ObjectId(id),
+    });
+
     return res.json(updatedNote);
   });
 
