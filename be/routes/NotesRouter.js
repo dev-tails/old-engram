@@ -65,6 +65,7 @@ export function initializeNotesRouter() {
       },
       {
         $set: {
+          type: update.type,
           start: new Date(update.start),
           archived: update.archived,
           checked: update.checked,
