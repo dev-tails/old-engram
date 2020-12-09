@@ -73,7 +73,6 @@ export default function NotesPage(props: NotesPageProps) {
   };
 
   const handleArrowClicked = (direction: string) => {
-    console.log(direction);
     if (direction === "left") {
       setDate(moment(date).subtract(1, "d").toDate());
     } else {
