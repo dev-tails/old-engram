@@ -5,8 +5,8 @@ import React, { useEffect, useState } from "react";
 import { BulletIcon } from "../BulletIcon/BulletIcon";
 import "./CollapsibleNoteItem.scss";
 
-type CollapsibleNote = {
-  _id: string;
+export type CollapsibleNote = {
+  _id?: string;
   body: string;
   prev?: string;
   parent?: string;

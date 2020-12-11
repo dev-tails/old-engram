@@ -1,13 +1,57 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useParams } from "react-router";
-import { CollapsibleNoteItem } from "../CollapsibleNoteItem/CollapsibleNoteItem";
-import { NoteItem } from "../NoteItem/NoteItem";
+import {
+  CollapsibleNote,
+  CollapsibleNoteItem,
+} from "../CollapsibleNoteItem/CollapsibleNoteItem";
+import { Note } from "../NotesApi";
 
 type EditNotePageProps = {};
 
 type EditNotePageParams = {
   id: string;
 };
+
+function getNoteWithChildren(
+  notes: Note[],
+  noteId: string | undefined
+): CollapsibleNote | null {
+  const note = notes.find((note) => note._id === noteId);
+  if (!note) {
+    return null;
+  }
+
+  const children = notes.filter((note) => note.parent === noteId);
+  const sortedChildren: CollapsibleNote[] = [];
+  let prev = null;
+  do {
+    let found = false;
+    for (let i = 0; i < children.length; i++) {
+      const child = children[i];
+
+      if (!prev && !child.prev) {
+        found = true;
+      } else if (prev === child.prev) {
+        found = true;
+      }
+
+      if (found) {
+        prev = child._id;
+        const childNoteWithChildren = getNoteWithChildren(notes, child._id);
+        if (childNoteWithChildren) {
+          sortedChildren.push(childNoteWithChildren);
+        }
+        break;
+      }
+    }
+
+    if (!found) {
+      prev = null;
+    }
+  } while (prev !== null);
+
+  return { ...note, children: sortedChildren };
+}
 
 export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
   const params = useParams<EditNotePageParams>();
@@ -42,42 +86,14 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
     },
   ];
 
-  const note = notes.find((note) => note._id === params.id);
+  const note = getNoteWithChildren(notes, params.id);
   if (!note) {
     return null;
   }
 
-  const children = notes.filter((note) => note.parent === params.id);
-  const sortedChildren = [];
-  let prev = null;
-  do {
-    let found = false;
-    for (let i = 0; i < children.length; i++) {
-      const child = children[i];
-
-      if (!prev && !child.prev) {
-        found = true;
-      } else if (prev === child.prev) {
-        found = true;
-      }
-
-      if (found) {
-        prev = child._id;
-        sortedChildren.push(child);
-        break;
-      }
-    }
-
-    if (!found) {
-      prev = null;
-    }
-  } while (prev !== null);
-
-  const populatedNote = { ...note, children: sortedChildren };
-
   return (
     <div className="edit-note-page">
-      <CollapsibleNoteItem note={populatedNote} onSave={() => {}} />
+      <CollapsibleNoteItem note={note} onSave={() => {}} />
     </div>
   );
 };
