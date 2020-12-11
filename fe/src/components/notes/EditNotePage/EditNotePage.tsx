@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router";
 import {
   CollapsibleNote,
@@ -56,7 +56,7 @@ function getNoteWithChildren(
 export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
   const params = useParams<EditNotePageParams>();
 
-  const notes = [
+  const [notes, setNotes] = useState([
     {
       _id: "1",
       body: "Title",
@@ -84,16 +84,53 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
       body: "Child 2 - Child 1",
       parent: "3",
     },
-  ];
+  ]);
 
   const note = getNoteWithChildren(notes, params.id);
   if (!note) {
     return null;
   }
 
+  const handleUnindent = (unindentedNote: Note) => {
+    if (!unindentedNote.parent) {
+      return;
+    }
+
+    const notesCopy = Array.from(notes);
+
+    const unindentedNoteCopy = notesCopy.find(
+      (n) => n._id === unindentedNote._id
+    );
+    if (!unindentedNoteCopy) {
+      return;
+    }
+
+    unindentedNoteCopy.prev = unindentedNoteCopy.parent;
+    const parentNote = notesCopy.find(
+      (note) => note._id === unindentedNoteCopy.parent
+    );
+    unindentedNoteCopy.parent = parentNote?.parent;
+
+    const newNextNote = notesCopy.find(
+      (note) => note.prev === unindentedNoteCopy.parent
+    );
+    if (newNextNote) {
+      newNextNote.prev = unindentedNote._id;
+    }
+
+    setNotes(notesCopy);
+  };
+
+  const handleIndent = (note: Note) => {};
+
   return (
     <div className="edit-note-page">
-      <CollapsibleNoteItem note={note} onSave={() => {}} />
+      <CollapsibleNoteItem
+        note={note}
+        onSave={() => {}}
+        onIndent={handleIndent}
+        onUnindent={handleUnindent}
+      />
     </div>
   );
 };

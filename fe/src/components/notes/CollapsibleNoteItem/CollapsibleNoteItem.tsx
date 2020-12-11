@@ -24,15 +24,32 @@ type CollapsibleNoteItemProps = {
 export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   props
 ) => {
+  const [active, setActive] = useState(false);
   const [body, setBody] = useState(props.note.body);
   const [collapsed, setCollapsed] = useState(true);
 
   useEffect(() => {
-    document.addEventListener("keydown", (event) => {
+    function keyDownListener(event: KeyboardEvent) {
+      if (!active) {
+        return;
+      }
+
       if (event.key === "Tab") {
         event.preventDefault();
+        event.stopPropagation();
+
+        if (event.shiftKey) {
+          props.onUnindent && props.onUnindent(props.note);
+        } else {
+          props.onIndent && props.onIndent(props.note);
+        }
       }
-    });
+    }
+    document.addEventListener("keydown", keyDownListener);
+
+    return () => {
+      document.removeEventListener("keydown", keyDownListener);
+    };
   });
 
   const handleTextChanged = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -40,6 +57,8 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   };
 
   const handleSave = () => {
+    setActive(false);
+
     if (body === props.note.body) {
       return;
     }
@@ -69,6 +88,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
           value={body}
           onChange={handleTextChanged}
           onBlur={handleSave}
+          onClick={setActive.bind(this, true)}
         />
       </div>
       {!collapsed && props.note.children && (
@@ -76,9 +96,9 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
           {props.note.children.map((childNote) => {
             return (
               <CollapsibleNoteItem
+                {...props}
                 key={childNote._id}
                 note={childNote}
-                onSave={() => {}}
               />
             );
           })}
