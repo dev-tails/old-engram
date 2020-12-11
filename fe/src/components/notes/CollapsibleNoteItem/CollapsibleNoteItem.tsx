@@ -2,13 +2,23 @@ import { TextareaAutosize } from "@material-ui/core";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import React, { useEffect, useState } from "react";
-import { Note } from "../NotesApi";
 import { BulletIcon } from "../BulletIcon/BulletIcon";
 import "./CollapsibleNoteItem.scss";
 
+type CollapsibleNote = {
+  _id: string;
+  body: string;
+  prev?: string;
+  parent?: string;
+  next?: string;
+  children?: CollapsibleNote[];
+};
+
 type CollapsibleNoteItemProps = {
-  note: Note;
-  onSave: (note: Note) => void;
+  note: CollapsibleNote;
+  onSave: (note: CollapsibleNote) => void;
+  onUnindent?: (note: CollapsibleNote) => void;
+  onIndent?: (note: CollapsibleNote) => void;
 };
 
 export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
@@ -22,7 +32,6 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
       if (event.key === "Tab") {
         event.preventDefault();
       }
-      console.log(event.key);
     });
   });
 
@@ -46,8 +55,8 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   };
 
   return (
-    <div className="note-item-wrapper">
-      <div className="note-item">
+    <div className="collapsible-note-item-wrapper">
+      <div className="collapsible-note-item">
         <span className="block-expand" onClick={handleToggleExpand}>
           {collapsed ? (
             <ArrowRightIcon fontSize="small" />
@@ -65,7 +74,13 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
       {!collapsed && props.note.children && (
         <div style={{ marginLeft: "12px" }}>
           {props.note.children.map((childNote) => {
-            return <CollapsibleNoteItem note={childNote} onSave={() => {}} />;
+            return (
+              <CollapsibleNoteItem
+                key={childNote._id}
+                note={childNote}
+                onSave={() => {}}
+              />
+            );
           })}
         </div>
       )}
