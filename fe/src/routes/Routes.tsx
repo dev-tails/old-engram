@@ -10,6 +10,7 @@ import { HelpPage } from "../components/HelpPage/HelpPage";
 import { ZapierHelpPage } from "../components/HelpPage/ZapierHelpPage/ZapierHelpPage";
 import LoginPage from "../components/login/LoginPage";
 import { LogoutPage } from "../components/LogoutPage/LogoutPage";
+import { EditNotePage } from "../components/notes/EditNotePage/EditNotePage";
 import NotesPage from "../components/notes/NotesPage";
 
 export default function Routes() {
@@ -18,6 +19,9 @@ export default function Routes() {
       <Switch>
         <Route exact path="/">
           <Redirect to="/daily" />
+        </Route>
+        <Route exact path="/notes/:id">
+          <EditNotePage />
         </Route>
         <Route exact path="/collections/agenda">
           <AgendaViewPage />

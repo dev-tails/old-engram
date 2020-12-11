@@ -1,7 +1,7 @@
 import { TextareaAutosize } from "@material-ui/core";
 import React, { useState } from "react";
 import { Note } from "../NotesApi";
-import { NoteIcon } from "./NoteIcon";
+import { BulletIcon } from "../BulletIcon/BulletIcon";
 import "./NoteItem.scss";
 
 type NoteItemProps = {
@@ -29,7 +29,7 @@ export const NoteItem: React.FC<NoteItemProps> = (props) => {
 
   return (
     <div className="note-item">
-      <NoteIcon />
+      <BulletIcon />
       <TextareaAutosize
         value={body}
         onChange={handleTextChanged}

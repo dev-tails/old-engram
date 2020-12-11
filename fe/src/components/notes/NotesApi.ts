@@ -11,6 +11,7 @@ export type Note = {
   archived?: boolean;
   type?: NoteType;
   start?: Date;
+  children?: Note[];
 };
 
 export async function createOrUpdateNote(note: Partial<Note>) {
