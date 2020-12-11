@@ -1,0 +1,25 @@
+.note-item {
+  display: flex;
+
+  &:first-child {
+    border-left: none;
+  }
+
+  border-left: 1px solid black;
+
+  .block-expand {
+    visibility: hidden;
+  }
+
+  &:hover {
+    .block-expand {
+      visibility: visible;
+    }
+  }
+
+  textarea {
+    border: none;
+    resize: none;
+    width: 100%;
+  }
+}
