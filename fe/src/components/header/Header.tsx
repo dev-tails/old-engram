@@ -4,7 +4,7 @@ import {
   List,
   ListItem,
   ListItemText,
-  SwipeableDrawer,
+  Drawer,
   Toolbar,
   Typography,
 } from "@material-ui/core";
@@ -98,11 +98,11 @@ export const Header: React.FC<HeaderProps> = ({
         </Toolbar>
       </AppBar>
       <React.Fragment>
-        <SwipeableDrawer
+        <Drawer
           anchor={"left"}
           open={leftDrawerOpen}
           onClose={setLeftDrawerOpen.bind(this, false)}
-          onOpen={setLeftDrawerOpen.bind(this, true)}
+          // onOpen={setLeftDrawerOpen.bind(this, true)}
         >
           <div className="drawer-contents">
             <List>
@@ -121,14 +121,14 @@ export const Header: React.FC<HeaderProps> = ({
               })}
             </List>
           </div>
-        </SwipeableDrawer>
+        </Drawer>
       </React.Fragment>
       <React.Fragment>
-        <SwipeableDrawer
+        <Drawer
           anchor={"right"}
           open={rightDrawerOpen}
           onClose={setRightDrawerOpen.bind(this, false)}
-          onOpen={setRightDrawerOpen.bind(this, true)}
+          // onOpen={setRightDrawerOpen.bind(this, true)}
         >
           <div className="drawer-contents">
             <List>
@@ -139,7 +139,7 @@ export const Header: React.FC<HeaderProps> = ({
               </Link>
             </List>
           </div>
-        </SwipeableDrawer>
+        </Drawer>
       </React.Fragment>
     </div>
   );
