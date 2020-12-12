@@ -26,7 +26,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
 ) => {
   const [active, setActive] = useState(false);
   const [body, setBody] = useState(props.note.body);
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
     function keyDownListener(event: KeyboardEvent) {
