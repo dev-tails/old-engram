@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useParams } from "react-router";
+import { Header } from "../../header/Header";
 import {
   CollapsibleNote,
   CollapsibleNoteItem,
 } from "../CollapsibleNoteItem/CollapsibleNoteItem";
 import { Note } from "../NotesApi";
+import "./EditNotePage.scss";
 
 type EditNotePageProps = {};
 
@@ -180,12 +182,15 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
 
   return (
     <div className="edit-note-page">
-      <CollapsibleNoteItem
-        note={note}
-        onSave={() => {}}
-        onIndent={handleIndent}
-        onUnindent={handleUnindent}
-      />
+      <Header title={"Edit Note"} />
+      <div className="edit-note-page-content">
+        <CollapsibleNoteItem
+          note={note}
+          onSave={() => {}}
+          onIndent={handleIndent}
+          onUnindent={handleUnindent}
+        />
+      </div>
     </div>
   );
 };
