@@ -76,8 +76,8 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
     {
       _id: "4",
       body: "Child 2 - Child 2",
-      parent: "3",
-      prev: "5",
+      parent: "1",
+      prev: "3",
     },
     {
       _id: "5",
@@ -92,7 +92,7 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
   }
 
   const handleUnindent = (unindentedNote: Note) => {
-    if (!unindentedNote.parent) {
+    if (!unindentedNote.parent || unindentedNote.parent === params.id) {
       return;
     }
 
@@ -105,15 +105,25 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
       return;
     }
 
+    // Find the old next note and update prev to point to new prev note
+    const oldPrev = unindentedNoteCopy.prev;
+    const oldNextNote = notesCopy.find(
+      (note) => note.prev === unindentedNoteCopy._id
+    );
+    if (oldNextNote) {
+      oldNextNote.prev = oldPrev;
+    }
+
+    // Update unindented note prev and parent
+    const oldParent = unindentedNoteCopy.parent;
     unindentedNoteCopy.prev = unindentedNoteCopy.parent;
     const parentNote = notesCopy.find(
       (note) => note._id === unindentedNoteCopy.parent
     );
     unindentedNoteCopy.parent = parentNote?.parent;
 
-    const newNextNote = notesCopy.find(
-      (note) => note.prev === unindentedNoteCopy.parent
-    );
+    // Find new next note and update prev to point to unindented note
+    const newNextNote = notesCopy.find((note) => note.prev === oldParent);
     if (newNextNote) {
       newNextNote.prev = unindentedNote._id;
     }
