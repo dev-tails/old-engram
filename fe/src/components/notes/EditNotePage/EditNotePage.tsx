@@ -131,7 +131,51 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
     setNotes(notesCopy);
   };
 
-  const handleIndent = (note: Note) => {};
+  const handleIndent = (indentedNote: CollapsibleNote) => {
+    // Can't indent if there is no prev note
+    if (!indentedNote.prev) {
+      return;
+    }
+
+    const notesCopy = Array.from(notes);
+
+    const indentedNoteCopy = notesCopy.find((n) => n._id === indentedNote._id);
+    if (!indentedNoteCopy) {
+      return;
+    }
+
+    // Update note's prev to last element in parent's children (if exists, else null)
+    const newParentId = indentedNoteCopy.prev;
+
+    const newParentWithChildren = getNoteWithChildren(notesCopy, newParentId);
+
+    if (
+      newParentWithChildren &&
+      newParentWithChildren.children &&
+      newParentWithChildren.children.length > 0
+    ) {
+      const lastChild =
+        newParentWithChildren.children[
+          newParentWithChildren.children.length - 1
+        ];
+      indentedNoteCopy.prev = lastChild._id;
+    } else {
+      delete indentedNoteCopy.prev;
+    }
+
+    // Update note's parent to old prev
+    indentedNoteCopy.parent = newParentId;
+
+    // Update old next (if exists) to point to old prev
+    const oldNextNote = notesCopy.find(
+      (note) => note.prev === indentedNoteCopy._id
+    );
+    if (oldNextNote) {
+      oldNextNote.prev = newParentId;
+    }
+
+    setNotes(notesCopy);
+  };
 
   return (
     <div className="edit-note-page">
