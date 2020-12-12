@@ -1,5 +1,6 @@
 import express from "express";
 import { ObjectId } from "../Database.js";
+import { UnauthorizedError } from "../middleware/AuthMiddleware.js";
 import { AuthRequiredMiddleware } from "../middleware/AuthRequiredMiddleware.js";
 import { handleNewNote } from "../vendor/zapier/Zapier.js";
 
@@ -43,6 +44,30 @@ export function initializeNotesRouter() {
     const notes = await query.toArray();
 
     return res.json(notes.reverse());
+  });
+
+  router.get("/:id", async function (req, res) {
+    const { user, db } = req;
+
+    const topLevelNote = await db.collection("notes").findOne({
+      _id: ObjectId(req.params.id),
+    });
+
+    function userHasAccessToNote(note, user) {
+      if (note?.shareSettings?.public?.view) {
+        return true;
+      }
+
+      return String(note.user) === String(user);
+    }
+
+    if (!userHasAccessToNote(topLevelNote, user)) {
+      throw new UnauthorizedError();
+    }
+
+    const notesToReturn = [topLevelNote];
+
+    return res.json(notesToReturn);
   });
 
   router.put("/:id", async function (req, res) {
