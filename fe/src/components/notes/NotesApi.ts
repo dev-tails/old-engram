@@ -32,6 +32,13 @@ export async function createNote(note: Partial<Note>) {
   return res.data;
 }
 
+export async function getNote(params: { id: string }): Promise<Note[]> {
+  const res = await Api.get(`/api/notes/${params.id}`, {
+    withCredentials: true,
+  });
+  return res.data;
+}
+
 export type GetNotesParams = {
   since_id?: string;
   max_id?: string;

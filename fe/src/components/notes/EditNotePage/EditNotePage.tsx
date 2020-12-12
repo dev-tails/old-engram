@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Header } from "../../header/Header";
 import {
   CollapsibleNote,
   CollapsibleNoteItem,
 } from "../CollapsibleNoteItem/CollapsibleNoteItem";
-import { Note } from "../NotesApi";
+import { getNote, Note } from "../NotesApi";
 import "./EditNotePage.scss";
 
 type EditNotePageProps = {};
@@ -57,36 +57,15 @@ function getNoteWithChildren(
 
 export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
   const params = useParams<EditNotePageParams>();
+  const [notes, setNotes] = useState<Note[]>([]);
 
-  const [notes, setNotes] = useState([
-    {
-      _id: "1",
-      body: "Title",
-    },
-    {
-      _id: "3",
-      body: "Title Child 2",
-      parent: "1",
-      prev: "2",
-    },
-    {
-      _id: "2",
-      body: "Title Child 1",
-      parent: "1",
-      next: "3",
-    },
-    {
-      _id: "4",
-      body: "Child 2 - Child 2",
-      parent: "1",
-      prev: "3",
-    },
-    {
-      _id: "5",
-      body: "Child 2 - Child 1",
-      parent: "3",
-    },
-  ]);
+  useEffect(() => {
+    async function fetchNote() {
+      const fetchedNotes = await getNote({ id: params.id });
+      setNotes(fetchedNotes);
+    }
+    fetchNote();
+  }, [params.id]);
 
   const note = getNoteWithChildren(notes, params.id);
   if (!note) {
