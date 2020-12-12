@@ -161,7 +161,7 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
 
   return (
     <div className="edit-note-page">
-      <Header title={"Edit Note"} />
+      <Header title={"engram"} />
       <div className="edit-note-page-content">
         <CollapsibleNoteItem
           note={note}
