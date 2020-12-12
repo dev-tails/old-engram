@@ -65,7 +65,22 @@ export function initializeNotesRouter() {
       throw new UnauthorizedError();
     }
 
-    const notesToReturn = [topLevelNote];
+    let notesToReturn = [topLevelNote];
+
+    let depth = 1;
+    const maxDepth = 10;
+    let childrenNotes = [];
+    do {
+      const childrenNotes = await db
+        .collection("notes")
+        .find({
+          parent: ObjectId(req.params.id),
+        })
+        .toArray();
+
+      notesToReturn = [...notesToReturn, ...childrenNotes];
+      depth++;
+    } while (childrenNotes.length > 0 && depth < maxDepth);
 
     return res.json(notesToReturn);
   });
