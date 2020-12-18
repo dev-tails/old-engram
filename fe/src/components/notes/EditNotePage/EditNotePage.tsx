@@ -58,6 +58,8 @@ function getNoteWithChildren(
 export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
   const params = useParams<EditNotePageParams>();
   const [notes, setNotes] = useState<Note[]>([]);
+  const [activeParentId, setActiveParentId] = useState<string>(params.id);
+  const [activeNoteId, setActiveNoteId] = useState(params.id);
 
   useEffect(() => {
     async function fetchNote() {
@@ -113,12 +115,13 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
     setNotes(notesCopy);
   };
 
-  const handleIndent = (indentedNote: CollapsibleNote) => {
+  const handleIndent = async (indentedNote: CollapsibleNote) => {
     // Can't indent if there is no prev note
     if (!indentedNote.prev) {
       return;
     }
 
+    const promises: Promise<any>[] = [];
     const notesCopy = Array.from(notes);
 
     const indentedNoteCopy = notesCopy.find((n) => n._id === indentedNote._id);
@@ -145,30 +148,49 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
         ];
       indentedNoteCopy.prev = lastChild._id;
     } else {
-      delete indentedNoteCopy.prev;
+      indentedNoteCopy.prev = "";
     }
 
     // Update note's parent to old prev
     indentedNoteCopy.parent = newParentId;
+    promises.push(updateNote(indentedNoteCopy));
 
     // Update old next (if exists) to point to old prev
     if (oldNextNote) {
       oldNextNote.prev = newParentId;
+      promises.push(updateNote(oldNextNote));
     }
 
     setNotes(notesCopy);
+    await Promise.all(promises);
   };
 
   const handleNewNote = async (note: CollapsibleNote) => {
-    const newNote = await createNote({
+    const isRoot = note._id === params.id;
+    const noteToCreate: Partial<Note> = {
       body: "",
-      parent: note._id,
-    });
+    };
+
+    if (isRoot) {
+      noteToCreate.parent = params.id;
+    } else {
+      noteToCreate.parent = activeParentId;
+      noteToCreate.prev = note._id;
+    }
+
+    const newNote = await createNote(noteToCreate);
+    setActiveNoteId(newNote._id);
     setNotes([...notes, newNote]);
   };
 
   const handleSave = async (note: CollapsibleNote) => {
     await updateNote(note);
+  };
+
+  const handleNoteActivate = async (note: CollapsibleNote) => {
+    if (note._id) {
+      setActiveNoteId(note._id);
+    }
   };
 
   return (
@@ -177,10 +199,12 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
       <div className="edit-note-page-content">
         <CollapsibleNoteItem
           note={note}
+          activeId={activeNoteId}
           onSave={handleSave}
           onIndent={handleIndent}
           onUnindent={handleUnindent}
           onNewNote={handleNewNote}
+          onActivate={handleNoteActivate}
         />
       </div>
     </div>

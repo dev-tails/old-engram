@@ -110,6 +110,8 @@ export function initializeNotesRouter() {
           archived: update.archived,
           checked: update.checked,
           body: update.body,
+          parent: req.body.parent ? ObjectId(req.body.parent) : null,
+          prev: req.body.prev ? ObjectId(req.body.prev) : null,
         },
       }
     );
