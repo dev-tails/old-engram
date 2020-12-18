@@ -5,7 +5,7 @@ import {
   CollapsibleNote,
   CollapsibleNoteItem,
 } from "../CollapsibleNoteItem/CollapsibleNoteItem";
-import { getNote, Note } from "../NotesApi";
+import { createNote, getNote, Note, updateNote } from "../NotesApi";
 import "./EditNotePage.scss";
 
 type EditNotePageProps = {};
@@ -159,15 +159,28 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
     setNotes(notesCopy);
   };
 
+  const handleNewNote = async (note: CollapsibleNote) => {
+    const newNote = await createNote({
+      body: "",
+      parent: note._id,
+    });
+    setNotes([...notes, newNote]);
+  };
+
+  const handleSave = async (note: CollapsibleNote) => {
+    await updateNote(note);
+  };
+
   return (
     <div className="edit-note-page">
       <Header title={"engram"} />
       <div className="edit-note-page-content">
         <CollapsibleNoteItem
           note={note}
-          onSave={() => {}}
+          onSave={handleSave}
           onIndent={handleIndent}
           onUnindent={handleUnindent}
+          onNewNote={handleNewNote}
         />
       </div>
     </div>

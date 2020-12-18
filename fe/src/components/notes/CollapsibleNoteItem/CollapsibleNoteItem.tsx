@@ -19,6 +19,7 @@ type CollapsibleNoteItemProps = {
   onSave: (note: CollapsibleNote) => void;
   onUnindent?: (note: CollapsibleNote) => void;
   onIndent?: (note: CollapsibleNote) => void;
+  onNewNote?: (note: CollapsibleNote) => void;
 };
 
 export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
@@ -32,6 +33,14 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
     function keyDownListener(event: KeyboardEvent) {
       if (!active) {
         return;
+      }
+
+      if (event.key === "Enter") {
+        if (!event.shiftKey) {
+          handleSave();
+          handleNewNote();
+          event.preventDefault();
+        }
       }
 
       if (event.key === "Tab") {
@@ -67,6 +76,12 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
       ...props.note,
       body,
     });
+  };
+
+  const handleNewNote = () => {
+    if (props.onNewNote) {
+      props.onNewNote(props.note);
+    }
   };
 
   const handleToggleExpand = () => {
