@@ -74,11 +74,12 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
     return null;
   }
 
-  const handleUnindent = (unindentedNote: Note) => {
+  const handleUnindent = async (unindentedNote: Note) => {
     if (!unindentedNote.parent || unindentedNote.parent === params.id) {
       return;
     }
 
+    const promises: Promise<any>[] = [];
     const notesCopy = Array.from(notes);
 
     const unindentedNoteCopy = notesCopy.find(
@@ -101,18 +102,23 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
     // Find the old next note and update prev to point to new prev note
     if (oldNextNote) {
       oldNextNote.prev = oldPrev;
+      promises.push(updateNote(oldNextNote));
     }
 
     // Update unindented note prev and parent
     unindentedNoteCopy.prev = unindentedNoteCopy.parent;
     unindentedNoteCopy.parent = parentNote?.parent;
 
+    promises.push(updateNote(unindentedNoteCopy));
+
     // Find new next note and update prev to point to unindented note
     if (newNextNote) {
       newNextNote.prev = unindentedNote._id;
+      promises.push(updateNote(newNextNote));
     }
 
     setNotes(notesCopy);
+    await Promise.all(promises);
   };
 
   const handleIndent = async (indentedNote: CollapsibleNote) => {
