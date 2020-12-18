@@ -130,6 +130,8 @@ export function initializeNotesRouter() {
         start: new Date(req.body.start),
         body: req.body.body,
         type: req.body.type,
+        parent: req.body.parent ? ObjectId(req.body.parent) : null,
+        prev: req.body.prev ? ObjectId(req.body.prev) : null,
       });
 
       const newNote = await db.collection("notes").findOne({
