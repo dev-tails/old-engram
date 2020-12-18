@@ -16,22 +16,23 @@ export type CollapsibleNote = {
 
 type CollapsibleNoteItemProps = {
   note: CollapsibleNote;
+  activeId: string;
   onSave: (note: CollapsibleNote) => void;
   onUnindent?: (note: CollapsibleNote) => void;
   onIndent?: (note: CollapsibleNote) => void;
   onNewNote?: (note: CollapsibleNote) => void;
+  onActivate: (note: CollapsibleNote) => void;
 };
 
 export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   props
 ) => {
-  const [active, setActive] = useState(false);
   const [body, setBody] = useState(props.note.body);
   const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
     function keyDownListener(event: KeyboardEvent) {
-      if (!active) {
+      if (props.activeId !== props.note._id) {
         return;
       }
 
@@ -66,8 +67,6 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   };
 
   const handleSave = () => {
-    setActive(false);
-
     if (body === props.note.body) {
       return;
     }
@@ -103,7 +102,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
           value={body}
           onChange={handleTextChanged}
           onBlur={handleSave}
-          onClick={setActive.bind(this, true)}
+          onClick={props.onActivate.bind(this, props.note)}
         />
       </div>
       {!collapsed && props.note.children && (
