@@ -1,3 +1,4 @@
+import mongodb from "mongodb";
 import yup from "yup";
 
 export class ObjectIdSchema extends yup.mixed {
@@ -6,13 +7,14 @@ export class ObjectIdSchema extends yup.mixed {
 
     this.withMutation((schema) => {
       schema.transform(function (value) {
-        if (this.isType(value)) return value;
-        return new ObjectId(value);
+        if (mongodb.ObjectId.isValid(value)) {
+          return value;
+        } else if (value === "") {
+          return null;
+        } else {
+          throw new Error("Invalid ObjectId");
+        }
       });
     });
-  }
-
-  _typeCheck(value) {
-    return ObjectId.isValid(value);
   }
 }
