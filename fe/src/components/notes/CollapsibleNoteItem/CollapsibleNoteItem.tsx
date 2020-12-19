@@ -4,9 +4,11 @@ import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import React, { useEffect, useRef, useState } from "react";
 import { BulletIcon } from "../BulletIcon/BulletIcon";
 import "./CollapsibleNoteItem.scss";
+import { Note, NoteType } from "../NotesApi";
 
 export type CollapsibleNote = {
   _id?: string;
+  type?: NoteType;
   body: string;
   prev?: string;
   parent?: string;
@@ -29,7 +31,14 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
 ) => {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const [body, setBody] = useState(props.note.body);
+  const [type, setType] = useState(props.note.type);
   const [collapsed, setCollapsed] = useState(false);
+
+  const note = {
+    ...props.note,
+    body,
+    type,
+  };
 
   useEffect(() => {
     function keyDownListener(event: KeyboardEvent) {
@@ -44,7 +53,11 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
       }
 
       if (event.key === "Enter") {
-        if (!event.shiftKey) {
+        if (event.ctrlKey) {
+          event.preventDefault();
+
+          handleChangeType();
+        } else if (!event.shiftKey) {
           event.preventDefault();
 
           handleSave();
@@ -88,14 +101,14 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
     setBody(event.currentTarget.value);
   };
 
-  const handleSave = () => {
+  const handleSave = (update?: Partial<Note>) => {
     if (body === props.note.body) {
       return;
     }
 
     props.onSave({
-      ...props.note,
-      body,
+      ...note,
+      ...update,
     });
   };
 
@@ -109,6 +122,20 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
     setCollapsed(!collapsed);
   };
 
+  const handleChangeType = () => {
+    const TYPES: NoteType[] = ["note", "task", "task_completed", "event"];
+    const currentIndex = TYPES.indexOf(note.type || "note");
+    let newIndex = currentIndex + 1;
+    if (currentIndex > TYPES.length) {
+      newIndex = 0;
+    }
+
+    const newType = TYPES[newIndex];
+
+    setType(newType);
+    handleSave({ type: newType });
+  };
+
   return (
     <div className="collapsible-note-item-wrapper">
       <div className="collapsible-note-item">
@@ -119,12 +146,12 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
             <ArrowDropDownIcon fontSize="small" />
           )}
         </span>
-        <BulletIcon note={props.note} />
+        <BulletIcon note={note} />
         <TextareaAutosize
           ref={textAreaRef}
           value={body}
           onChange={handleTextChanged}
-          onBlur={handleSave}
+          onBlur={handleSave.bind(this, {})}
           onClick={props.onActivate.bind(this, props.note)}
         />
       </div>
