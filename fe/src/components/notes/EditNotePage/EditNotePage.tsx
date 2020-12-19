@@ -96,6 +96,8 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
       return;
     }
 
+    unindentedNoteCopy.body = unindentedNote.body;
+
     const oldParent = unindentedNoteCopy.parent;
     const oldPrev = unindentedNoteCopy.prev;
     const newNextNote = notesCopy.find((note) => note.prev === oldParent);
@@ -142,6 +144,8 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
     if (!indentedNoteCopy) {
       return;
     }
+
+    indentedNoteCopy.body = indentedNote.body;
 
     // Update note's prev to last element in parent's children (if exists, else null)
     const newParentId = indentedNoteCopy.prev;
