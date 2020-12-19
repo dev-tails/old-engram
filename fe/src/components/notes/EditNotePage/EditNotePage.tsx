@@ -3,7 +3,7 @@ import { useParams } from "react-router";
 import { Header } from "../../header/Header";
 import { CollapsibleNotesList } from "../CollapsibleNotesList/CollapsibleNotesList";
 import { getNote, Note } from "../NotesApi";
-import * as NoteUtils from "../NoteUtils";
+import moment from "moment";
 import "./EditNotePage.scss";
 
 type EditNotePageProps = {};
@@ -15,25 +15,22 @@ type EditNotePageParams = {
 export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
   const params = useParams<EditNotePageParams>();
   const [notes, setNotes] = useState<Note[]>([]);
+  const [lastUpdate, setLastUpdate] = useState("");
 
   useEffect(() => {
     async function fetchNote() {
       const fetchedNotes = await getNote({ id: params.id });
       setNotes(fetchedNotes);
+      setLastUpdate(moment().format());
     }
     fetchNote();
   }, [params.id]);
-
-  const note = NoteUtils.getNoteWithChildren(notes, params.id);
-  if (!note) {
-    return null;
-  }
 
   return (
     <div className="edit-note-page">
       <Header title={"engram"} />
       <div className="edit-note-page-content">
-        <CollapsibleNotesList notes={[note]} />
+        <CollapsibleNotesList key={lastUpdate} notes={notes} />
       </div>
     </div>
   );
