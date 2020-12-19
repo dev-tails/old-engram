@@ -71,18 +71,22 @@ export function initializeNotesRouter() {
 
     let depth = 1;
     const maxDepth = 10;
-    let childrenNotes = [];
+    let parentIds = [ObjectId(req.params.id)];
     do {
       const childrenNotes = await db
         .collection("notes")
         .find({
-          parent: ObjectId(req.params.id),
+          parent: {
+            $in: parentIds,
+          },
         })
         .toArray();
 
+      parentIds = childrenNotes.map((childNote) => childNote._id);
+
       notesToReturn = [...notesToReturn, ...childrenNotes];
       depth++;
-    } while (childrenNotes.length > 0 && depth < maxDepth);
+    } while (parentIds.length > 0 && depth < maxDepth);
 
     return res.json(notesToReturn);
   });
