@@ -93,7 +93,7 @@ export function initializeNotesRouter() {
 
     const bodySchema = yup.object().shape({
       start: yup.date(),
-      body: yup.string().required(),
+      body: yup.string(),
       type: yup.string().default("note"),
       parent: new ObjectIdSchema(),
       prev: new ObjectIdSchema(),
@@ -133,7 +133,7 @@ export function initializeNotesRouter() {
   router.post("", async function (req, res) {
     const bodySchema = yup.object().shape({
       start: yup.date(),
-      body: yup.string().required(),
+      body: yup.string(),
       type: yup.string().default("note"),
       parent: new ObjectIdSchema(),
       prev: new ObjectIdSchema(),
