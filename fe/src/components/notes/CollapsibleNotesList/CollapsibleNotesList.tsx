@@ -15,9 +15,7 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
 ) => {
   const [activeParentId, setActiveParentId] = useState<string | null>(null);
   const [activeNoteId, setActiveNoteId] = useState<string | null>(null);
-  const [notes, setNotes] = useState<Note[]>(
-    props.notes.length > 0 ? props.notes : [{ body: "" }]
-  );
+  const [notes, setNotes] = useState<Note[]>(props.notes);
 
   useEffect(() => {
     const activeNote = notes.find((n) => n._id === activeNoteId);
@@ -182,9 +180,26 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
     await removeNote(note._id);
   };
 
+  const topLevelNotesWithChildren = notes
+    .filter((note) => {
+      return !note.parent;
+    })
+    .map((note) => {
+      return NoteUtils.getNoteWithChildren(notes, note._id);
+    });
+
+  if (topLevelNotesWithChildren.length === 0) {
+    topLevelNotesWithChildren.push({
+      body: "",
+    });
+  }
+
   return (
     <div className="collapsible-notes-list">
-      {notes.map((note) => {
+      {topLevelNotesWithChildren.map((note) => {
+        if (!note) {
+          return null;
+        }
         return (
           <CollapsibleNoteItem
             key={note._id || "first_note"}
