@@ -69,6 +69,13 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
     fetchNote();
   }, [params.id]);
 
+  useEffect(() => {
+    const activeNote = notes.find((n) => n._id === activeNoteId);
+    if (activeNote) {
+      setActiveParentId(activeNote.parent as string);
+    }
+  }, [activeNoteId]);
+
   const note = getNoteWithChildren(notes, params.id);
   if (!note) {
     return null;
@@ -117,6 +124,7 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
       promises.push(updateNote(newNextNote));
     }
 
+    setActiveParentId(unindentedNoteCopy.parent as string);
     setNotes(notesCopy);
     await Promise.all(promises);
   };
@@ -167,6 +175,7 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
       promises.push(updateNote(oldNextNote));
     }
 
+    setActiveParentId(indentedNoteCopy.parent as string);
     setNotes(notesCopy);
     await Promise.all(promises);
   };
