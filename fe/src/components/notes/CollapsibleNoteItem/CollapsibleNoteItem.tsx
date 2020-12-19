@@ -8,8 +8,8 @@ import "./CollapsibleNoteItem.scss";
 export type CollapsibleNote = {
   _id?: string;
   body: string;
-  prev?: string | null;
-  parent?: string | null;
+  prev?: string;
+  parent?: string;
   children?: CollapsibleNote[];
 };
 

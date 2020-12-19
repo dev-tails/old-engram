@@ -3,6 +3,7 @@ import yup from "yup";
 import { ObjectId } from "../Database.js";
 import { UnauthorizedError } from "../middleware/AuthMiddleware.js";
 import { AuthRequiredMiddleware } from "../middleware/AuthRequiredMiddleware.js";
+import NoteSchema from "../schemas/NoteSchema.js";
 import { ObjectIdSchema } from "../schemas/ObjectIdSchema.js";
 import { handleNewNote } from "../vendor/zapier/Zapier.js";
 
@@ -45,14 +46,7 @@ export function initializeNotesRouter() {
 
     const notes = await query.toArray();
 
-    const notesSchema = yup.array().of(
-      yup.object().shape({
-        _id: yup.string().required(),
-        body: yup.string().default(""),
-        parent: new ObjectIdSchema(),
-        prev: new ObjectIdSchema(),
-      })
-    );
+    const notesSchema = yup.array().of(NoteSchema);
 
     const notesToReturn = notesSchema.cast(notes, { stripUnknown: true });
 
