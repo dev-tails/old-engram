@@ -49,10 +49,15 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
         event.preventDefault();
         event.stopPropagation();
 
+        const updatedNote = {
+          ...props.note,
+          body,
+        };
+
         if (event.shiftKey) {
-          props.onUnindent && props.onUnindent(props.note);
+          props.onUnindent && props.onUnindent(updatedNote);
         } else {
-          props.onIndent && props.onIndent(props.note);
+          props.onIndent && props.onIndent(updatedNote);
         }
       }
     }
