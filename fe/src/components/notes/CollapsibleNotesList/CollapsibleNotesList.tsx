@@ -5,6 +5,7 @@ import {
 } from "../CollapsibleNoteItem/CollapsibleNoteItem";
 import { createNote, Note, removeNote, updateNote } from "../NotesApi";
 import * as NoteUtils from "../NoteUtils";
+import "./CollapsibleNotesList.scss";
 
 type CollapsibleNotesListProps = {
   notes: CollapsibleNote[];
@@ -174,6 +175,10 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
   };
 
   const handleDelete = async (note: CollapsibleNote) => {
+    if (!note._id) {
+      return;
+    }
+
     const notesCopy = Array.from(notes);
     const indexToRemove = notesCopy.findIndex((n) => n._id === note._id);
     notesCopy.splice(indexToRemove, 1);

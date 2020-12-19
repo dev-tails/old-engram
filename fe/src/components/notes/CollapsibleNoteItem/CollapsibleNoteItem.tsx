@@ -46,7 +46,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
 
   useEffect(() => {
     function keyDownListener(event: KeyboardEvent) {
-      if (props.activeId === props.note._id) {
+      if (props.activeId !== props.note._id) {
         return;
       }
 
