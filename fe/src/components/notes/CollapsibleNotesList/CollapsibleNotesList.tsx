@@ -13,8 +13,8 @@ type CollapsibleNotesListProps = {
 export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
   props
 ) => {
-  const [activeParentId, setActiveParentId] = useState<string | null>(null);
-  const [activeNoteId, setActiveNoteId] = useState<string | null>(null);
+  const [activeParentId, setActiveParentId] = useState<string>("");
+  const [activeNoteId, setActiveNoteId] = useState<string>("");
   const [notes, setNotes] = useState<Note[]>(props.notes);
 
   useEffect(() => {
