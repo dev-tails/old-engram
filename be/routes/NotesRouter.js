@@ -45,7 +45,18 @@ export function initializeNotesRouter() {
 
     const notes = await query.toArray();
 
-    return res.json(notes);
+    const notesSchema = yup.array().of(
+      yup.object().shape({
+        _id: yup.string().required(),
+        body: yup.string().default(""),
+        parent: new ObjectIdSchema(),
+        prev: new ObjectIdSchema(),
+      })
+    );
+
+    const notesToReturn = notesSchema.cast(notes, { stripUnknown: true });
+
+    return res.json(notesToReturn);
   });
 
   router.get("/:id", async function (req, res) {

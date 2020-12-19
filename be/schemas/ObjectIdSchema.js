@@ -11,8 +11,10 @@ export class ObjectIdSchema extends yup.mixed {
           return new mongodb.ObjectId(value);
         } else if (value === "") {
           return null;
+        } else if (!value) {
+          return "";
         } else {
-          throw new Error("Invalid ObjectId");
+          throw new Error(`Invalid ObjectId ${value}`);
         }
       });
     });
