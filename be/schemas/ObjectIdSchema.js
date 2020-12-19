@@ -8,7 +8,7 @@ export class ObjectIdSchema extends yup.mixed {
     this.withMutation((schema) => {
       schema.transform(function (value) {
         if (mongodb.ObjectId.isValid(value)) {
-          return value;
+          return new mongodb.ObjectId(value);
         } else if (value === "") {
           return null;
         } else {
