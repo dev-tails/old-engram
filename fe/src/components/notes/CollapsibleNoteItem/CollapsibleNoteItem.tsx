@@ -45,9 +45,13 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
 
       if (event.key === "Enter") {
         if (!event.shiftKey) {
-          handleSave();
-          handleNewNote();
           event.preventDefault();
+
+          handleSave();
+
+          if (props.note._id) {
+            handleNewNote();
+          }
         }
       }
 
