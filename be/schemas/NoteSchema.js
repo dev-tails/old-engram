@@ -7,6 +7,7 @@ export default yup.object().shape({
   start: yup.date(),
   type: yup
     .string()
+    .nullable()
     .default("note")
     .oneOf(["note", "task", "task_complete", "event"]),
   parent: new ObjectIdSchema().default(""),
