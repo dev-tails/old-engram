@@ -119,7 +119,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
             <ArrowDropDownIcon fontSize="small" />
           )}
         </span>
-        <BulletIcon />
+        <BulletIcon note={props.note} />
         <TextareaAutosize
           ref={textAreaRef}
           value={body}
