@@ -1,7 +1,7 @@
 import { TextareaAutosize } from "@material-ui/core";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BulletIcon } from "../BulletIcon/BulletIcon";
 import "./CollapsibleNoteItem.scss";
 
@@ -27,6 +27,7 @@ type CollapsibleNoteItemProps = {
 export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   props
 ) => {
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const [body, setBody] = useState(props.note.body);
   const [collapsed, setCollapsed] = useState(false);
 
@@ -61,6 +62,12 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
       document.removeEventListener("keydown", keyDownListener);
     };
   });
+
+  useEffect(() => {
+    if (props.activeId === props.note._id && textAreaRef.current) {
+      textAreaRef.current.focus();
+    }
+  }, [props.activeId]);
 
   const handleTextChanged = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setBody(event.currentTarget.value);
@@ -99,6 +106,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
         </span>
         <BulletIcon />
         <TextareaAutosize
+          ref={textAreaRef}
           value={body}
           onChange={handleTextChanged}
           onBlur={handleSave}
