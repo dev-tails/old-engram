@@ -5,7 +5,7 @@ import {
   CollapsibleNote,
   CollapsibleNoteItem,
 } from "../CollapsibleNoteItem/CollapsibleNoteItem";
-import { createNote, getNote, Note, updateNote } from "../NotesApi";
+import { createNote, getNote, Note, removeNote, updateNote } from "../NotesApi";
 import "./EditNotePage.scss";
 
 type EditNotePageProps = {};
@@ -223,6 +223,15 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
     }
   };
 
+  const handleDelete = async (note: CollapsibleNote) => {
+    const notesCopy = Array.from(notes);
+    const indexToRemove = notesCopy.findIndex((n) => n._id === note._id);
+    notesCopy.splice(indexToRemove, 1);
+    setNotes(notesCopy);
+
+    await removeNote(note._id);
+  };
+
   return (
     <div className="edit-note-page">
       <Header title={"engram"} />
@@ -235,6 +244,7 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
           onUnindent={handleUnindent}
           onNewNote={handleNewNote}
           onActivate={handleNoteActivate}
+          onDelete={handleDelete}
         />
       </div>
     </div>
