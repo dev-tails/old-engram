@@ -3,6 +3,7 @@ import yup from "yup";
 import { ObjectId } from "../Database.js";
 import { UnauthorizedError } from "../middleware/AuthMiddleware.js";
 import { AuthRequiredMiddleware } from "../middleware/AuthRequiredMiddleware.js";
+import { ObjectIdSchema } from "../schemas/ObjectIdSchema.js";
 import { handleNewNote } from "../vendor/zapier/Zapier.js";
 
 export function initializeNotesRouter() {
@@ -125,23 +126,6 @@ export function initializeNotesRouter() {
   });
 
   router.post("", async function (req, res) {
-    class ObjectIdSchema extends yup.mixed {
-      constructor() {
-        super({ type: "objectId" });
-
-        this.withMutation((schema) => {
-          schema.transform(function (value) {
-            if (this.isType(value)) return value;
-            return new ObjectId(value);
-          });
-        });
-      }
-
-      _typeCheck(value) {
-        return ObjectId.isValid(value);
-      }
-    }
-
     const bodySchema = yup.object().shape({
       start: yup.date(),
       body: yup.string().required(),
