@@ -22,6 +22,7 @@ type CollapsibleNoteItemProps = {
   onIndent?: (note: CollapsibleNote) => void;
   onNewNote?: (note: CollapsibleNote) => void;
   onActivate: (note: CollapsibleNote) => void;
+  onDelete: (note: CollapsibleNote) => void;
 };
 
 export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
@@ -35,6 +36,12 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
     function keyDownListener(event: KeyboardEvent) {
       if (props.activeId !== props.note._id) {
         return;
+      }
+
+      if (event.key === "Backspace") {
+        if (body === "") {
+          return props.onDelete(props.note);
+        }
       }
 
       if (event.key === "Enter") {
