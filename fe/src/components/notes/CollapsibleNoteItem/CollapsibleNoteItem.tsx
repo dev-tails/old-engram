@@ -5,6 +5,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { BulletIcon } from "../BulletIcon/BulletIcon";
 import "./CollapsibleNoteItem.scss";
 import { Note, NoteType } from "../NotesApi";
+import ReactMarkdown from "react-markdown";
+import gfm from "remark-gfm";
 
 export type CollapsibleNote = {
   _id?: string;
@@ -34,6 +36,8 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   const [type, setType] = useState(props.note.type);
   const [collapsed, setCollapsed] = useState(false);
 
+  const isActive = props.activeId === props.note._id;
+
   const note = {
     ...props.note,
     body,
@@ -42,7 +46,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
 
   useEffect(() => {
     function keyDownListener(event: KeyboardEvent) {
-      if (props.activeId !== props.note._id) {
+      if (props.activeId === props.note._id) {
         return;
       }
 
@@ -138,7 +142,10 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
 
   return (
     <div className="collapsible-note-item-wrapper">
-      <div className="collapsible-note-item">
+      <div
+        className="collapsible-note-item"
+        onClick={props.onActivate.bind(this, props.note)}
+      >
         <span className="block-expand" onClick={handleToggleExpand}>
           {collapsed ? (
             <ArrowRightIcon fontSize="small" />
@@ -149,13 +156,18 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
         <div className="bullet-icon-wrapper" onClick={handleChangeType}>
           <BulletIcon note={note} />
         </div>
-        <TextareaAutosize
-          ref={textAreaRef}
-          value={body}
-          onChange={handleTextChanged}
-          onBlur={handleSave.bind(this, {})}
-          onClick={props.onActivate.bind(this, props.note)}
-        />
+        {isActive ? (
+          <TextareaAutosize
+            ref={textAreaRef}
+            value={body}
+            onChange={handleTextChanged}
+            onBlur={handleSave.bind(this, {})}
+          />
+        ) : (
+          <div className="note-inactive">
+            <ReactMarkdown plugins={[gfm]}>{body}</ReactMarkdown>
+          </div>
+        )}
       </div>
       {!collapsed && props.note.children && (
         <div style={{ marginLeft: "12px" }}>
