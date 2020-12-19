@@ -11,6 +11,10 @@
     visibility: hidden;
   }
 
+  .hidden {
+    visibility: hidden !important;
+  }
+
   &:hover {
     .block-expand {
       visibility: visible;

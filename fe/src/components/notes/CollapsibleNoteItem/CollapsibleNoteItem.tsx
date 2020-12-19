@@ -37,6 +37,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   const [collapsed, setCollapsed] = useState(false);
 
   const isActive = props.activeId === props.note._id;
+  const hasChildren = props.note.children && props.note.children.length > 0;
 
   const note = {
     ...props.note,
@@ -150,7 +151,10 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
         className="collapsible-note-item"
         onClick={props.onActivate.bind(this, props.note)}
       >
-        <span className="block-expand" onClick={handleToggleExpand}>
+        <span
+          className={`block-expand ${hasChildren ? "" : "hidden"}`}
+          onClick={handleToggleExpand}
+        >
           {collapsed ? (
             <ArrowRightIcon fontSize="small" />
           ) : (
