@@ -7,6 +7,7 @@ import "./CollapsibleNoteItem.scss";
 import { Note, NoteType } from "../NotesApi";
 import ReactMarkdown from "react-markdown";
 import gfm from "remark-gfm";
+import { Link } from "react-router-dom";
 
 export type CollapsibleNote = {
   _id?: string;
@@ -161,9 +162,19 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
             <ArrowDropDownIcon fontSize="small" />
           )}
         </span>
+        <Link to={`/notes/${note._id}`}>
+          <span className={`block-edit`} onClick={handleToggleExpand}>
+            <svg height="8" width="8">
+              <circle cx="4" cy="1" r="1" />
+              <circle cx="4" cy="4" r="1" />
+              <circle cx="4" cy="7" r="1" />
+            </svg>
+          </span>
+        </Link>
         <div className="bullet-icon-wrapper" onClick={handleChangeType}>
           <BulletIcon note={note} />
         </div>
+
         {isActive ? (
           <TextareaAutosize
             ref={textAreaRef}

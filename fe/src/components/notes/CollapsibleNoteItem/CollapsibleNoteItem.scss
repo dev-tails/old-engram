@@ -16,10 +16,22 @@
   }
 
   &:hover {
+    .block-edit,
     .block-expand {
       visibility: visible;
       cursor: pointer;
     }
+  }
+
+  .bullet-icon-wrapper {
+    width: 16px;
+    text-align: center;
+  }
+
+  .block-edit {
+    width: 16px;
+    text-align: center;
+    visibility: hidden;
   }
 
   textarea {
