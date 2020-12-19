@@ -1,4 +1,5 @@
 import express from "express";
+import yup from "yup";
 import { ObjectId } from "../Database.js";
 import { UnauthorizedError } from "../middleware/AuthMiddleware.js";
 import { AuthRequiredMiddleware } from "../middleware/AuthRequiredMiddleware.js";
@@ -124,33 +125,47 @@ export function initializeNotesRouter() {
   });
 
   router.post("", async function (req, res) {
-    try {
-      const { user, db } = req;
+    class ObjectIdSchema extends yup.mixed {
+      constructor() {
+        super({ type: "objectId" });
 
-      const insertOpResult = await db.collection("notes").insertOne({
-        user: ObjectId(user),
-        start: new Date(req.body.start),
-        body: req.body.body,
-        type: req.body.type,
-        parent: req.body.parent ? ObjectId(req.body.parent) : null,
-        prev: req.body.prev ? ObjectId(req.body.prev) : null,
-      });
+        this.withMutation((schema) => {
+          schema.transform(function (value) {
+            if (this.isType(value)) return value;
+            return new ObjectId(value);
+          });
+        });
+      }
 
-      const newNote = await db.collection("notes").findOne({
-        _id: insertOpResult.insertedId,
-      });
-
-      await handleNewNote(db, newNote, user);
-
-      return res.json(newNote);
-    } catch (err) {
-      console.error(err);
-      if (err instanceof UnauthorizedError) {
-        res.sendStatus(401);
-      } else {
-        res.json({ errors: [err] });
+      _typeCheck(value) {
+        return ObjectId.isValid(value);
       }
     }
+
+    const bodySchema = yup.object().shape({
+      start: yup.date(),
+      body: yup.string().required(),
+      type: yup.string().default("note"),
+      parent: new ObjectIdSchema(),
+      prev: new ObjectIdSchema(),
+    });
+
+    const noteToCreate = await bodySchema.validate(req.body);
+
+    const { user, db } = req;
+
+    const insertOpResult = await db.collection("notes").insertOne({
+      user: ObjectId(user),
+      ...noteToCreate,
+    });
+
+    const newNote = await db.collection("notes").findOne({
+      _id: insertOpResult.insertedId,
+    });
+
+    await handleNewNote(db, newNote, user);
+
+    return res.json(newNote);
   });
 
   router.delete("/:id", async function (req, res) {
