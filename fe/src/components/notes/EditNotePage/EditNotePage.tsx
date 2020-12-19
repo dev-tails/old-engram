@@ -180,22 +180,19 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
       body: "",
     };
 
-    if (isRoot) {
-      noteToCreate.parent = params.id;
-    } else {
-      noteToCreate.parent = activeParentId;
+    noteToCreate.parent = activeParentId;
+    if (!isRoot) {
       noteToCreate.prev = note._id;
     }
 
     const newNote = await createNote(noteToCreate);
-    if (isRoot) {
-      const currentFirstChild = notesCopy.find(
-        (n) => n.parent === note._id && !n.prev
-      );
-      if (currentFirstChild) {
-        currentFirstChild.prev = newNote._id;
-        promises.push(updateNote(currentFirstChild));
-      }
+
+    const nextNote = notesCopy.find(
+      (n) => n.parent === activeParentId && n.prev === note._id
+    );
+    if (nextNote) {
+      nextNote.prev = newNote._id;
+      promises.push(updateNote(nextNote));
     }
 
     setActiveNoteId(newNote._id);
