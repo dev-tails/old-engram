@@ -8,15 +8,14 @@ import "./CollapsibleNoteItem.scss";
 export type CollapsibleNote = {
   _id?: string;
   body: string;
-  prev?: string;
-  parent?: string;
-  next?: string;
+  prev?: string | null;
+  parent?: string | null;
   children?: CollapsibleNote[];
 };
 
 type CollapsibleNoteItemProps = {
   note: CollapsibleNote;
-  activeId: string;
+  activeId: string | null;
   onSave: (note: CollapsibleNote) => void;
   onUnindent?: (note: CollapsibleNote) => void;
   onIndent?: (note: CollapsibleNote) => void;
@@ -79,7 +78,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
     if (props.activeId === props.note._id && textAreaRef.current) {
       textAreaRef.current.focus();
     }
-  }, [props.activeId]);
+  }, [props.activeId, props.note._id]);
 
   const handleTextChanged = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setBody(event.currentTarget.value);

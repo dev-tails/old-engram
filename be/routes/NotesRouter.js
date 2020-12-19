@@ -45,7 +45,7 @@ export function initializeNotesRouter() {
 
     const notes = await query.toArray();
 
-    return res.json(notes.reverse());
+    return res.json(notes);
   });
 
   router.get("/:id", async function (req, res) {
