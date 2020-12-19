@@ -172,6 +172,9 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
   };
 
   const handleNewNote = async (note: CollapsibleNote) => {
+    const promises: Promise<any>[] = [];
+    const notesCopy = Array.from(notes);
+
     const isRoot = note._id === params.id;
     const noteToCreate: Partial<Note> = {
       body: "",
@@ -185,8 +188,19 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
     }
 
     const newNote = await createNote(noteToCreate);
+    if (isRoot) {
+      const currentFirstChild = notesCopy.find(
+        (n) => n.parent === note._id && !n.prev
+      );
+      if (currentFirstChild) {
+        currentFirstChild.prev = newNote._id;
+        promises.push(updateNote(currentFirstChild));
+      }
+    }
+
     setActiveNoteId(newNote._id);
-    setNotes([...notes, newNote]);
+    setNotes([...notesCopy, newNote]);
+    await Promise.all(promises);
   };
 
   const handleSave = async (note: CollapsibleNote) => {
