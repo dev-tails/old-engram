@@ -80,5 +80,9 @@ export const BulletIcon: React.FC<BulletIconProps> = (props) => {
       icon = <NoteIcon />;
       break;
   }
-  return <span className="bullet-icon">{icon}</span>;
+  return (
+    <span className="bullet-icon" style={{ cursor: "pointer" }}>
+      {icon}
+    </span>
+  );
 };
