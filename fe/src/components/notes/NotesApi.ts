@@ -2,7 +2,7 @@ import axios from "axios";
 import * as Api from "../../Api";
 import queryString from "query-string";
 
-export type NoteType = "note" | "task" | "event";
+export type NoteType = "note" | "task" | "task_completed" | "event";
 
 export type Note = {
   _id?: string;
