@@ -161,7 +161,9 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
       await updateNote(note);
     } else {
       const newNote = await createNote(note);
-      setNotes([newNote]);
+      const newEmptyNote = await createNote({ body: "", prev: newNote._id });
+      setNotes([newNote, newEmptyNote]);
+      setActiveNoteId(newEmptyNote._id);
     }
   };
 
@@ -190,6 +192,7 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
 
   if (topLevelNotesWithChildren.length === 0) {
     topLevelNotesWithChildren.push({
+      _id: "",
       body: "",
     });
   }
@@ -202,7 +205,7 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
         }
         return (
           <CollapsibleNoteItem
-            key={note._id || "first_note"}
+            key={note._id}
             note={note}
             activeId={activeNoteId}
             onSave={handleSave}
