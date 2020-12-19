@@ -90,7 +90,18 @@ export function initializeNotesRouter() {
   router.put("/:id", async function (req, res) {
     const { id } = req.params;
     const { user, db } = req;
-    const update = req.body;
+
+    const bodySchema = yup.object().shape({
+      start: yup.date(),
+      body: yup.string().required(),
+      type: yup.string().default("note"),
+      parent: new ObjectIdSchema(),
+      prev: new ObjectIdSchema(),
+      archived: yup.boolean(),
+      checked: yup.boolean(),
+    });
+
+    const update = await bodySchema.validate(req.body, { stripUnknown: true });
 
     const Note = db.collection("notes");
     const note = await Note.findOne({
@@ -107,13 +118,7 @@ export function initializeNotesRouter() {
       },
       {
         $set: {
-          type: update.type,
-          start: new Date(update.start),
-          archived: update.archived,
-          checked: update.checked,
-          body: update.body,
-          parent: req.body.parent ? ObjectId(req.body.parent) : null,
-          prev: req.body.prev ? ObjectId(req.body.prev) : null,
+          ...update,
         },
       }
     );
@@ -134,7 +139,9 @@ export function initializeNotesRouter() {
       prev: new ObjectIdSchema(),
     });
 
-    const noteToCreate = await bodySchema.validate(req.body);
+    const noteToCreate = await bodySchema.validate(req.body, {
+      stripUnknown: true,
+    });
 
     const { user, db } = req;
 
