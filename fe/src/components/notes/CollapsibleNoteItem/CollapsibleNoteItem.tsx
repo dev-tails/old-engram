@@ -140,6 +140,10 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
     handleSave({ type: newType });
   };
 
+  function getBodyForMarkdown() {
+    return body.replaceAll("\n", `\n&nbsp;`);
+  }
+
   return (
     <div className="collapsible-note-item-wrapper">
       <div
@@ -165,7 +169,9 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
           />
         ) : (
           <div className="note-inactive">
-            <ReactMarkdown plugins={[gfm]}>{body}</ReactMarkdown>
+            <ReactMarkdown plugins={[gfm]}>
+              {getBodyForMarkdown()}
+            </ReactMarkdown>
           </div>
         )}
       </div>
