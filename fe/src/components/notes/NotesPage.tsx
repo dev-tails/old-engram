@@ -15,8 +15,6 @@ export default function NotesPage({ date }: NotesPageProps) {
   const [notes, setNotes] = useState<Note[]>([]);
   const [lastUpdate, setLastUpdate] = useState("");
 
-  console.log(date);
-
   useEffect(() => {
     const getNotesParams: GetNotesParams = {};
     if (date) {
