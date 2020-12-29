@@ -1,28 +1,25 @@
-import React, { useEffect, useState } from "react";
-import "./NotesPage.scss";
-import { Note, getNotes, GetNotesParams } from "./NotesApi";
-import { Header } from "../header/Header";
-import moment from "moment";
-import { objectIdFromDate } from "../../utils/ObjectId";
-import { CollapsibleNotesList } from "./CollapsibleNotesList/CollapsibleNotesList";
+import './NotesPage.scss';
+
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+
+import { objectIdFromDate } from '../../utils/ObjectId';
+import { CollapsibleNotesList } from './CollapsibleNotesList/CollapsibleNotesList';
+import { getNotes, GetNotesParams, Note } from './NotesApi';
 
 export type NotesPageProps = {
-  daily?: boolean;
+  date?: Date;
 };
 
-export default function NotesPage(props: NotesPageProps) {
-  const [date, setDate] = useState<Date>(moment().startOf("day").toDate());
+export default function NotesPage({ date }: NotesPageProps) {
   const [notes, setNotes] = useState<Note[]>([]);
   const [lastUpdate, setLastUpdate] = useState("");
 
-  let title = "Archive";
-  if (props.daily) {
-    title = date.toLocaleDateString();
-  }
+  console.log(date);
 
   useEffect(() => {
     const getNotesParams: GetNotesParams = {};
-    if (props.daily) {
+    if (date) {
       getNotesParams.since_id = objectIdFromDate(date);
       getNotesParams.max_id = objectIdFromDate(
         moment(date).endOf("day").toDate()
@@ -33,23 +30,10 @@ export default function NotesPage(props: NotesPageProps) {
       setNotes(notes);
       setLastUpdate(moment().format());
     });
-  }, [date, props.daily]);
-
-  const handleArrowClicked = (direction: string) => {
-    if (direction === "left") {
-      setDate(moment(date).subtract(1, "d").toDate());
-    } else {
-      setDate(moment(date).add(1, "d").toDate());
-    }
-  };
+  }, [date]);
 
   return (
     <div className="notes-page">
-      <Header
-        title={title}
-        showArrows={props.daily}
-        onArrowClicked={handleArrowClicked}
-      />
       <CollapsibleNotesList key={lastUpdate} notes={notes} />
     </div>
   );

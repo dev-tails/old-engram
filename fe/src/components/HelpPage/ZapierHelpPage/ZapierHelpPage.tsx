@@ -1,10 +1,11 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { createKey, deleteKey } from "../../../ZapierApi";
-import { Header } from "../../header/Header";
-import ApiKeyImage from "./api-key.png";
-import ZapierSignInImage from "./zapier-sign-in-to-engram.png";
-import "./ZapierHelpPage.scss";
+import './ZapierHelpPage.scss';
+
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+
+import { createKey, deleteKey } from '../../../ZapierApi';
+import ApiKeyImage from './api-key.png';
+import ZapierSignInImage from './zapier-sign-in-to-engram.png';
 
 type ZapierHelpPageProps = {};
 type Key = { _id: string };
@@ -39,7 +40,6 @@ export const ZapierHelpPage: React.FC<ZapierHelpPageProps> = (props) => {
 
   return (
     <div className="zapier-help-page">
-      <Header title="Zapier Help" />
       <div className="container" style={{ marginTop: 64 }}>
         <h2>How to Set up Zapier</h2>
         <h3>Create an API key</h3>

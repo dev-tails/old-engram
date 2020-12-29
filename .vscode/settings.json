@@ -4,5 +4,6 @@
   "search.useGlobalIgnoreFiles": true,
   "files.exclude": {
     "**/node_modules": true
-  }
+  },
+  "typescriptHero.imports.organizeOnSave": true
 }

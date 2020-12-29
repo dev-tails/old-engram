@@ -1,14 +1,17 @@
-import React, { useState } from "react";
-import axios from "axios";
-import "./LoginPage.scss";
-import { Header } from "../header/Header";
-import { useHistory } from "react-router-dom";
-import { ListWidget } from "../widgets/ListWidget/ListWidget";
-import { Note } from "../notes/NotesApi";
-import { objectIdFromDate } from "../../utils/ObjectId";
-import { signUp } from "../../UsersApi";
+import './LoginPage.scss';
+
+import axios from 'axios';
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
+
+import { signUp } from '../../UsersApi';
+import { objectIdFromDate } from '../../utils/ObjectId';
+import { Note } from '../notes/NotesApi';
+import { ListWidget } from '../widgets/ListWidget/ListWidget';
 
 export type LoginPageProps = {};
+
+export const LoginPagePath = "/login";
 
 export default function LoginPage(props: LoginPageProps) {
   const history = useHistory();
@@ -68,7 +71,6 @@ export default function LoginPage(props: LoginPageProps) {
 
   return (
     <div className="login-page">
-      <Header title="engram" />
       <ListWidget items={errors} />
       <div className="bottom-box">
         <input
