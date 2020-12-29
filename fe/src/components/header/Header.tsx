@@ -6,6 +6,8 @@ import { ChevronLeft, ChevronRight, Menu, MoreHoriz } from '@material-ui/icons';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import { isMobileUserAgent } from '../../utils/UserAgentUtils';
+
 type HeaderProps = {
   title: string;
   showArrows?: boolean;
@@ -44,6 +46,10 @@ export const Header: React.FC<HeaderProps> = ({
     { to: "/collections/agenda", title: "Agenda" },
     { to: "/archive", title: "Archive" },
   ];
+
+  if (isMobileUserAgent()) {
+    links.shift();
+  }
 
   return (
     <div className="header">

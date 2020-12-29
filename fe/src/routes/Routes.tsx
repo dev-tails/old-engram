@@ -11,6 +11,7 @@ import LoginPage, { LoginPagePath } from '../components/login/LoginPage';
 import { LogoutPage } from '../components/LogoutPage/LogoutPage';
 import { EditNotePage } from '../components/notes/EditNotePage/EditNotePage';
 import NotesPage from '../components/notes/NotesPage';
+import { isMobileUserAgent } from '../utils/UserAgentUtils';
 
 export default function Routes() {
   const location = useLocation();
@@ -50,7 +51,11 @@ export default function Routes() {
       />
       <Switch>
         <Route exact path="/">
-          <HomePage date={date} />
+          {isMobileUserAgent() ? (
+            <Redirect to="/daily" />
+          ) : (
+            <HomePage date={date} />
+          )}
         </Route>
         <Route exact path="/notes/:id">
           <EditNotePage />
