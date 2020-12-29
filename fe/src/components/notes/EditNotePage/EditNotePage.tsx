@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { Header } from "../../header/Header";
 import { CollapsibleNotesList } from "../CollapsibleNotesList/CollapsibleNotesList";
 import { getNote, Note } from "../NotesApi";
 import moment from "moment";
@@ -28,7 +27,6 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
 
   return (
     <div className="edit-note-page">
-      <Header title={"engram"} />
       <div className="edit-note-page-content">
         <CollapsibleNotesList key={lastUpdate} notes={notes} />
       </div>

@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
-import moment from "moment";
-import { createOrUpdateNote, getNotes, Note } from "../notes/NotesApi";
-import { Header } from "../header/Header";
-import { AgendaView } from "../AgengaView/AgendaView";
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
 
-type AgendaViewProps = {};
+import { AgendaView } from '../AgengaView/AgendaView';
+import { createOrUpdateNote, getNotes, Note } from '../notes/NotesApi';
 
-export const AgendaViewPage: React.FC<AgendaViewProps> = (props) => {
-  const [date, setDate] = useState<Date>(moment().startOf("day").toDate());
+type AgendaViewProps = {
+  date: Date;
+};
+
+export const AgendaViewPage: React.FC<AgendaViewProps> = ({ date }) => {
   const [items, setItems] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -42,23 +43,8 @@ export const AgendaViewPage: React.FC<AgendaViewProps> = (props) => {
     setItems(itemsCopy);
   };
 
-  const handleArrowClicked = (direction: string) => {
-    if (direction === "left") {
-      setDate(moment(date).subtract(1, "d").toDate());
-    } else {
-      setDate(moment(date).add(1, "d").toDate());
-    }
-  };
-
-  const title = date.toLocaleDateString();
-
   return (
     <div className="agenda-view">
-      <Header
-        title={title}
-        showArrows={true}
-        onArrowClicked={handleArrowClicked}
-      />
       <div className="agenda-view-content">
         {!loading && (
           <AgendaView date={date} items={items} onSave={handleNoteSaved} />
