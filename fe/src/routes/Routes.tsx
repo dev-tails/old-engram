@@ -6,6 +6,7 @@ import { AgendaViewPage } from '../components/AgendaViewPage/AgendaViewPage';
 import { Header } from '../components/header/Header';
 import { HelpPage } from '../components/HelpPage/HelpPage';
 import { ZapierHelpPage } from '../components/HelpPage/ZapierHelpPage/ZapierHelpPage';
+import { HomePage } from '../components/HomePage/HomePage';
 import LoginPage, { LoginPagePath } from '../components/login/LoginPage';
 import { LogoutPage } from '../components/LogoutPage/LogoutPage';
 import { EditNotePage } from '../components/notes/EditNotePage/EditNotePage';
@@ -49,7 +50,7 @@ export default function Routes() {
       />
       <Switch>
         <Route exact path="/">
-          <Redirect to="/daily" />
+          <HomePage date={date} />
         </Route>
         <Route exact path="/notes/:id">
           <EditNotePage />

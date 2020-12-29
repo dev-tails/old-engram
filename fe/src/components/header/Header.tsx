@@ -1,18 +1,10 @@
-import {
-  AppBar,
-  IconButton,
-  List,
-  ListItem,
-  ListItemText,
-  Drawer,
-  Toolbar,
-  Typography,
-} from "@material-ui/core";
-import { Menu, MoreHoriz, ChevronLeft, ChevronRight } from "@material-ui/icons";
-import { makeStyles } from "@material-ui/core/styles";
-import React, { useState } from "react";
-import "./Header.scss";
-import { Link } from "react-router-dom";
+import './Header.scss';
+
+import { AppBar, Drawer, IconButton, List, ListItem, ListItemText, Toolbar, Typography } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import { ChevronLeft, ChevronRight, Menu, MoreHoriz } from '@material-ui/icons';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 type HeaderProps = {
   title: string;
@@ -47,6 +39,7 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   const links = [
+    { to: "/", title: "Home" },
     { to: "/daily", title: "Daily" },
     { to: "/collections/agenda", title: "Agenda" },
     { to: "/archive", title: "Archive" },
