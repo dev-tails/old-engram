@@ -1,5 +1,16 @@
 .header {
-  
+  #date {
+    color: white;
+    border-bottom: none;
+
+    &:hover {
+      border-bottom: none;
+    }
+
+    &::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+    }
+  }
 }
 
 .drawer-contents {

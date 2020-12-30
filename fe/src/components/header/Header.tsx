@@ -1,17 +1,18 @@
 import './Header.scss';
 
-import { AppBar, Drawer, IconButton, List, ListItem, ListItemText, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, Drawer, IconButton, List, ListItem, ListItemText, TextField, Toolbar, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { ChevronLeft, ChevronRight, Menu, MoreHoriz } from '@material-ui/icons';
-import React, { useState } from 'react';
+import { Menu, MoreHoriz } from '@material-ui/icons';
+import moment from 'moment';
+import React, { ChangeEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { isMobileUserAgent } from '../../utils/UserAgentUtils';
 
 type HeaderProps = {
-  title: string;
-  showArrows?: boolean;
-  onArrowClicked?: (direction: string) => void;
+  date?: Date;
+  title?: string;
+  onDateChange?: (date: Date) => void;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -20,15 +21,21 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   toolbar: theme.mixins.toolbar,
+  textField: {
+    color: "#FFFFFF",
+  },
 }));
 
 export const Header: React.FC<HeaderProps> = ({
   title,
-  showArrows,
-  onArrowClicked,
+  date,
+  onDateChange,
 }) => {
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false);
   const [rightDrawerOpen, setRightDrawerOpen] = useState(false);
+  const [dateString, setDateString] = useState(
+    moment(date).format("YYYY-MM-DD")
+  );
 
   const classes = useStyles();
 
@@ -51,6 +58,19 @@ export const Header: React.FC<HeaderProps> = ({
     links.shift();
   }
 
+  const handleDateChanged = (event: ChangeEvent<HTMLInputElement>) => {
+    setDateString(event.currentTarget.value);
+  };
+
+  const handleDateBlur = () => {
+    if (onDateChange) {
+      const dateAsMoment = moment(dateString);
+      if (dateAsMoment.isValid()) {
+        onDateChange(dateAsMoment.toDate());
+      }
+    }
+  };
+
   return (
     <div className="header">
       <AppBar>
@@ -64,26 +84,19 @@ export const Header: React.FC<HeaderProps> = ({
             <Menu />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            {showArrows && (
-              <IconButton
-                color="inherit"
-                onClick={
-                  onArrowClicked ? onArrowClicked.bind(this, "left") : () => {}
-                }
-              >
-                <ChevronLeft />
-              </IconButton>
-            )}
-            {title}
-            {showArrows && (
-              <IconButton
-                color="inherit"
-                onClick={
-                  onArrowClicked ? onArrowClicked.bind(this, "right") : () => {}
-                }
-              >
-                <ChevronRight />
-              </IconButton>
+            {title ? (
+              title
+            ) : (
+              <TextField
+                id="date"
+                type="date"
+                value={dateString}
+                onChange={handleDateChanged}
+                onBlur={handleDateBlur}
+                InputProps={{
+                  disableUnderline: true,
+                }}
+              />
             )}
           </Typography>
           <IconButton

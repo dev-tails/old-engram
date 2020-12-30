@@ -18,37 +18,26 @@ export default function Routes() {
 
   const [date, setDate] = useState(moment().startOf("day").toDate());
 
-  let title = date.toLocaleDateString();
-  let showArrows = true;
+  let title = "";
   switch (location.pathname) {
     case LoginPagePath:
       title = "engram";
-      showArrows = false;
       break;
     case "/help":
     case "/help/zapier":
       title = "Help";
-      showArrows = false;
       break;
     default:
       break;
   }
 
-  const handleArrowClicked = (direction: string) => {
-    if (direction === "left") {
-      setDate(moment(date).subtract(1, "d").toDate());
-    } else {
-      setDate(moment(date).add(1, "d").toDate());
-    }
+  const handleDateChanged = (date: Date) => {
+    setDate(date);
   };
 
   return (
     <>
-      <Header
-        title={title}
-        onArrowClicked={handleArrowClicked}
-        showArrows={showArrows}
-      />
+      <Header title={title} date={date} onDateChange={handleDateChanged} />
       <Switch>
         <Route exact path="/">
           {isMobileUserAgent() ? (
