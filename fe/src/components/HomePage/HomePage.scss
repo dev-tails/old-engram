@@ -1,19 +1,51 @@
 .home-page {
-  .events {
-    .agenda-view-content {
-      width: 34%;
+  .events, .tasks, .notes {
+    display: none;
+  }
+
+  .bottom-navigation {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: block;
+  }
+
+  .visible {
+    display: block;
+  }
+
+  @media (min-width: 1000px) {
+    .bottom-navigation {
+      display: none;
     }
-  }
 
-  .tasks .notes-page {
-    left: 34%;
-    right: 33%;
-    width: 33%;
-  }
+    .events {
+      display: block;
 
-  .notes .notes-page {
-    left: 67%;
-    right: 0;
-    width: 33%;
+      .agenda-view-content {
+        width: 34%;
+      }
+    }
+
+    .tasks {
+      display: block;
+
+      .notes-page {
+        left: 34%;
+        right: 33%;
+        width: 33%;
+      }
+    }
+
+    .notes {
+      display: block;
+
+      .notes-page {
+
+        left: 67%;
+        right: 0;
+        width: 33%;
+      }
+    }
   }
 }
