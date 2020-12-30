@@ -6,9 +6,9 @@ import React, { useState } from 'react';
 import { AgendaViewPage } from '../AgendaViewPage/AgendaViewPage';
 import NotesPage from '../notes/NotesPage';
 
-type HomePageProps = { date: Date };
+type HomePageProps = { date: Date; dateRangeValue: string };
 
-export const HomePage: React.FC<HomePageProps> = ({ date }) => {
+export const HomePage: React.FC<HomePageProps> = ({ date, dateRangeValue }) => {
   const [bottomNavValue, setBottomNavValue] = useState("note");
 
   const handleChange = (event: any, newValue: string) => {
@@ -21,10 +21,10 @@ export const HomePage: React.FC<HomePageProps> = ({ date }) => {
         <AgendaViewPage date={date} />
       </div>
       <div className={`tasks ${bottomNavValue === "task" ? "visible" : ""}`}>
-        <NotesPage date={date} type="task" />
+        <NotesPage date={date} type="task" dateRangeValue={dateRangeValue} />
       </div>
       <div className={`notes ${bottomNavValue === "note" ? "visible" : ""}`}>
-        <NotesPage date={date} type="note" />
+        <NotesPage date={date} type="note" dateRangeValue={dateRangeValue} />
       </div>
       <div className="bottom-navigation">
         <BottomNavigation

@@ -1,6 +1,18 @@
 import './Header.scss';
 
-import { AppBar, Drawer, IconButton, List, ListItem, ListItemText, TextField, Toolbar, Typography } from '@material-ui/core';
+import {
+  AppBar,
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+  MenuItem,
+  Select,
+  TextField,
+  Toolbar,
+  Typography,
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Menu, MoreHoriz } from '@material-ui/icons';
 import moment from 'moment';
@@ -10,9 +22,11 @@ import { Link } from 'react-router-dom';
 import { isMobileUserAgent } from '../../utils/UserAgentUtils';
 
 type HeaderProps = {
+  dateRangeValue: string;
   date?: Date;
   title?: string;
   onDateChange?: (date: Date) => void;
+  onDateRangeChange: (dateRange: string) => void;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -30,6 +44,8 @@ export const Header: React.FC<HeaderProps> = ({
   title,
   date,
   onDateChange,
+  dateRangeValue,
+  onDateRangeChange,
 }) => {
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false);
   const [rightDrawerOpen, setRightDrawerOpen] = useState(false);
@@ -71,6 +87,10 @@ export const Header: React.FC<HeaderProps> = ({
     }
   };
 
+  const handleDateRangeChanged = (event: any) => {
+    onDateRangeChange(event.target.value);
+  };
+
   return (
     <div className="header">
       <AppBar>
@@ -99,6 +119,20 @@ export const Header: React.FC<HeaderProps> = ({
               />
             )}
           </Typography>
+          <Select
+            id="date-range"
+            value={dateRangeValue}
+            onChange={handleDateRangeChanged}
+            disableUnderline={true}
+          >
+            {["D", "W", "F", "M", "Q", "Y", "A"].map((option) => {
+              return (
+                <MenuItem key={option} value={option}>
+                  {option}
+                </MenuItem>
+              );
+            })}
+          </Select>
           <IconButton
             edge="end"
             color="inherit"

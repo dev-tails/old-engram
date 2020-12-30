@@ -2,7 +2,6 @@ import moment from 'moment';
 import React, { useState } from 'react';
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
 
-import { AgendaViewPage } from '../components/AgendaViewPage/AgendaViewPage';
 import { Header } from '../components/header/Header';
 import { HelpPage } from '../components/HelpPage/HelpPage';
 import { ZapierHelpPage } from '../components/HelpPage/ZapierHelpPage/ZapierHelpPage';
@@ -10,13 +9,12 @@ import { HomePage } from '../components/HomePage/HomePage';
 import LoginPage, { LoginPagePath } from '../components/login/LoginPage';
 import { LogoutPage } from '../components/LogoutPage/LogoutPage';
 import { EditNotePage } from '../components/notes/EditNotePage/EditNotePage';
-import NotesPage from '../components/notes/NotesPage';
-import { isMobileUserAgent } from '../utils/UserAgentUtils';
 
 export default function Routes() {
   const location = useLocation();
 
   const [date, setDate] = useState(moment().startOf("day").toDate());
+  const [dateRangeValue, setDateRangeValue] = useState("D");
 
   let title = "";
   switch (location.pathname) {
@@ -35,28 +33,25 @@ export default function Routes() {
     setDate(date);
   };
 
+  const handleDateRangeChanged = (dateRange: string) => {
+    setDateRangeValue(dateRange);
+  };
+
   return (
     <>
-      <Header title={title} date={date} onDateChange={handleDateChanged} />
+      <Header
+        title={title}
+        date={date}
+        onDateChange={handleDateChanged}
+        dateRangeValue={dateRangeValue}
+        onDateRangeChange={handleDateRangeChanged}
+      />
       <Switch>
         <Route exact path="/">
-          {isMobileUserAgent() ? (
-            <Redirect to="/daily" />
-          ) : (
-            <HomePage date={date} />
-          )}
+          <HomePage date={date} dateRangeValue={dateRangeValue} />
         </Route>
         <Route exact path="/notes/:id">
           <EditNotePage />
-        </Route>
-        <Route exact path="/collections/agenda">
-          <AgendaViewPage date={date} />
-        </Route>
-        <Route exact path="/archive">
-          <NotesPage />
-        </Route>
-        <Route exact path="/daily">
-          <NotesPage date={date} />
         </Route>
         <Route exact path={LoginPagePath}>
           <LoginPage />
