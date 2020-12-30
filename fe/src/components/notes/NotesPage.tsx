@@ -32,7 +32,7 @@ export default function NotesPage({ date, type }: NotesPageProps) {
       setNotes(notes);
       setLastUpdate(moment().format());
     });
-  }, [date]);
+  }, [date, type]);
 
   return (
     <div className="notes-page">
