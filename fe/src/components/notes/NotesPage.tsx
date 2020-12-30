@@ -49,6 +49,7 @@ export default function NotesPage({
             break;
           case "B":
             amount = 0;
+            break;
           default:
             break;
         }
