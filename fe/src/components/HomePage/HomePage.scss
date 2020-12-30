@@ -1,10 +1,19 @@
 .home-page {
-  .agenda-view-content {
-    width: 50%;
+  .events {
+    .agenda-view-content {
+      width: 34%;
+    }
   }
 
-  .notes-page {
-    left: 50%;
+  .tasks .notes-page {
+    left: 34%;
+    right: 33%;
+    width: 33%;
+  }
+
+  .notes .notes-page {
+    left: 67%;
     right: 0;
+    width: 33%;
   }
 }

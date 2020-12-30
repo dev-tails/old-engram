@@ -1,11 +1,12 @@
-import express from "express";
-import yup from "yup";
-import { ObjectId } from "../Database.js";
-import { UnauthorizedError } from "../middleware/AuthMiddleware.js";
-import { AuthRequiredMiddleware } from "../middleware/AuthRequiredMiddleware.js";
-import NoteSchema from "../schemas/NoteSchema.js";
-import { ObjectIdSchema } from "../schemas/ObjectIdSchema.js";
-import { handleNewNote } from "../vendor/zapier/Zapier.js";
+import express from 'express';
+import yup from 'yup';
+
+import { ObjectId } from '../Database.js';
+import { UnauthorizedError } from '../middleware/AuthMiddleware.js';
+import { AuthRequiredMiddleware } from '../middleware/AuthRequiredMiddleware.js';
+import NoteSchema from '../schemas/NoteSchema.js';
+import { ObjectIdSchema } from '../schemas/ObjectIdSchema.js';
+import { handleNewNote } from '../vendor/zapier/Zapier.js';
 
 export function initializeNotesRouter() {
   const router = express.Router();
@@ -14,28 +15,42 @@ export function initializeNotesRouter() {
   router.get("", async function (req, res) {
     const { user, db } = req;
 
+    const querySchema = yup.object().shape({
+      count: yup.number(),
+      type: yup.string().nullable(),
+      max_id: new ObjectIdSchema(),
+      since_id: new ObjectIdSchema(),
+      before: yup.date(),
+      since: yup.date(),
+    });
+    const parsedQuery = querySchema.cast(req.query);
+
     const {
       count,
       since_id: sinceId,
       max_id: maxId,
       since,
       before,
-    } = req.query;
+      type,
+    } = parsedQuery;
 
     let findOptions = {
       user: ObjectId(user),
     };
     if (sinceId && maxId) {
       findOptions._id = {
-        $gt: ObjectId(sinceId),
-        $lte: ObjectId(maxId),
+        $gt: sinceId,
+        $lte: maxId,
       };
     }
     if (since && before) {
       findOptions.start = {
-        $gte: new Date(since),
-        $lte: new Date(before),
+        $gte: since,
+        $lte: before,
       };
+    }
+    if (type) {
+      findOptions.type = type;
     }
 
     const query = db.collection("notes").find(findOptions);

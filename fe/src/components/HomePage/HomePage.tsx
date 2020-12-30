@@ -10,8 +10,15 @@ type HomePageProps = { date: Date };
 export const HomePage: React.FC<HomePageProps> = ({ date }) => {
   return (
     <div className="home-page">
-      <AgendaViewPage date={date} />
-      <NotesPage date={date} />
+      <div className="events">
+        <AgendaViewPage date={date} />
+      </div>
+      <div className="tasks">
+        <NotesPage date={date} type="task" />
+      </div>
+      <div className="notes">
+        <NotesPage date={date} type="note" />
+      </div>
     </div>
   );
 };

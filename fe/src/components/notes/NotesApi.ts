@@ -1,6 +1,7 @@
-import axios from "axios";
-import * as Api from "../../Api";
-import queryString from "query-string";
+import axios from 'axios';
+import queryString from 'query-string';
+
+import * as Api from '../../Api';
 
 export type NoteType = "note" | "task" | "task_completed" | "event";
 
@@ -43,6 +44,7 @@ export type GetNotesParams = {
   max_id?: string;
   since?: Date;
   before?: Date;
+  type?: NoteType;
 };
 
 export async function getNotes(params: GetNotesParams): Promise<Note[]> {
@@ -51,6 +53,7 @@ export async function getNotes(params: GetNotesParams): Promise<Note[]> {
     max_id: params.max_id,
     before: params.before?.toISOString(),
     since: params.since?.toISOString(),
+    type: params.type,
   };
 
   const res = await Api.get(`/api/notes?${queryString.stringify(paramsCopy)}`, {

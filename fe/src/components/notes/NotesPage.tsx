@@ -5,13 +5,14 @@ import React, { useEffect, useState } from 'react';
 
 import { objectIdFromDate } from '../../utils/ObjectId';
 import { CollapsibleNotesList } from './CollapsibleNotesList/CollapsibleNotesList';
-import { getNotes, GetNotesParams, Note } from './NotesApi';
+import { getNotes, GetNotesParams, Note, NoteType } from './NotesApi';
 
 export type NotesPageProps = {
   date?: Date;
+  type?: NoteType;
 };
 
-export default function NotesPage({ date }: NotesPageProps) {
+export default function NotesPage({ date, type }: NotesPageProps) {
   const [notes, setNotes] = useState<Note[]>([]);
   const [lastUpdate, setLastUpdate] = useState("");
 
@@ -22,6 +23,9 @@ export default function NotesPage({ date }: NotesPageProps) {
       getNotesParams.max_id = objectIdFromDate(
         moment(date).endOf("day").toDate()
       );
+    }
+    if (type) {
+      getNotesParams.type = type;
     }
 
     getNotes(getNotesParams).then((notes) => {
