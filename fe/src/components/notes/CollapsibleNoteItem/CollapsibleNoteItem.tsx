@@ -1,13 +1,15 @@
-import { TextareaAutosize } from "@material-ui/core";
-import ArrowRightIcon from "@material-ui/icons/ArrowRight";
-import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
-import React, { useEffect, useRef, useState } from "react";
-import { BulletIcon } from "../BulletIcon/BulletIcon";
-import "./CollapsibleNoteItem.scss";
-import { Note, NoteType } from "../NotesApi";
-import ReactMarkdown from "react-markdown";
-import gfm from "remark-gfm";
-import { Link } from "react-router-dom";
+import './CollapsibleNoteItem.scss';
+
+import { TextareaAutosize } from '@material-ui/core';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import React, { useEffect, useRef, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+import { Link } from 'react-router-dom';
+import gfm from 'remark-gfm';
+
+import { BulletIcon } from '../BulletIcon/BulletIcon';
+import { Note, NoteType } from '../NotesApi';
 
 export type CollapsibleNote = {
   _id?: string;
@@ -20,6 +22,7 @@ export type CollapsibleNote = {
 
 type CollapsibleNoteItemProps = {
   note: CollapsibleNote;
+  defaultType?: NoteType;
   activeId: string | null;
   onSave: (note: CollapsibleNote) => void;
   onUnindent?: (note: CollapsibleNote) => void;
@@ -34,7 +37,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
 ) => {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const [body, setBody] = useState(props.note.body);
-  const [type, setType] = useState(props.note.type);
+  const [type, setType] = useState(props.note.type || props.defaultType);
   const [collapsed, setCollapsed] = useState(false);
 
   const isActive = props.activeId === props.note._id;

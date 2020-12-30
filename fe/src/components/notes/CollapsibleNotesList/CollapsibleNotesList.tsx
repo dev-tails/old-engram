@@ -228,6 +228,7 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
           <CollapsibleNoteItem
             key={note._id}
             note={note}
+            defaultType={props.type}
             activeId={activeNoteId}
             onSave={handleSave}
             onIndent={handleIndent}
