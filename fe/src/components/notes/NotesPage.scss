@@ -1,6 +1,10 @@
 .notes-page {
   position: fixed;
   top: 64px;
-  bottom: 0;
+  bottom: 56px;
   width: 100%;
+
+  @media (min-width: 1000px) {
+    bottom: 0;
+  }
 }
