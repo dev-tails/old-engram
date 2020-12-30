@@ -82,7 +82,7 @@ export const Header: React.FC<HeaderProps> = ({
     if (onDateChange) {
       const dateAsMoment = moment(dateString);
       if (dateAsMoment.isValid()) {
-        onDateChange(dateAsMoment.toDate());
+        onDateChange(dateAsMoment.startOf("d").toDate());
       }
     }
   };
@@ -125,7 +125,7 @@ export const Header: React.FC<HeaderProps> = ({
             onChange={handleDateRangeChanged}
             disableUnderline={true}
           >
-            {["D", "W", "F", "M", "Q", "Y", "A"].map((option) => {
+            {["D", "W", "F", "M", "Q", "Y", "A", "B"].map((option) => {
               return (
                 <MenuItem key={option} value={option}>
                   {option}

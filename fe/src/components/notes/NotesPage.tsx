@@ -47,12 +47,14 @@ export default function NotesPage({
           case "Y":
             unit = "y";
             break;
+          case "B":
+            amount = 0;
           default:
             break;
         }
 
         getNotesParams.max_id = objectIdFromDate(
-          moment(date).add(amount, unit).endOf("day").toDate()
+          moment(date).add(amount, unit).toDate()
         );
       }
     }

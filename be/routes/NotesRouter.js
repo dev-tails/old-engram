@@ -42,7 +42,16 @@ export function initializeNotesRouter() {
         $gt: sinceId,
         $lte: maxId,
       };
+    } else if (sinceId) {
+      findOptions._id = {
+        $gt: sinceId,
+      };
+    } else if (maxId) {
+      findOptions._id = {
+        $lte: maxId,
+      };
     }
+
     if (since && before) {
       findOptions.start = {
         $gte: since,
