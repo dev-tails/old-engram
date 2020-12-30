@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import {
-  CollapsibleNote,
-  CollapsibleNoteItem,
-} from "../CollapsibleNoteItem/CollapsibleNoteItem";
-import { createNote, Note, removeNote, updateNote } from "../NotesApi";
-import * as NoteUtils from "../NoteUtils";
-import "./CollapsibleNotesList.scss";
+import './CollapsibleNotesList.scss';
+
+import React, { useEffect, useState } from 'react';
+
+import { FloatingActionButton } from '../../FloatingActionButton/FloatingActionButton';
+import { CollapsibleNote, CollapsibleNoteItem } from '../CollapsibleNoteItem/CollapsibleNoteItem';
+import { createNote, Note, removeNote, updateNote } from '../NotesApi';
+import * as NoteUtils from '../NoteUtils';
 
 type CollapsibleNotesListProps = {
   notes: CollapsibleNote[];
@@ -187,6 +187,11 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
     await removeNote(note._id);
   };
 
+  const handleQuickAddSubmit = async (note: Note) => {
+    const newNote = await createNote(note);
+    setNotes([...notes, newNote]);
+  };
+
   const topLevelNotesWithChildren = notes
     .filter((note) => {
       return !note.parent;
@@ -222,6 +227,7 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
           />
         );
       })}
+      <FloatingActionButton onSubmit={handleQuickAddSubmit} />
     </div>
   );
 };
