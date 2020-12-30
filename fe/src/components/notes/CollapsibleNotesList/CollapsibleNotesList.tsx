@@ -4,11 +4,12 @@ import React, { useEffect, useState } from 'react';
 
 import { FloatingActionButton } from '../../FloatingActionButton/FloatingActionButton';
 import { CollapsibleNote, CollapsibleNoteItem } from '../CollapsibleNoteItem/CollapsibleNoteItem';
-import { createNote, Note, removeNote, updateNote } from '../NotesApi';
+import { createNote, Note, NoteType, removeNote, updateNote } from '../NotesApi';
 import * as NoteUtils from '../NoteUtils';
 
 type CollapsibleNotesListProps = {
   notes: CollapsibleNote[];
+  type?: NoteType;
 };
 
 export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
@@ -142,7 +143,7 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
     noteToCreate.parent = activeParentId;
     noteToCreate.prev = note._id;
 
-    const newNote = await createNote(noteToCreate);
+    const newNote = await createNoteWithDefaultType(noteToCreate);
 
     const nextNote = notesCopy.find(
       (n) => n.parent === activeParentId && n.prev === note._id
@@ -157,12 +158,22 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
     await Promise.all(promises);
   };
 
+  const createNoteWithDefaultType = (note: Partial<Note>) => {
+    return createNote({
+      ...note,
+      ...(props.type && { type: props.type }),
+    });
+  };
+
   const handleSave = async (note: CollapsibleNote) => {
     if (note._id) {
       await updateNote(note);
     } else {
-      const newNote = await createNote(note);
-      const newEmptyNote = await createNote({ body: "", prev: newNote._id });
+      const newNote = await createNoteWithDefaultType(note);
+      const newEmptyNote = await createNoteWithDefaultType({
+        body: "",
+        prev: newNote._id,
+      });
       setNotes([newNote, newEmptyNote]);
       setActiveNoteId(newEmptyNote._id);
     }
@@ -188,7 +199,7 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
   };
 
   const handleQuickAddSubmit = async (note: Note) => {
-    const newNote = await createNote(note);
+    const newNote = await createNoteWithDefaultType(note);
     setNotes([...notes, newNote]);
   };
 
