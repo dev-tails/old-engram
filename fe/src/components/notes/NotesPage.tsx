@@ -36,7 +36,7 @@ export default function NotesPage({ date, type }: NotesPageProps) {
 
   return (
     <div className="notes-page">
-      <CollapsibleNotesList key={lastUpdate} notes={notes} />
+      <CollapsibleNotesList key={lastUpdate} notes={notes} type={type} />
     </div>
   );
 }
