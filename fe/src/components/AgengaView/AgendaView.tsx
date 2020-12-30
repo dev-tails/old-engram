@@ -1,8 +1,10 @@
-import React from "react";
-import moment from "moment";
-import "./AgendaView.scss";
-import { Note } from "../notes/NotesApi";
-import { NoteItem } from "../notes/NoteItem/NoteItem";
+import './AgendaView.scss';
+
+import moment from 'moment';
+import React from 'react';
+
+import { NoteItem } from '../notes/NoteItem/NoteItem';
+import { Note } from '../notes/NotesApi';
 
 type AgendaViewProps = {
   date: Date;
@@ -32,7 +34,7 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
     <div className="agenda-view">
       {itemsByHour.map((items, index) => {
         let iterationMoment = moment().startOf("day").hour(index).minutes(0);
-        let timeString = iterationMoment.format("h A");
+        let timeString = iterationMoment.format("HH:mm");
 
         return (
           <div className="agenda-view-item" key={`${date}-${index}`}>

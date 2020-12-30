@@ -1,8 +1,10 @@
-import { TextareaAutosize } from "@material-ui/core";
-import React, { useState } from "react";
-import { Note } from "../NotesApi";
-import { BulletIcon } from "../BulletIcon/BulletIcon";
-import "./NoteItem.scss";
+import './NoteItem.scss';
+
+import { TextareaAutosize } from '@material-ui/core';
+import React, { useState } from 'react';
+
+import { BulletIcon } from '../BulletIcon/BulletIcon';
+import { Note } from '../NotesApi';
 
 type NoteItemProps = {
   note: Note;
@@ -29,7 +31,7 @@ export const NoteItem: React.FC<NoteItemProps> = (props) => {
 
   return (
     <div className="note-item">
-      <BulletIcon note={props.note} />
+      <BulletIcon note={props.note} defaultType="event" />
       <TextareaAutosize
         value={body}
         onChange={handleTextChanged}

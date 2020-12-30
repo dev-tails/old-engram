@@ -1,8 +1,10 @@
-import React from "react";
-import { Note } from "../NotesApi";
+import React from 'react';
+
+import { Note } from '../NotesApi';
 
 type BulletIconProps = {
   note: Note;
+  defaultType?: string;
 };
 
 const NoteIcon = () => {
@@ -66,7 +68,9 @@ const EventIcon = () => {
 
 export const BulletIcon: React.FC<BulletIconProps> = (props) => {
   let icon = null;
-  switch (props.note.type) {
+  let type = props.note.type || props.defaultType;
+
+  switch (type) {
     case "event":
       icon = <EventIcon />;
       break;
