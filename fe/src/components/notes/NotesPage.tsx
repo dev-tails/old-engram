@@ -1,6 +1,6 @@
 import './NotesPage.scss';
 
-import moment, { DurationInputArg2 } from 'moment';
+import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 
 import { objectIdFromDate } from '../../utils/ObjectId';
@@ -10,53 +10,33 @@ import { getNotes, GetNotesParams, Note, NoteType } from './NotesApi';
 export type NotesPageProps = {
   date?: Date;
   type?: NoteType;
-  dateRangeValue: string;
+  startDate: Date | null;
+  endDate: Date | null;
 };
 
 export default function NotesPage({
   date,
   type,
-  dateRangeValue,
+  startDate,
+  endDate,
 }: NotesPageProps) {
   const [notes, setNotes] = useState<Note[]>([]);
   const [lastUpdate, setLastUpdate] = useState("");
 
   useEffect(() => {
     const getNotesParams: GetNotesParams = {};
-    if (date) {
-      if (dateRangeValue !== "Before") {
-        getNotesParams.since_id = objectIdFromDate(date);
+    if (startDate) {
+      if (type === "event") {
+        getNotesParams.since = moment(startDate).format("YYYY-MM-DD");
+      } else {
+        getNotesParams.since_id = objectIdFromDate(startDate);
       }
-
-      if (dateRangeValue !== "After") {
-        let unit: DurationInputArg2 = "d";
-        let amount = 1;
-        switch (dateRangeValue) {
-          case "Week":
-            amount = 7;
-            break;
-          case "Fortnight":
-            amount = 14;
-            break;
-          case "Month":
-            unit = "M";
-            break;
-          case "Quarter":
-            unit = "Q";
-            break;
-          case "Year":
-            unit = "y";
-            break;
-          case "Before":
-            amount = 0;
-            break;
-          default:
-            break;
-        }
-
-        getNotesParams.max_id = objectIdFromDate(
-          moment(date).add(amount, unit).toDate()
-        );
+    }
+    if (endDate) {
+      if (type === "event") {
+        getNotesParams.before = moment(endDate).format("YYYY-MM-DD");
+      } else {
+        getNotesParams.max_id = objectIdFromDate(endDate);
       }
     }
     if (type) {
@@ -67,7 +47,7 @@ export default function NotesPage({
       setNotes(notes);
       setLastUpdate(moment().format());
     });
-  }, [date, type, dateRangeValue]);
+  }, [type, startDate, endDate]);
 
   return (
     <div className="notes-page">

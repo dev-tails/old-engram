@@ -42,21 +42,13 @@ export async function getNote(params: { id: string }): Promise<Note[]> {
 export type GetNotesParams = {
   since_id?: string;
   max_id?: string;
-  since?: Date;
-  before?: Date;
+  since?: string;
+  before?: string;
   type?: NoteType;
 };
 
 export async function getNotes(params: GetNotesParams): Promise<Note[]> {
-  const paramsCopy = {
-    since_id: params.since_id,
-    max_id: params.max_id,
-    before: params.before?.toISOString(),
-    since: params.since?.toISOString(),
-    type: params.type,
-  };
-
-  const res = await Api.get(`/api/notes?${queryString.stringify(paramsCopy)}`, {
+  const res = await Api.get(`/api/notes?${queryString.stringify(params)}`, {
     withCredentials: true,
   });
   return res.data;

@@ -57,6 +57,14 @@ export function initializeNotesRouter() {
         $gte: since,
         $lte: before,
       };
+    } else if (since) {
+      findOptions.start = {
+        $gte: since,
+      };
+    } else if (before) {
+      findOptions._id = {
+        $lte: before,
+      };
     }
     if (type) {
       findOptions.type = type;
