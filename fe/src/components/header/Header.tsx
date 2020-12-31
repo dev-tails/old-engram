@@ -15,7 +15,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { MoreHoriz } from '@material-ui/icons';
-import moment from 'moment';
+import moment, { DurationInputArg2 } from 'moment';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -25,7 +25,7 @@ type HeaderProps = {
   dateRangeValue: string;
   date?: Date;
   title?: string;
-  onDateChange?: (date: Date) => void;
+  onDateChange: (date: Date) => void;
   onDateRangeChange: (dateRange: string) => void;
 };
 
@@ -55,6 +55,10 @@ export const Header: React.FC<HeaderProps> = ({
   );
 
   useEffect(() => {
+    setDateString(moment(date).format("YYYY-MM-DD"));
+  }, [date]);
+
+  useEffect(() => {
     function keyDownListener(event: KeyboardEvent) {
       if (!event.ctrlKey || !event.shiftKey) {
         return;
@@ -73,6 +77,24 @@ export const Header: React.FC<HeaderProps> = ({
       if (dateRange) {
         event.preventDefault();
         handleDateRangeChanged(dateRange);
+      }
+
+      const unitMap: { [key: string]: DurationInputArg2 } = {
+        Agenda: "day",
+        Day: "day",
+        Week: "week",
+        Fortnight: "week",
+        Month: "month",
+        Quarter: "quarter",
+        Year: "year",
+      };
+      const unit = unitMap[dateRangeValue];
+      let amount = dateRangeValue === "Fortnight" ? 2 : 1;
+
+      if (event.key === "ArrowLeft") {
+        onDateChange(moment(date).add(-amount, unit).startOf(unit).toDate());
+      } else if (event.key === "ArrowRight") {
+        onDateChange(moment(date).add(amount, unit).startOf(unit).toDate());
       }
     }
     document.addEventListener("keydown", keyDownListener);
