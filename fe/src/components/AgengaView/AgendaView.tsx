@@ -52,6 +52,7 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
                   itemForMinutes = {
                     body: "",
                     start: startDate,
+                    type: "event",
                   };
                 }
 
