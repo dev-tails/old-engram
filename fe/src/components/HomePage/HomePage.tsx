@@ -3,7 +3,6 @@ import './HomePage.scss';
 import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 import React, { useState } from 'react';
 
-import { AgendaViewPage } from '../AgendaViewPage/AgendaViewPage';
 import NotesPage from '../notes/NotesPage';
 
 type HomePageProps = { date: Date; dateRangeValue: string };
@@ -18,7 +17,7 @@ export const HomePage: React.FC<HomePageProps> = ({ date, dateRangeValue }) => {
   return (
     <div className="home-page">
       <div className={`events ${bottomNavValue === "event" ? "visible" : ""}`}>
-        <AgendaViewPage date={date} />
+        <NotesPage date={date} type="event" dateRangeValue={dateRangeValue} />
       </div>
       <div className={`tasks ${bottomNavValue === "task" ? "visible" : ""}`}>
         <NotesPage date={date} type="task" dateRangeValue={dateRangeValue} />
