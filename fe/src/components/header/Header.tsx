@@ -2,19 +2,20 @@ import './Header.scss';
 
 import {
   AppBar,
+  Button,
   Drawer,
   IconButton,
   List,
   ListItem,
   ListItemText,
+  Menu,
   MenuItem,
-  Select,
   TextField,
   Toolbar,
   Typography,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { Menu, MoreHoriz } from '@material-ui/icons';
+import { MoreHoriz } from '@material-ui/icons';
 import moment from 'moment';
 import React, { ChangeEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -47,17 +48,14 @@ export const Header: React.FC<HeaderProps> = ({
   dateRangeValue,
   onDateRangeChange,
 }) => {
-  const [leftDrawerOpen, setLeftDrawerOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
   const [rightDrawerOpen, setRightDrawerOpen] = useState(false);
   const [dateString, setDateString] = useState(
     moment(date).format("YYYY-MM-DD")
   );
 
   const classes = useStyles();
-
-  const handleLeftMenuButtonClicked = () => {
-    setLeftDrawerOpen(true);
-  };
 
   const handleRightMenuButtonClicked = () => {
     setRightDrawerOpen(true);
@@ -87,22 +85,25 @@ export const Header: React.FC<HeaderProps> = ({
     }
   };
 
-  const handleDateRangeChanged = (event: any) => {
-    onDateRangeChange(event.target.value);
+  const handleDateRangeChanged = (newValue: string) => {
+    onDateRangeChange(newValue);
+    handleCloseDateRangeMenu();
+  };
+
+  const handleDateRangeClicked = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseDateRangeMenu = () => {
+    setAnchorEl(null);
   };
 
   return (
     <div className="header">
       <AppBar>
         <Toolbar>
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            onClick={handleLeftMenuButtonClicked}
-          >
-            <Menu />
-          </IconButton>
           <Typography variant="h6" className={classes.title}>
             {title ? (
               title
@@ -119,20 +120,41 @@ export const Header: React.FC<HeaderProps> = ({
               />
             )}
           </Typography>
-          <Select
-            id="date-range"
-            value={dateRangeValue}
-            onChange={handleDateRangeChanged}
-            disableUnderline={true}
+          <Button
+            id="date-range-button"
+            aria-controls="date-range-menu"
+            aria-haspopup="true"
+            onClick={handleDateRangeClicked}
           >
-            {["D", "W", "F", "M", "Q", "Y", "A", "B"].map((option) => {
+            {dateRangeValue}
+          </Button>
+          <Menu
+            id="date-range-menu"
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleCloseDateRangeMenu}
+          >
+            {[
+              "Day",
+              "Week",
+              "Fortnight",
+              "Month",
+              "Quarter",
+              "Year",
+              "After",
+              "Before",
+            ].map((option) => {
               return (
-                <MenuItem key={option} value={option}>
+                <MenuItem
+                  key={option}
+                  value={option}
+                  onClick={handleDateRangeChanged.bind(this, option)}
+                >
                   {option}
                 </MenuItem>
               );
             })}
-          </Select>
+          </Menu>
           <IconButton
             edge="end"
             color="inherit"
@@ -143,32 +165,6 @@ export const Header: React.FC<HeaderProps> = ({
           </IconButton>
         </Toolbar>
       </AppBar>
-      <React.Fragment>
-        <Drawer
-          anchor={"left"}
-          open={leftDrawerOpen}
-          onClose={setLeftDrawerOpen.bind(this, false)}
-          // onOpen={setLeftDrawerOpen.bind(this, true)}
-        >
-          <div className="drawer-contents">
-            <List>
-              {links.map((link) => {
-                return (
-                  <Link
-                    key={link.to}
-                    to={link.to}
-                    onClick={setLeftDrawerOpen.bind(this, false)}
-                  >
-                    <ListItem button>
-                      <ListItemText primary={link.title} />
-                    </ListItem>
-                  </Link>
-                );
-              })}
-            </List>
-          </div>
-        </Drawer>
-      </React.Fragment>
       <React.Fragment>
         <Drawer
           anchor={"right"}

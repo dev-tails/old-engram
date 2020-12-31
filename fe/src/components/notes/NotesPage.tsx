@@ -24,30 +24,30 @@ export default function NotesPage({
   useEffect(() => {
     const getNotesParams: GetNotesParams = {};
     if (date) {
-      if (dateRangeValue !== "B") {
+      if (dateRangeValue !== "Before") {
         getNotesParams.since_id = objectIdFromDate(date);
       }
 
-      if (dateRangeValue !== "A") {
+      if (dateRangeValue !== "After") {
         let unit: DurationInputArg2 = "d";
         let amount = 1;
         switch (dateRangeValue) {
-          case "W":
+          case "Week":
             amount = 7;
             break;
-          case "F":
+          case "Fortnight":
             amount = 14;
             break;
-          case "M":
+          case "Month":
             unit = "M";
             break;
-          case "Q":
+          case "Quarter":
             unit = "Q";
             break;
-          case "Y":
+          case "Year":
             unit = "y";
             break;
-          case "B":
+          case "Before":
             amount = 0;
             break;
           default:

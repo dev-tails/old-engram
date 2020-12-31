@@ -14,7 +14,7 @@ export default function Routes() {
   const location = useLocation();
 
   const [date, setDate] = useState(moment().startOf("day").toDate());
-  const [dateRangeValue, setDateRangeValue] = useState("D");
+  const [dateRangeValue, setDateRangeValue] = useState("Day");
 
   let title = "";
   switch (location.pathname) {
