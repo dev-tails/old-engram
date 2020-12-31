@@ -31,7 +31,7 @@ export const NoteItem: React.FC<NoteItemProps> = (props) => {
 
   return (
     <div className="note-item">
-      <BulletIcon note={props.note} defaultType="event" />
+      <BulletIcon note={props.note} />
       <TextareaAutosize
         value={body}
         onChange={handleTextChanged}
