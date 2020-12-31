@@ -1,8 +1,7 @@
-import "./Header.scss";
+import './Header.scss';
 
 import {
   AppBar,
-  Button,
   Drawer,
   IconButton,
   List,
@@ -13,14 +12,14 @@ import {
   TextField,
   Toolbar,
   Typography,
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import { MoreHoriz } from "@material-ui/icons";
-import moment from "moment";
-import React, { ChangeEvent, useState } from "react";
-import { Link } from "react-router-dom";
+} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import { MoreHoriz } from '@material-ui/icons';
+import moment from 'moment';
+import React, { ChangeEvent, useState } from 'react';
+import { Link } from 'react-router-dom';
 
-import { isMobileUserAgent } from "../../utils/UserAgentUtils";
+import { isMobileUserAgent } from '../../utils/UserAgentUtils';
 
 type HeaderProps = {
   dateRangeValue: string;
@@ -121,13 +120,14 @@ export const Header: React.FC<HeaderProps> = ({
             onClose={handleCloseDateRangeMenu}
           >
             {[
+              "Agenda",
               "Day",
               "Week",
               "Fortnight",
               "Month",
               "Quarter",
               "Year",
-              "After",
+              "Since",
               "Before",
             ].map((option) => {
               return (
