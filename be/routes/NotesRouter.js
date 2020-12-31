@@ -22,6 +22,7 @@ export function initializeNotesRouter() {
       since_id: new ObjectIdSchema(),
       before: yup.date(),
       since: yup.date(),
+      sort: yup.string().oneOf(["start"]),
     });
     const parsedQuery = querySchema.cast(req.query);
 
@@ -32,6 +33,7 @@ export function initializeNotesRouter() {
       since,
       before,
       type,
+      sort,
     } = parsedQuery;
 
     let findOptions = {
@@ -74,6 +76,12 @@ export function initializeNotesRouter() {
 
     if (count) {
       query.limit(count);
+    }
+
+    if (sort) {
+      query.sort({
+        [sort]: 1,
+      });
     }
 
     const notes = await query.toArray();

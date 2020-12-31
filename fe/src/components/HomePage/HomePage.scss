@@ -1,5 +1,7 @@
 .home-page {
-  .events, .tasks, .notes {
+  .events,
+  .tasks,
+  .notes {
     display: none;
   }
 
@@ -25,6 +27,10 @@
       .notes-page {
         width: 34%;
       }
+
+      .agenda-view-content {
+        width: 34%;
+      }
     }
 
     .tasks {
@@ -41,7 +47,6 @@
       display: block;
 
       .notes-page {
-
         left: 67%;
         right: 0;
         width: 33%;
