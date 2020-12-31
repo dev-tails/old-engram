@@ -134,6 +134,10 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
   };
 
   const handleNewNote = async (note: CollapsibleNote) => {
+    if (props.readOnly) {
+      return;
+    }
+
     const promises: Promise<any>[] = [];
     const notesCopy = Array.from(notes);
 
@@ -168,7 +172,12 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
 
   const handleSave = async (note: CollapsibleNote) => {
     if (note._id) {
-      await updateNote(note);
+      const updatedNote = await updateNote(note);
+      const notesCopy = Array.from(notes);
+      const indexToUpdate = notesCopy.findIndex((n) => n._id === note._id);
+      notesCopy.splice(indexToUpdate, 1, updatedNote);
+      setNotes(notesCopy);
+      setActiveNoteId("");
     } else {
       const newNote = await createNoteWithDefaultType(note);
       const newEmptyNote = await createNoteWithDefaultType({

@@ -77,22 +77,22 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
         }
       }
 
-      if (event.key === "Tab") {
-        event.preventDefault();
-        event.stopPropagation();
+      // Temporarily disable indenting until working better
+      // if (event.key === "Tab") {
+      //   event.preventDefault();
+      //   event.stopPropagation();
 
-        const updatedNote = {
-          ...props.note,
-          body,
-        };
+      //   const updatedNote = {
+      //     ...props.note,
+      //     body,
+      //   };
 
-        // Temporarily disable indenting until working better
-        // if (event.shiftKey) {
-        //   props.onUnindent && props.onUnindent(updatedNote);
-        // } else {
-        //   props.onIndent && props.onIndent(updatedNote);
-        // }
-      }
+      //   if (event.shiftKey) {
+      //     props.onUnindent && props.onUnindent(updatedNote);
+      //   } else {
+      //     props.onIndent && props.onIndent(updatedNote);
+      //   }
+      // }
     }
     document.addEventListener("keydown", keyDownListener);
 
@@ -116,13 +116,18 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
       return;
     }
 
-    if (body === props.note.body && type === props.note.type) {
-      return;
-    }
-
     props.onSave({
       ...note,
       ...update,
+    });
+  };
+
+  const handleTextAreaBlur = () => {
+    if (body === props.note.body) {
+      return;
+    }
+    handleSave({
+      body,
     });
   };
 
@@ -140,7 +145,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
     const TYPES: NoteType[] = ["note", "task", "task_completed"];
     const currentIndex = TYPES.indexOf(note.type || "note");
     let newIndex = currentIndex + 1;
-    if (currentIndex > TYPES.length) {
+    if (newIndex > TYPES.length) {
       newIndex = 0;
     }
 
@@ -188,7 +193,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
             ref={textAreaRef}
             value={body}
             onChange={handleTextChanged}
-            onBlur={handleSave.bind(this, {})}
+            onBlur={handleTextAreaBlur}
           />
         ) : (
           <div className="note-inactive">
