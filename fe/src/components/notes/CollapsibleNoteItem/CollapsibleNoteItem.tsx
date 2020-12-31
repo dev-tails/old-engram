@@ -137,7 +137,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   };
 
   const handleChangeType = () => {
-    const TYPES: NoteType[] = ["note", "task", "task_completed", "event"];
+    const TYPES: NoteType[] = ["note", "task", "task_completed"];
     const currentIndex = TYPES.indexOf(note.type || "note");
     let newIndex = currentIndex + 1;
     if (currentIndex > TYPES.length) {
