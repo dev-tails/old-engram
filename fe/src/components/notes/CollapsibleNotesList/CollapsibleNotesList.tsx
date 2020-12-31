@@ -10,6 +10,7 @@ import * as NoteUtils from '../NoteUtils';
 type CollapsibleNotesListProps = {
   notes: CollapsibleNote[];
   type?: NoteType;
+  readOnly?: boolean;
 };
 
 export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
@@ -211,13 +212,6 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
       return NoteUtils.getNoteWithChildren(notes, note._id);
     });
 
-  if (topLevelNotesWithChildren.length === 0) {
-    topLevelNotesWithChildren.push({
-      _id: "",
-      body: "",
-    });
-  }
-
   return (
     <div
       className="collapsible-notes-list"
@@ -236,13 +230,15 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
             onSave={handleSave}
             onIndent={handleIndent}
             onUnindent={handleUnindent}
-            onNewNote={handleNewNote}
+            onNewNote={props.readOnly ? handleNewNote : () => {}}
             onActivate={handleNoteActivate}
             onDelete={handleDelete}
           />
         );
       })}
-      <FloatingActionButton onSubmit={handleQuickAddSubmit} />
+      {!props.readOnly && (
+        <FloatingActionButton onSubmit={handleQuickAddSubmit} />
+      )}
     </div>
   );
 };

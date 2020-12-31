@@ -1,20 +1,22 @@
-import './HomePage.scss';
+import "./HomePage.scss";
 
-import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
-import React, { useState } from 'react';
+import { BottomNavigation, BottomNavigationAction } from "@material-ui/core";
+import React, { useState } from "react";
 
-import NotesPage from '../notes/NotesPage';
+import NotesPage from "../notes/NotesPage";
 
 type HomePageProps = {
   date: Date;
   startDate: Date | null;
   endDate: Date | null;
+  dateRangeValue: string;
 };
 
 export const HomePage: React.FC<HomePageProps> = ({
   date,
   startDate,
   endDate,
+  dateRangeValue,
 }) => {
   const [bottomNavValue, setBottomNavValue] = useState("note");
 
@@ -29,12 +31,15 @@ export const HomePage: React.FC<HomePageProps> = ({
   return (
     <div className="home-page">
       <div className={`events ${bottomNavValue === "event" ? "visible" : ""}`}>
-        <NotesPage
-          date={date}
-          type="event"
-          startDate={startDate}
-          endDate={endDate}
-        />
+        {dateRangeValue !== "Agenda" ? (
+          <NotesPage
+            date={date}
+            type="event"
+            startDate={startDate}
+            endDate={endDate}
+            readOnly={true}
+          />
+        ) : null}
       </div>
       <div className={`tasks ${bottomNavValue === "task" ? "visible" : ""}`}>
         <NotesPage

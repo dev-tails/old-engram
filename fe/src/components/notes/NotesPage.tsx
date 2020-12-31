@@ -1,17 +1,18 @@
-import './NotesPage.scss';
+import "./NotesPage.scss";
 
-import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import moment from "moment";
+import React, { useEffect, useState } from "react";
 
-import { objectIdFromDate } from '../../utils/ObjectId';
-import { CollapsibleNotesList } from './CollapsibleNotesList/CollapsibleNotesList';
-import { getNotes, GetNotesParams, Note, NoteType } from './NotesApi';
+import { objectIdFromDate } from "../../utils/ObjectId";
+import { CollapsibleNotesList } from "./CollapsibleNotesList/CollapsibleNotesList";
+import { getNotes, GetNotesParams, Note, NoteType } from "./NotesApi";
 
 export type NotesPageProps = {
   date?: Date;
   type?: NoteType;
   startDate: Date | null;
   endDate: Date | null;
+  readOnly?: boolean;
 };
 
 export default function NotesPage({
@@ -19,6 +20,7 @@ export default function NotesPage({
   type,
   startDate,
   endDate,
+  readOnly,
 }: NotesPageProps) {
   const [notes, setNotes] = useState<Note[]>([]);
   const [lastUpdate, setLastUpdate] = useState("");
@@ -51,7 +53,12 @@ export default function NotesPage({
 
   return (
     <div className="notes-page">
-      <CollapsibleNotesList key={lastUpdate} notes={notes} type={type} />
+      <CollapsibleNotesList
+        key={lastUpdate}
+        notes={notes}
+        type={type}
+        readOnly={readOnly}
+      />
     </div>
   );
 }

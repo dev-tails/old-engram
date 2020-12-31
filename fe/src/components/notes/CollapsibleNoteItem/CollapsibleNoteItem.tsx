@@ -1,16 +1,16 @@
-import './CollapsibleNoteItem.scss';
+import "./CollapsibleNoteItem.scss";
 
-import { TextareaAutosize } from '@material-ui/core';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-import moment from 'moment';
-import React, { useEffect, useRef, useState } from 'react';
-import ReactMarkdown from 'react-markdown';
-import { Link } from 'react-router-dom';
-import gfm from 'remark-gfm';
+import { TextareaAutosize } from "@material-ui/core";
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import ArrowRightIcon from "@material-ui/icons/ArrowRight";
+import moment from "moment";
+import React, { useEffect, useRef, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import { Link } from "react-router-dom";
+import gfm from "remark-gfm";
 
-import { BulletIcon } from '../BulletIcon/BulletIcon';
-import { Note, NoteType } from '../NotesApi';
+import { BulletIcon } from "../BulletIcon/BulletIcon";
+import { Note, NoteType } from "../NotesApi";
 
 export type CollapsibleNote = {
   _id?: string;
