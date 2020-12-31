@@ -86,11 +86,12 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
           body,
         };
 
-        if (event.shiftKey) {
-          props.onUnindent && props.onUnindent(updatedNote);
-        } else {
-          props.onIndent && props.onIndent(updatedNote);
-        }
+        // Temporarily disable indenting until working better
+        // if (event.shiftKey) {
+        //   props.onUnindent && props.onUnindent(updatedNote);
+        // } else {
+        //   props.onIndent && props.onIndent(updatedNote);
+        // }
       }
     }
     document.addEventListener("keydown", keyDownListener);
