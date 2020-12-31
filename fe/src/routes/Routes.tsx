@@ -1,14 +1,14 @@
-import moment from "moment";
-import React, { useState } from "react";
-import { Redirect, Route, Switch, useLocation } from "react-router-dom";
+import moment from 'moment';
+import React, { useState } from 'react';
+import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
 
-import { Header } from "../components/header/Header";
-import { HelpPage } from "../components/HelpPage/HelpPage";
-import { ZapierHelpPage } from "../components/HelpPage/ZapierHelpPage/ZapierHelpPage";
-import { HomePage } from "../components/HomePage/HomePage";
-import LoginPage, { LoginPagePath } from "../components/login/LoginPage";
-import { LogoutPage } from "../components/LogoutPage/LogoutPage";
-import { EditNotePage } from "../components/notes/EditNotePage/EditNotePage";
+import { Header } from '../components/header/Header';
+import { HelpPage } from '../components/HelpPage/HelpPage';
+import { ZapierHelpPage } from '../components/HelpPage/ZapierHelpPage/ZapierHelpPage';
+import { HomePage } from '../components/HomePage/HomePage';
+import LoginPage, { LoginPagePath } from '../components/login/LoginPage';
+import { LogoutPage } from '../components/LogoutPage/LogoutPage';
+import { EditNotePage } from '../components/notes/EditNotePage/EditNotePage';
 
 function getStartDate(date: Date, dateRangeValue: string) {
   switch (dateRangeValue) {
@@ -67,7 +67,7 @@ export default function Routes() {
   const location = useLocation();
 
   const [date, setDate] = useState(moment().startOf("day").toDate());
-  const [dateRangeValue, setDateRangeValue] = useState("Day");
+  const [dateRangeValue, setDateRangeValue] = useState("Agenda");
 
   const startDate = getStartDate(date, dateRangeValue);
   const endDate = getEndDate(date, dateRangeValue);
