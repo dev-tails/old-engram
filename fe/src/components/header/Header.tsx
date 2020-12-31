@@ -16,7 +16,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import { MoreHoriz } from '@material-ui/icons';
 import moment from 'moment';
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { isMobileUserAgent } from '../../utils/UserAgentUtils';
@@ -53,6 +53,34 @@ export const Header: React.FC<HeaderProps> = ({
   const [dateString, setDateString] = useState(
     moment(date).format("YYYY-MM-DD")
   );
+
+  useEffect(() => {
+    function keyDownListener(event: KeyboardEvent) {
+      if (!event.ctrlKey || !event.shiftKey) {
+        return;
+      }
+
+      let dateRangeMap: { [key: string]: string } = {
+        A: "Agenda",
+        D: "Day",
+        W: "Week",
+        F: "Fortnight",
+        M: "Month",
+        Q: "Quarter",
+        Y: "Year",
+      };
+      const dateRange = dateRangeMap[event.key];
+      if (dateRange) {
+        event.preventDefault();
+        handleDateRangeChanged(dateRange);
+      }
+    }
+    document.addEventListener("keydown", keyDownListener);
+
+    return () => {
+      document.removeEventListener("keydown", keyDownListener);
+    };
+  });
 
   const classes = useStyles();
 
@@ -127,8 +155,6 @@ export const Header: React.FC<HeaderProps> = ({
               "Month",
               "Quarter",
               "Year",
-              "Since",
-              "Before",
             ].map((option) => {
               return (
                 <MenuItem
