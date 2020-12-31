@@ -60,18 +60,18 @@ export const Header: React.FC<HeaderProps> = ({
 
   useEffect(() => {
     function keyDownListener(event: KeyboardEvent) {
-      if (!event.ctrlKey || !event.shiftKey) {
+      if (!event.altKey) {
         return;
       }
 
       let dateRangeMap: { [key: string]: string } = {
-        A: "Agenda",
-        D: "Day",
-        W: "Week",
-        F: "Fortnight",
-        M: "Month",
-        Q: "Quarter",
-        Y: "Year",
+        a: "Agenda",
+        d: "Day",
+        w: "Week",
+        f: "Fortnight",
+        m: "Month",
+        q: "Quarter",
+        y: "Year",
       };
       const dateRange = dateRangeMap[event.key];
       if (dateRange) {
@@ -93,8 +93,10 @@ export const Header: React.FC<HeaderProps> = ({
 
       if (event.key === "ArrowLeft") {
         onDateChange(moment(date).add(-amount, unit).startOf(unit).toDate());
+        event.preventDefault();
       } else if (event.key === "ArrowRight") {
         onDateChange(moment(date).add(amount, unit).startOf(unit).toDate());
+        event.preventDefault();
       }
     }
     document.addEventListener("keydown", keyDownListener);
