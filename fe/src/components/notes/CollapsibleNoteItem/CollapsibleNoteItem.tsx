@@ -1,16 +1,15 @@
-import "./CollapsibleNoteItem.scss";
+import './CollapsibleNoteItem.scss';
 
-import { TextareaAutosize } from "@material-ui/core";
-import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
-import ArrowRightIcon from "@material-ui/icons/ArrowRight";
-import moment from "moment";
-import React, { useEffect, useRef, useState } from "react";
-import ReactMarkdown from "react-markdown";
-import { Link } from "react-router-dom";
-import gfm from "remark-gfm";
+import { TextareaAutosize } from '@material-ui/core';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import React, { useEffect, useRef, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+import { Link } from 'react-router-dom';
+import gfm from 'remark-gfm';
 
-import { BulletIcon } from "../BulletIcon/BulletIcon";
-import { Note, NoteType } from "../NotesApi";
+import { BulletIcon } from '../BulletIcon/BulletIcon';
+import { Note, NoteType } from '../NotesApi';
 
 export type CollapsibleNote = {
   _id?: string;
@@ -152,11 +151,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   };
 
   function getBodyForMarkdown() {
-    let readonlyBody = "";
-    if (props.note.start) {
-      readonlyBody += `${moment(props.note.start).format("HH:MM")} `;
-    }
-    return readonlyBody + body.replaceAll("\n", `\n&nbsp;`);
+    return body.replaceAll("\n", `\n&nbsp;`);
   }
 
   return (
@@ -187,14 +182,6 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
         <div className="bullet-icon-wrapper" onClick={handleChangeType}>
           <BulletIcon note={note} />
         </div>
-
-        {/* <div className="note-date">
-          <input
-            type="time"
-            step="300"
-            value={note.date?.toLocaleTimeString() || ""}
-          />
-        </div> */}
 
         {isActive ? (
           <TextareaAutosize

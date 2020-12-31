@@ -1,0 +1,37 @@
+.agenda-view {
+  .agenda-view-content {
+    position: fixed;
+    top: 64px;
+    bottom: 56px;
+    width: 100%;
+    overflow-y: scroll;
+
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+    scrollbar-width: none; /* Firefox */
+
+    &::-webkit-scrollbar {
+      display: none; /* Safari and Chrome */
+    }
+
+    @media (min-width: 1000px) {
+      bottom: 0px;
+    }
+  }
+
+  .agenda-view-item {
+    padding: 8px;
+    display: flex;
+    .agenda-view-item-left {
+      margin-top: 4px;
+      margin-right: 4px;
+      font-size: 0.8em;
+    }
+
+    .agenda-view-item-content {
+      width: 100%;
+
+      .agenda-view-slot {
+      }
+    }
+  }
+}
