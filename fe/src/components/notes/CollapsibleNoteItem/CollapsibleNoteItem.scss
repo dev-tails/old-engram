@@ -34,6 +34,17 @@
     visibility: hidden;
   }
 
+  .note-date {
+    input {
+      border: none;
+      visibility: hidden;
+
+      &:hover {
+        visibility: visible;
+      }
+    }
+  }
+
   textarea {
     border: none;
     resize: none;
