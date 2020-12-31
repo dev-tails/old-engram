@@ -1,4 +1,4 @@
-import './Header.scss';
+import "./Header.scss";
 
 import {
   AppBar,
@@ -13,14 +13,14 @@ import {
   TextField,
   Toolbar,
   Typography,
-} from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import { MoreHoriz } from '@material-ui/icons';
-import moment from 'moment';
-import React, { ChangeEvent, useState } from 'react';
-import { Link } from 'react-router-dom';
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import { MoreHoriz } from "@material-ui/icons";
+import moment from "moment";
+import React, { ChangeEvent, useState } from "react";
+import { Link } from "react-router-dom";
 
-import { isMobileUserAgent } from '../../utils/UserAgentUtils';
+import { isMobileUserAgent } from "../../utils/UserAgentUtils";
 
 type HeaderProps = {
   dateRangeValue: string;
@@ -104,30 +104,16 @@ export const Header: React.FC<HeaderProps> = ({
     <div className="header">
       <AppBar>
         <Toolbar>
-          <Typography variant="h6" className={classes.title}>
-            {title ? (
-              title
-            ) : (
-              <TextField
-                id="date"
-                type="date"
-                value={dateString}
-                onChange={handleDateChanged}
-                onBlur={handleDateBlur}
-                InputProps={{
-                  disableUnderline: true,
-                }}
-              />
-            )}
-          </Typography>
-          <Button
+          <IconButton
             id="date-range-button"
             aria-controls="date-range-menu"
             aria-haspopup="true"
+            edge="start"
+            color="inherit"
             onClick={handleDateRangeClicked}
           >
-            {dateRangeValue}
-          </Button>
+            {dateRangeValue[0]}
+          </IconButton>
           <Menu
             id="date-range-menu"
             anchorEl={anchorEl}
@@ -155,6 +141,22 @@ export const Header: React.FC<HeaderProps> = ({
               );
             })}
           </Menu>
+          <Typography variant="h6" className={classes.title}>
+            {title ? (
+              title
+            ) : (
+              <TextField
+                id="date"
+                type="date"
+                value={dateString}
+                onChange={handleDateChanged}
+                onBlur={handleDateBlur}
+                InputProps={{
+                  disableUnderline: true,
+                }}
+              />
+            )}
+          </Typography>
           <IconButton
             edge="end"
             color="inherit"
