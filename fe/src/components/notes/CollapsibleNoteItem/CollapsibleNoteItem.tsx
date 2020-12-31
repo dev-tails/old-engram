@@ -5,7 +5,6 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import React, { useEffect, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { Link } from 'react-router-dom';
 import gfm from 'remark-gfm';
 
 import { BulletIcon } from '../BulletIcon/BulletIcon';
@@ -170,7 +169,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
             <ArrowDropDownIcon fontSize="small" />
           )}
         </span>
-        <Link to={`/notes/${note._id}`}>
+        {/* <Link to={`/notes/${note._id}`}>
           <span className={`block-edit`} onClick={handleToggleExpand}>
             <svg height="8" width="8">
               <circle cx="4" cy="1" r="1" />
@@ -178,7 +177,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
               <circle cx="4" cy="7" r="1" />
             </svg>
           </span>
-        </Link>
+        </Link> */}
         <div className="bullet-icon-wrapper" onClick={handleChangeType}>
           <BulletIcon note={note} />
         </div>
