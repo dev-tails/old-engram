@@ -113,6 +113,10 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   };
 
   const handleSave = (update?: Partial<Note>) => {
+    if (!body) {
+      return;
+    }
+
     if (body === props.note.body && type === props.note.type) {
       return;
     }

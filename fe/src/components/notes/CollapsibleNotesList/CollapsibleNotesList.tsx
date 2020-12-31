@@ -219,7 +219,10 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
   }
 
   return (
-    <div className="collapsible-notes-list">
+    <div
+      className="collapsible-notes-list"
+      onBlur={setActiveNoteId.bind(this, "")}
+    >
       {topLevelNotesWithChildren.map((note) => {
         if (!note) {
           return null;
