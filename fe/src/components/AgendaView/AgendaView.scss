@@ -21,6 +21,11 @@
   .agenda-view-item {
     padding: 8px;
     display: flex;
+
+    &.current {
+      color: red;
+    }
+
     .agenda-view-item-left {
       margin-top: 4px;
       margin-right: 4px;

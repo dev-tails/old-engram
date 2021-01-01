@@ -1,7 +1,7 @@
 import './AgendaView.scss';
 
 import moment from 'moment';
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import { NoteItem } from '../notes/NoteItem/NoteItem';
 import { Note } from '../notes/NotesApi';
@@ -17,6 +17,14 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
   items,
   onSave,
 }) => {
+  const activeHourRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (activeHourRef.current) {
+      activeHourRef.current.scrollIntoView();
+    }
+  });
+
   const itemsByHour: Array<Note[]> = [];
   for (let i = 0; i < 24; i++) {
     itemsByHour.push([]);
@@ -33,14 +41,25 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
   return (
     <div className="agenda-view">
       {itemsByHour.map((items, index) => {
+        let isActiveHour = index === 7;
+        let isCurrentHour = false;
+        if (moment(date).isSame(moment(), "day")) {
+          isCurrentHour = index === moment().hour();
+          isActiveHour = isCurrentHour;
+        }
+
         let iterationMoment = moment().startOf("day").hour(index).minutes(0);
         let timeString = iterationMoment.format("HH:mm");
 
         return (
-          <div className="agenda-view-item" key={`${date}-${index}`}>
+          <div
+            className={`agenda-view-item ${isCurrentHour ? "current" : ""}`}
+            key={`${date}-${index}`}
+            ref={isActiveHour ? activeHourRef : null}
+          >
             <div className="agenda-view-item-left">{timeString}</div>
             <div className="agenda-view-item-content">
-              {[0, 30].map((minutes) => {
+              {[0, 15, 30, 45].map((minutes) => {
                 let startDate = moment(date)
                   .hour(index)
                   .minutes(minutes)
