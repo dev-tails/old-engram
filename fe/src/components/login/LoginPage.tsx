@@ -87,7 +87,9 @@ export default function LoginPage(props: LoginPageProps) {
           Log In
         </Button>
         <Divider />
-        <a href="mailto:engram@xyzdigital.com?subject=Engram: Reset Password Request">
+        <a
+          href={`mailto:engram@xyzdigital.com?subject=Engram: Reset Password Request&body=Username: ${username}`}
+        >
           <Button size="small">Forgot Password</Button>
         </a>
         <Link to={SignupPagePath}>
