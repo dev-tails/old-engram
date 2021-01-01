@@ -12,7 +12,7 @@ import {
   TextField,
   Toolbar,
 } from '@material-ui/core';
-import { ChevronLeft, ChevronRight, MoreHoriz } from '@material-ui/icons';
+import { ChevronLeft, ChevronRight, Home, MoreHoriz } from '@material-ui/icons';
 import moment, { DurationInputArg2 } from 'moment';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -81,7 +81,7 @@ export const Header: React.FC<HeaderProps> = ({
     };
   });
 
-  const isDateView = !!title;
+  const isDateView = !title;
 
   const handleRightMenuButtonClicked = () => {
     setRightDrawerOpen(true);
@@ -151,6 +151,14 @@ export const Header: React.FC<HeaderProps> = ({
       <AppBar>
         <Toolbar>
           {!isDateView && (
+            <Link to="/">
+              <IconButton edge="start" color="inherit">
+                <Home />
+              </IconButton>
+            </Link>
+          )}
+
+          {isDateView && (
             <>
               <IconButton
                 id="date-range-button"
@@ -194,7 +202,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           <div className="spacer" />
 
-          {!isDateView && (
+          {isDateView && (
             <IconButton
               color="inherit"
               onClick={handleNavigateDate.bind(this, "left")}
@@ -219,7 +227,7 @@ export const Header: React.FC<HeaderProps> = ({
               />
             )}
           </div>
-          {!isDateView && (
+          {isDateView && (
             <IconButton
               color="inherit"
               onClick={handleNavigateDate.bind(this, "right")}
@@ -230,7 +238,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           <div className="spacer" />
 
-          {!isDateView && (
+          {isDateView && (
             <IconButton
               edge="end"
               color="inherit"
