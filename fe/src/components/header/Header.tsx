@@ -23,7 +23,6 @@ type HeaderProps = {
   dateRangeValue: string;
   date?: Date;
   title?: string;
-  showArrows?: boolean;
   onDateChange: (date: Date) => void;
   onDateRangeChange: (dateRange: string) => void;
 };
@@ -31,7 +30,6 @@ type HeaderProps = {
 export const Header: React.FC<HeaderProps> = ({
   title,
   date,
-  showArrows,
   onDateChange,
   dateRangeValue,
   onDateRangeChange,
@@ -82,6 +80,8 @@ export const Header: React.FC<HeaderProps> = ({
       document.removeEventListener("keydown", keyDownListener);
     };
   });
+
+  const isDateView = !!title;
 
   const handleRightMenuButtonClicked = () => {
     setRightDrawerOpen(true);
@@ -150,47 +150,51 @@ export const Header: React.FC<HeaderProps> = ({
     <div className="header">
       <AppBar>
         <Toolbar>
-          <IconButton
-            id="date-range-button"
-            aria-controls="date-range-menu"
-            aria-haspopup="true"
-            edge="start"
-            color="inherit"
-            size="small"
-            onClick={handleDateRangeClicked}
-          >
-            {dateRangeValue[0]}
-          </IconButton>
-          <Menu
-            id="date-range-menu"
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleCloseDateRangeMenu}
-          >
-            {[
-              "Agenda",
-              "Day",
-              "Week",
-              "Fortnight",
-              "Month",
-              "Quarter",
-              "Year",
-            ].map((option) => {
-              return (
-                <MenuItem
-                  key={option}
-                  value={option}
-                  onClick={handleDateRangeChanged.bind(this, option)}
-                >
-                  {option}
-                </MenuItem>
-              );
-            })}
-          </Menu>
+          {!isDateView && (
+            <>
+              <IconButton
+                id="date-range-button"
+                aria-controls="date-range-menu"
+                aria-haspopup="true"
+                edge="start"
+                color="inherit"
+                size="small"
+                onClick={handleDateRangeClicked}
+              >
+                {dateRangeValue[0]}
+              </IconButton>
+              <Menu
+                id="date-range-menu"
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleCloseDateRangeMenu}
+              >
+                {[
+                  "Agenda",
+                  "Day",
+                  "Week",
+                  "Fortnight",
+                  "Month",
+                  "Quarter",
+                  "Year",
+                ].map((option) => {
+                  return (
+                    <MenuItem
+                      key={option}
+                      value={option}
+                      onClick={handleDateRangeChanged.bind(this, option)}
+                    >
+                      {option}
+                    </MenuItem>
+                  );
+                })}
+              </Menu>
+            </>
+          )}
 
           <div className="spacer" />
 
-          {showArrows && (
+          {!isDateView && (
             <IconButton
               color="inherit"
               onClick={handleNavigateDate.bind(this, "left")}
@@ -215,7 +219,7 @@ export const Header: React.FC<HeaderProps> = ({
               />
             )}
           </div>
-          {showArrows && (
+          {!isDateView && (
             <IconButton
               color="inherit"
               onClick={handleNavigateDate.bind(this, "right")}

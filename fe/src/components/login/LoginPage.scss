@@ -6,7 +6,7 @@
     position: fixed;
     bottom: 0;
     padding: 10px;
-    background-color: #1C1C1E;
+    background-color: #1c1c1e;
     text-align: center;
   }
 
@@ -23,5 +23,13 @@
 
   button {
     margin: 4px;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  #login-button {
+    margin: 16px 0;
   }
 }
