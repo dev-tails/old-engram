@@ -57,6 +57,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
 
       if (event.key === "Backspace") {
         if (body === "") {
+          event.preventDefault();
           return props.onDelete(props.note);
         }
       }
