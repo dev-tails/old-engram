@@ -5,7 +5,6 @@ import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
 import { signUp } from '../../UsersApi';
-import { objectIdFromDate } from '../../utils/ObjectId';
 import { Note } from '../notes/NotesApi';
 
 export type SignupPageProps = {};
@@ -23,14 +22,13 @@ export default function SignupPage(props: SignupPageProps) {
       await signUp({ username, password });
       history.push("/");
     } catch (err) {
-      let errorMessage = err.message;
-      setErrors([
-        ...errors,
-        {
-          _id: objectIdFromDate(new Date()),
-          body: errorMessage,
-        },
-      ]);
+      let errors = [err.message];
+
+      if (err?.response?.data?.errors) {
+        errors = err?.response?.data?.errors;
+      }
+
+      setErrors(errors);
     }
   };
 
@@ -51,7 +49,7 @@ export default function SignupPage(props: SignupPageProps) {
       <div className="container">
         <div className="errors">
           {errors.map((error) => {
-            return error.body;
+            return error;
           })}
         </div>
         <TextField

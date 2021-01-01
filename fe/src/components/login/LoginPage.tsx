@@ -32,7 +32,6 @@ export default function LoginPage(props: LoginPageProps) {
         }
 
         setErrors([
-          ...errors,
           {
             _id: objectIdFromDate(new Date()),
             body: errorMessage,

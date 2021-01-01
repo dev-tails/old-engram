@@ -1,11 +1,12 @@
-import bcrypt from "bcrypt";
-import express from "express";
-import jwt from "jsonwebtoken";
-import { ObjectId } from "../Database.js";
-import { getEnv } from "../env.js";
-import { AuthAPIKeyMiddleware } from "../middleware/AuthAPIKeyMiddleware.js";
-import { AuthRequiredMiddleware } from "../middleware/AuthRequiredMiddleware.js";
-import yup from "yup";
+import bcrypt from 'bcrypt';
+import express from 'express';
+import jwt from 'jsonwebtoken';
+import yup from 'yup';
+
+import { ObjectId } from '../Database.js';
+import { getEnv } from '../env.js';
+import { AuthAPIKeyMiddleware } from '../middleware/AuthAPIKeyMiddleware.js';
+import { AuthRequiredMiddleware } from '../middleware/AuthRequiredMiddleware.js';
 
 async function setToken(res, user) {
   const { jwtSecret, production } = getEnv();
@@ -57,7 +58,7 @@ export function initializeUserRouter() {
     });
     if (existingUser) {
       return res.status(409).json({
-        errors: [new Error("username already exists")],
+        errors: ["username already exists"],
       });
     }
 
