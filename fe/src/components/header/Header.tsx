@@ -12,7 +12,6 @@ import {
   TextField,
   Toolbar,
 } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
 import { ChevronLeft, ChevronRight, MoreHoriz } from '@material-ui/icons';
 import moment, { DurationInputArg2 } from 'moment';
 import React, { ChangeEvent, useEffect, useState } from 'react';
@@ -28,13 +27,6 @@ type HeaderProps = {
   onDateChange: (date: Date) => void;
   onDateRangeChange: (dateRange: string) => void;
 };
-
-const useStyles = makeStyles((theme) => ({
-  toolbar: theme.mixins.toolbar,
-  textField: {
-    color: "#FFFFFF",
-  },
-}));
 
 export const Header: React.FC<HeaderProps> = ({
   title,
@@ -90,8 +82,6 @@ export const Header: React.FC<HeaderProps> = ({
       document.removeEventListener("keydown", keyDownListener);
     };
   });
-
-  const classes = useStyles();
 
   const handleRightMenuButtonClicked = () => {
     setRightDrawerOpen(true);
