@@ -9,6 +9,7 @@ import { HomePage } from '../components/HomePage/HomePage';
 import LoginPage, { LoginPagePath } from '../components/login/LoginPage';
 import { LogoutPage } from '../components/LogoutPage/LogoutPage';
 import { EditNotePage } from '../components/notes/EditNotePage/EditNotePage';
+import SignupPage, { SignupPagePath } from '../components/SignupPage/SignupPage';
 
 function getStartDate(date: Date, dateRangeValue: string) {
   switch (dateRangeValue) {
@@ -74,6 +75,7 @@ export default function Routes() {
 
   let title = "";
   switch (location.pathname) {
+    case SignupPagePath:
     case LoginPagePath:
       title = "engram";
       break;
@@ -116,6 +118,9 @@ export default function Routes() {
         </Route>
         <Route exact path={LoginPagePath}>
           <LoginPage />
+        </Route>
+        <Route exact path={SignupPagePath}>
+          <SignupPage />
         </Route>
         <Route exact path="/logout">
           <LogoutPage />
