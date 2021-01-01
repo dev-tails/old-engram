@@ -1,0 +1,11 @@
+.privacy-policy-page {
+  position: fixed;
+  top: 64px;
+  bottom: 0;
+  width: 100%;
+
+  .container {
+    height: 100%;
+    overflow-y: scroll;
+  }
+}

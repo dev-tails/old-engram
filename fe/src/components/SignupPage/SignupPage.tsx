@@ -4,8 +4,10 @@ import { Button, Divider, TextField } from '@material-ui/core';
 import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
+import { TermsOfServicePagePath } from '../../TermsOfServicePage/TermsOfServicePage';
 import { signUp } from '../../UsersApi';
 import { Note } from '../notes/NotesApi';
+import { PrivacyPolicyPagePath } from '../PrivacyPolicyPage/PrivacyPolicyPage';
 
 export type SignupPageProps = {};
 
@@ -78,6 +80,11 @@ export default function SignupPage(props: SignupPageProps) {
         >
           Sign Up
         </Button>
+        <p style={{ textAlign: "center" }}>
+          By signing up, you agree to our{" "}
+          <Link to={TermsOfServicePagePath}>Terms</Link> and{" "}
+          <Link to={PrivacyPolicyPagePath}>Privacy Policy</Link>
+        </p>
         <Divider />
         <Link to="/login">
           <Button size="small">Log In</Button>
