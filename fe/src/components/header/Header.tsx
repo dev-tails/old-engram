@@ -230,14 +230,16 @@ export const Header: React.FC<HeaderProps> = ({
 
           <div className="spacer" />
 
-          <IconButton
-            edge="end"
-            color="inherit"
-            aria-label="menu"
-            onClick={handleRightMenuButtonClicked}
-          >
-            <MoreHoriz />
-          </IconButton>
+          {!isDateView && (
+            <IconButton
+              edge="end"
+              color="inherit"
+              aria-label="menu"
+              onClick={handleRightMenuButtonClicked}
+            >
+              <MoreHoriz />
+            </IconButton>
+          )}
         </Toolbar>
       </AppBar>
       <React.Fragment>
