@@ -97,7 +97,6 @@ export default function Routes() {
     <>
       <Header
         title={title}
-        showArrows={!title}
         date={date}
         onDateChange={handleDateChanged}
         dateRangeValue={dateRangeValue}

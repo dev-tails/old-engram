@@ -1,13 +1,12 @@
 import './LoginPage.scss';
 
+import { Button, Divider, TextField } from '@material-ui/core';
 import axios from 'axios';
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
-import { signUp } from '../../UsersApi';
 import { objectIdFromDate } from '../../utils/ObjectId';
 import { Note } from '../notes/NotesApi';
-import { ListWidget } from '../widgets/ListWidget/ListWidget';
 
 export type LoginPageProps = {};
 
@@ -41,22 +40,6 @@ export default function LoginPage(props: LoginPageProps) {
       });
   };
 
-  const handleSignUp = async () => {
-    try {
-      await signUp({ username, password });
-      history.push("/");
-    } catch (err) {
-      let errorMessage = err.message;
-      setErrors([
-        ...errors,
-        {
-          _id: objectIdFromDate(new Date()),
-          body: errorMessage,
-        },
-      ]);
-    }
-  };
-
   const handleUsernameChanged: React.InputHTMLAttributes<HTMLInputElement>["onChange"] = (
     event
   ) => {
@@ -71,25 +54,45 @@ export default function LoginPage(props: LoginPageProps) {
 
   return (
     <div className="login-page">
-      <ListWidget items={errors} />
-      <div className="bottom-box">
-        <input
-          type="text"
+      <div className="container">
+        <div className="errors">
+          {errors.map((error) => {
+            return error.body;
+          })}
+        </div>
+        <TextField
+          id="username"
+          label="Username"
+          fullWidth
           autoComplete="off"
           autoCapitalize="none"
           autoFocus={true}
-          placeholder="username"
           onChange={handleUsernameChanged}
-        ></input>
-        <input
+        />
+        <TextField
+          id="password"
+          label="Password"
           type="password"
+          fullWidth
           autoComplete="off"
           autoCapitalize="none"
-          placeholder="password"
           onChange={handlePasswordChanged}
-        ></input>
-        <button onClick={handleSignUp}>Sign Up</button>
-        <button onClick={handleSignIn}>Sign In</button>
+        />
+        <Button
+          id="login-button"
+          fullWidth
+          onClick={handleSignIn}
+          variant="contained"
+        >
+          Log In
+        </Button>
+        <Divider />
+        <Button onClick={handleSignIn} size="small">
+          Forgot Password
+        </Button>
+        <Link to="/signup">
+          <Button size="small">Sign Up</Button>
+        </Link>
       </div>
     </div>
   );
