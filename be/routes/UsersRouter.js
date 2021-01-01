@@ -40,14 +40,21 @@ export function initializeUserRouter() {
 
   router.post("/signup", async function (req, res) {
     const schema = yup.object().shape({
-      username: yup.string().required(),
-      password: yup.string().required().length(8),
+      username: yup
+        .string()
+        .required()
+        .max(32, "Username must be less than 32 characters")
+        .matches(
+          /[a-z0-9]/,
+          "Username must contain only lowercase letters or numbers"
+        ),
+      password: yup
+        .string()
+        .required()
+        .length(8, "Password must contain at least 8 characters"),
     });
 
-    const isValidRequest = await schema.isValid(req.body);
-    if (!isValidRequest) {
-      return res.sendStatus(400);
-    }
+    schema.validateSync(req.body);
 
     const { db } = req;
     const { username, password } = req.body;
