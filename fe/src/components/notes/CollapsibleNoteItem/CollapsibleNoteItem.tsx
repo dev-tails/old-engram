@@ -156,7 +156,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   };
 
   function getBodyForMarkdown() {
-    return body.replaceAll("\n", `\n&nbsp;`);
+    return body.replaceAll("\n\n", `\n&nbsp;\n`);
   }
 
   return (

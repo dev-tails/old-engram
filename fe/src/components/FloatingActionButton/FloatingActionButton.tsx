@@ -57,6 +57,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
             margin="dense"
             id="note"
             fullWidth
+            multiline
             value={body}
             onChange={handleTextFieldChange}
           />
