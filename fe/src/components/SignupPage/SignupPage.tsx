@@ -1,44 +1,37 @@
-import './LoginPage.scss';
+import './SignupPage.scss';
 
 import { Button, Divider, TextField } from '@material-ui/core';
-import axios from 'axios';
 import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
+import { signUp } from '../../UsersApi';
 import { objectIdFromDate } from '../../utils/ObjectId';
 import { Note } from '../notes/NotesApi';
-import { SignupPagePath } from '../SignupPage/SignupPage';
 
-export type LoginPageProps = {};
+export type SignupPageProps = {};
 
-export const LoginPagePath = "/login";
+export const SignupPagePath = "/signup";
 
-export default function LoginPage(props: LoginPageProps) {
+export default function SignupPage(props: SignupPageProps) {
   const history = useHistory();
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [errors, setErrors] = useState<Note[]>([]);
 
-  const handleSignIn = () => {
-    axios
-      .post("/api/users/login", { username, password })
-      .then((res) => {
-        history.push("/");
-      })
-      .catch((err) => {
-        let errorMessage = err.message;
-        if (err.response.status === 400) {
-          errorMessage = "The username or password is incorrect";
-        }
-
-        setErrors([
-          ...errors,
-          {
-            _id: objectIdFromDate(new Date()),
-            body: errorMessage,
-          },
-        ]);
-      });
+  const handleSignUp = async () => {
+    try {
+      await signUp({ username, password });
+      history.push("/");
+    } catch (err) {
+      let errorMessage = err.message;
+      setErrors([
+        ...errors,
+        {
+          _id: objectIdFromDate(new Date()),
+          body: errorMessage,
+        },
+      ]);
+    }
   };
 
   const handleUsernameChanged: React.InputHTMLAttributes<HTMLInputElement>["onChange"] = (
@@ -54,7 +47,7 @@ export default function LoginPage(props: LoginPageProps) {
   };
 
   return (
-    <div className="login-page">
+    <div className="signup-page">
       <div className="container">
         <div className="errors">
           {errors.map((error) => {
@@ -63,36 +56,33 @@ export default function LoginPage(props: LoginPageProps) {
         </div>
         <TextField
           id="username"
-          label="Username"
-          fullWidth
           autoComplete="off"
           autoCapitalize="none"
           autoFocus={true}
+          label="Username"
+          fullWidth
           onChange={handleUsernameChanged}
         />
         <TextField
           id="password"
           label="Password"
           type="password"
-          fullWidth
           autoComplete="off"
           autoCapitalize="none"
+          fullWidth
           onChange={handlePasswordChanged}
         />
         <Button
-          id="login-button"
+          id="signup-button"
           fullWidth
-          onClick={handleSignIn}
+          onClick={handleSignUp}
           variant="contained"
         >
-          Log In
+          Sign Up
         </Button>
         <Divider />
-        <Button onClick={handleSignIn} size="small">
-          Forgot Password
-        </Button>
-        <Link to={SignupPagePath}>
-          <Button size="small">Sign Up</Button>
+        <Link to="/login">
+          <Button size="small">Log In</Button>
         </Link>
       </div>
     </div>
