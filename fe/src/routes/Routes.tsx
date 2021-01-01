@@ -9,7 +9,9 @@ import { HomePage } from '../components/HomePage/HomePage';
 import LoginPage, { LoginPagePath } from '../components/login/LoginPage';
 import { LogoutPage } from '../components/LogoutPage/LogoutPage';
 import { EditNotePage } from '../components/notes/EditNotePage/EditNotePage';
+import { PrivacyPolicyPage, PrivacyPolicyPagePath } from '../components/PrivacyPolicyPage/PrivacyPolicyPage';
 import SignupPage, { SignupPagePath } from '../components/SignupPage/SignupPage';
+import { TermsOfServicePage, TermsOfServicePagePath } from '../TermsOfServicePage/TermsOfServicePage';
 
 function getStartDate(date: Date, dateRangeValue: string) {
   switch (dateRangeValue) {
@@ -75,6 +77,12 @@ export default function Routes() {
 
   let title = "";
   switch (location.pathname) {
+    case TermsOfServicePagePath:
+      title = "Terms of Service";
+      break;
+    case PrivacyPolicyPagePath:
+      title = "Privacy Policy";
+      break;
     case SignupPagePath:
     case LoginPagePath:
       title = "engram";
@@ -130,6 +138,12 @@ export default function Routes() {
         </Route>
         <Route exact path="/help/zapier">
           <ZapierHelpPage />
+        </Route>
+        <Route exact path={PrivacyPolicyPagePath}>
+          <PrivacyPolicyPage />
+        </Route>
+        <Route exact path={TermsOfServicePagePath}>
+          <TermsOfServicePage />
         </Route>
         <Redirect to="/" />
       </Switch>
