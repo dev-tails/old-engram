@@ -198,6 +198,7 @@ export const Header: React.FC<HeaderProps> = ({
               <TextField
                 id="date"
                 type="date"
+                required
                 value={dateString}
                 onChange={handleDateChanged}
                 onBlur={handleDateBlur}
