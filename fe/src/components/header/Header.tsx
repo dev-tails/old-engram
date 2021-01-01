@@ -11,10 +11,9 @@ import {
   MenuItem,
   TextField,
   Toolbar,
-  Typography,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { MoreHoriz } from '@material-ui/icons';
+import { ChevronLeft, ChevronRight, MoreHoriz } from '@material-ui/icons';
 import moment, { DurationInputArg2 } from 'moment';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -25,15 +24,12 @@ type HeaderProps = {
   dateRangeValue: string;
   date?: Date;
   title?: string;
+  showArrows?: boolean;
   onDateChange: (date: Date) => void;
   onDateRangeChange: (dateRange: string) => void;
 };
 
 const useStyles = makeStyles((theme) => ({
-  title: {
-    textAlign: "center",
-    flexGrow: 1,
-  },
   toolbar: theme.mixins.toolbar,
   textField: {
     color: "#FFFFFF",
@@ -43,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
 export const Header: React.FC<HeaderProps> = ({
   title,
   date,
+  showArrows,
   onDateChange,
   dateRangeValue,
   onDateRangeChange,
@@ -79,23 +76,11 @@ export const Header: React.FC<HeaderProps> = ({
         handleDateRangeChanged(dateRange);
       }
 
-      const unitMap: { [key: string]: DurationInputArg2 } = {
-        Agenda: "day",
-        Day: "day",
-        Week: "week",
-        Fortnight: "week",
-        Month: "month",
-        Quarter: "quarter",
-        Year: "year",
-      };
-      const unit = unitMap[dateRangeValue];
-      let amount = dateRangeValue === "Fortnight" ? 2 : 1;
-
       if (event.key === "ArrowLeft") {
-        onDateChange(moment(date).add(-amount, unit).startOf(unit).toDate());
+        handleNavigateDate("left");
         event.preventDefault();
       } else if (event.key === "ArrowRight") {
-        onDateChange(moment(date).add(amount, unit).startOf(unit).toDate());
+        handleNavigateDate("right");
         event.preventDefault();
       }
     }
@@ -122,6 +107,26 @@ export const Header: React.FC<HeaderProps> = ({
   if (isMobileUserAgent()) {
     links.shift();
   }
+
+  const handleNavigateDate = (direction: "left" | "right") => {
+    const unitMap: { [key: string]: DurationInputArg2 } = {
+      Agenda: "day",
+      Day: "day",
+      Week: "week",
+      Fortnight: "week",
+      Month: "month",
+      Quarter: "quarter",
+      Year: "year",
+    };
+    const unit = unitMap[dateRangeValue];
+    let amount = dateRangeValue === "Fortnight" ? 2 : 1;
+
+    if (direction === "left") {
+      onDateChange(moment(date).add(-amount, unit).startOf(unit).toDate());
+    } else if (direction === "right") {
+      onDateChange(moment(date).add(amount, unit).startOf(unit).toDate());
+    }
+  };
 
   const handleDateChanged = (event: ChangeEvent<HTMLInputElement>) => {
     setDateString(event.currentTarget.value);
@@ -161,6 +166,7 @@ export const Header: React.FC<HeaderProps> = ({
             aria-haspopup="true"
             edge="start"
             color="inherit"
+            size="small"
             onClick={handleDateRangeClicked}
           >
             {dateRangeValue[0]}
@@ -191,7 +197,18 @@ export const Header: React.FC<HeaderProps> = ({
               );
             })}
           </Menu>
-          <Typography variant="h6" className={classes.title}>
+
+          <div className="spacer" />
+
+          {showArrows && (
+            <IconButton
+              color="inherit"
+              onClick={handleNavigateDate.bind(this, "left")}
+            >
+              <ChevronLeft />
+            </IconButton>
+          )}
+          <div className="title">
             {title ? (
               title
             ) : (
@@ -207,7 +224,18 @@ export const Header: React.FC<HeaderProps> = ({
                 }}
               />
             )}
-          </Typography>
+          </div>
+          {showArrows && (
+            <IconButton
+              color="inherit"
+              onClick={handleNavigateDate.bind(this, "right")}
+            >
+              <ChevronRight />
+            </IconButton>
+          )}
+
+          <div className="spacer" />
+
           <IconButton
             edge="end"
             color="inherit"
