@@ -14,7 +14,7 @@ import {
 } from '@material-ui/core';
 import { ChevronLeft, ChevronRight, Home, MoreHoriz } from '@material-ui/icons';
 import moment, { DurationInputArg2 } from 'moment';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { isMobileUserAgent } from '../../utils/UserAgentUtils';
@@ -34,6 +34,7 @@ export const Header: React.FC<HeaderProps> = ({
   dateRangeValue,
   onDateRangeChange,
 }) => {
+  const dateInputRef = useRef<HTMLDivElement | null>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const [rightDrawerOpen, setRightDrawerOpen] = useState(false);
@@ -191,6 +192,7 @@ export const Header: React.FC<HeaderProps> = ({
                       key={option}
                       value={option}
                       onClick={handleDateRangeChanged.bind(this, option)}
+                      title={`Alt + ${option[0]}`}
                     >
                       {option}
                     </MenuItem>
@@ -206,6 +208,7 @@ export const Header: React.FC<HeaderProps> = ({
             <IconButton
               color="inherit"
               onClick={handleNavigateDate.bind(this, "left")}
+              title="Alt+LeftArrow"
             >
               <ChevronLeft />
             </IconButton>
@@ -217,6 +220,7 @@ export const Header: React.FC<HeaderProps> = ({
               <TextField
                 id="date"
                 type="date"
+                ref={dateInputRef}
                 required
                 value={dateString}
                 onChange={handleDateChanged}
@@ -231,6 +235,7 @@ export const Header: React.FC<HeaderProps> = ({
             <IconButton
               color="inherit"
               onClick={handleNavigateDate.bind(this, "right")}
+              title="Alt+RightArrow"
             >
               <ChevronRight />
             </IconButton>

@@ -50,10 +50,10 @@ export const AddNoteDialog: React.FC<AddNoteDialogProps> = ({
         aria-labelledby="form-dialog-title"
       >
         <DialogActions>
-          <Button onClick={handleCancel} color="primary">
+          <Button onClick={handleCancel} color="primary" title="Esc">
             Cancel
           </Button>
-          <Button onClick={handleSubmit} color="primary">
+          <Button onClick={handleSubmit} color="primary" title="Ctrl+Enter">
             Submit
           </Button>
         </DialogActions>
