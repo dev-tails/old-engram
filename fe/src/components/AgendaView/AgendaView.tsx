@@ -3,7 +3,7 @@ import './AgendaView.scss';
 import moment from 'moment';
 import React, { useEffect, useRef } from 'react';
 
-import { NoteItem } from '../notes/NoteItem/NoteItem';
+import { CollapsibleNoteItem } from '../notes/CollapsibleNoteItem/CollapsibleNoteItem';
 import { Note } from '../notes/NotesApi';
 
 type AgendaViewProps = {
@@ -80,7 +80,14 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
                     className="agenda-view-slot"
                     key={`${date}-${index}-${minutes}`}
                   >
-                    <NoteItem note={itemForMinutes} onSave={onSave} />
+                    <CollapsibleNoteItem
+                      activeId=""
+                      note={itemForMinutes}
+                      onSave={() => {}}
+                      onActivate={() => {}}
+                      onDelete={() => {}}
+                    />
+                    {/* <NoteItem note={itemForMinutes} onSave={onSave} /> */}
                   </div>
                 );
               })}
