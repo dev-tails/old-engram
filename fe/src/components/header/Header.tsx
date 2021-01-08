@@ -52,6 +52,11 @@ export const Header: React.FC<HeaderProps> = ({
         return;
       }
 
+      if (event.key === "t") {
+        event.preventDefault();
+        onDateChange(new Date());
+      }
+
       let dateRangeMap: { [key: string]: string } = {
         a: "Agenda",
         d: "Day",
