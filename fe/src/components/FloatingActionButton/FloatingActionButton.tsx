@@ -2,7 +2,7 @@ import './FloatingActionButton.scss';
 
 import { Fab } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { AddNoteDialog } from '../AddNoteDialog/AddNoteDialog';
 import { Note } from '../notes/NotesApi';
