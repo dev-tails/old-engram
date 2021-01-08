@@ -17,11 +17,12 @@ export default function SignupPage(props: SignupPageProps) {
   const history = useHistory();
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [errors, setErrors] = useState<Note[]>([]);
 
   const handleSignUp = async () => {
     try {
-      await signUp({ username, password });
+      await signUp({ username, password, email });
       history.push("/");
     } catch (err) {
       let errors = [err.message];
@@ -46,6 +47,12 @@ export default function SignupPage(props: SignupPageProps) {
     setPassword(event.target.value);
   };
 
+  const handleEmailChanged: React.InputHTMLAttributes<HTMLInputElement>["onChange"] = (
+    event
+  ) => {
+    setEmail(event.target.value);
+  };
+
   return (
     <div className="signup-page">
       <div className="container">
@@ -62,6 +69,14 @@ export default function SignupPage(props: SignupPageProps) {
           label="Username"
           fullWidth
           onChange={handleUsernameChanged}
+        />
+        <TextField
+          id="email"
+          type="email"
+          autoCapitalize="none"
+          label="Email"
+          fullWidth
+          onChange={handleEmailChanged}
         />
         <TextField
           id="password"

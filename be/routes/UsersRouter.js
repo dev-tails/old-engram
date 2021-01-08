@@ -48,6 +48,7 @@ export function initializeUserRouter() {
           /[a-z0-9]/,
           "Username must contain only lowercase letters or numbers"
         ),
+      email: yup.string().email().required(),
       password: yup
         .string()
         .required()
@@ -57,7 +58,7 @@ export function initializeUserRouter() {
     schema.validateSync(req.body);
 
     const { db } = req;
-    const { username, password } = req.body;
+    const { username, password, email } = req.body;
 
     const User = db.collection("users");
     const existingUser = await User.findOne({
@@ -75,6 +76,7 @@ export function initializeUserRouter() {
     const insertOpResult = await User.insertOne({
       username,
       hashedPassword,
+      email,
     });
 
     const user = String(insertOpResult.insertedId);
