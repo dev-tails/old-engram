@@ -23,7 +23,9 @@
     display: flex;
 
     &.current {
-      color: red;
+      .agenda-view-item-left {
+        color: red;
+      }
     }
 
     .agenda-view-item-left {

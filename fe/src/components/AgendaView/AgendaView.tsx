@@ -83,9 +83,9 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
                     <CollapsibleNoteItem
                       activeId=""
                       note={itemForMinutes}
-                      onSave={() => {}}
-                      onActivate={() => {}}
-                      onDelete={() => {}}
+                      onSave={onSave}
+                      onActivate={() => { }}
+                      onDelete={() => { }}
                     />
                     {/* <NoteItem note={itemForMinutes} onSave={onSave} /> */}
                   </div>
