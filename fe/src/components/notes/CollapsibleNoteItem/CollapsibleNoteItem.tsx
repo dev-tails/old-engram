@@ -40,7 +40,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   const [type, setType] = useState(props.note.type || props.defaultType);
   const [collapsed, setCollapsed] = useState(false);
 
-  const isActive = props.activeId === props.note._id;
+  const [isActive, setActive] = useState(false);
   const hasChildren = props.note.children && props.note.children.length > 0;
 
   const note = {
@@ -102,12 +102,6 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
     };
   });
 
-  useEffect(() => {
-    if (props.activeId === props.note._id && textAreaRef.current) {
-      textAreaRef.current.focus();
-    }
-  }, [props.activeId, props.note._id]);
-
   const handleTextChanged = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setBody(event.currentTarget.value);
   };
@@ -156,6 +150,13 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
     handleSave({ type: newType });
   };
 
+  const handleNoteClicked = () => {
+    setActive(true);
+    setImmediate(() => {
+      textAreaRef.current?.focus();
+    });
+  }
+
   function getBodyForMarkdown() {
     return body.replaceAll("\n\n", `\n&nbsp;\n`);
   }
@@ -164,7 +165,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
     <div className="collapsible-note-item-wrapper">
       <div
         className={`collapsible-note-item ${!props.note.body ? "empty" : ""}`}
-        onClick={props.onActivate.bind(this, props.note)}
+        onClick={handleNoteClicked}
       >
         <span
           className={`block-expand ${hasChildren ? "" : "hidden"}`}
@@ -173,8 +174,8 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
           {collapsed ? (
             <ArrowRightIcon fontSize="small" />
           ) : (
-            <ArrowDropDownIcon fontSize="small" />
-          )}
+              <ArrowDropDownIcon fontSize="small" />
+            )}
         </span>
         {/* <Link to={`/notes/${note._id}`}>
           <span className={`block-edit`} onClick={handleToggleExpand}>
@@ -197,12 +198,12 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
             onBlur={handleTextAreaBlur}
           />
         ) : (
-          <div className="note-inactive">
-            <ReactMarkdown plugins={[gfm]}>
-              {getBodyForMarkdown()}
-            </ReactMarkdown>
-          </div>
-        )}
+            <div className="note-inactive">
+              <ReactMarkdown plugins={[gfm]}>
+                {getBodyForMarkdown()}
+              </ReactMarkdown>
+            </div>
+          )}
       </div>
       {!collapsed && props.note.children && (
         <div style={{ marginLeft: "12px" }}>
