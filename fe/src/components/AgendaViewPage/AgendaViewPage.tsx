@@ -2,7 +2,7 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 
 import { AgendaView } from '../AgendaView/AgendaView';
-import { createOrUpdateNote, getNotes, Note, NoteType } from '../notes/NotesApi';
+import { createOrUpdateNote, getNotes, Note, NoteType, removeNote } from '../notes/NotesApi';
 
 type AgendaViewProps = {
   date: Date;
@@ -45,11 +45,24 @@ export const AgendaViewPage: React.FC<AgendaViewProps> = ({ date, type }) => {
     setItems(itemsCopy);
   };
 
+  const handleNoteDeleted = async (note: Note) => {
+    const itemsCopy = Array.from(items);
+
+    const indexInItemsArray = itemsCopy.findIndex(
+      (item) => item._id === note._id
+    );
+
+    itemsCopy.splice(indexInItemsArray, 1);
+    setItems(itemsCopy);
+
+    await removeNote(note._id);
+  }
+
   return (
     <div className="agenda-view">
       <div className="agenda-view-content">
         {!loading && (
-          <AgendaView type={type} date={date} items={items} onSave={handleNoteSaved} />
+          <AgendaView type={type} date={date} items={items} onSave={handleNoteSaved} onDelete={handleNoteDeleted} />
         )}
       </div>
     </div>

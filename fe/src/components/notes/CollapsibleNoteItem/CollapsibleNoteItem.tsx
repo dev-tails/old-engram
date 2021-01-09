@@ -51,7 +51,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
 
   useEffect(() => {
     function keyDownListener(event: KeyboardEvent) {
-      if (props.activeId !== props.note._id) {
+      if (!isActive) {
         return;
       }
 
@@ -107,7 +107,8 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   };
 
   const handleSave = (update?: Partial<Note>) => {
-    if (!body) {
+    if (!body && note._id) {
+      props.onDelete(note);
       return;
     }
 
@@ -118,6 +119,8 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   };
 
   const handleTextAreaBlur = () => {
+    setActive(false);
+
     if (body === props.note.body) {
       return;
     }
