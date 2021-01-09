@@ -11,6 +11,7 @@ type AgendaViewProps = {
   date: Date;
   items: Note[];
   onSave: (note: Note) => Promise<void>;
+  onDelete: (note: Note) => Promise<void>;
 };
 
 export const AgendaView: React.FC<AgendaViewProps> = ({
@@ -18,6 +19,7 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
   date,
   items,
   onSave,
+  onDelete
 }) => {
   const activeHourRef = useRef<HTMLDivElement>(null);
 
@@ -87,7 +89,7 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
                       note={itemForMinutes}
                       onSave={onSave}
                       onActivate={() => { }}
-                      onDelete={() => { }}
+                      onDelete={onDelete}
                     />
                     {/* <NoteItem note={itemForMinutes} onSave={onSave} /> */}
                   </div>
