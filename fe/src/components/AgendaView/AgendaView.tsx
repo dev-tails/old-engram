@@ -4,15 +4,17 @@ import moment from 'moment';
 import React, { useEffect, useRef } from 'react';
 
 import { CollapsibleNoteItem } from '../notes/CollapsibleNoteItem/CollapsibleNoteItem';
-import { Note } from '../notes/NotesApi';
+import { Note, NoteType } from '../notes/NotesApi';
 
 type AgendaViewProps = {
+  type: NoteType;
   date: Date;
   items: Note[];
   onSave: (note: Note) => Promise<void>;
 };
 
 export const AgendaView: React.FC<AgendaViewProps> = ({
+  type,
   date,
   items,
   onSave,
@@ -70,8 +72,7 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
                 if (!itemForMinutes) {
                   itemForMinutes = {
                     body: "",
-                    start: startDate,
-                    type: "event",
+                    start: startDate
                   };
                 }
 
@@ -82,6 +83,7 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
                   >
                     <CollapsibleNoteItem
                       activeId=""
+                      defaultType={type}
                       note={itemForMinutes}
                       onSave={onSave}
                       onActivate={() => { }}

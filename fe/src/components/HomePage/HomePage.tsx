@@ -29,23 +29,21 @@ export const HomePage: React.FC<HomePageProps> = ({
     return null;
   }
 
+  const PageClass = dateRangeValue === "Agenda" ? AgendaViewPage : NotesPage;
+
   return (
     <div className="home-page">
       <div className={`events ${bottomNavValue === "event" ? "visible" : ""}`}>
-        {dateRangeValue !== "Agenda" ? (
-          <NotesPage
-            date={date}
-            type="event"
-            startDate={startDate}
-            endDate={endDate}
-            readOnly={true}
-          />
-        ) : (
-          <AgendaViewPage date={date} />
-        )}
+        <PageClass
+          date={date}
+          type="event"
+          startDate={startDate}
+          endDate={endDate}
+          readOnly={true}
+        />
       </div>
       <div className={`tasks ${bottomNavValue === "task" ? "visible" : ""}`}>
-        <NotesPage
+        <PageClass
           date={date}
           type="task"
           startDate={startDate}
@@ -53,7 +51,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         />
       </div>
       <div className={`notes ${bottomNavValue === "note" ? "visible" : ""}`}>
-        <NotesPage
+        <PageClass
           date={date}
           type="note"
           startDate={startDate}

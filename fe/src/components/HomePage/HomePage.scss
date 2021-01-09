@@ -36,7 +36,7 @@
     .tasks {
       display: block;
 
-      .notes-page {
+      .agenda-view-content, .notes-page {
         left: 34%;
         right: 33%;
         width: 33%;
@@ -46,7 +46,7 @@
     .notes {
       display: block;
 
-      .notes-page {
+      .agenda-view-content, .notes-page {
         left: 67%;
         right: 0;
         width: 33%;
