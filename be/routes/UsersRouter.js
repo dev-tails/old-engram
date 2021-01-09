@@ -52,7 +52,7 @@ export function initializeUserRouter() {
       password: yup
         .string()
         .required()
-        .length(8, "Password must contain at least 8 characters"),
+        .min(8, "Password must contain at least 8 characters"),
     });
 
     schema.validateSync(req.body);
