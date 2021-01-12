@@ -49,6 +49,12 @@ export default function NotesPage({
     }
 
     getNotes(getNotesParams).then((notes) => {
+      let sortedNotes = notes;
+
+      if (type === "task") {
+        sortedNotes.sort((a, b) => { return (a.type || "") > (b.type || "") ? 1 : -1})
+      }
+
       setNotes(notes);
       setLastUpdate(moment().format());
     });

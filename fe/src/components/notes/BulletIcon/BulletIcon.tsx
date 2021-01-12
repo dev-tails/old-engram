@@ -42,7 +42,7 @@ const TaskIcon = () => {
 
 const TaskCompletedIcon = () => {
   const style = {
-    stroke: "#000000",
+    stroke: "#ddd",
     strokeWidth: 1,
   };
   return (

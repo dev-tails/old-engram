@@ -165,7 +165,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   }
 
   return (
-    <div className="collapsible-note-item-wrapper">
+    <div className={`collapsible-note-item-wrapper ${type}`}>
       <div
         className={`collapsible-note-item ${!props.note.body ? "empty" : ""}`}
         onClick={handleNoteClicked}
