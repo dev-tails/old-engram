@@ -70,7 +70,7 @@ export default function Routes() {
   const location = useLocation();
 
   const [date, setDate] = useState(moment().startOf("day").toDate());
-  const [dateRangeValue, setDateRangeValue] = useState("Agenda");
+  const [dateRangeValue, setDateRangeValue] = useState("Day");
 
   const startDate = getStartDate(date, dateRangeValue);
   const endDate = getEndDate(date, dateRangeValue);
