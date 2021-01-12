@@ -69,7 +69,13 @@ export function initializeNotesRouter() {
       };
     }
     if (type) {
-      findOptions.type = type;
+      if (type !== "task") {
+        findOptions.type = type;
+      } else {
+        findOptions.type = {
+          $in: ["task", "task_completed"]
+        };
+      }
     }
 
     const query = db.collection("notes").find(findOptions);
