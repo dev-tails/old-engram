@@ -48,7 +48,7 @@ export type GetNotesParams = {
   sort?: string;
 };
 
-export async function getNotes(params: GetNotesParams): Promise<Note[]> {
+export async function getNotes(params: GetNotesParams = {}): Promise<Note[]> {
   const paramsCopy = {
     since_id: params.since_id,
     max_id: params.max_id,

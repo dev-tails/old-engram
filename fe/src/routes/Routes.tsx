@@ -1,6 +1,8 @@
 import moment from 'moment';
 import React, { useState } from 'react';
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
+import { CollectionListPage } from '../components/CollectionListPage/CollectionListPage';
+import { CollectionViewPage } from '../components/CollectionViewPage/CollectionViewPage';
 
 import { Header } from '../components/header/Header';
 import { HelpPage } from '../components/HelpPage/HelpPage';
@@ -91,6 +93,9 @@ export default function Routes() {
     case "/help/zapier":
       title = "Help";
       break;
+    case "/collections":
+      title = "Collections";
+      break;
     default:
       break;
   }
@@ -120,6 +125,12 @@ export default function Routes() {
             startDate={startDate}
             endDate={endDate}
           />
+        </Route>
+        <Route exact path ="/collections">
+          <CollectionListPage/>
+        </Route>
+        <Route exact path ="/collections/:collection">
+          <CollectionViewPage/>
         </Route>
         <Route exact path="/notes/:id">
           <EditNotePage />
