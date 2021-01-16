@@ -8,6 +8,7 @@ import {
   InputBase,
   List,
   ListItem,
+  ListItemIcon,
   ListItemText,
   makeStyles,
   Menu,
@@ -16,6 +17,7 @@ import {
   Toolbar,
 } from "@material-ui/core";
 import {
+  Add,
   ChevronLeft,
   ChevronRight,
   MoreHoriz,
@@ -23,9 +25,15 @@ import {
 } from "@material-ui/icons";
 import moment, { DurationInputArg2 } from "moment";
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import { isMobileUserAgent } from "../../utils/UserAgentUtils";
+import {
+  createNote,
+  createOrUpdateNote,
+  getNotes,
+  Note,
+} from "../notes/NotesApi";
 
 type HeaderProps = {
   dateRangeValue: string;
@@ -89,6 +97,9 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  nested: {
+    paddingLeft: theme.spacing(4),
+  },
 }));
 
 export const Header: React.FC<HeaderProps> = ({
@@ -99,6 +110,7 @@ export const Header: React.FC<HeaderProps> = ({
   onDateRangeChange,
   onSearchSubmit,
 }) => {
+  const history = useHistory();
   const classes = useStyles();
 
   const dateInputRef = useRef<HTMLDivElement | null>(null);
@@ -106,14 +118,26 @@ export const Header: React.FC<HeaderProps> = ({
 
   const [search, setSearch] = useState<string | null>(null);
   const isSearchOpen = search !== null;
+  const [leftDrawerOpen, setLeftDrawerOpen] = useState(false);
   const [rightDrawerOpen, setRightDrawerOpen] = useState(false);
   const [dateString, setDateString] = useState(
     moment(date).format("YYYY-MM-DD")
   );
 
+  const [workspaces, setWorkspaces] = useState<Note[]>([]);
+  const [workspaceBody, setWorkspaceBody] = useState<string | null>(null);
+
   useEffect(() => {
     setDateString(moment(date).format("YYYY-MM-DD"));
   }, [date]);
+
+  useEffect(() => {
+    async function getWorkspaces() {
+      const fetchedWorkspaces = await getNotes({ type: "workspace" });
+      setWorkspaces(fetchedWorkspaces);
+    }
+    getWorkspaces();
+  }, []);
 
   useEffect(() => {
     function keyDownListener(event: KeyboardEvent) {
@@ -221,20 +245,37 @@ export const Header: React.FC<HeaderProps> = ({
     setAnchorEl(null);
   };
 
+  const handleLogoClicked = () => {
+    if (isDateView) {
+      setLeftDrawerOpen(true);
+    } else {
+      history.push("/");
+    }
+  };
+
+  const handleSubmitWorkspace = async () => {
+    if (workspaceBody) {
+      const newWorkspace = await createOrUpdateNote({
+        type: "workspace",
+        body: workspaceBody,
+      });
+      setWorkspaces([...workspaces, newWorkspace]);
+    }
+    setWorkspaceBody(null);
+  };
+
   return (
     <div className="header">
       <AppBar className={`${isSearchOpen ? "search" : ""}`}>
         <Toolbar>
-          <Link to="/">
-            <IconButton edge="start" color="inherit">
-              <img
-                alt="engram logo"
-                width="36"
-                height="36"
-                src="/images/logo.svg"
-              />
-            </IconButton>
-          </Link>
+          <IconButton onClick={handleLogoClicked} edge="start" color="inherit">
+            <img
+              alt="engram logo"
+              width="36"
+              height="36"
+              src="/images/logo.svg"
+            />
+          </IconButton>
 
           {isDateView && (
             <>
@@ -372,6 +413,55 @@ export const Header: React.FC<HeaderProps> = ({
           )}
         </Toolbar>
       </AppBar>
+      <React.Fragment>
+        <Drawer
+          anchor={"left"}
+          open={leftDrawerOpen}
+          onClose={setLeftDrawerOpen.bind(this, false)}
+        >
+          <div className="drawer-contents">
+            <List>
+              <ListItem button>
+                <ListItemText primary="Workspaces" />
+              </ListItem>
+              <List component="div" disablePadding>
+                {workspaces.map((workspace) => {
+                  return (
+                    <ListItem button className={classes.nested}>
+                      <ListItemText primary={workspace.body} />
+                    </ListItem>
+                  );
+                })}
+                <ListItem
+                  button
+                  className={classes.nested}
+                  onClick={() => {
+                    setWorkspaceBody("");
+                  }}
+                >
+                  {workspaceBody !== null ? (
+                    <TextField
+                      onChange={(event) => {
+                        setWorkspaceBody(event.currentTarget.value);
+                      }}
+                      value={workspaceBody}
+                      autoFocus
+                      onBlur={handleSubmitWorkspace}
+                    />
+                  ) : (
+                    <>
+                      <ListItemIcon>
+                        <Add />
+                      </ListItemIcon>
+                      <ListItemText primary={"Add"} />
+                    </>
+                  )}
+                </ListItem>
+              </List>
+            </List>
+          </div>
+        </Drawer>
+      </React.Fragment>
       <React.Fragment>
         <Drawer
           anchor={"right"}

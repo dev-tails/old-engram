@@ -4,7 +4,7 @@ import moment from "moment";
 import * as Api from '../../Api';
 import { isObjectId } from '../../utils/ObjectId';
 
-export type NoteType = "note" | "task" | "task_completed" | "event";
+export type NoteType = "note" | "task" | "task_completed" | "event" | "workspace";
 
 export type Note = {
   _id?: string;
