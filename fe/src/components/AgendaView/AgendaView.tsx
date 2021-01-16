@@ -1,7 +1,7 @@
 import "./AgendaView.scss";
 
 import moment from "moment";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { CollapsibleNoteItem } from "../notes/CollapsibleNoteItem/CollapsibleNoteItem";
 import { Note, NoteType } from "../notes/NotesApi";
@@ -21,6 +21,7 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
   onSave,
   onDelete,
 }) => {
+  const [activeId, setActiveId] = useState("");
   const activeHourRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -41,6 +42,10 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
       }
     }
   }
+
+  const handleNoteBlur = () => {
+    setActiveId("");
+  };
 
   return (
     <div className="agenda-view">
@@ -73,6 +78,7 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
                 });
                 if (!itemForMinutes) {
                   itemForMinutes = {
+                    _id: `${startDate.getDate()}`,
                     body: "",
                     start: startDate,
                   };
@@ -84,14 +90,14 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
                     key={`${date}-${index}-${minutes}`}
                   >
                     <CollapsibleNoteItem
-                      activeId=""
+                      activeId={activeId}
                       defaultType={type}
                       note={itemForMinutes}
                       onSave={onSave}
                       onActivate={() => {}}
                       onDelete={onDelete}
+                      onBlur={handleNoteBlur}
                     />
-                    {/* <NoteItem note={itemForMinutes} onSave={onSave} /> */}
                   </div>
                 );
               })}

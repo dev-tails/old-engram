@@ -1,11 +1,20 @@
-import './CollapsibleNotesList.scss';
+import "./CollapsibleNotesList.scss";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
-import { FloatingActionButton } from '../../FloatingActionButton/FloatingActionButton';
-import { CollapsibleNote, CollapsibleNoteItem } from '../CollapsibleNoteItem/CollapsibleNoteItem';
-import { createNote, Note, NoteType, removeNote, updateNote } from '../NotesApi';
-import * as NoteUtils from '../NoteUtils';
+import { FloatingActionButton } from "../../FloatingActionButton/FloatingActionButton";
+import {
+  CollapsibleNote,
+  CollapsibleNoteItem,
+} from "../CollapsibleNoteItem/CollapsibleNoteItem";
+import {
+  createNote,
+  Note,
+  NoteType,
+  removeNote,
+  updateNote,
+} from "../NotesApi";
+import * as NoteUtils from "../NoteUtils";
 
 type CollapsibleNotesListProps = {
   notes: CollapsibleNote[];
@@ -163,7 +172,7 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
     await Promise.all(promises);
   };
 
-  const createNoteWithDefaultType = (note: Partial<Note>) => {
+  const createNoteWithDefaultType = (note: Partial<Note> = {}) => {
     return createNote({
       ...note,
       ...(props.type && { type: props.type }),
@@ -208,9 +217,10 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
     await removeNote(note._id);
   };
 
-  const handleQuickAddSubmit = async (note: Note) => {
-    const newNote = await createNoteWithDefaultType(note);
+  const handleQuickAddClicked = async (event: React.MouseEvent) => {
+    const newNote = await createNoteWithDefaultType();
     setNotes([...notes, newNote]);
+    setActiveNoteId(newNote._id);
   };
 
   const topLevelNotesWithChildren = notes
@@ -221,11 +231,15 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
       return NoteUtils.getNoteWithChildren(notes, note._id);
     });
 
+  const handleBlur = () => {
+    console.log("we blurring");
+    setActiveNoteId("");
+  };
+
+  console.log(activeNoteId);
+
   return (
-    <div
-      className="collapsible-notes-list"
-      onBlur={setActiveNoteId.bind(this, "")}
-    >
+    <div className="collapsible-notes-list">
       {topLevelNotesWithChildren.map((note) => {
         if (!note) {
           return null;
@@ -242,11 +256,12 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
             onNewNote={props.readOnly ? handleNewNote : () => {}}
             onActivate={handleNoteActivate}
             onDelete={handleDelete}
+            onBlur={handleBlur}
           />
         );
       })}
       {!props.readOnly && (
-        <FloatingActionButton onSubmit={handleQuickAddSubmit} />
+        <FloatingActionButton onClick={handleQuickAddClicked} />
       )}
     </div>
   );

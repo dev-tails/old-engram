@@ -1,14 +1,14 @@
-import './CollapsibleNoteItem.scss';
+import "./CollapsibleNoteItem.scss";
 
-import { TextareaAutosize } from '@material-ui/core';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-import React, { useEffect, useRef, useState } from 'react';
-import ReactMarkdown from 'react-markdown';
-import gfm from 'remark-gfm';
+import { TextareaAutosize } from "@material-ui/core";
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import ArrowRightIcon from "@material-ui/icons/ArrowRight";
+import React, { useEffect, useRef, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import gfm from "remark-gfm";
 
-import { BulletIcon } from '../BulletIcon/BulletIcon';
-import { Note, NoteType } from '../NotesApi';
+import { BulletIcon } from "../BulletIcon/BulletIcon";
+import { Note, NoteType } from "../NotesApi";
 
 export type CollapsibleNote = {
   _id?: string;
@@ -30,6 +30,7 @@ type CollapsibleNoteItemProps = {
   onNewNote?: (note: CollapsibleNote) => void;
   onActivate: (note: CollapsibleNote) => void;
   onDelete: (note: CollapsibleNote) => void;
+  onBlur: () => void;
 };
 
 export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
@@ -40,7 +41,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   const [type, setType] = useState(props.note.type || props.defaultType);
   const [collapsed, setCollapsed] = useState(false);
 
-  const [isActive, setActive] = useState(false);
+  const isActive = props.note._id === props.activeId;
   const hasChildren = props.note.children && props.note.children.length > 0;
 
   const note = {
@@ -48,6 +49,14 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
     body,
     type,
   };
+
+  // useEffect(() => {
+  //   if (isActive) {
+  //     setTimeout(() => {
+  //       textAreaRef.current?.focus();
+  //     }, 50);
+  //   }
+  // }, [isActive]);
 
   useEffect(() => {
     function keyDownListener(event: KeyboardEvent) {
@@ -119,7 +128,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   };
 
   const handleTextAreaBlur = () => {
-    setActive(false);
+    props.onBlur();
 
     if (body === props.note.body) {
       return;
@@ -154,11 +163,8 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   };
 
   const handleNoteClicked = () => {
-    setActive(true);
-    setImmediate(() => {
-      textAreaRef.current?.focus();
-    });
-  }
+    props.onActivate(props.note);
+  };
 
   function getBodyForMarkdown() {
     return body.replaceAll("\n\n", `\n&nbsp;\n`);
@@ -177,8 +183,8 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
           {collapsed ? (
             <ArrowRightIcon fontSize="small" />
           ) : (
-              <ArrowDropDownIcon fontSize="small" />
-            )}
+            <ArrowDropDownIcon fontSize="small" />
+          )}
         </span>
         {/* <Link to={`/notes/${note._id}`}>
           <span className={`block-edit`} onClick={handleToggleExpand}>
@@ -199,14 +205,15 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
             value={body}
             onChange={handleTextChanged}
             onBlur={handleTextAreaBlur}
+            autoFocus={isActive}
           />
         ) : (
-            <div className="note-inactive">
-              <ReactMarkdown plugins={[gfm]}>
-                {getBodyForMarkdown()}
-              </ReactMarkdown>
-            </div>
-          )}
+          <div className="note-inactive">
+            <ReactMarkdown plugins={[gfm]}>
+              {getBodyForMarkdown()}
+            </ReactMarkdown>
+          </div>
+        )}
       </div>
       {!collapsed && props.note.children && (
         <div style={{ marginLeft: "12px" }}>
