@@ -1,15 +1,15 @@
-import './App.css';
+import "./App.css";
 
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import React from "react";
+import { BrowserRouter as Router } from "react-router-dom";
 
-import Routes from './routes/Routes';
+import Routes from "./routes/Routes";
 
 let theme = createMuiTheme({
   palette: {
     primary: {
-      main: "#1C1C1C",
+      main: "#333",
     },
   },
 });

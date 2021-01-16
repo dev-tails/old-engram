@@ -226,13 +226,11 @@ export const Header: React.FC<HeaderProps> = ({
     <div className="header">
       <AppBar className={`${isSearchOpen ? "search" : ""}`}>
         <Toolbar>
-          {!isDateView && (
-            <Link to="/">
-              <IconButton edge="start" color="inherit">
-                <Home />
-              </IconButton>
-            </Link>
-          )}
+          <Link to="/">
+            <IconButton edge="start" color="inherit">
+              <img width="36" height="36" src="/images/logo.svg" />
+            </IconButton>
+          </Link>
 
           {isDateView && (
             <>
@@ -362,6 +360,7 @@ export const Header: React.FC<HeaderProps> = ({
               edge="end"
               color="inherit"
               aria-label="menu"
+              size="small"
               onClick={handleRightMenuButtonClicked}
             >
               <MoreHoriz />

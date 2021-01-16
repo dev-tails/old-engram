@@ -16,6 +16,10 @@
     display: block;
   }
 
+  .notes-page {
+    padding: 0 8px;
+  }
+
   @media (min-width: 1000px) {
     .bottom-navigation {
       display: none;
@@ -36,7 +40,8 @@
     .tasks {
       display: block;
 
-      .agenda-view-content, .notes-page {
+      .agenda-view-content,
+      .notes-page {
         left: 34%;
         right: 33%;
         width: 33%;
@@ -46,7 +51,8 @@
     .notes {
       display: block;
 
-      .agenda-view-content, .notes-page {
+      .agenda-view-content,
+      .notes-page {
         left: 67%;
         right: 0;
         width: 33%;

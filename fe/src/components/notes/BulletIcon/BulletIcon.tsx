@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-import { Note } from '../NotesApi';
+import { Note } from "../NotesApi";
 
 type BulletIconProps = {
   note: Note;
@@ -16,7 +16,7 @@ const NoteIcon = () => {
         x2="8"
         y2="4"
         style={{
-          stroke: "#000000",
+          stroke: "#FFFFFF",
           strokeWidth: 1,
         }}
       />
@@ -32,7 +32,7 @@ const TaskIcon = () => {
         cy="4"
         r="1"
         style={{
-          stroke: "#000000",
+          stroke: "#FFFFFF",
           strokeWidth: 1,
         }}
       />
@@ -56,7 +56,7 @@ const TaskCompletedIcon = () => {
 
 const EventIcon = () => {
   const style = {
-    stroke: "#000000",
+    stroke: "#FFFFFF",
     fillOpacity: 0,
   };
   return (

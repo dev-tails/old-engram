@@ -13,7 +13,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
 }) => {
   return (
     <div className="floating-action-button">
-      <Fab onClick={onClick}>
+      <Fab onClick={onClick} color="primary">
         <AddIcon />
       </Fab>
     </div>
