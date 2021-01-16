@@ -18,7 +18,6 @@ import {
 import {
   ChevronLeft,
   ChevronRight,
-  Home,
   MoreHoriz,
   Search as SearchIcon,
 } from "@material-ui/icons";
@@ -228,7 +227,12 @@ export const Header: React.FC<HeaderProps> = ({
         <Toolbar>
           <Link to="/">
             <IconButton edge="start" color="inherit">
-              <img width="36" height="36" src="/images/logo.svg" />
+              <img
+                alt="engram logo"
+                width="36"
+                height="36"
+                src="/images/logo.svg"
+              />
             </IconButton>
           </Link>
 
