@@ -1,17 +1,25 @@
-import moment from 'moment';
-import React, { useState } from 'react';
-import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
+import moment from "moment";
+import React, { useState } from "react";
+import { Redirect, Route, Switch, useLocation } from "react-router-dom";
 
-import { Header } from '../components/header/Header';
-import { HelpPage } from '../components/HelpPage/HelpPage';
-import { ZapierHelpPage } from '../components/HelpPage/ZapierHelpPage/ZapierHelpPage';
-import { HomePage } from '../components/HomePage/HomePage';
-import LoginPage, { LoginPagePath } from '../components/login/LoginPage';
-import { LogoutPage } from '../components/LogoutPage/LogoutPage';
-import { EditNotePage } from '../components/notes/EditNotePage/EditNotePage';
-import { PrivacyPolicyPage, PrivacyPolicyPagePath } from '../components/PrivacyPolicyPage/PrivacyPolicyPage';
-import SignupPage, { SignupPagePath } from '../components/SignupPage/SignupPage';
-import { TermsOfServicePage, TermsOfServicePagePath } from '../TermsOfServicePage/TermsOfServicePage';
+import { Header } from "../components/header/Header";
+import { HelpPage } from "../components/HelpPage/HelpPage";
+import { ZapierHelpPage } from "../components/HelpPage/ZapierHelpPage/ZapierHelpPage";
+import { HomePage } from "../components/HomePage/HomePage";
+import LoginPage, { LoginPagePath } from "../components/login/LoginPage";
+import { LogoutPage } from "../components/LogoutPage/LogoutPage";
+import { EditNotePage } from "../components/notes/EditNotePage/EditNotePage";
+import {
+  PrivacyPolicyPage,
+  PrivacyPolicyPagePath,
+} from "../components/PrivacyPolicyPage/PrivacyPolicyPage";
+import SignupPage, {
+  SignupPagePath,
+} from "../components/SignupPage/SignupPage";
+import {
+  TermsOfServicePage,
+  TermsOfServicePagePath,
+} from "../TermsOfServicePage/TermsOfServicePage";
 
 function getStartDate(date: Date, dateRangeValue: string) {
   switch (dateRangeValue) {
@@ -71,6 +79,7 @@ export default function Routes() {
 
   const [date, setDate] = useState(moment().startOf("day").toDate());
   const [dateRangeValue, setDateRangeValue] = useState("Day");
+  const [search, setSearch] = useState("");
 
   const startDate = getStartDate(date, dateRangeValue);
   const endDate = getEndDate(date, dateRangeValue);
@@ -103,6 +112,10 @@ export default function Routes() {
     setDateRangeValue(dateRange);
   };
 
+  const handleSearchSubmitted = (search: string) => {
+    setSearch(search);
+  };
+
   return (
     <>
       <Header
@@ -111,6 +124,7 @@ export default function Routes() {
         onDateChange={handleDateChanged}
         dateRangeValue={dateRangeValue}
         onDateRangeChange={handleDateRangeChanged}
+        onSearchSubmit={handleSearchSubmitted}
       />
       <Switch>
         <Route exact path="/">

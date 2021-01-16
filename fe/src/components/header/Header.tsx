@@ -1,23 +1,32 @@
-import './Header.scss';
+import "./Header.scss";
 
 import {
   AppBar,
   Drawer,
+  fade,
   IconButton,
+  InputBase,
   List,
   ListItem,
   ListItemText,
+  makeStyles,
   Menu,
   MenuItem,
   TextField,
   Toolbar,
-} from '@material-ui/core';
-import { ChevronLeft, ChevronRight, Home, MoreHoriz } from '@material-ui/icons';
-import moment, { DurationInputArg2 } from 'moment';
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+} from "@material-ui/core";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Home,
+  MoreHoriz,
+  Search as SearchIcon,
+} from "@material-ui/icons";
+import moment, { DurationInputArg2 } from "moment";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 
-import { isMobileUserAgent } from '../../utils/UserAgentUtils';
+import { isMobileUserAgent } from "../../utils/UserAgentUtils";
 
 type HeaderProps = {
   dateRangeValue: string;
@@ -25,7 +34,63 @@ type HeaderProps = {
   title?: string;
   onDateChange: (date: Date) => void;
   onDateRangeChange: (dateRange: string) => void;
+  onSearchSubmit: (search: string) => void;
 };
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+    display: "none",
+    [theme.breakpoints.up("sm")]: {
+      display: "block",
+    },
+  },
+  search: {
+    position: "relative",
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    "&:hover": {
+      backgroundColor: fade(theme.palette.common.white, 0.25),
+    },
+    marginLeft: 0,
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      marginLeft: theme.spacing(1),
+      width: "auto",
+    },
+  },
+  searchIcon: {
+    padding: theme.spacing(0, 2),
+    height: "100%",
+    position: "absolute",
+    pointerEvents: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  inputRoot: {
+    color: "inherit",
+  },
+  inputInput: {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      width: "12ch",
+      "&:focus": {
+        width: "20ch",
+      },
+    },
+  },
+}));
 
 export const Header: React.FC<HeaderProps> = ({
   title,
@@ -33,10 +98,15 @@ export const Header: React.FC<HeaderProps> = ({
   onDateChange,
   dateRangeValue,
   onDateRangeChange,
+  onSearchSubmit,
 }) => {
+  const classes = useStyles();
+
   const dateInputRef = useRef<HTMLDivElement | null>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
+  const [isSearchOpen, setSearchOpen] = useState(false);
+  const [search, setSearch] = useState("");
   const [rightDrawerOpen, setRightDrawerOpen] = useState(false);
   const [dateString, setDateString] = useState(
     moment(date).format("YYYY-MM-DD")
@@ -154,7 +224,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <div className="header">
-      <AppBar>
+      <AppBar className={`${isSearchOpen ? "search" : ""}`}>
         <Toolbar>
           {!isDateView && (
             <Link to="/">
@@ -207,17 +277,27 @@ export const Header: React.FC<HeaderProps> = ({
             </>
           )}
 
-          <div className="spacer" />
-
           {isDateView && (
             <IconButton
               color="inherit"
               onClick={handleNavigateDate.bind(this, "left")}
               title="Alt+LeftArrow"
+              size="small"
             >
               <ChevronLeft />
             </IconButton>
           )}
+          {isDateView && (
+            <IconButton
+              color="inherit"
+              onClick={handleNavigateDate.bind(this, "right")}
+              title="Alt+RightArrow"
+              size="small"
+            >
+              <ChevronRight />
+            </IconButton>
+          )}
+
           <div className="title">
             {title ? (
               title
@@ -236,17 +316,44 @@ export const Header: React.FC<HeaderProps> = ({
               />
             )}
           </div>
-          {isDateView && (
+
+          <div className="spacer" />
+
+          {isDateView && !isSearchOpen && (
             <IconButton
               color="inherit"
-              onClick={handleNavigateDate.bind(this, "right")}
-              title="Alt+RightArrow"
+              aria-label="menu"
+              size="small"
+              onClick={setSearchOpen.bind(this, true)}
             >
-              <ChevronRight />
+              <SearchIcon />
             </IconButton>
           )}
 
-          <div className="spacer" />
+          {isDateView && isSearchOpen && (
+            <div className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <InputBase
+                placeholder="Search…"
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput,
+                }}
+                autoFocus
+                inputProps={{ "aria-label": "search" }}
+                value={search}
+                onChange={(event) => {
+                  setSearch(event.currentTarget.value);
+                }}
+                onSubmit={() => {
+                  onSearchSubmit(search);
+                }}
+                onBlur={setSearchOpen.bind(this, false)}
+              />
+            </div>
+          )}
 
           {isDateView && (
             <IconButton

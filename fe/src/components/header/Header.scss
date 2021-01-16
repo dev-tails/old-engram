@@ -1,10 +1,20 @@
 .header {
+  .search {
+    @media (max-width: 600px) {
+      .title {
+        display: none;
+      }
+    }
+  }
+
   #date {
     color: white;
 
     &::-webkit-calendar-picker-indicator {
       filter: invert(1);
     }
+
+    width: 140px;
   }
 
   #date-range-button {
