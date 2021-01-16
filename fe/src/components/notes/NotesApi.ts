@@ -1,5 +1,5 @@
-import axios from 'axios';
-import queryString from 'query-string';
+import axios, { AxiosResponse } from 'axios';
+import moment from "moment";
 
 import * as Api from '../../Api';
 
@@ -39,29 +39,57 @@ export async function getNote(params: { id: string }): Promise<Note[]> {
   return res.data;
 }
 
+let notesPromise: Promise<AxiosResponse<Note[]>> | null = null;
+export async function getAllNotes(): Promise<Note[]>  {
+  if (!notesPromise) {
+    notesPromise = Api.get(`/api/notes`);
+  }
+  const res = await notesPromise;
+  return res.data;
+}
+
 export type GetNotesParams = {
   since_id?: string;
   max_id?: string;
   since?: Date;
   before?: Date;
   type?: NoteType;
+  tag?: string | null;
+  search?: string | null;
   sort?: string;
 };
 
-export async function getNotes(params: GetNotesParams): Promise<Note[]> {
-  const paramsCopy = {
-    since_id: params.since_id,
-    max_id: params.max_id,
-    before: params.before?.toISOString(),
-    since: params.since?.toISOString(),
-    type: params.type,
-    sort: params.sort,
-  };
+export async function getNotes(params: GetNotesParams = {}): Promise<Note[]> {
+  const notes = await getAllNotes();
 
-  const res = await Api.get(`/api/notes?${queryString.stringify(paramsCopy)}`, {
-    withCredentials: true,
+  const notesToReturn = notes.filter((note) => {
+    let id = note._id as string;
+
+    if(params.since_id && id < params.since_id) {
+      return false;
+    }
+    if(params.max_id && id > params.max_id) {
+      return false;
+    }
+    if (params.type && note.type !== params.type) {
+      return false;
+    }
+    if (params.since && (moment(note.start).isBefore(params.since))) {
+      return false;
+    }
+    if (params.before && (moment(note.start).isAfter(params.before))) {
+      return false;
+    }
+    if(params.tag && !note.body.includes(`[[${params.tag}]]`)) {
+      return false
+    }
+    if(params.search && !note.body.toLowerCase().includes(`${params.search}`)) {
+      return false
+    }
+    return true;
   });
-  return res.data;
+
+  return notesToReturn;
 }
 
 export async function updateNote(note: Partial<Note>): Promise<Note> {

@@ -13,6 +13,6 @@ axios.interceptors.response.use(
   }
 );
 
-export function get(url: string, config: AxiosRequestConfig) {
+export function get(url: string, config: AxiosRequestConfig = {}) {
   return axios.get(url, config);
 }
