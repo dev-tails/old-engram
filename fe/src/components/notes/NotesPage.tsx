@@ -63,7 +63,7 @@ export default function NotesPage({
       setNotes(notes);
       setLastUpdate(moment().format());
     });
-  }, [type, startDate, endDate]);
+  }, [type, startDate, endDate, search]);
 
   return (
     <div className="notes-page">
