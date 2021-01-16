@@ -62,6 +62,10 @@ export type GetNotesParams = {
 export async function getNotes(params: GetNotesParams = {}): Promise<Note[]> {
   const notes = await getAllNotes();
 
+  let searchRegex: RegExp | null = null;
+  if(params.search) {
+    searchRegex = new RegExp(params.search, "i");
+  }
   const notesToReturn = notes.filter((note) => {
     let id = note._id as string;
 
@@ -83,7 +87,7 @@ export async function getNotes(params: GetNotesParams = {}): Promise<Note[]> {
     if(params.tag && !note.body.includes(`[[${params.tag}]]`)) {
       return false
     }
-    if(params.search && !note.body.toLowerCase().includes(`${params.search}`)) {
+    if(searchRegex && !searchRegex.test(note.body)) {
       return false
     }
     return true;
