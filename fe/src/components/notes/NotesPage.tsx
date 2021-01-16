@@ -1,11 +1,11 @@
-import './NotesPage.scss';
+import "./NotesPage.scss";
 
-import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import moment from "moment";
+import React, { useEffect, useState } from "react";
 
-import { objectIdFromDate } from '../../utils/ObjectId';
-import { CollapsibleNotesList } from './CollapsibleNotesList/CollapsibleNotesList';
-import { getNotes, GetNotesParams, Note, NoteType } from './NotesApi';
+import { objectIdFromDate } from "../../utils/ObjectId";
+import { CollapsibleNotesList } from "./CollapsibleNotesList/CollapsibleNotesList";
+import { getNotes, GetNotesParams, Note, NoteType } from "./NotesApi";
 
 export type NotesPageProps = {
   date?: Date;
@@ -13,6 +13,7 @@ export type NotesPageProps = {
   startDate: Date | null;
   endDate: Date | null;
   readOnly?: boolean;
+  search?: string;
 };
 
 export default function NotesPage({
@@ -21,6 +22,7 @@ export default function NotesPage({
   startDate,
   endDate,
   readOnly,
+  search,
 }: NotesPageProps) {
   const [notes, setNotes] = useState<Note[]>([]);
   const [lastUpdate, setLastUpdate] = useState("");
@@ -47,12 +49,15 @@ export default function NotesPage({
     if (type === "event") {
       getNotesParams.sort = "start";
     }
+    getNotesParams.search = search;
 
     getNotes(getNotesParams).then((notes) => {
       let sortedNotes = notes;
 
       if (type === "task") {
-        sortedNotes.sort((a, b) => { return (a.type || "") > (b.type || "") ? 1 : -1})
+        sortedNotes.sort((a, b) => {
+          return (a.type || "") > (b.type || "") ? 1 : -1;
+        });
       }
 
       setNotes(notes);

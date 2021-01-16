@@ -105,8 +105,8 @@ export const Header: React.FC<HeaderProps> = ({
   const dateInputRef = useRef<HTMLDivElement | null>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const [isSearchOpen, setSearchOpen] = useState(false);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState<string | null>(null);
+  const isSearchOpen = search !== null;
   const [rightDrawerOpen, setRightDrawerOpen] = useState(false);
   const [dateString, setDateString] = useState(
     moment(date).format("YYYY-MM-DD")
@@ -324,7 +324,7 @@ export const Header: React.FC<HeaderProps> = ({
               color="inherit"
               aria-label="menu"
               size="small"
-              onClick={setSearchOpen.bind(this, true)}
+              onClick={setSearch.bind(this, "")}
             >
               <SearchIcon />
             </IconButton>
@@ -347,10 +347,12 @@ export const Header: React.FC<HeaderProps> = ({
                 onChange={(event) => {
                   setSearch(event.currentTarget.value);
                 }}
-                onSubmit={() => {
-                  onSearchSubmit(search);
+                onBlur={() => {
+                  if (!search) {
+                    setSearch(null);
+                  }
+                  onSearchSubmit(search || "");
                 }}
-                onBlur={setSearchOpen.bind(this, false)}
               />
             </div>
           )}

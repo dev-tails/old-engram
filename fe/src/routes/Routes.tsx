@@ -133,6 +133,7 @@ export default function Routes() {
             date={date}
             startDate={startDate}
             endDate={endDate}
+            search={search}
           />
         </Route>
         <Route exact path="/notes/:id">
