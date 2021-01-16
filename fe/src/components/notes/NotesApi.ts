@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import moment from "moment";
 
 import * as Api from '../../Api';
+import { isObjectId } from '../../utils/ObjectId';
 
 export type NoteType = "note" | "task" | "task_completed" | "event";
 
@@ -17,7 +18,7 @@ export type Note = {
 };
 
 export async function createOrUpdateNote(note: Partial<Note>) {
-  if (note._id) {
+  if (isObjectId(note._id)) {
     return updateNote(note);
   }
   return createNote(note);

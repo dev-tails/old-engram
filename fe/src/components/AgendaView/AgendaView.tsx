@@ -59,11 +59,12 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
 
         let iterationMoment = moment().startOf("day").hour(index).minutes(0);
         let timeString = iterationMoment.format("HH:mm");
+        const key = `${date.getTime()}-${index}`;
 
         return (
           <div
             className={`agenda-view-item ${isCurrentHour ? "current" : ""}`}
-            key={`${date}-${index}`}
+            key={key}
             ref={isActiveHour ? activeHourRef : null}
           >
             <div className="agenda-view-item-left">{timeString}</div>
@@ -78,7 +79,7 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
                 });
                 if (!itemForMinutes) {
                   itemForMinutes = {
-                    _id: `${startDate.getDate()}`,
+                    _id: `${key}-${minutes}`,
                     body: "",
                     start: startDate,
                   };
@@ -94,7 +95,9 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
                       defaultType={type}
                       note={itemForMinutes}
                       onSave={onSave}
-                      onActivate={() => {}}
+                      onActivate={(note) => {
+                        setActiveId(note._id || "");
+                      }}
                       onDelete={onDelete}
                       onBlur={handleNoteBlur}
                     />

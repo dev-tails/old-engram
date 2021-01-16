@@ -11,6 +11,7 @@ textarea,
 input {
   background-color: #1c1c1c;
   caret-color: white;
+  color: white;
 }
 
 .App {

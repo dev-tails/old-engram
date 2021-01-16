@@ -50,14 +50,6 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
     type,
   };
 
-  // useEffect(() => {
-  //   if (isActive) {
-  //     setTimeout(() => {
-  //       textAreaRef.current?.focus();
-  //     }, 50);
-  //   }
-  // }, [isActive]);
-
   useEffect(() => {
     function keyDownListener(event: KeyboardEvent) {
       if (!isActive) {
