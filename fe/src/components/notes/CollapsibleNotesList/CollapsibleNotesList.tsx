@@ -20,6 +20,7 @@ type CollapsibleNotesListProps = {
   notes: CollapsibleNote[];
   type?: NoteType;
   readOnly?: boolean;
+  activeParentId?: string;
 };
 
 export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
@@ -176,6 +177,7 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
     return createNote({
       ...note,
       ...(props.type && { type: props.type }),
+      ...(props.activeParentId && { parent: props.activeParentId }),
     });
   };
 
@@ -232,11 +234,8 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
     });
 
   const handleBlur = () => {
-    console.log("we blurring");
     setActiveNoteId("");
   };
-
-  console.log(activeNoteId);
 
   return (
     <div className="collapsible-notes-list">

@@ -12,6 +12,7 @@ type HomePageProps = {
   endDate: Date | null;
   dateRangeValue: string;
   search?: string;
+  activeParentId?: string;
 };
 
 export const HomePage: React.FC<HomePageProps> = ({
@@ -20,6 +21,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   endDate,
   dateRangeValue,
   search,
+  activeParentId,
 }) => {
   const [bottomNavValue, setBottomNavValue] = useState("note");
 
@@ -43,6 +45,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           endDate={endDate}
           readOnly={true}
           search={search}
+          activeParentId={activeParentId}
         />
       </div>
       <div className={`tasks ${bottomNavValue === "task" ? "visible" : ""}`}>
@@ -52,6 +55,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           startDate={startDate}
           endDate={endDate}
           search={search}
+          activeParentId={activeParentId}
         />
       </div>
       <div className={`notes ${bottomNavValue === "note" ? "visible" : ""}`}>
@@ -61,6 +65,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           startDate={startDate}
           endDate={endDate}
           search={search}
+          activeParentId={activeParentId}
         />
       </div>
       <div className="bottom-navigation">

@@ -14,6 +14,7 @@ export type NotesPageProps = {
   endDate: Date | null;
   readOnly?: boolean;
   search?: string;
+  activeParentId?: string;
 };
 
 export default function NotesPage({
@@ -23,6 +24,7 @@ export default function NotesPage({
   endDate,
   readOnly,
   search,
+  activeParentId,
 }: NotesPageProps) {
   const [notes, setNotes] = useState<Note[]>([]);
   const [lastUpdate, setLastUpdate] = useState("");
@@ -50,6 +52,7 @@ export default function NotesPage({
       getNotesParams.sort = "start";
     }
     getNotesParams.search = search;
+    getNotesParams.parent = activeParentId;
 
     getNotes(getNotesParams).then((notes) => {
       let sortedNotes = notes;
@@ -63,7 +66,7 @@ export default function NotesPage({
       setNotes(notes);
       setLastUpdate(moment().format());
     });
-  }, [type, startDate, endDate, search]);
+  }, [type, startDate, endDate, search, activeParentId]);
 
   return (
     <div className="notes-page">
@@ -72,6 +75,7 @@ export default function NotesPage({
         notes={notes}
         type={type}
         readOnly={readOnly}
+        activeParentId={activeParentId}
       />
     </div>
   );

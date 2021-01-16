@@ -80,6 +80,7 @@ export default function Routes() {
   const [date, setDate] = useState(moment().startOf("day").toDate());
   const [dateRangeValue, setDateRangeValue] = useState("Day");
   const [search, setSearch] = useState("");
+  const [activeParentId, setActiveParentId] = useState("");
 
   const startDate = getStartDate(date, dateRangeValue);
   const endDate = getEndDate(date, dateRangeValue);
@@ -116,6 +117,10 @@ export default function Routes() {
     setSearch(search);
   };
 
+  const handleWorkspaceSelected = (id: string) => {
+    setActiveParentId(id);
+  };
+
   return (
     <>
       <Header
@@ -125,6 +130,7 @@ export default function Routes() {
         dateRangeValue={dateRangeValue}
         onDateRangeChange={handleDateRangeChanged}
         onSearchSubmit={handleSearchSubmitted}
+        onWorkspaceSelected={handleWorkspaceSelected}
       />
       <Switch>
         <Route exact path="/">
@@ -134,6 +140,7 @@ export default function Routes() {
             startDate={startDate}
             endDate={endDate}
             search={search}
+            activeParentId={activeParentId}
           />
         </Route>
         <Route exact path="/notes/:id">

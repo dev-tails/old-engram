@@ -58,6 +58,7 @@ export type GetNotesParams = {
   tag?: string | null;
   search?: string | null;
   sort?: string;
+  parent?: string;
 };
 
 export async function getNotes(params: GetNotesParams = {}): Promise<Note[]> {
@@ -86,10 +87,13 @@ export async function getNotes(params: GetNotesParams = {}): Promise<Note[]> {
       return false;
     }
     if(params.tag && !note.body.includes(`[[${params.tag}]]`)) {
-      return false
+      return false;
     }
     if(searchRegex && !searchRegex.test(note.body)) {
-      return false
+      return false;
+    }
+    if(params.parent && note.parent !== params.parent) {
+      return false;
     }
     return true;
   });

@@ -28,12 +28,7 @@ import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 
 import { isMobileUserAgent } from "../../utils/UserAgentUtils";
-import {
-  createNote,
-  createOrUpdateNote,
-  getNotes,
-  Note,
-} from "../notes/NotesApi";
+import { createOrUpdateNote, getNotes, Note } from "../notes/NotesApi";
 
 type HeaderProps = {
   dateRangeValue: string;
@@ -42,6 +37,7 @@ type HeaderProps = {
   onDateChange: (date: Date) => void;
   onDateRangeChange: (dateRange: string) => void;
   onSearchSubmit: (search: string) => void;
+  onWorkspaceSelected: (id: string) => void;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -109,6 +105,7 @@ export const Header: React.FC<HeaderProps> = ({
   dateRangeValue,
   onDateRangeChange,
   onSearchSubmit,
+  onWorkspaceSelected,
 }) => {
   const history = useHistory();
   const classes = useStyles();
@@ -262,6 +259,13 @@ export const Header: React.FC<HeaderProps> = ({
       setWorkspaces([...workspaces, newWorkspace]);
     }
     setWorkspaceBody(null);
+  };
+
+  const handleWorkspaceSelected = (workspace: Note) => {
+    if (workspace._id) {
+      onWorkspaceSelected(workspace._id);
+    }
+    setLeftDrawerOpen(false);
   };
 
   return (
@@ -427,7 +431,12 @@ export const Header: React.FC<HeaderProps> = ({
               <List component="div" disablePadding>
                 {workspaces.map((workspace) => {
                   return (
-                    <ListItem button className={classes.nested}>
+                    <ListItem
+                      key={workspace._id}
+                      button
+                      className={classes.nested}
+                      onClick={handleWorkspaceSelected.bind(this, workspace)}
+                    >
                       <ListItemText primary={workspace.body} />
                     </ListItem>
                   );
