@@ -1,10 +1,10 @@
-import './AgendaView.scss';
+import "./AgendaView.scss";
 
-import moment from 'moment';
-import React, { useEffect, useRef } from 'react';
+import moment from "moment";
+import React, { useEffect, useRef } from "react";
 
-import { CollapsibleNoteItem } from '../notes/CollapsibleNoteItem/CollapsibleNoteItem';
-import { Note, NoteType } from '../notes/NotesApi';
+import { CollapsibleNoteItem } from "../notes/CollapsibleNoteItem/CollapsibleNoteItem";
+import { Note, NoteType } from "../notes/NotesApi";
 
 type AgendaViewProps = {
   type: NoteType;
@@ -19,7 +19,7 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
   date,
   items,
   onSave,
-  onDelete
+  onDelete,
 }) => {
   const activeHourRef = useRef<HTMLDivElement>(null);
 
@@ -27,7 +27,7 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
     if (activeHourRef.current) {
       activeHourRef.current.scrollIntoView();
     }
-  });
+  }, []);
 
   const itemsByHour: Array<Note[]> = [];
   for (let i = 0; i < 24; i++) {
@@ -74,7 +74,7 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
                 if (!itemForMinutes) {
                   itemForMinutes = {
                     body: "",
-                    start: startDate
+                    start: startDate,
                   };
                 }
 
@@ -88,7 +88,7 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
                       defaultType={type}
                       note={itemForMinutes}
                       onSave={onSave}
-                      onActivate={() => { }}
+                      onActivate={() => {}}
                       onDelete={onDelete}
                     />
                     {/* <NoteItem note={itemForMinutes} onSave={onSave} /> */}
