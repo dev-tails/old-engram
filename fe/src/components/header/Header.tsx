@@ -129,9 +129,9 @@ export const Header: React.FC<HeaderProps> = ({
     moment(date).format("YYYY-MM-DD")
   );
 
-  const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<string | null>(
-    null
-  );
+  const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<
+    string | undefined | null
+  >(null);
   const [
     workspaceAnchorEl,
     setWorkspaceAnchorEl,
@@ -182,6 +182,16 @@ export const Header: React.FC<HeaderProps> = ({
         event.preventDefault();
       } else if (event.key === "ArrowRight") {
         handleNavigateDate("right");
+        event.preventDefault();
+      }
+
+      if (event.code.includes("Digit")) {
+        const digit = Number(event.code[event.code.length - 1]) - 1;
+        if (digit < 0) {
+          onWorkspaceSelected(null);
+        } else if (digit < workspaces.length) {
+          onWorkspaceSelected(workspaces[digit]._id);
+        }
         event.preventDefault();
       }
     }
