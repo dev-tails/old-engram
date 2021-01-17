@@ -9,7 +9,7 @@ export function dateFromObjectId(objectId?: string) {
   return new Date(parseInt(objectId.substring(0, 8), 16) * 1000);
 }
 
-export function isObjectId(id?: string) {
+export function isObjectId(id?: string | null | undefined) {
   if (!id) {
     return false;
   }

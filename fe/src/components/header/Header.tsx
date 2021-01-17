@@ -3,6 +3,7 @@ import "./Header.scss";
 import {
   AppBar,
   Drawer,
+  Fade,
   fade,
   IconButton,
   InputBase,
@@ -28,7 +29,13 @@ import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 
 import { isMobileUserAgent } from "../../utils/UserAgentUtils";
-import { createOrUpdateNote, getNotes, Note } from "../notes/NotesApi";
+import { Holdable } from "../Holdable/Holdable";
+import {
+  createOrUpdateNote,
+  getNotes,
+  Note,
+  removeNote,
+} from "../notes/NotesApi";
 
 type HeaderProps = {
   dateRangeValue: string;
@@ -121,6 +128,13 @@ export const Header: React.FC<HeaderProps> = ({
     moment(date).format("YYYY-MM-DD")
   );
 
+  const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<string | null>(
+    null
+  );
+  const [
+    workspaceAnchorEl,
+    setWorkspaceAnchorEl,
+  ] = React.useState<null | HTMLDivElement>(null);
   const [workspaces, setWorkspaces] = useState<Note[]>([]);
   const [workspaceBody, setWorkspaceBody] = useState<string | null>(null);
 
@@ -266,6 +280,26 @@ export const Header: React.FC<HeaderProps> = ({
       onWorkspaceSelected(workspace._id);
     }
     setLeftDrawerOpen(false);
+  };
+
+  const handleWorkspaceLongPress = (
+    workspace: Note,
+    event: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
+  ) => {
+    setWorkspaceAnchorEl(event.target as any);
+    setSelectedWorkspaceId(workspace._id || null);
+  };
+
+  const handleRemoveWorkspace = async () => {
+    await removeNote(selectedWorkspaceId);
+    setSelectedWorkspaceId(null);
+    setWorkspaceAnchorEl(null);
+    const workspacesCopy = Array.from(workspaces);
+    const index = workspacesCopy.findIndex(
+      (w) => w._id === selectedWorkspaceId
+    );
+    workspacesCopy.splice(index, 1);
+    setWorkspaces(workspacesCopy);
   };
 
   return (
@@ -431,14 +465,21 @@ export const Header: React.FC<HeaderProps> = ({
               <List component="div" disablePadding>
                 {workspaces.map((workspace) => {
                   return (
-                    <ListItem
-                      key={workspace._id}
-                      button
-                      className={classes.nested}
+                    <Holdable
+                      onLongPress={handleWorkspaceLongPress.bind(
+                        this,
+                        workspace
+                      )}
                       onClick={handleWorkspaceSelected.bind(this, workspace)}
                     >
-                      <ListItemText primary={workspace.body} />
-                    </ListItem>
+                      <ListItem
+                        key={workspace._id}
+                        button
+                        className={classes.nested}
+                      >
+                        <ListItemText primary={workspace.body} />
+                      </ListItem>
+                    </Holdable>
                   );
                 })}
                 <ListItem
@@ -468,6 +509,16 @@ export const Header: React.FC<HeaderProps> = ({
                 </ListItem>
               </List>
             </List>
+            <Menu
+              id="fade-menu"
+              anchorEl={workspaceAnchorEl}
+              keepMounted
+              open={Boolean(workspaceAnchorEl)}
+              onClose={setWorkspaceAnchorEl.bind(this, null)}
+              TransitionComponent={Fade}
+            >
+              <MenuItem onClick={handleRemoveWorkspace}>Remove</MenuItem>
+            </Menu>
           </div>
         </Drawer>
       </React.Fragment>

@@ -1,10 +1,15 @@
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from "axios";
 import moment from "moment";
 
-import * as Api from '../../Api';
-import { isObjectId } from '../../utils/ObjectId';
+import * as Api from "../../Api";
+import { isObjectId } from "../../utils/ObjectId";
 
-export type NoteType = "note" | "task" | "task_completed" | "event" | "workspace";
+export type NoteType =
+  | "note"
+  | "task"
+  | "task_completed"
+  | "event"
+  | "workspace";
 
 export type Note = {
   _id?: string;
@@ -41,7 +46,7 @@ export async function getNote(params: { id: string }): Promise<Note[]> {
 }
 
 let notesPromise: Promise<AxiosResponse<Note[]>> | null = null;
-export async function getAllNotes(): Promise<Note[]>  {
+export async function getAllNotes(): Promise<Note[]> {
   if (!notesPromise) {
     notesPromise = Api.get(`/api/notes`);
   }
@@ -65,34 +70,34 @@ export async function getNotes(params: GetNotesParams = {}): Promise<Note[]> {
   const notes = await getAllNotes();
 
   let searchRegex: RegExp | null = null;
-  if(params.search) {
+  if (params.search) {
     searchRegex = new RegExp(params.search, "i");
   }
   const notesToReturn = notes.filter((note) => {
     let id = note._id as string;
 
-    if(params.since_id && id < params.since_id) {
+    if (params.since_id && id < params.since_id) {
       return false;
     }
-    if(params.max_id && id > params.max_id) {
+    if (params.max_id && id > params.max_id) {
       return false;
     }
     if (params.type && note.type !== params.type) {
       return false;
     }
-    if (params.since && (moment(note.start).isBefore(params.since))) {
+    if (params.since && moment(note.start).isBefore(params.since)) {
       return false;
     }
-    if (params.before && (moment(note.start).isAfter(params.before))) {
+    if (params.before && moment(note.start).isAfter(params.before)) {
       return false;
     }
-    if(params.tag && !note.body.includes(`[[${params.tag}]]`)) {
+    if (params.tag && !note.body.includes(`[[${params.tag}]]`)) {
       return false;
     }
-    if(searchRegex && !searchRegex.test(note.body)) {
+    if (searchRegex && !searchRegex.test(note.body)) {
       return false;
     }
-    if(params.parent && note.parent !== params.parent) {
+    if (params.parent && note.parent !== params.parent) {
       return false;
     }
     return true;
@@ -108,8 +113,8 @@ export async function updateNote(note: Partial<Note>): Promise<Note> {
   return res.data;
 }
 
-export async function removeNote(noteId?: string) {
-  if (!noteId) {
+export async function removeNote(noteId?: string | null | undefined) {
+  if (!isObjectId(noteId)) {
     return;
   }
   await axios.delete(`/api/notes/${noteId}`);
