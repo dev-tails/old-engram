@@ -225,21 +225,13 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
     setActiveNoteId(newNote._id);
   };
 
-  const topLevelNotesWithChildren = notes
-    .filter((note) => {
-      return !note.parent;
-    })
-    .map((note) => {
-      return NoteUtils.getNoteWithChildren(notes, note._id);
-    });
-
   const handleBlur = () => {
     setActiveNoteId("");
   };
 
   return (
     <div className="collapsible-notes-list">
-      {topLevelNotesWithChildren.map((note) => {
+      {notes.map((note) => {
         if (!note) {
           return null;
         }
