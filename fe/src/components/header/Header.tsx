@@ -21,6 +21,7 @@ import {
   Add,
   ChevronLeft,
   ChevronRight,
+  Home,
   MoreHoriz,
   Search as SearchIcon,
 } from "@material-ui/icons";
@@ -44,7 +45,7 @@ type HeaderProps = {
   onDateChange: (date: Date) => void;
   onDateRangeChange: (dateRange: string) => void;
   onSearchSubmit: (search: string) => void;
-  onWorkspaceSelected: (id: string) => void;
+  onWorkspaceSelected: (id: string | null | undefined) => void;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -275,10 +276,8 @@ export const Header: React.FC<HeaderProps> = ({
     setWorkspaceBody(null);
   };
 
-  const handleWorkspaceSelected = (workspace: Note) => {
-    if (workspace._id) {
-      onWorkspaceSelected(workspace._id);
-    }
+  const handleWorkspaceSelected = (workspace: Note | null) => {
+    onWorkspaceSelected(workspace?._id);
     setLeftDrawerOpen(false);
   };
 
@@ -459,7 +458,16 @@ export const Header: React.FC<HeaderProps> = ({
         >
           <div className="drawer-contents">
             <List>
-              <ListItem button>
+              <ListItem
+                button
+                onClick={handleWorkspaceSelected.bind(this, null)}
+              >
+                <ListItemIcon>
+                  <Home />
+                </ListItemIcon>
+                <ListItemText primary="Home" />
+              </ListItem>
+              <ListItem>
                 <ListItemText primary="Workspaces" />
               </ListItem>
               <List component="div" disablePadding>

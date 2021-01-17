@@ -80,7 +80,9 @@ export default function Routes() {
   const [date, setDate] = useState(moment().startOf("day").toDate());
   const [dateRangeValue, setDateRangeValue] = useState("Day");
   const [search, setSearch] = useState("");
-  const [activeParentId, setActiveParentId] = useState("");
+  const [activeParentId, setActiveParentId] = useState<
+    string | null | undefined
+  >(null);
 
   const startDate = getStartDate(date, dateRangeValue);
   const endDate = getEndDate(date, dateRangeValue);
@@ -117,7 +119,7 @@ export default function Routes() {
     setSearch(search);
   };
 
-  const handleWorkspaceSelected = (id: string) => {
+  const handleWorkspaceSelected = (id: string | null | undefined) => {
     setActiveParentId(id);
   };
 

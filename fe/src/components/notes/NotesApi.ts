@@ -63,7 +63,7 @@ export type GetNotesParams = {
   tag?: string | null;
   search?: string | null;
   sort?: string;
-  parent?: string;
+  parent?: string | null | undefined;
 };
 
 export async function getNotes(params: GetNotesParams = {}): Promise<Note[]> {

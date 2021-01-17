@@ -20,7 +20,7 @@ type CollapsibleNotesListProps = {
   notes: CollapsibleNote[];
   type?: NoteType;
   readOnly?: boolean;
-  activeParentId?: string;
+  activeParentId?: string | null | undefined;
 };
 
 export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (

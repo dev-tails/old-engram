@@ -12,7 +12,7 @@ type HomePageProps = {
   endDate: Date | null;
   dateRangeValue: string;
   search?: string;
-  activeParentId?: string;
+  activeParentId?: string | null | undefined;
 };
 
 export const HomePage: React.FC<HomePageProps> = ({

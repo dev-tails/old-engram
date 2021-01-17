@@ -14,7 +14,7 @@ export type NotesPageProps = {
   endDate: Date | null;
   readOnly?: boolean;
   search?: string;
-  activeParentId?: string;
+  activeParentId?: string | null | undefined;
 };
 
 export default function NotesPage({
@@ -62,8 +62,6 @@ export default function NotesPage({
           return (a.type || "") > (b.type || "") ? 1 : -1;
         });
       }
-
-      console.log(notes);
 
       setNotes(notes);
       setLastUpdate(moment().format());
