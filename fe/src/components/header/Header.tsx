@@ -143,13 +143,17 @@ export const Header: React.FC<HeaderProps> = ({
     setDateString(moment(date).format("YYYY-MM-DD"));
   }, [date]);
 
+  const isDateView = !title;
+
   useEffect(() => {
     async function getWorkspaces() {
       const fetchedWorkspaces = await getNotes({ type: "workspace" });
       setWorkspaces(fetchedWorkspaces);
     }
-    getWorkspaces();
-  }, []);
+    if (isDateView) {
+      getWorkspaces();
+    }
+  }, [isDateView]);
 
   useEffect(() => {
     function keyDownListener(event: KeyboardEvent) {
@@ -201,8 +205,6 @@ export const Header: React.FC<HeaderProps> = ({
       document.removeEventListener("keydown", keyDownListener);
     };
   });
-
-  const isDateView = !title;
 
   const handleRightMenuButtonClicked = () => {
     setRightDrawerOpen(true);
