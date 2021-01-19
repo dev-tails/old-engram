@@ -17,8 +17,6 @@ input {
 .App {
   height: 100vh;
   overflow: hidden;
-  background-color: #1c1c1c;
-  color: white;
 }
 
 body {

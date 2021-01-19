@@ -1,13 +1,13 @@
-import './LoginPage.scss';
+import "./LoginPage.scss";
 
-import { Button, Divider, TextField } from '@material-ui/core';
-import axios from 'axios';
-import React, { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Button, Divider, TextField } from "@material-ui/core";
+import axios from "axios";
+import React, { useState } from "react";
+import { Link, useHistory } from "react-router-dom";
 
-import { objectIdFromDate } from '../../utils/ObjectId';
-import { Note } from '../notes/NotesApi';
-import { SignupPagePath } from '../SignupPage/SignupPage';
+import { objectIdFromDate } from "../../utils/ObjectId";
+import { Note } from "../notes/NotesApi";
+import { SignupPagePath } from "../SignupPage/SignupPage";
 
 export type LoginPageProps = {};
 
@@ -83,6 +83,7 @@ export default function LoginPage(props: LoginPageProps) {
           fullWidth
           onClick={handleSignIn}
           variant="contained"
+          color="primary"
         >
           Log In
         </Button>
