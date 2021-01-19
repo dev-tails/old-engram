@@ -9,7 +9,7 @@ input:focus {
 
 textarea,
 input {
-  background-color: #1c1c1c;
+  background-color: #303030;
   caret-color: white;
   color: white;
 }
