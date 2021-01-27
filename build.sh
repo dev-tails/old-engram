@@ -1,1 +1,1 @@
-docker build -f Dockerfile.prod -t engram:latest .
+docker build -f Dockerfile.prod -t devtails/engram:latest .
