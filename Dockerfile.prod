@@ -1,8 +1,7 @@
 # stage1 - build react app first 
 FROM node:15.6.0-alpine3.12 as build
-RUN apk add g++ make python2 nginx
+RUN apk add g++ make python2
 WORKDIR /app
-# ENV PATH /app/node_modules/.bin:$PATH
 
 COPY ./be/package.json /app/be/package.json
 COPY ./be/yarn.lock /app/be/yarn.lock
@@ -12,13 +11,19 @@ COPY ./fe/package.json /app/fe/package.json
 COPY ./fe/yarn.lock /app/fe/package.lock
 RUN yarn --cwd /app/fe install
 
-COPY . /app
-
+COPY ./fe /app/fe
 RUN yarn --cwd /app/fe/ build
+
+FROM nginx:alpine as final
+RUN apk add --update npm
+RUN npm install --global yarn
+COPY --from=build /app/be /app/be
+COPY --from=build /app/fe/build /app/fe/build
 
 RUN mkdir -p /run/nginx
 RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx/nginx.conf /etc/nginx/conf.d
+COPY entrypoint.sh /app/entrypoint.sh
 EXPOSE 80
 
 CMD ["/app/entrypoint.sh"]
