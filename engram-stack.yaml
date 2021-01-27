@@ -1,0 +1,11 @@
+version: "3.7"
+
+services:
+  engram-app:
+    image: devtails/engram:latest
+    ports:
+      - 4000:4000
+      - 80:80
+    environment:
+      DB_URL: mongodb://host.docker.internal:27017
+      JWT_SECRET: XGH2XjEiGx@53

@@ -1,6 +1,7 @@
 #!/bin/sh
 
-yarn --cwd be/ start &
+cd /app/be
+node /app/be/index.js &
 P1=$!
 nginx -g 'daemon off;' & 
 P2=$!
