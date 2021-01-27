@@ -1,2 +1,4 @@
 fe/node_modules
 be/node_modules
+be/.env
+fe/build
