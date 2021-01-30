@@ -36,6 +36,11 @@ export const Holdable: React.FC<HoldableProps> = ({
     }
   };
 
+  function handleContextMenu(event: Event) {
+    event.preventDefault();
+    onLongPress(event);
+  }
+
   return (
     <div
       className="holdable"
@@ -44,6 +49,7 @@ export const Holdable: React.FC<HoldableProps> = ({
       onMouseDown={handleButtonPress}
       onMouseUp={handleButtonRelease}
       onMouseLeave={handleButtonRelease}
+      onContextMenu={handleContextMenu}
     >
       {children}
     </div>

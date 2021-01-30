@@ -486,6 +486,7 @@ export const Header: React.FC<HeaderProps> = ({
                 {workspaces.map((workspace) => {
                   return (
                     <Holdable
+                      key={workspace._id}
                       onLongPress={handleWorkspaceLongPress.bind(
                         this,
                         workspace
@@ -536,6 +537,7 @@ export const Header: React.FC<HeaderProps> = ({
               open={Boolean(workspaceAnchorEl)}
               onClose={setWorkspaceAnchorEl.bind(this, null)}
               TransitionComponent={Fade}
+              anchorOrigin={{ vertical: "center", horizontal: "right" }}
             >
               <MenuItem onClick={handleRemoveWorkspace}>Remove</MenuItem>
             </Menu>
