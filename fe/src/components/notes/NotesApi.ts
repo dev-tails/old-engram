@@ -83,7 +83,10 @@ export async function getNotes(params: GetNotesParams = {}): Promise<Note[]> {
       return false;
     }
     if (params.type && note.type !== params.type) {
-      return false;
+      if (params.type === "task" && note.type === "task_completed") {
+      } else {
+        return false;
+      }
     }
     if (params.since && moment(note.start).isBefore(params.since)) {
       return false;

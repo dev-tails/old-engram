@@ -59,7 +59,17 @@ export default function NotesPage({
 
       if (type === "task") {
         sortedNotes.sort((a, b) => {
-          return (a.type || "") > (b.type || "") ? 1 : -1;
+          if (a.type !== b.type) {
+            if (b.type === "task_completed") {
+              return -1;
+            }
+          }
+
+          if (!a._id || !b._id) {
+            return 0;
+          }
+
+          return a._id > b._id ? 1 : -1;
         });
       }
 
