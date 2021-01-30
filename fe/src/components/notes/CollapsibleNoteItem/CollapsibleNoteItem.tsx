@@ -4,11 +4,10 @@ import { TextareaAutosize } from "@material-ui/core";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import React, { useEffect, useRef, useState } from "react";
-import ReactMarkdown from "react-markdown";
-import gfm from "remark-gfm";
 
 import { BulletIcon } from "../BulletIcon/BulletIcon";
 import { Note, NoteType } from "../NotesApi";
+import { Markdown } from "../../Markdown/Markdown";
 
 export type CollapsibleNote = {
   _id?: string;
@@ -201,9 +200,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
           />
         ) : (
           <div className="note-inactive">
-            <ReactMarkdown plugins={[gfm]}>
-              {getBodyForMarkdown()}
-            </ReactMarkdown>
+            <Markdown body={getBodyForMarkdown()} />
           </div>
         )}
       </div>
