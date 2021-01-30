@@ -229,9 +229,16 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
     setActiveNoteId("");
   };
 
+  const minLines = 30;
+  const notesWithEmpties = [...notes];
+
+  for (let i = 0; i < minLines - notes.length; i++) {
+    notesWithEmpties.push({ body: "" });
+  }
+
   return (
     <div className="collapsible-notes-list">
-      {notes.map((note) => {
+      {notesWithEmpties.map((note) => {
         if (!note) {
           return null;
         }
