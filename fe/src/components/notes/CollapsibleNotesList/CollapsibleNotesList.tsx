@@ -15,6 +15,7 @@ import {
   updateNote,
 } from "../NotesApi";
 import * as NoteUtils from "../NoteUtils";
+import { isObjectId } from "../../../utils/ObjectId";
 
 type CollapsibleNotesListProps = {
   notes: CollapsibleNote[];
@@ -182,7 +183,7 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
   };
 
   const handleSave = async (note: CollapsibleNote) => {
-    if (note._id) {
+    if (isObjectId(note._id)) {
       const updatedNote = await updateNote(note);
       const notesCopy = Array.from(notes);
       const indexToUpdate = notesCopy.findIndex((n) => n._id === note._id);
@@ -191,12 +192,8 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
       setActiveNoteId("");
     } else {
       const newNote = await createNoteWithDefaultType(note);
-      const newEmptyNote = await createNoteWithDefaultType({
-        body: "",
-        prev: newNote._id,
-      });
-      setNotes([newNote, newEmptyNote]);
-      setActiveNoteId(newEmptyNote._id);
+      setNotes([...notes, newNote]);
+      setActiveNoteId(newNote._id);
     }
   };
 
@@ -233,7 +230,7 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
   const notesWithEmpties = [...notes];
 
   for (let i = 0; i < minLines - notes.length; i++) {
-    notesWithEmpties.push({ body: "" });
+    notesWithEmpties.push({ _id: `empty-${i}`, body: "" });
   }
 
   return (
