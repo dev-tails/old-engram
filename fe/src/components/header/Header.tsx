@@ -437,13 +437,14 @@ export const Header: React.FC<HeaderProps> = ({
                 inputProps={{ "aria-label": "search" }}
                 value={search}
                 onChange={(event) => {
-                  setSearch(event.currentTarget.value);
+                  const newSearch = event.currentTarget.value;
+                  setSearch(newSearch);
+                  onSearchSubmit(newSearch);
                 }}
                 onBlur={() => {
                   if (!search) {
                     setSearch(null);
                   }
-                  onSearchSubmit(search || "");
                 }}
               />
             </div>
