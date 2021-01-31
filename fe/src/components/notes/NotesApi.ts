@@ -13,6 +13,7 @@ export type NoteType =
 
 export type Note = {
   _id?: string;
+  date?: string;
   body: string;
   checked?: boolean;
   archived?: boolean;

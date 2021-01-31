@@ -1,6 +1,7 @@
 import "./CollapsibleNotesList.scss";
 
 import React, { useEffect, useState } from "react";
+import moment from "moment";
 
 import {
   CollapsibleNote,
@@ -17,6 +18,7 @@ import * as NoteUtils from "../NoteUtils";
 import { isObjectId } from "../../../utils/ObjectId";
 
 type CollapsibleNotesListProps = {
+  date?: Date;
   notes: CollapsibleNote[];
   type?: NoteType;
   readOnly?: boolean;
@@ -174,10 +176,13 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
   };
 
   const createNoteWithDefaultType = (note: Partial<Note> = {}) => {
+    const dateString = moment(props.date || new Date()).format("YYYY-MM-DD");
+
     return createNote({
       ...note,
       ...(props.type && { type: props.type }),
       ...(props.activeParentId && { parent: props.activeParentId }),
+      date: dateString,
     });
   };
 

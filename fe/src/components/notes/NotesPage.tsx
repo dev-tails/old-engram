@@ -82,6 +82,7 @@ export default function NotesPage({
     <div className="notes-page">
       <CollapsibleNotesList
         key={lastUpdate}
+        date={date}
         notes={notes}
         type={type}
         readOnly={readOnly}

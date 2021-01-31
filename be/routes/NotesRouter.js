@@ -188,6 +188,7 @@ export function initializeNotesRouter() {
   router.post("", async function (req, res) {
     const bodySchema = yup.object().shape({
       start: yup.date(),
+      date: yup.string(),
       body: yup.string().default(""),
       type: yup.string().default("note"),
       parent: new ObjectIdSchema(),
