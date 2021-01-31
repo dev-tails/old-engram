@@ -23,5 +23,8 @@
     "uuid": "^8.3.1",
     "yup": "^0.32.6"
   },
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "migrate": "^1.7.0"
+  }
 }
