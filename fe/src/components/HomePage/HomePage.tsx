@@ -5,6 +5,7 @@ import React, { useState } from "react";
 
 import { AgendaViewPage } from "../AgendaViewPage/AgendaViewPage";
 import NotesPage from "../notes/NotesPage";
+import { BulletIcon } from "../notes/BulletIcon/BulletIcon";
 
 type HomePageProps = {
   date: Date;
@@ -74,9 +75,36 @@ export const HomePage: React.FC<HomePageProps> = ({
           onChange={handleChange}
           showLabels
         >
-          <BottomNavigationAction label="Notes" value="note" />
-          <BottomNavigationAction label="Tasks" value="task" />
-          <BottomNavigationAction label="Events" value="event" />
+          <BottomNavigationAction
+            label="Notes"
+            value="note"
+            icon={
+              <BulletIcon
+                note={{ type: "note" }}
+                color={bottomNavValue === "note" ? "#90caf9" : ""}
+              />
+            }
+          />
+          <BottomNavigationAction
+            label="Tasks"
+            value="task"
+            icon={
+              <BulletIcon
+                note={{ type: "task" }}
+                color={bottomNavValue === "task" ? "#90caf9" : ""}
+              />
+            }
+          />
+          <BottomNavigationAction
+            label="Events"
+            value="event"
+            icon={
+              <BulletIcon
+                note={{ type: "event" }}
+                color={bottomNavValue === "event" ? "#90caf9" : ""}
+              />
+            }
+          />
         </BottomNavigation>
       </div>
     </div>

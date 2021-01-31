@@ -10,6 +10,10 @@
     bottom: 0;
     width: 100%;
     display: block;
+
+    .MuiBottomNavigationAction-root.Mui-selected {
+      color: #90caf9;
+    }
   }
 
   .visible {
@@ -21,10 +25,6 @@
   }
 
   @media (min-width: 1000px) {
-    .bottom-navigation {
-      display: none;
-    }
-
     .notes {
       display: block;
 

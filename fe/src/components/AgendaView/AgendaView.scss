@@ -12,10 +12,6 @@
     &::-webkit-scrollbar {
       display: none; /* Safari and Chrome */
     }
-
-    @media (min-width: 1000px) {
-      bottom: 0px;
-    }
   }
 
   .agenda-view-item {

@@ -1,13 +1,16 @@
 import React from "react";
 
-import { Note } from "../NotesApi";
-
 type BulletIconProps = {
-  note: Note;
+  note: { type?: string };
   defaultType?: string;
+  color?: string;
 };
 
-const NoteIcon = () => {
+type IconProps = {
+  color: string;
+};
+
+const NoteIcon = (props: IconProps) => {
   return (
     <svg height="8" width="8">
       <line
@@ -16,7 +19,7 @@ const NoteIcon = () => {
         x2="8"
         y2="4"
         style={{
-          stroke: "#FFFFFF",
+          stroke: props.color,
           strokeWidth: 1,
         }}
       />
@@ -24,7 +27,7 @@ const NoteIcon = () => {
   );
 };
 
-const TaskIcon = () => {
+const TaskIcon = (props: IconProps) => {
   return (
     <svg height="8" width="8">
       <circle
@@ -32,7 +35,7 @@ const TaskIcon = () => {
         cy="4"
         r="1"
         style={{
-          stroke: "#FFFFFF",
+          stroke: props.color,
           strokeWidth: 1,
         }}
       />
@@ -54,9 +57,9 @@ const TaskCompletedIcon = () => {
   );
 };
 
-const EventIcon = () => {
+const EventIcon = (props: IconProps) => {
   const style = {
-    stroke: "#FFFFFF",
+    stroke: props.color,
     fillOpacity: 0,
   };
   return (
@@ -69,19 +72,20 @@ const EventIcon = () => {
 export const BulletIcon: React.FC<BulletIconProps> = (props) => {
   let icon = null;
   let type = props.note.type || props.defaultType;
+  let strokeColor = props.color || "#FFFFFF";
 
   switch (type) {
     case "event":
-      icon = <EventIcon />;
+      icon = <EventIcon color={strokeColor} />;
       break;
     case "task":
-      icon = <TaskIcon />;
+      icon = <TaskIcon color={strokeColor} />;
       break;
     case "task_completed":
       icon = <TaskCompletedIcon />;
       break;
     default:
-      icon = <NoteIcon />;
+      icon = <NoteIcon color={strokeColor} />;
       break;
   }
   return (
