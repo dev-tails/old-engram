@@ -58,6 +58,8 @@ export async function getAllNotes(): Promise<Note[]> {
 export type GetNotesParams = {
   since_id?: string;
   max_id?: string;
+  startsBefore?: Date;
+  startsAfter?: Date;
   since?: Date;
   before?: Date;
   type?: NoteType;
@@ -76,7 +78,6 @@ export async function getNotes(params: GetNotesParams = {}): Promise<Note[]> {
   }
   const notesToReturn = notes.filter((note) => {
     let id = note._id as string;
-    const date = params.type === "event" ? note.start : note.date;
 
     if (params.since_id && id < params.since_id) {
       return false;
@@ -90,10 +91,28 @@ export async function getNotes(params: GetNotesParams = {}): Promise<Note[]> {
         return false;
       }
     }
-    if (params.since && (!date || moment(date).isBefore(params.since))) {
+    if (
+      params.since &&
+      (!note.date || moment(note.date).isBefore(params.since))
+    ) {
       return false;
     }
-    if (params.before && (!date || moment(date).isAfter(params.before))) {
+    if (
+      params.before &&
+      (!note.date || moment(note.date).isAfter(params.before))
+    ) {
+      return false;
+    }
+    if (
+      params.startsAfter &&
+      (!note.start || moment(note.start).isBefore(params.startsAfter))
+    ) {
+      return false;
+    }
+    if (
+      params.startsBefore &&
+      (!note.start || moment(note.start).isAfter(params.startsBefore))
+    ) {
       return false;
     }
     if (params.tag && !note.body.includes(`[[${params.tag}]]`)) {

@@ -1,21 +1,12 @@
-import "./CollapsibleNotesList.scss";
+import './CollapsibleNotesList.scss';
 
-import React, { useEffect, useState } from "react";
-import moment from "moment";
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
 
-import {
-  CollapsibleNote,
-  CollapsibleNoteItem,
-} from "../CollapsibleNoteItem/CollapsibleNoteItem";
-import {
-  createNote,
-  Note,
-  NoteType,
-  removeNote,
-  updateNote,
-} from "../NotesApi";
-import * as NoteUtils from "../NoteUtils";
-import { isObjectId } from "../../../utils/ObjectId";
+import { isObjectId } from '../../../utils/ObjectId';
+import { CollapsibleNote, CollapsibleNoteItem } from '../CollapsibleNoteItem/CollapsibleNoteItem';
+import { createNote, Note, NoteType, removeNote, updateNote } from '../NotesApi';
+import * as NoteUtils from '../NoteUtils';
 
 type CollapsibleNotesListProps = {
   date?: Date;
@@ -193,16 +184,39 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
       const indexToUpdate = notesCopy.findIndex((n) => n._id === note._id);
       notesCopy.splice(indexToUpdate, 1, updatedNote);
       setNotes(notesCopy);
-      setActiveNoteId("");
+      activateNextEmptyNote(notesCopy);
     } else {
       const newNote = await createNoteWithDefaultType(note);
-      setNotes([...notes, newNote]);
+      const newNotes = [...notes, newNote];
+      setNotes(newNotes);
+      activateNextEmptyNote(newNotes);
     }
   };
 
+  function activateNextEmptyNote(notes: Note[]) {
+    const emptyNotes = getEmptyNotes(notes);
+    setActiveNoteId(emptyNotes[0]._id || "");
+  }
+
+  function getEmptyNotes(notes: Note[]): Note[] {
+    const minLines = 30;
+    const emptyLinesToAdd = Math.max(minLines - notes.length, 1);
+    let emptyLineId = notes.length;
+
+    const emptyNotes = [];
+
+    for (let i = 0; i < emptyLinesToAdd; i++) {
+      emptyNotes.push({ _id: `empty-${emptyLineId++}`, body: "" });
+    }
+
+    return emptyNotes;
+  }
+
   const handleNoteActivate = async (note: CollapsibleNote) => {
-    if (note._id) {
-      setActiveNoteId(note._id);
+    if (isObjectId(note._id)) {
+      setActiveNoteId(note._id || "");
+    } else {
+      activateNextEmptyNote(notes);
     }
   };
 
@@ -223,13 +237,7 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
     setActiveNoteId("");
   };
 
-  const minLines = 30;
-  const notesWithEmpties = [...notes];
-  const emptyLinesToAdd = Math.max(minLines - notes.length, 1);
-
-  for (let i = 0; i < emptyLinesToAdd; i++) {
-    notesWithEmpties.push({ _id: `empty-${i}`, body: "" });
-  }
+  const notesWithEmpties = [...notes, ...getEmptyNotes(notes)];
 
   return (
     <div className="collapsible-notes-list">

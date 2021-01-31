@@ -19,9 +19,9 @@ export const AgendaViewPage: React.FC<AgendaViewProps> = ({ date, type }) => {
       const dateAsMoment = moment(date);
 
       const newItems = await getNotes({
-        since: dateAsMoment.startOf("day").toDate(),
-        before: dateAsMoment.endOf("day").toDate(),
-        type
+        startsAfter: dateAsMoment.startOf("day").toDate(),
+        startsBefore: dateAsMoment.endOf("day").toDate(),
+        type,
       });
       setItems(newItems);
       setLoading(false);
@@ -56,13 +56,19 @@ export const AgendaViewPage: React.FC<AgendaViewProps> = ({ date, type }) => {
     setItems(itemsCopy);
 
     await removeNote(note._id);
-  }
+  };
 
   return (
     <div className="agenda-view">
       <div className="agenda-view-content">
         {!loading && (
-          <AgendaView type={type} date={date} items={items} onSave={handleNoteSaved} onDelete={handleNoteDeleted} />
+          <AgendaView
+            type={type}
+            date={date}
+            items={items}
+            onSave={handleNoteSaved}
+            onDelete={handleNoteDeleted}
+          />
         )}
       </div>
     </div>
