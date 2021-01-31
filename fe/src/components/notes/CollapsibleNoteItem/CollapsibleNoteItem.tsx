@@ -8,6 +8,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { BulletIcon } from "../BulletIcon/BulletIcon";
 import { Note, NoteType } from "../NotesApi";
 import { Markdown } from "../../Markdown/Markdown";
+import { isObjectId } from "../../../utils/ObjectId";
 
 export type CollapsibleNote = {
   _id?: string;
@@ -107,7 +108,9 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   };
 
   const handleSave = (update?: Partial<Note>) => {
-    if (!body && note._id) {
+    const idValidNote = isObjectId(note._id);
+
+    if (!body && idValidNote) {
       props.onDelete(note);
       return;
     }
@@ -116,6 +119,10 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
       ...note,
       ...update,
     });
+
+    if (!idValidNote) {
+      setBody("");
+    }
   };
 
   const handleTextAreaBlur = () => {
@@ -190,7 +197,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
           <BulletIcon note={note} />
         </div>
 
-        {isActive ? (
+        {isActive || !body ? (
           <TextareaAutosize
             ref={textAreaRef}
             value={body}

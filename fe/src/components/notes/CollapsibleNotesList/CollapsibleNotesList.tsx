@@ -2,7 +2,6 @@ import "./CollapsibleNotesList.scss";
 
 import React, { useEffect, useState } from "react";
 
-import { FloatingActionButton } from "../../FloatingActionButton/FloatingActionButton";
 import {
   CollapsibleNote,
   CollapsibleNoteItem,
@@ -193,7 +192,6 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
     } else {
       const newNote = await createNoteWithDefaultType(note);
       setNotes([...notes, newNote]);
-      setActiveNoteId(newNote._id);
     }
   };
 
@@ -214,12 +212,6 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
     setNotes(notesCopy);
 
     await removeNote(note._id);
-  };
-
-  const handleQuickAddClicked = async (event: React.MouseEvent) => {
-    const newNote = await createNoteWithDefaultType();
-    setNotes([...notes, newNote]);
-    setActiveNoteId(newNote._id);
   };
 
   const handleBlur = () => {
@@ -255,9 +247,6 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
           />
         );
       })}
-      {!props.readOnly && (
-        <FloatingActionButton onClick={handleQuickAddClicked} />
-      )}
     </div>
   );
 };
