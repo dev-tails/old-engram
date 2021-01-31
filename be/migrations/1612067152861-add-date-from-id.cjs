@@ -26,7 +26,8 @@ module.exports.up = async function () {
     .toArray();
   for (const note of notesWithoutDates) {
     const date = dateFromObjectId(String(note._id));
-    const dateString = moment(date).format("YYYY-MM-DD");
+    const dateWithOffset = moment(date).utcOffset("-0800");
+    const dateString = dateWithOffset.format("YYYY-MM-DD");
     await db
       .collection("notes")
       .updateOne({ _id: note._id }, { $set: { date: dateString } });
