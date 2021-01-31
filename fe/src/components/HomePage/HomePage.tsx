@@ -37,13 +37,12 @@ export const HomePage: React.FC<HomePageProps> = ({
 
   return (
     <div className="home-page">
-      <div className={`events ${bottomNavValue === "event" ? "visible" : ""}`}>
+      <div className={`notes ${bottomNavValue === "note" ? "visible" : ""}`}>
         <PageClass
           date={date}
-          type="event"
+          type="note"
           startDate={startDate}
           endDate={endDate}
-          readOnly={true}
           search={search}
           activeParentId={activeParentId}
         />
@@ -58,12 +57,13 @@ export const HomePage: React.FC<HomePageProps> = ({
           activeParentId={activeParentId}
         />
       </div>
-      <div className={`notes ${bottomNavValue === "note" ? "visible" : ""}`}>
+      <div className={`events ${bottomNavValue === "event" ? "visible" : ""}`}>
         <PageClass
           date={date}
-          type="note"
+          type="event"
           startDate={startDate}
           endDate={endDate}
+          readOnly={true}
           search={search}
           activeParentId={activeParentId}
         />
@@ -74,9 +74,9 @@ export const HomePage: React.FC<HomePageProps> = ({
           onChange={handleChange}
           showLabels
         >
-          <BottomNavigationAction label="Events" value="event" />
-          <BottomNavigationAction label="Tasks" value="task" />
           <BottomNavigationAction label="Notes" value="note" />
+          <BottomNavigationAction label="Tasks" value="task" />
+          <BottomNavigationAction label="Events" value="event" />
         </BottomNavigation>
       </div>
     </div>
