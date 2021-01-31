@@ -7,6 +7,7 @@
     "@material-ui/icons": "^4.9.1",
     "@types/react": "^16.9.53",
     "@types/react-router-dom": "^5.1.6",
+    "@types/uuid": "^8.3.0",
     "autolinker": "^3.14.2",
     "axios": "^0.20.0",
     "cra-template-typescript": "1.0.3",
@@ -20,7 +21,8 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
-    "remark-gfm": "^1.0.0"
+    "remark-gfm": "^1.0.0",
+    "uuid": "^8.3.2"
   },
   "scripts": {
     "start": "react-scripts start",
