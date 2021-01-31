@@ -20,7 +20,7 @@ type LinkRendererProps = {
 
 const LinkRenderer: React.FC<LinkRendererProps> = (props) => {
   return (
-    <a href={props.href} target="_blank">
+    <a href={props.href} target="_blank" rel="noopener noreferrer">
       {props.children}
     </a>
   );
