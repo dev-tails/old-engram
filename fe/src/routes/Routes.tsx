@@ -1,25 +1,17 @@
-import moment from "moment";
-import React, { useState } from "react";
-import { Redirect, Route, Switch, useLocation } from "react-router-dom";
+import moment from 'moment';
+import React, { useState } from 'react';
+import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
 
-import { Header } from "../components/header/Header";
-import { HelpPage } from "../components/HelpPage/HelpPage";
-import { ZapierHelpPage } from "../components/HelpPage/ZapierHelpPage/ZapierHelpPage";
-import { HomePage } from "../components/HomePage/HomePage";
-import LoginPage, { LoginPagePath } from "../components/login/LoginPage";
-import { LogoutPage } from "../components/LogoutPage/LogoutPage";
-import { EditNotePage } from "../components/notes/EditNotePage/EditNotePage";
-import {
-  PrivacyPolicyPage,
-  PrivacyPolicyPagePath,
-} from "../components/PrivacyPolicyPage/PrivacyPolicyPage";
-import SignupPage, {
-  SignupPagePath,
-} from "../components/SignupPage/SignupPage";
-import {
-  TermsOfServicePage,
-  TermsOfServicePagePath,
-} from "../TermsOfServicePage/TermsOfServicePage";
+import { Header } from '../components/header/Header';
+import { HelpPage } from '../components/HelpPage/HelpPage';
+import { ZapierHelpPage } from '../components/HelpPage/ZapierHelpPage/ZapierHelpPage';
+import { HomePage } from '../components/HomePage/HomePage';
+import LoginPage, { LoginPagePath } from '../components/login/LoginPage';
+import { LogoutPage } from '../components/LogoutPage/LogoutPage';
+import { EditNotePage } from '../components/notes/EditNotePage/EditNotePage';
+import { PrivacyPolicyPage, PrivacyPolicyPagePath } from '../components/PrivacyPolicyPage/PrivacyPolicyPage';
+import SignupPage, { SignupPagePath } from '../components/SignupPage/SignupPage';
+import { TermsOfServicePage, TermsOfServicePagePath } from '../TermsOfServicePage/TermsOfServicePage';
 
 function getStartDate(date: Date, dateRangeValue: string) {
   switch (dateRangeValue) {
@@ -71,7 +63,7 @@ function getEndDate(date: Date, dateRangeValue: string) {
     default:
       throw new Error(`Unexpected value: ${dateRangeValue}`);
   }
-  return momentToReturn.add(1, "day").startOf("day").toDate();
+  return momentToReturn.endOf("day").toDate();
 }
 
 export default function Routes() {

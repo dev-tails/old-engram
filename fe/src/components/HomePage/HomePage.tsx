@@ -1,11 +1,11 @@
-import "./HomePage.scss";
+import './HomePage.scss';
 
-import { BottomNavigation, BottomNavigationAction } from "@material-ui/core";
-import React, { useState } from "react";
+import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
+import React, { useState } from 'react';
 
-import { AgendaViewPage } from "../AgendaViewPage/AgendaViewPage";
-import NotesPage from "../notes/NotesPage";
-import { BulletIcon } from "../notes/BulletIcon/BulletIcon";
+import { AgendaViewPage } from '../AgendaViewPage/AgendaViewPage';
+import { BulletIcon } from '../notes/BulletIcon/BulletIcon';
+import NotesPage from '../notes/NotesPage';
 
 type HomePageProps = {
   date: Date;

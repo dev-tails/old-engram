@@ -1,11 +1,10 @@
-import "./NotesPage.scss";
+import './NotesPage.scss';
 
-import moment from "moment";
-import React, { useEffect, useState } from "react";
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
 
-import { objectIdFromDate } from "../../utils/ObjectId";
-import { CollapsibleNotesList } from "./CollapsibleNotesList/CollapsibleNotesList";
-import { getNotes, GetNotesParams, Note, NoteType } from "./NotesApi";
+import { CollapsibleNotesList } from './CollapsibleNotesList/CollapsibleNotesList';
+import { getNotes, GetNotesParams, Note, NoteType } from './NotesApi';
 
 export type NotesPageProps = {
   date?: Date;
@@ -32,18 +31,10 @@ export default function NotesPage({
   useEffect(() => {
     const getNotesParams: GetNotesParams = {};
     if (startDate) {
-      if (type === "event") {
-        getNotesParams.since = moment(startDate).toDate();
-      } else {
-        getNotesParams.since_id = objectIdFromDate(startDate);
-      }
+      getNotesParams.since = moment(startDate).toDate();
     }
     if (endDate) {
-      if (type === "event") {
-        getNotesParams.before = moment(endDate).toDate();
-      } else {
-        getNotesParams.max_id = objectIdFromDate(endDate);
-      }
+      getNotesParams.before = moment(endDate).toDate();
     }
     if (type) {
       getNotesParams.type = type;

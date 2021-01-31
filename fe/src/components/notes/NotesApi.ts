@@ -1,8 +1,8 @@
-import axios, { AxiosResponse } from "axios";
-import moment from "moment";
+import axios, { AxiosResponse } from 'axios';
+import moment from 'moment';
 
-import * as Api from "../../Api";
-import { isObjectId } from "../../utils/ObjectId";
+import * as Api from '../../Api';
+import { isObjectId } from '../../utils/ObjectId';
 
 export type NoteType =
   | "note"
@@ -76,6 +76,7 @@ export async function getNotes(params: GetNotesParams = {}): Promise<Note[]> {
   }
   const notesToReturn = notes.filter((note) => {
     let id = note._id as string;
+    const date = params.type === "event" ? note.start : note.date;
 
     if (params.since_id && id < params.since_id) {
       return false;
@@ -89,10 +90,10 @@ export async function getNotes(params: GetNotesParams = {}): Promise<Note[]> {
         return false;
       }
     }
-    if (params.since && moment(note.start).isBefore(params.since)) {
+    if (params.since && (!date || moment(date).isBefore(params.since))) {
       return false;
     }
-    if (params.before && moment(note.start).isAfter(params.before)) {
+    if (params.before && (!date || moment(date).isAfter(params.before))) {
       return false;
     }
     if (params.tag && !note.body.includes(`[[${params.tag}]]`)) {

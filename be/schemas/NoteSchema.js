@@ -1,8 +1,10 @@
-import yup from "yup";
-import { ObjectIdSchema } from "./ObjectIdSchema.js";
+import yup from 'yup';
+
+import { ObjectIdSchema } from './ObjectIdSchema.js';
 
 export default yup.object().shape({
   _id: yup.string().required(),
+  date: yup.string(),
   body: yup.string().default(""),
   start: yup.date(),
   type: yup
