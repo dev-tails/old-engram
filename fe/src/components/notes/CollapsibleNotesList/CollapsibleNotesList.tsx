@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from "uuid";
 import "./CollapsibleNotesList.scss";
 
 import React, { useEffect, useState } from "react";
@@ -231,7 +230,7 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
   const notesWithEmpties = [...notes];
 
   for (let i = 0; i < minLines - notes.length; i++) {
-    notesWithEmpties.push({ _id: uuidv4(), body: "" });
+    notesWithEmpties.push({ _id: `empty-${i}`, body: "" });
   }
 
   return (
