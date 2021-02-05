@@ -9,8 +9,8 @@ import NotesPage from "../notes/NotesPage";
 
 type HomePageProps = {
   date: Date;
-  startDate: Date | null;
-  endDate: Date | null;
+  startDate: Date;
+  endDate: Date;
   dateRangeValue: string;
   search?: string;
   activeParentId?: string | null | undefined;

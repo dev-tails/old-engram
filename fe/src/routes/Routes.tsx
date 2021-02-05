@@ -23,8 +23,8 @@ import {
 
 function getStartDate(date: Date, dateRangeValue: string) {
   switch (dateRangeValue) {
-    case "Before":
-      return null;
+    // case "Before":
+    //   return null;
     case "Since":
     case "Day":
       return moment(date).startOf("day").toDate();
@@ -46,8 +46,8 @@ function getEndDate(date: Date, dateRangeValue: string) {
   const startDate = getStartDate(date, dateRangeValue);
   let momentToReturn = moment(startDate);
   switch (dateRangeValue) {
-    case "Since":
-      return null;
+    // case "Since":
+    //   return null;
     case "Before":
     case "Day":
       break;
@@ -76,7 +76,7 @@ export default function Routes() {
   const location = useLocation();
 
   const [date, setDate] = useState(moment().startOf("day").toDate());
-  const [dateRangeValue, setDateRangeValue] = useState("Day");
+  const [dateRangeValue, setDateRangeValue] = useState("Week");
   const [search, setSearch] = useState("");
   const [activeParentId, setActiveParentId] = useState<
     string | null | undefined

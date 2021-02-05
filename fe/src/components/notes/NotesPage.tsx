@@ -1,16 +1,16 @@
-import './NotesPage.scss';
+import "./NotesPage.scss";
 
-import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import moment from "moment";
+import React, { useEffect, useState } from "react";
 
-import { CollapsibleNotesList } from './CollapsibleNotesList/CollapsibleNotesList';
-import { getNotes, GetNotesParams, Note, NoteType } from './NotesApi';
+import { CollapsibleNotesList } from "./CollapsibleNotesList/CollapsibleNotesList";
+import { getNotes, GetNotesParams, Note, NoteType } from "./NotesApi";
 
 export type NotesPageProps = {
-  date?: Date;
+  date: Date;
   type?: NoteType;
-  startDate: Date | null;
-  endDate: Date | null;
+  startDate: Date;
+  endDate: Date;
   readOnly?: boolean;
   search?: string;
   activeParentId?: string | null | undefined;
@@ -69,16 +69,34 @@ export default function NotesPage({
     });
   }, [type, startDate, endDate, search, activeParentId]);
 
+  const dates = [];
+  for (
+    let date = startDate;
+    date < endDate;
+    date = moment(date).add(1, "d").toDate()
+  ) {
+    dates.push(date);
+  }
+
   return (
-    <div className="notes-page">
-      <CollapsibleNotesList
-        key={lastUpdate}
-        date={date}
-        notes={notes}
-        type={type}
-        readOnly={readOnly}
-        activeParentId={activeParentId}
-      />
+    <div className="notes-page" key={lastUpdate}>
+      {dates.map((date) => {
+        const notesForDate = notes.filter((note) => {
+          const isSameDay = moment(note.date).isSame(date, "d");
+          return isSameDay;
+        });
+
+        return (
+          <CollapsibleNotesList
+            key={date.getDate()}
+            date={date}
+            notes={notesForDate}
+            type={type}
+            readOnly={readOnly}
+            activeParentId={activeParentId}
+          />
+        );
+      })}
     </div>
   );
 }
