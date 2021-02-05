@@ -29,7 +29,6 @@ import moment, { DurationInputArg2 } from "moment";
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 
-import { isMobileUserAgent } from "../../utils/UserAgentUtils";
 import { Holdable } from "../Holdable/Holdable";
 import {
   createOrUpdateNote,
@@ -167,7 +166,6 @@ export const Header: React.FC<HeaderProps> = ({
       }
 
       let dateRangeMap: { [key: string]: string } = {
-        a: "Agenda",
         d: "Day",
         w: "Week",
         f: "Fortnight",
@@ -210,20 +208,8 @@ export const Header: React.FC<HeaderProps> = ({
     setRightDrawerOpen(true);
   };
 
-  const links = [
-    { to: "/", title: "Home" },
-    { to: "/daily", title: "Daily" },
-    { to: "/collections/agenda", title: "Agenda" },
-    { to: "/archive", title: "Archive" },
-  ];
-
-  if (isMobileUserAgent()) {
-    links.shift();
-  }
-
   const handleNavigateDate = (direction: "left" | "right") => {
     const unitMap: { [key: string]: DurationInputArg2 } = {
-      Agenda: "day",
       Day: "day",
       Week: "week",
       Fortnight: "week",
@@ -345,26 +331,20 @@ export const Header: React.FC<HeaderProps> = ({
                 open={Boolean(anchorEl)}
                 onClose={handleCloseDateRangeMenu}
               >
-                {[
-                  "Agenda",
-                  "Day",
-                  "Week",
-                  "Fortnight",
-                  "Month",
-                  "Quarter",
-                  "Year",
-                ].map((option) => {
-                  return (
-                    <MenuItem
-                      key={option}
-                      value={option}
-                      onClick={handleDateRangeChanged.bind(this, option)}
-                      title={`Alt + ${option[0]}`}
-                    >
-                      {option}
-                    </MenuItem>
-                  );
-                })}
+                {["Day", "Week", "Fortnight", "Month", "Quarter", "Year"].map(
+                  (option) => {
+                    return (
+                      <MenuItem
+                        key={option}
+                        value={option}
+                        onClick={handleDateRangeChanged.bind(this, option)}
+                        title={`Alt + ${option[0]}`}
+                      >
+                        {option}
+                      </MenuItem>
+                    );
+                  }
+                )}
               </Menu>
             </>
           )}
