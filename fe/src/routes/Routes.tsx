@@ -76,7 +76,7 @@ export default function Routes() {
   const location = useLocation();
 
   const [date, setDate] = useState(moment().startOf("day").toDate());
-  const [dateRangeValue, setDateRangeValue] = useState("Week");
+  const [dateRangeValue, setDateRangeValue] = useState("Day");
   const [search, setSearch] = useState("");
   const [activeParentId, setActiveParentId] = useState<
     string | null | undefined
