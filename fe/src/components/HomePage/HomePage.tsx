@@ -1,16 +1,16 @@
-import './HomePage.scss';
+import "./HomePage.scss";
 
-import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
-import React, { useState } from 'react';
+import { BottomNavigation, BottomNavigationAction } from "@material-ui/core";
+import React, { useState } from "react";
 
-import { AgendaViewPage } from '../AgendaViewPage/AgendaViewPage';
-import { BulletIcon } from '../notes/BulletIcon/BulletIcon';
-import NotesPage from '../notes/NotesPage';
+import { AgendaViewPage } from "../AgendaViewPage/AgendaViewPage";
+import { BulletIcon } from "../notes/BulletIcon/BulletIcon";
+import NotesPage from "../notes/NotesPage";
 
 type HomePageProps = {
   date: Date;
-  startDate: Date | null;
-  endDate: Date | null;
+  startDate: Date;
+  endDate: Date;
   dateRangeValue: string;
   search?: string;
   activeParentId?: string | null | undefined;
@@ -34,12 +34,10 @@ export const HomePage: React.FC<HomePageProps> = ({
     return null;
   }
 
-  const PageClass = dateRangeValue === "Agenda" ? AgendaViewPage : NotesPage;
-
   return (
     <div className="home-page">
       <div className={`notes ${bottomNavValue === "note" ? "visible" : ""}`}>
-        <PageClass
+        <NotesPage
           date={date}
           type="note"
           startDate={startDate}
@@ -49,7 +47,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         />
       </div>
       <div className={`tasks ${bottomNavValue === "task" ? "visible" : ""}`}>
-        <PageClass
+        <NotesPage
           date={date}
           type="task"
           startDate={startDate}
@@ -59,15 +57,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         />
       </div>
       <div className={`events ${bottomNavValue === "event" ? "visible" : ""}`}>
-        <PageClass
-          date={date}
-          type="event"
-          startDate={startDate}
-          endDate={endDate}
-          readOnly={true}
-          search={search}
-          activeParentId={activeParentId}
-        />
+        <AgendaViewPage date={date} type="event" />
       </div>
       <div className="bottom-navigation">
         <BottomNavigation

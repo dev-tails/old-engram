@@ -1,12 +1,21 @@
-import './CollapsibleNotesList.scss';
+import "./CollapsibleNotesList.scss";
 
-import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import moment from "moment";
+import React, { useEffect, useState } from "react";
 
-import { isObjectId } from '../../../utils/ObjectId';
-import { CollapsibleNote, CollapsibleNoteItem } from '../CollapsibleNoteItem/CollapsibleNoteItem';
-import { createNote, Note, NoteType, removeNote, updateNote } from '../NotesApi';
-import * as NoteUtils from '../NoteUtils';
+import { isObjectId } from "../../../utils/ObjectId";
+import {
+  CollapsibleNote,
+  CollapsibleNoteItem,
+} from "../CollapsibleNoteItem/CollapsibleNoteItem";
+import {
+  createNote,
+  Note,
+  NoteType,
+  removeNote,
+  updateNote,
+} from "../NotesApi";
+import * as NoteUtils from "../NoteUtils";
 
 type CollapsibleNotesListProps = {
   date?: Date;
@@ -199,7 +208,7 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
   }
 
   function getEmptyNotes(notes: Note[]): Note[] {
-    const minLines = 30;
+    const minLines = 0;
     const emptyLinesToAdd = Math.max(minLines - notes.length, 1);
     let emptyLineId = notes.length;
 
@@ -241,6 +250,13 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
 
   return (
     <div className="collapsible-notes-list">
+      <h2 className="date">
+        {Intl.DateTimeFormat(navigator.language, {
+          weekday: "long",
+          month: "long",
+          day: "numeric",
+        }).format(props.date)}
+      </h2>
       {notesWithEmpties.map((note) => {
         if (!note) {
           return null;
