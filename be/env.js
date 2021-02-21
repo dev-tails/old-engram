@@ -1,4 +1,5 @@
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
+import fs from 'fs';
 
 let env = null;
 
@@ -13,10 +14,27 @@ export function getEnv() {
 export function initializeEnv() {
   dotenv.config();
   env = {
+    url: readSecret("DB_URL"),
+    jwtSecret: readSecret("JWT_SECRET"),
     origin: process.env.ORIGIN,
-    url: process.env.DB_URL,
     port: Number(process.env.PORT) || 4000,
-    jwtSecret: process.env.JWT_SECRET,
     production: process.env.NODE_ENV === "production",
   };
+}
+
+function readSecret(secretName) {
+  try {
+    return fs.readFileSync(`/run/secrets/${secretName.toLowerCase()}`, "utf8");
+  } catch (err) {
+    if (err.code !== "ENOENT") {
+      console.error(
+        `An error occurred while trying to read the secret: ${secretName}. Err: ${err}`
+      );
+    } else {
+      console.debug(
+        `Could not find the secret, probably not running in swarm mode: ${secretName}. Err: ${err}`
+      );
+    }
+  }
+  return process.env[secretName];
 }

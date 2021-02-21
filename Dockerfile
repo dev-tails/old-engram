@@ -9,21 +9,10 @@ RUN yarn --cwd /app/fe install
 COPY ./fe /app/fe
 RUN yarn --cwd /app/fe/ build
 
-FROM node:15.6.0-alpine3.12 as be-build
-COPY ./be/package.json /app/be/package.json
-COPY ./be/yarn.lock /app/be/yarn.lock
-RUN yarn --cwd /app/be install
-COPY ./be /app/be
-
-FROM nginx:alpine as final
-RUN apk add --update nodejs-current
-COPY --from=be-build /app/be /app/be
+FROM nginx:alpine
 COPY --from=fe-build /app/fe/build /app/fe/build
 
 RUN mkdir -p /run/nginx
 COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
-COPY entrypoint.sh /app/entrypoint.sh
-EXPOSE 80
-EXPOSE 4000
 
-CMD ["/app/entrypoint.sh"]
+CMD ["nginx", "-g", "daemon off;"]

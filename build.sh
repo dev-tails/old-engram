@@ -1,1 +1,1 @@
-docker build -f Dockerfile.prod -t devtails/engram:latest .
+docker build -f Dockerfile -t xyzdigital/engram-static:latest .
