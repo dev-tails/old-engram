@@ -1,11 +1,14 @@
 version: "3.7"
 
 services:
-  engram-app:
-    image: devtails/engram:latest
+  engram-api:
+    image: xyzdigital/engram-api:latest
     ports:
       - 4000:4000
-      - 80:80
     environment:
-      DB_URL: mongodb://host.docker.internal:27017
+      DB_URL: mongodb+srv://adam:6EP0S2LYtsqE1T4N@engram-staging.maxej.mongodb.net/journal
       JWT_SECRET: XGH2XjEiGx@53
+  engram-static:
+    image: xyzdigital/engram-static:latest
+    ports:
+      - 80:80
