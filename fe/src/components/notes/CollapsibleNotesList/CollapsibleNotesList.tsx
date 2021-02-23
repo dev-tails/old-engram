@@ -176,13 +176,11 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
   };
 
   const createNoteWithDefaultType = (note: Partial<Note> = {}) => {
-    const dateString = moment(props.date || new Date()).format("YYYY-MM-DD");
-
     return createNote({
       ...note,
       ...(props.type && { type: props.type }),
       ...(props.activeParentId && { parent: props.activeParentId }),
-      date: dateString,
+      ...(props.date && { date: moment(props.date).format("YYYY-MM-DD") }),
     });
   };
 
@@ -248,15 +246,17 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
 
   const notesWithEmpties = [...notes, ...getEmptyNotes(notes)];
 
+  const title = props.date
+    ? Intl.DateTimeFormat(navigator.language, {
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+      }).format(props.date)
+    : "Backlog";
+
   return (
     <div className="collapsible-notes-list">
-      <h2 className="date">
-        {Intl.DateTimeFormat(navigator.language, {
-          weekday: "long",
-          month: "long",
-          day: "numeric",
-        }).format(props.date)}
-      </h2>
+      <h2 className="title">{title}</h2>
       {notesWithEmpties.map((note) => {
         if (!note) {
           return null;

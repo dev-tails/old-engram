@@ -30,12 +30,15 @@ export default function NotesPage({
 
   useEffect(() => {
     const getNotesParams: GetNotesParams = {};
-    if (startDate) {
-      getNotesParams.since = moment(startDate).toDate();
+    if (type !== "task") {
+      if (startDate) {
+        getNotesParams.since = moment(startDate).toDate();
+      }
+      if (endDate) {
+        getNotesParams.before = moment(endDate).toDate();
+      }
     }
-    if (endDate) {
-      getNotesParams.before = moment(endDate).toDate();
-    }
+
     if (type) {
       getNotesParams.type = type;
     }
@@ -69,34 +72,61 @@ export default function NotesPage({
     });
   }, [type, startDate, endDate, search, activeParentId]);
 
-  const dates = [];
-  for (
-    let date = startDate;
-    date < endDate;
-    date = moment(date).add(1, "d").toDate()
-  ) {
-    dates.push(date);
+  const renderNotesByDate = () => {
+    const dates = [];
+    for (
+      let date = startDate;
+      date < endDate;
+      date = moment(date).add(1, "d").toDate()
+    ) {
+      dates.push(date);
+    }
+    return (
+      <>
+        {dates.map((date) => {
+          const notesForDate = notes.filter((note) => {
+            const isSameDay = note.date && moment(note.date).isSame(date, "d");
+            return isSameDay;
+          });
+
+          return (
+            <CollapsibleNotesList
+              key={date.getDate()}
+              date={date}
+              notes={notesForDate}
+              type={type}
+              readOnly={readOnly}
+              activeParentId={activeParentId}
+            />
+          );
+        })}
+      </>
+    );
+  };
+
+  function renderBacklog() {
+    if (type !== "task") {
+      return null;
+    }
+
+    const incompleteTasks = notes.filter((note) => {
+      return !note.date && note.type === "task";
+    });
+
+    return (
+      <CollapsibleNotesList
+        notes={incompleteTasks}
+        type={type}
+        readOnly={readOnly}
+        activeParentId={activeParentId}
+      />
+    );
   }
 
   return (
     <div className="notes-page" key={lastUpdate}>
-      {dates.map((date) => {
-        const notesForDate = notes.filter((note) => {
-          const isSameDay = moment(note.date).isSame(date, "d");
-          return isSameDay;
-        });
-
-        return (
-          <CollapsibleNotesList
-            key={date.getDate()}
-            date={date}
-            notes={notesForDate}
-            type={type}
-            readOnly={readOnly}
-            activeParentId={activeParentId}
-          />
-        );
-      })}
+      {renderNotesByDate()}
+      {renderBacklog()}
     </div>
   );
 }
