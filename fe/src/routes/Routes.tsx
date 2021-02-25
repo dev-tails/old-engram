@@ -81,6 +81,9 @@ export default function Routes() {
   const [activeParentId, setActiveParentId] = useState<
     string | null | undefined
   >(null);
+  const [workspaceName, setWorkspaceName] = useState<string | null | undefined>(
+    null
+  );
 
   const startDate = getStartDate(date, dateRangeValue);
   const endDate = getEndDate(date, dateRangeValue);
@@ -117,9 +120,18 @@ export default function Routes() {
     setSearch(search);
   };
 
-  const handleWorkspaceSelected = (id: string | null | undefined) => {
+  const handleWorkspaceSelected = (
+    id: string | null | undefined,
+    name?: string
+  ) => {
     setActiveParentId(id);
+    setWorkspaceName(name);
+    console.log(name);
   };
+
+  if (workspaceName) {
+    title = workspaceName;
+  }
 
   return (
     <>
@@ -141,6 +153,8 @@ export default function Routes() {
             endDate={endDate}
             search={search}
             activeParentId={activeParentId}
+            onDateChange={handleDateChanged}
+            onDateRangeChange={handleDateRangeChanged}
           />
         </Route>
         <Route exact path="/notes/:id">

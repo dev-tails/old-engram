@@ -17,16 +17,8 @@ import {
   TextField,
   Toolbar,
 } from "@material-ui/core";
-import {
-  Add,
-  ChevronLeft,
-  ChevronRight,
-  Home,
-  MoreHoriz,
-  Search as SearchIcon,
-} from "@material-ui/icons";
-import moment, { DurationInputArg2 } from "moment";
-import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+import { Add, Home, MoreHoriz, Search as SearchIcon } from "@material-ui/icons";
+import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 
 import { Holdable } from "../Holdable/Holdable";
@@ -44,7 +36,7 @@ type HeaderProps = {
   onDateChange: (date: Date) => void;
   onDateRangeChange: (dateRange: string) => void;
   onSearchSubmit: (search: string) => void;
-  onWorkspaceSelected: (id: string | null | undefined) => void;
+  onWorkspaceSelected: (id: string | null | undefined, name?: string) => void;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -117,17 +109,10 @@ export const Header: React.FC<HeaderProps> = ({
   const history = useHistory();
   const classes = useStyles();
 
-  const dateInputRef = useRef<HTMLDivElement | null>(null);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
   const [search, setSearch] = useState<string | null>(null);
   const isSearchOpen = search !== null;
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false);
   const [rightDrawerOpen, setRightDrawerOpen] = useState(false);
-  const [dateString, setDateString] = useState(
-    moment(date).format("YYYY-MM-DD")
-  );
-
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<
     string | undefined | null
   >(null);
@@ -137,10 +122,6 @@ export const Header: React.FC<HeaderProps> = ({
   ] = React.useState<null | HTMLDivElement>(null);
   const [workspaces, setWorkspaces] = useState<Note[]>([]);
   const [workspaceBody, setWorkspaceBody] = useState<string | null>(null);
-
-  useEffect(() => {
-    setDateString(moment(date).format("YYYY-MM-DD"));
-  }, [date]);
 
   const isDateView = !title;
 
@@ -160,39 +141,12 @@ export const Header: React.FC<HeaderProps> = ({
         return;
       }
 
-      if (event.key === "t") {
-        event.preventDefault();
-        onDateChange(new Date());
-      }
-
-      let dateRangeMap: { [key: string]: string } = {
-        d: "Day",
-        w: "Week",
-        f: "Fortnight",
-        m: "Month",
-        q: "Quarter",
-        y: "Year",
-      };
-      const dateRange = dateRangeMap[event.key];
-      if (dateRange) {
-        event.preventDefault();
-        handleDateRangeChanged(dateRange);
-      }
-
-      if (event.key === "ArrowLeft") {
-        handleNavigateDate("left");
-        event.preventDefault();
-      } else if (event.key === "ArrowRight") {
-        handleNavigateDate("right");
-        event.preventDefault();
-      }
-
       if (event.code.includes("Digit")) {
         const digit = Number(event.code[event.code.length - 1]) - 1;
         if (digit < 0) {
           onWorkspaceSelected(null);
         } else if (digit < workspaces.length) {
-          onWorkspaceSelected(workspaces[digit]._id);
+          onWorkspaceSelected(workspaces[digit]._id, workspaces[digit].body);
         }
         event.preventDefault();
       }
@@ -206,53 +160,6 @@ export const Header: React.FC<HeaderProps> = ({
 
   const handleRightMenuButtonClicked = () => {
     setRightDrawerOpen(true);
-  };
-
-  const handleNavigateDate = (direction: "left" | "right") => {
-    const unitMap: { [key: string]: DurationInputArg2 } = {
-      Day: "day",
-      Week: "week",
-      Fortnight: "week",
-      Month: "month",
-      Quarter: "quarter",
-      Year: "year",
-    };
-    const unit = unitMap[dateRangeValue];
-    let amount = dateRangeValue === "Fortnight" ? 2 : 1;
-
-    if (direction === "left") {
-      onDateChange(moment(date).add(-amount, unit).startOf(unit).toDate());
-    } else if (direction === "right") {
-      onDateChange(moment(date).add(amount, unit).startOf(unit).toDate());
-    }
-  };
-
-  const handleDateChanged = (event: ChangeEvent<HTMLInputElement>) => {
-    setDateString(event.currentTarget.value);
-  };
-
-  const handleDateBlur = () => {
-    if (onDateChange) {
-      const dateAsMoment = moment(dateString);
-      if (dateAsMoment.isValid()) {
-        onDateChange(dateAsMoment.startOf("d").toDate());
-      }
-    }
-  };
-
-  const handleDateRangeChanged = (newValue: string) => {
-    onDateRangeChange(newValue);
-    handleCloseDateRangeMenu();
-  };
-
-  const handleDateRangeClicked = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleCloseDateRangeMenu = () => {
-    setAnchorEl(null);
   };
 
   const handleLogoClicked = () => {
@@ -275,7 +182,7 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   const handleWorkspaceSelected = (workspace: Note | null) => {
-    onWorkspaceSelected(workspace?._id);
+    onWorkspaceSelected(workspace?._id, workspace?.body);
     setLeftDrawerOpen(false);
   };
 
@@ -312,82 +219,7 @@ export const Header: React.FC<HeaderProps> = ({
             />
           </IconButton>
 
-          {isDateView && (
-            <>
-              <IconButton
-                id="date-range-button"
-                aria-controls="date-range-menu"
-                aria-haspopup="true"
-                edge="start"
-                color="inherit"
-                size="small"
-                onClick={handleDateRangeClicked}
-              >
-                {dateRangeValue[0]}
-              </IconButton>
-              <Menu
-                id="date-range-menu"
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleCloseDateRangeMenu}
-              >
-                {["Day", "Week", "Fortnight", "Month", "Quarter", "Year"].map(
-                  (option) => {
-                    return (
-                      <MenuItem
-                        key={option}
-                        value={option}
-                        onClick={handleDateRangeChanged.bind(this, option)}
-                        title={`Alt + ${option[0]}`}
-                      >
-                        {option}
-                      </MenuItem>
-                    );
-                  }
-                )}
-              </Menu>
-            </>
-          )}
-
-          {isDateView && (
-            <IconButton
-              color="inherit"
-              onClick={handleNavigateDate.bind(this, "left")}
-              title="Alt+LeftArrow"
-              size="small"
-            >
-              <ChevronLeft />
-            </IconButton>
-          )}
-          {isDateView && (
-            <IconButton
-              color="inherit"
-              onClick={handleNavigateDate.bind(this, "right")}
-              title="Alt+RightArrow"
-              size="small"
-            >
-              <ChevronRight />
-            </IconButton>
-          )}
-
-          <div className="title">
-            {title ? (
-              title
-            ) : (
-              <TextField
-                id="date"
-                type="date"
-                ref={dateInputRef}
-                required
-                value={dateString}
-                onChange={handleDateChanged}
-                onBlur={handleDateBlur}
-                InputProps={{
-                  disableUnderline: true,
-                }}
-              />
-            )}
-          </div>
+          <div className="title">{title ? title : null}</div>
 
           <div className="spacer" />
 
