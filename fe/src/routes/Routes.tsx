@@ -1,25 +1,17 @@
-import moment from "moment";
-import React, { useState } from "react";
-import { Redirect, Route, Switch, useLocation } from "react-router-dom";
+import moment from 'moment';
+import React, { useState } from 'react';
+import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
 
-import { Header } from "../components/header/Header";
-import { HelpPage } from "../components/HelpPage/HelpPage";
-import { ZapierHelpPage } from "../components/HelpPage/ZapierHelpPage/ZapierHelpPage";
-import { HomePage } from "../components/HomePage/HomePage";
-import LoginPage, { LoginPagePath } from "../components/login/LoginPage";
-import { LogoutPage } from "../components/LogoutPage/LogoutPage";
-import { EditNotePage } from "../components/notes/EditNotePage/EditNotePage";
-import {
-  PrivacyPolicyPage,
-  PrivacyPolicyPagePath,
-} from "../components/PrivacyPolicyPage/PrivacyPolicyPage";
-import SignupPage, {
-  SignupPagePath,
-} from "../components/SignupPage/SignupPage";
-import {
-  TermsOfServicePage,
-  TermsOfServicePagePath,
-} from "../TermsOfServicePage/TermsOfServicePage";
+import { Header } from '../components/header/Header';
+import { HelpPage } from '../components/HelpPage/HelpPage';
+import { ZapierHelpPage } from '../components/HelpPage/ZapierHelpPage/ZapierHelpPage';
+import { HomePage } from '../components/HomePage/HomePage';
+import LoginPage, { LoginPagePath } from '../components/login/LoginPage';
+import { LogoutPage } from '../components/LogoutPage/LogoutPage';
+import { EditNotePage } from '../components/notes/EditNotePage/EditNotePage';
+import { PrivacyPolicyPage, PrivacyPolicyPagePath } from '../components/PrivacyPolicyPage/PrivacyPolicyPage';
+import SignupPage, { SignupPagePath } from '../components/SignupPage/SignupPage';
+import { TermsOfServicePage, TermsOfServicePagePath } from '../TermsOfServicePage/TermsOfServicePage';
 
 function getStartDate(date: Date, dateRangeValue: string) {
   switch (dateRangeValue) {
@@ -89,6 +81,7 @@ export default function Routes() {
   const endDate = getEndDate(date, dateRangeValue);
 
   let title = "";
+  let isPublicRoute = true;
   switch (location.pathname) {
     case TermsOfServicePagePath:
       title = "Terms of Service";
@@ -98,13 +91,13 @@ export default function Routes() {
       break;
     case SignupPagePath:
     case LoginPagePath:
-      title = "engram";
       break;
     case "/help":
     case "/help/zapier":
       title = "Help";
       break;
     default:
+      isPublicRoute = false;
       break;
   }
 
@@ -137,12 +130,10 @@ export default function Routes() {
     <>
       <Header
         title={title}
-        date={date}
-        onDateChange={handleDateChanged}
-        dateRangeValue={dateRangeValue}
-        onDateRangeChange={handleDateRangeChanged}
+        isPublicRoute={isPublicRoute}
         onSearchSubmit={handleSearchSubmitted}
         onWorkspaceSelected={handleWorkspaceSelected}
+        activeParentId={activeParentId}
       />
       <Switch>
         <Route exact path="/">

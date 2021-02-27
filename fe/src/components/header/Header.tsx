@@ -1,7 +1,8 @@
-import "./Header.scss";
+import './Header.scss';
 
 import {
   AppBar,
+  Divider,
   Drawer,
   Fade,
   fade,
@@ -9,32 +10,26 @@ import {
   InputBase,
   List,
   ListItem,
-  ListItemIcon,
   ListItemText,
+  ListSubheader,
   makeStyles,
   Menu,
   MenuItem,
   TextField,
   Toolbar,
-} from "@material-ui/core";
-import { Add, Home, MoreHoriz, Search as SearchIcon } from "@material-ui/icons";
-import React, { useEffect, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+  Typography,
+} from '@material-ui/core';
+import { Menu as MenuIcon, Search as SearchIcon } from '@material-ui/icons';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
-import { Holdable } from "../Holdable/Holdable";
-import {
-  createOrUpdateNote,
-  getNotes,
-  Note,
-  removeNote,
-} from "../notes/NotesApi";
+import { Holdable } from '../Holdable/Holdable';
+import { createOrUpdateNote, getNotes, Note, removeNote } from '../notes/NotesApi';
 
 type HeaderProps = {
-  dateRangeValue: string;
-  date?: Date;
   title?: string;
-  onDateChange: (date: Date) => void;
-  onDateRangeChange: (dateRange: string) => void;
+  isPublicRoute: boolean;
+  activeParentId: string | undefined | null;
   onSearchSubmit: (search: string) => void;
   onWorkspaceSelected: (id: string | null | undefined, name?: string) => void;
 };
@@ -99,20 +94,16 @@ const useStyles = makeStyles((theme) => ({
 
 export const Header: React.FC<HeaderProps> = ({
   title,
-  date,
-  onDateChange,
-  dateRangeValue,
-  onDateRangeChange,
+  activeParentId,
+  isPublicRoute,
   onSearchSubmit,
   onWorkspaceSelected,
 }) => {
-  const history = useHistory();
   const classes = useStyles();
 
   const [search, setSearch] = useState<string | null>(null);
   const isSearchOpen = search !== null;
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false);
-  const [rightDrawerOpen, setRightDrawerOpen] = useState(false);
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<
     string | undefined | null
   >(null);
@@ -123,17 +114,15 @@ export const Header: React.FC<HeaderProps> = ({
   const [workspaces, setWorkspaces] = useState<Note[]>([]);
   const [workspaceBody, setWorkspaceBody] = useState<string | null>(null);
 
-  const isDateView = !title;
-
   useEffect(() => {
     async function getWorkspaces() {
       const fetchedWorkspaces = await getNotes({ type: "workspace" });
       setWorkspaces(fetchedWorkspaces);
     }
-    if (isDateView) {
+    if (!isPublicRoute) {
       getWorkspaces();
     }
-  }, [isDateView]);
+  }, [isPublicRoute]);
 
   useEffect(() => {
     function keyDownListener(event: KeyboardEvent) {
@@ -158,16 +147,8 @@ export const Header: React.FC<HeaderProps> = ({
     };
   });
 
-  const handleRightMenuButtonClicked = () => {
-    setRightDrawerOpen(true);
-  };
-
-  const handleLogoClicked = () => {
-    if (isDateView) {
-      setLeftDrawerOpen(true);
-    } else {
-      history.push("/");
-    }
+  const handleLeftDrawerOpened = () => {
+    setLeftDrawerOpen(true);
   };
 
   const handleSubmitWorkspace = async () => {
@@ -210,31 +191,48 @@ export const Header: React.FC<HeaderProps> = ({
     <div className="header">
       <AppBar className={`${isSearchOpen ? "search" : ""}`}>
         <Toolbar>
-          <IconButton onClick={handleLogoClicked} edge="start" color="inherit">
-            <img
-              alt="engram logo"
-              width="36"
-              height="36"
-              src="/images/logo.svg"
-            />
-          </IconButton>
-
-          <div className="title">{title ? title : null}</div>
+          {!isPublicRoute && (
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              onClick={handleLeftDrawerOpened}
+            >
+              <MenuIcon />
+            </IconButton>
+          )}
 
           <div className="spacer" />
 
-          {isDateView && !isSearchOpen && (
+          {title ? (
+            <Typography variant="h6">{title}</Typography>
+          ) : (
+            <Link to="/">
+              <IconButton className="logo" color="inherit">
+                <img
+                  alt="engram logo"
+                  width="36"
+                  height="36"
+                  src="/images/logo.svg"
+                />
+              </IconButton>
+            </Link>
+          )}
+
+          <div className="spacer" />
+
+          {!isPublicRoute && !isSearchOpen && (
             <IconButton
+              edge="end"
               color="inherit"
               aria-label="menu"
-              size="small"
               onClick={setSearch.bind(this, "")}
             >
               <SearchIcon />
             </IconButton>
           )}
 
-          {isDateView && isSearchOpen && (
+          {!isPublicRoute && isSearchOpen && (
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />
@@ -261,18 +259,6 @@ export const Header: React.FC<HeaderProps> = ({
               />
             </div>
           )}
-
-          {isDateView && (
-            <IconButton
-              edge="end"
-              color="inherit"
-              aria-label="menu"
-              size="small"
-              onClick={handleRightMenuButtonClicked}
-            >
-              <MoreHoriz />
-            </IconButton>
-          )}
         </Toolbar>
       </AppBar>
       <React.Fragment>
@@ -287,14 +273,10 @@ export const Header: React.FC<HeaderProps> = ({
                 button
                 onClick={handleWorkspaceSelected.bind(this, null)}
               >
-                <ListItemIcon>
-                  <Home />
-                </ListItemIcon>
                 <ListItemText primary="Home" />
               </ListItem>
-              <ListItem>
-                <ListItemText primary="Workspaces" />
-              </ListItem>
+              <Divider />
+              <ListSubheader>Workspaces</ListSubheader>
               <List component="div" disablePadding>
                 {workspaces.map((workspace) => {
                   return (
@@ -308,6 +290,7 @@ export const Header: React.FC<HeaderProps> = ({
                     >
                       <ListItem
                         key={workspace._id}
+                        selected={workspace._id === activeParentId}
                         button
                         className={classes.nested}
                       >
@@ -334,13 +317,16 @@ export const Header: React.FC<HeaderProps> = ({
                     />
                   ) : (
                     <>
-                      <ListItemIcon>
-                        <Add />
-                      </ListItemIcon>
-                      <ListItemText primary={"Add"} />
+                      <ListItemText primary={"Create Workspace"} />
                     </>
                   )}
                 </ListItem>
+                <Divider />
+                <Link to={`/logout`}>
+                  <ListItem button>
+                    <ListItemText primary={"Logout"} />
+                  </ListItem>
+                </Link>
               </List>
             </List>
             <Menu
@@ -354,24 +340,6 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <MenuItem onClick={handleRemoveWorkspace}>Remove</MenuItem>
             </Menu>
-          </div>
-        </Drawer>
-      </React.Fragment>
-      <React.Fragment>
-        <Drawer
-          anchor={"right"}
-          open={rightDrawerOpen}
-          onClose={setRightDrawerOpen.bind(this, false)}
-          // onOpen={setRightDrawerOpen.bind(this, true)}
-        >
-          <div className="drawer-contents">
-            <List>
-              <Link to={`/logout`}>
-                <ListItem button>
-                  <ListItemText primary={"Logout"} />
-                </ListItem>
-              </Link>
-            </List>
           </div>
         </Drawer>
       </React.Fragment>
