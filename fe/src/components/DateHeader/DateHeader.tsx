@@ -1,8 +1,11 @@
-import { IconButton, Menu, MenuItem, TextField } from "@material-ui/core";
-import { ChevronLeft, ChevronRight } from "@material-ui/icons";
-import moment, { DurationInputArg2 } from "moment";
-import React, { ChangeEvent, useEffect, useState } from "react";
-import "./DateHeader.scss";
+import './DateHeader.scss';
+
+import { IconButton, Menu, MenuItem } from '@material-ui/core';
+import { ChevronLeft, ChevronRight } from '@material-ui/icons';
+import { DatePicker } from '@material-ui/pickers';
+import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
+import moment, { DurationInputArg2 } from 'moment';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 
 export type DateHeaderProps = {
   dateRangeValue: string;
@@ -18,9 +21,6 @@ export const DateHeader: React.FC<DateHeaderProps> = ({
   onDateRangeChange,
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [dateString, setDateString] = useState(
-    moment(date).format("YYYY-MM-DD")
-  );
 
   useEffect(() => {
     function keyDownListener(event: KeyboardEvent) {
@@ -62,18 +62,18 @@ export const DateHeader: React.FC<DateHeaderProps> = ({
     };
   });
 
-  const handleDateChanged = (event: ChangeEvent<HTMLInputElement>) => {
-    setDateString(event.currentTarget.value);
+  const handleDateChanged = (date: MaterialUiPickersDate) => {
+    onDateChange(date as Date);
   };
 
-  const handleDateBlur = () => {
-    if (onDateChange) {
-      const dateAsMoment = moment(dateString);
-      if (dateAsMoment.isValid()) {
-        onDateChange(dateAsMoment.startOf("d").toDate());
-      }
-    }
-  };
+  // const handleDateBlur = () => {
+  //   if (onDateChange) {
+  //     const dateAsMoment = moment(dateString);
+  //     if (dateAsMoment.isValid()) {
+  //       onDateChange(dateAsMoment.startOf("d").toDate());
+  //     }
+  //   }
+  // };
 
   const handleNavigateDate = (direction: "left" | "right") => {
     const unitMap: { [key: string]: DurationInputArg2 } = {
@@ -155,7 +155,17 @@ export const DateHeader: React.FC<DateHeaderProps> = ({
         <ChevronLeft />
       </IconButton>
 
-      <TextField
+      <DatePicker
+        className="date"
+        format="yyyy-MM-dd"
+        autoOk={true}
+        value={date}
+        onChange={handleDateChanged}
+        showTodayButton={true}
+        InputProps={{ disableUnderline: true }}
+      />
+
+      {/* <TextField
         id="date"
         type="date"
         required
@@ -165,7 +175,7 @@ export const DateHeader: React.FC<DateHeaderProps> = ({
         InputProps={{
           disableUnderline: true,
         }}
-      />
+      /> */}
 
       <IconButton
         color="inherit"
