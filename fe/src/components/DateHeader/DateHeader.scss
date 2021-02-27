@@ -4,9 +4,18 @@
   position: relative;
   background-color: #424242;
   text-align: center;
-  padding: 11px 0;
+
+  .date-range-button {
+    position: absolute;
+    right: 8px;
+    height: 48px;
+  }
 
   .date {
-    width: 82px;
+    display: inline;
+    .date-picker {
+      width: 82px;
+      padding: 8px 0;
+    }
   }
 }

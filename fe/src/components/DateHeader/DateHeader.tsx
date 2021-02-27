@@ -1,11 +1,11 @@
 import './DateHeader.scss';
 
-import { IconButton, Menu, MenuItem } from '@material-ui/core';
+import { IconButton, Select } from '@material-ui/core';
 import { ChevronLeft, ChevronRight } from '@material-ui/icons';
 import { DatePicker } from '@material-ui/pickers';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import moment, { DurationInputArg2 } from 'moment';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 export type DateHeaderProps = {
   dateRangeValue: string;
@@ -20,8 +20,6 @@ export const DateHeader: React.FC<DateHeaderProps> = ({
   onDateChange,
   onDateRangeChange,
 }) => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
   useEffect(() => {
     function keyDownListener(event: KeyboardEvent) {
       if (!event.altKey) {
@@ -66,15 +64,6 @@ export const DateHeader: React.FC<DateHeaderProps> = ({
     onDateChange(date as Date);
   };
 
-  // const handleDateBlur = () => {
-  //   if (onDateChange) {
-  //     const dateAsMoment = moment(dateString);
-  //     if (dateAsMoment.isValid()) {
-  //       onDateChange(dateAsMoment.startOf("d").toDate());
-  //     }
-  //   }
-  // };
-
   const handleNavigateDate = (direction: "left" | "right") => {
     const unitMap: { [key: string]: DurationInputArg2 } = {
       Day: "day",
@@ -94,97 +83,66 @@ export const DateHeader: React.FC<DateHeaderProps> = ({
     }
   };
 
-  const handleDateRangeClicked = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleCloseDateRangeMenu = () => {
-    setAnchorEl(null);
-  };
-
   const handleDateRangeChanged = (newValue: string) => {
     onDateRangeChange(newValue);
-    handleCloseDateRangeMenu();
   };
 
   return (
     <div className="date-header">
       <>
-        <IconButton
-          id="date-range-button"
-          aria-controls="date-range-menu"
-          aria-haspopup="true"
-          edge="start"
-          color="inherit"
-          size="small"
-          onClick={handleDateRangeClicked}
-        >
-          {dateRangeValue[0]}
-        </IconButton>
-        <Menu
-          id="date-range-menu"
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleCloseDateRangeMenu}
+        <Select
+          className="date-range-button"
+          autoWidth={true}
+          native
+          value={dateRangeValue}
+          onChange={(e) => {
+            handleDateRangeChanged(e.target.value as string);
+          }}
+          disableUnderline={true}
         >
           {["Day", "Week", "Fortnight", "Month", "Quarter", "Year"].map(
             (option) => {
               return (
-                <MenuItem
+                <option
                   key={option}
                   value={option}
-                  onClick={handleDateRangeChanged.bind(this, option)}
                   title={`Alt + ${option[0]}`}
                 >
                   {option}
-                </MenuItem>
+                </option>
               );
             }
           )}
-        </Menu>
+        </Select>
       </>
 
-      <IconButton
-        color="inherit"
-        onClick={handleNavigateDate.bind(this, "left")}
-        title="Alt+LeftArrow"
-        size="small"
-      >
-        <ChevronLeft />
-      </IconButton>
+      <div className="date">
+        <IconButton
+          color="inherit"
+          onClick={handleNavigateDate.bind(this, "left")}
+          title="Alt+LeftArrow"
+        >
+          <ChevronLeft />
+        </IconButton>
 
-      <DatePicker
-        className="date"
-        format="yyyy-MM-dd"
-        autoOk={true}
-        value={date}
-        onChange={handleDateChanged}
-        showTodayButton={true}
-        InputProps={{ disableUnderline: true }}
-      />
+        <DatePicker
+          className="date-picker"
+          format="yyyy-MM-dd"
+          autoOk={true}
+          value={date}
+          onChange={handleDateChanged}
+          showTodayButton={true}
+          InputProps={{ disableUnderline: true }}
+        />
 
-      {/* <TextField
-        id="date"
-        type="date"
-        required
-        value={dateString}
-        onChange={handleDateChanged}
-        onBlur={handleDateBlur}
-        InputProps={{
-          disableUnderline: true,
-        }}
-      /> */}
-
-      <IconButton
-        color="inherit"
-        onClick={handleNavigateDate.bind(this, "right")}
-        title="Alt+RightArrow"
-        size="small"
-      >
-        <ChevronRight />
-      </IconButton>
+        <IconButton
+          color="inherit"
+          onClick={handleNavigateDate.bind(this, "right")}
+          title="Alt+RightArrow"
+        >
+          <ChevronRight />
+        </IconButton>
+      </div>
     </div>
   );
 };
