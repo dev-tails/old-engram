@@ -1,7 +1,8 @@
-import "./Header.scss";
+import './Header.scss';
 
 import {
   AppBar,
+  Divider,
   Drawer,
   Fade,
   fade,
@@ -9,42 +10,28 @@ import {
   InputBase,
   List,
   ListItem,
-  ListItemIcon,
   ListItemText,
+  ListSubheader,
   makeStyles,
   Menu,
   MenuItem,
   TextField,
   Toolbar,
-} from "@material-ui/core";
-import {
-  Add,
-  ChevronLeft,
-  ChevronRight,
-  Home,
-  MoreHoriz,
-  Search as SearchIcon,
-} from "@material-ui/icons";
-import moment, { DurationInputArg2 } from "moment";
-import React, { ChangeEvent, useEffect, useRef, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+  Typography,
+} from '@material-ui/core';
+import { Menu as MenuIcon, Search as SearchIcon } from '@material-ui/icons';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
-import { Holdable } from "../Holdable/Holdable";
-import {
-  createOrUpdateNote,
-  getNotes,
-  Note,
-  removeNote,
-} from "../notes/NotesApi";
+import { Holdable } from '../Holdable/Holdable';
+import { createOrUpdateNote, getNotes, Note, removeNote } from '../notes/NotesApi';
 
 type HeaderProps = {
-  dateRangeValue: string;
-  date?: Date;
   title?: string;
-  onDateChange: (date: Date) => void;
-  onDateRangeChange: (dateRange: string) => void;
+  isPublicRoute: boolean;
+  activeParentId: string | undefined | null;
   onSearchSubmit: (search: string) => void;
-  onWorkspaceSelected: (id: string | null | undefined) => void;
+  onWorkspaceSelected: (id: string | null | undefined, name?: string) => void;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -107,27 +94,16 @@ const useStyles = makeStyles((theme) => ({
 
 export const Header: React.FC<HeaderProps> = ({
   title,
-  date,
-  onDateChange,
-  dateRangeValue,
-  onDateRangeChange,
+  activeParentId,
+  isPublicRoute,
   onSearchSubmit,
   onWorkspaceSelected,
 }) => {
-  const history = useHistory();
   const classes = useStyles();
-
-  const dateInputRef = useRef<HTMLDivElement | null>(null);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const [search, setSearch] = useState<string | null>(null);
   const isSearchOpen = search !== null;
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false);
-  const [rightDrawerOpen, setRightDrawerOpen] = useState(false);
-  const [dateString, setDateString] = useState(
-    moment(date).format("YYYY-MM-DD")
-  );
-
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<
     string | undefined | null
   >(null);
@@ -139,20 +115,14 @@ export const Header: React.FC<HeaderProps> = ({
   const [workspaceBody, setWorkspaceBody] = useState<string | null>(null);
 
   useEffect(() => {
-    setDateString(moment(date).format("YYYY-MM-DD"));
-  }, [date]);
-
-  const isDateView = !title;
-
-  useEffect(() => {
     async function getWorkspaces() {
       const fetchedWorkspaces = await getNotes({ type: "workspace" });
       setWorkspaces(fetchedWorkspaces);
     }
-    if (isDateView) {
+    if (!isPublicRoute) {
       getWorkspaces();
     }
-  }, [isDateView]);
+  }, [isPublicRoute]);
 
   useEffect(() => {
     function keyDownListener(event: KeyboardEvent) {
@@ -160,39 +130,12 @@ export const Header: React.FC<HeaderProps> = ({
         return;
       }
 
-      if (event.key === "t") {
-        event.preventDefault();
-        onDateChange(new Date());
-      }
-
-      let dateRangeMap: { [key: string]: string } = {
-        d: "Day",
-        w: "Week",
-        f: "Fortnight",
-        m: "Month",
-        q: "Quarter",
-        y: "Year",
-      };
-      const dateRange = dateRangeMap[event.key];
-      if (dateRange) {
-        event.preventDefault();
-        handleDateRangeChanged(dateRange);
-      }
-
-      if (event.key === "ArrowLeft") {
-        handleNavigateDate("left");
-        event.preventDefault();
-      } else if (event.key === "ArrowRight") {
-        handleNavigateDate("right");
-        event.preventDefault();
-      }
-
       if (event.code.includes("Digit")) {
         const digit = Number(event.code[event.code.length - 1]) - 1;
         if (digit < 0) {
           onWorkspaceSelected(null);
         } else if (digit < workspaces.length) {
-          onWorkspaceSelected(workspaces[digit]._id);
+          onWorkspaceSelected(workspaces[digit]._id, workspaces[digit].body);
         }
         event.preventDefault();
       }
@@ -204,63 +147,8 @@ export const Header: React.FC<HeaderProps> = ({
     };
   });
 
-  const handleRightMenuButtonClicked = () => {
-    setRightDrawerOpen(true);
-  };
-
-  const handleNavigateDate = (direction: "left" | "right") => {
-    const unitMap: { [key: string]: DurationInputArg2 } = {
-      Day: "day",
-      Week: "week",
-      Fortnight: "week",
-      Month: "month",
-      Quarter: "quarter",
-      Year: "year",
-    };
-    const unit = unitMap[dateRangeValue];
-    let amount = dateRangeValue === "Fortnight" ? 2 : 1;
-
-    if (direction === "left") {
-      onDateChange(moment(date).add(-amount, unit).startOf(unit).toDate());
-    } else if (direction === "right") {
-      onDateChange(moment(date).add(amount, unit).startOf(unit).toDate());
-    }
-  };
-
-  const handleDateChanged = (event: ChangeEvent<HTMLInputElement>) => {
-    setDateString(event.currentTarget.value);
-  };
-
-  const handleDateBlur = () => {
-    if (onDateChange) {
-      const dateAsMoment = moment(dateString);
-      if (dateAsMoment.isValid()) {
-        onDateChange(dateAsMoment.startOf("d").toDate());
-      }
-    }
-  };
-
-  const handleDateRangeChanged = (newValue: string) => {
-    onDateRangeChange(newValue);
-    handleCloseDateRangeMenu();
-  };
-
-  const handleDateRangeClicked = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleCloseDateRangeMenu = () => {
-    setAnchorEl(null);
-  };
-
-  const handleLogoClicked = () => {
-    if (isDateView) {
-      setLeftDrawerOpen(true);
-    } else {
-      history.push("/");
-    }
+  const handleLeftDrawerOpened = () => {
+    setLeftDrawerOpen(true);
   };
 
   const handleSubmitWorkspace = async () => {
@@ -275,7 +163,7 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   const handleWorkspaceSelected = (workspace: Note | null) => {
-    onWorkspaceSelected(workspace?._id);
+    onWorkspaceSelected(workspace?._id, workspace?.body);
     setLeftDrawerOpen(false);
   };
 
@@ -303,106 +191,48 @@ export const Header: React.FC<HeaderProps> = ({
     <div className="header">
       <AppBar className={`${isSearchOpen ? "search" : ""}`}>
         <Toolbar>
-          <IconButton onClick={handleLogoClicked} edge="start" color="inherit">
-            <img
-              alt="engram logo"
-              width="36"
-              height="36"
-              src="/images/logo.svg"
-            />
-          </IconButton>
-
-          {isDateView && (
-            <>
-              <IconButton
-                id="date-range-button"
-                aria-controls="date-range-menu"
-                aria-haspopup="true"
-                edge="start"
-                color="inherit"
-                size="small"
-                onClick={handleDateRangeClicked}
-              >
-                {dateRangeValue[0]}
-              </IconButton>
-              <Menu
-                id="date-range-menu"
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleCloseDateRangeMenu}
-              >
-                {["Day", "Week", "Fortnight", "Month", "Quarter", "Year"].map(
-                  (option) => {
-                    return (
-                      <MenuItem
-                        key={option}
-                        value={option}
-                        onClick={handleDateRangeChanged.bind(this, option)}
-                        title={`Alt + ${option[0]}`}
-                      >
-                        {option}
-                      </MenuItem>
-                    );
-                  }
-                )}
-              </Menu>
-            </>
-          )}
-
-          {isDateView && (
+          {!isPublicRoute && (
             <IconButton
+              edge="start"
               color="inherit"
-              onClick={handleNavigateDate.bind(this, "left")}
-              title="Alt+LeftArrow"
-              size="small"
+              aria-label="menu"
+              onClick={handleLeftDrawerOpened}
             >
-              <ChevronLeft />
+              <MenuIcon />
             </IconButton>
           )}
-          {isDateView && (
-            <IconButton
-              color="inherit"
-              onClick={handleNavigateDate.bind(this, "right")}
-              title="Alt+RightArrow"
-              size="small"
-            >
-              <ChevronRight />
-            </IconButton>
-          )}
-
-          <div className="title">
-            {title ? (
-              title
-            ) : (
-              <TextField
-                id="date"
-                type="date"
-                ref={dateInputRef}
-                required
-                value={dateString}
-                onChange={handleDateChanged}
-                onBlur={handleDateBlur}
-                InputProps={{
-                  disableUnderline: true,
-                }}
-              />
-            )}
-          </div>
 
           <div className="spacer" />
 
-          {isDateView && !isSearchOpen && (
+          {title ? (
+            <Typography variant="h6">{title}</Typography>
+          ) : (
+            <Link to="/">
+              <IconButton className="logo" color="inherit">
+                <img
+                  alt="engram logo"
+                  width="36"
+                  height="36"
+                  src="/images/logo.svg"
+                />
+              </IconButton>
+            </Link>
+          )}
+
+          <div className="spacer" />
+
+          {!isPublicRoute && !isSearchOpen && (
             <IconButton
+              edge="end"
               color="inherit"
               aria-label="menu"
-              size="small"
               onClick={setSearch.bind(this, "")}
             >
               <SearchIcon />
             </IconButton>
           )}
 
-          {isDateView && isSearchOpen && (
+          {!isPublicRoute && isSearchOpen && (
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />
@@ -429,18 +259,6 @@ export const Header: React.FC<HeaderProps> = ({
               />
             </div>
           )}
-
-          {isDateView && (
-            <IconButton
-              edge="end"
-              color="inherit"
-              aria-label="menu"
-              size="small"
-              onClick={handleRightMenuButtonClicked}
-            >
-              <MoreHoriz />
-            </IconButton>
-          )}
         </Toolbar>
       </AppBar>
       <React.Fragment>
@@ -455,14 +273,10 @@ export const Header: React.FC<HeaderProps> = ({
                 button
                 onClick={handleWorkspaceSelected.bind(this, null)}
               >
-                <ListItemIcon>
-                  <Home />
-                </ListItemIcon>
                 <ListItemText primary="Home" />
               </ListItem>
-              <ListItem>
-                <ListItemText primary="Workspaces" />
-              </ListItem>
+              <Divider />
+              <ListSubheader>Workspaces</ListSubheader>
               <List component="div" disablePadding>
                 {workspaces.map((workspace) => {
                   return (
@@ -476,6 +290,7 @@ export const Header: React.FC<HeaderProps> = ({
                     >
                       <ListItem
                         key={workspace._id}
+                        selected={workspace._id === activeParentId}
                         button
                         className={classes.nested}
                       >
@@ -502,13 +317,16 @@ export const Header: React.FC<HeaderProps> = ({
                     />
                   ) : (
                     <>
-                      <ListItemIcon>
-                        <Add />
-                      </ListItemIcon>
-                      <ListItemText primary={"Add"} />
+                      <ListItemText primary={"Create Workspace"} />
                     </>
                   )}
                 </ListItem>
+                <Divider />
+                <Link to={`/logout`}>
+                  <ListItem button>
+                    <ListItemText primary={"Logout"} />
+                  </ListItem>
+                </Link>
               </List>
             </List>
             <Menu
@@ -522,24 +340,6 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <MenuItem onClick={handleRemoveWorkspace}>Remove</MenuItem>
             </Menu>
-          </div>
-        </Drawer>
-      </React.Fragment>
-      <React.Fragment>
-        <Drawer
-          anchor={"right"}
-          open={rightDrawerOpen}
-          onClose={setRightDrawerOpen.bind(this, false)}
-          // onOpen={setRightDrawerOpen.bind(this, true)}
-        >
-          <div className="drawer-contents">
-            <List>
-              <Link to={`/logout`}>
-                <ListItem button>
-                  <ListItemText primary={"Logout"} />
-                </ListItem>
-              </Link>
-            </List>
           </div>
         </Drawer>
       </React.Fragment>

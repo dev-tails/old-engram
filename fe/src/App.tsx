@@ -1,11 +1,13 @@
-import "./App.css";
+import './App.css';
 
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-import React from "react";
-import { BrowserRouter as Router } from "react-router-dom";
-import CssBaseline from "@material-ui/core/CssBaseline";
+import DateFnsUtils from '@date-io/date-fns';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import React from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
 
-import Routes from "./routes/Routes";
+import Routes from './routes/Routes';
 
 let theme = createMuiTheme({
   palette: {
@@ -17,12 +19,14 @@ let theme = createMuiTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <div className="App">
-        <Router>
-          <Routes />
-        </Router>
-      </div>
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <CssBaseline />
+        <div className="App">
+          <Router>
+            <Routes />
+          </Router>
+        </div>
+      </MuiPickersUtilsProvider>
     </ThemeProvider>
   );
 }

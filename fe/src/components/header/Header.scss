@@ -1,4 +1,14 @@
 .header {
+  .menu-icon {
+    position: absolute;
+    left: 16px;
+  }
+
+  .search-icon {
+    position: absolute;
+    right: 16px;
+  }
+
   .search {
     @media (max-width: 600px) {
       .title {

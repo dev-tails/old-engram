@@ -1,0 +1,21 @@
+.date-header {
+  height: 48px;
+  top: 64px;
+  position: relative;
+  background-color: #424242;
+  text-align: center;
+
+  .date-range-button {
+    position: absolute;
+    right: 8px;
+    height: 48px;
+  }
+
+  .date {
+    display: inline;
+    .date-picker {
+      width: 82px;
+      padding: 8px 0;
+    }
+  }
+}

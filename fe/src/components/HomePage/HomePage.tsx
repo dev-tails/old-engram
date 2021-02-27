@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import { AgendaViewPage } from "../AgendaViewPage/AgendaViewPage";
 import { BulletIcon } from "../notes/BulletIcon/BulletIcon";
 import NotesPage from "../notes/NotesPage";
+import { DateHeader } from "../DateHeader/DateHeader";
 
 type HomePageProps = {
   date: Date;
@@ -14,6 +15,8 @@ type HomePageProps = {
   dateRangeValue: string;
   search?: string;
   activeParentId?: string | null | undefined;
+  onDateChange: (date: Date) => void;
+  onDateRangeChange: (dateRange: string) => void;
 };
 
 export const HomePage: React.FC<HomePageProps> = ({
@@ -23,6 +26,8 @@ export const HomePage: React.FC<HomePageProps> = ({
   dateRangeValue,
   search,
   activeParentId,
+  onDateChange,
+  onDateRangeChange,
 }) => {
   const [bottomNavValue, setBottomNavValue] = useState("note");
 
@@ -36,6 +41,12 @@ export const HomePage: React.FC<HomePageProps> = ({
 
   return (
     <div className="home-page">
+      <DateHeader
+        date={date}
+        dateRangeValue={dateRangeValue}
+        onDateRangeChange={onDateRangeChange}
+        onDateChange={onDateChange}
+      />
       <div className={`notes ${bottomNavValue === "note" ? "visible" : ""}`}>
         <NotesPage
           date={date}
