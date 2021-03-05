@@ -1,14 +1,15 @@
-import './CollapsibleNoteItem.scss';
+import "./CollapsibleNoteItem.scss";
 
-import { TextareaAutosize } from '@material-ui/core';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-import React, { useEffect, useRef, useState } from 'react';
+import { TextareaAutosize } from "@material-ui/core";
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import ArrowRightIcon from "@material-ui/icons/ArrowRight";
+import React, { useEffect, useRef, useState } from "react";
 
-import { isObjectId } from '../../../utils/ObjectId';
-import { Markdown } from '../../Markdown/Markdown';
-import { BulletIcon } from '../BulletIcon/BulletIcon';
-import { Note, NoteType } from '../NotesApi';
+import { isObjectId } from "../../../utils/ObjectId";
+import { Markdown } from "../../Markdown/Markdown";
+import { BulletIcon } from "../BulletIcon/BulletIcon";
+import { Note, NoteType } from "../NotesApi";
+import { Link } from "react-router-dom";
 
 export type CollapsibleNote = {
   _id?: string;
@@ -180,15 +181,15 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
             <ArrowDropDownIcon fontSize="small" />
           )}
         </span>
-        {/* <Link to={`/notes/${note._id}`}>
+        <Link to={`/notes/${note._id}`}>
           <span className={`block-edit`} onClick={handleToggleExpand}>
-            <svg height="8" width="8">
+            <svg height="8" width="8" fill="#FFF">
               <circle cx="4" cy="1" r="1" />
               <circle cx="4" cy="4" r="1" />
               <circle cx="4" cy="7" r="1" />
             </svg>
           </span>
-        </Link> */}
+        </Link>
         <div className="bullet-icon-wrapper" onClick={handleChangeType}>
           <BulletIcon note={note} />
         </div>

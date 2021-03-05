@@ -2,8 +2,8 @@
   box-sizing: border-box;
 }
 
-textarea:focus,
-input:focus {
+*,
+*:focus {
   outline: none;
 }
 
