@@ -14,8 +14,11 @@
   .date {
     display: inline;
     .date-picker {
-      width: 82px;
+      width: 116px;
       padding: 8px 0;
+      input {
+        text-align: center;
+      }
     }
   }
 }
