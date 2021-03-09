@@ -12,32 +12,39 @@ export function getNoteWithChildren(
 
   const children = notes.filter((note) => note.parent === noteId);
   const sortedChildren: CollapsibleNote[] = [];
-  let prev = null;
-  do {
-    let found = false;
-    for (let i = 0; i < children.length; i++) {
-      const child = children[i];
-
-      if (!prev && !child.prev) {
-        found = true;
-      } else if (prev === child.prev) {
-        found = true;
-      }
-
-      if (found) {
-        prev = child._id;
-        const childNoteWithChildren = getNoteWithChildren(notes, child._id);
-        if (childNoteWithChildren) {
-          sortedChildren.push(childNoteWithChildren);
-        }
-        break;
-      }
+  for (const child of children) {
+    const childNoteWithChildren = getNoteWithChildren(notes, child._id);
+    if (childNoteWithChildren) {
+      sortedChildren.push(childNoteWithChildren);
     }
+  }
 
-    if (!found) {
-      prev = null;
-    }
-  } while (prev !== null);
+  // let prev = null;
+  // do {
+  //   let found = false;
+  //   for (let i = 0; i < children.length; i++) {
+  //     const child = children[i];
+
+  //     if (!prev && !child.prev) {
+  //       found = true;
+  //     } else if (prev === child.prev) {
+  //       found = true;
+  //     }
+
+  //     if (found) {
+  //       prev = child._id;
+  //       const childNoteWithChildren = getNoteWithChildren(notes, child._id);
+  //       if (childNoteWithChildren) {
+  //         sortedChildren.push(childNoteWithChildren);
+  //       }
+  //       break;
+  //     }
+  //   }
+
+  //   if (!found) {
+  //     prev = null;
+  //   }
+  // } while (prev !== null);
 
   return { ...note, children: sortedChildren };
 }
