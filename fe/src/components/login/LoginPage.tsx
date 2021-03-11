@@ -55,6 +55,14 @@ export default function LoginPage(props: LoginPageProps) {
   return (
     <div className="login-page">
       <div className="container">
+        <div className="logo">
+          <img
+            alt="engram logo"
+            width="auto"
+            height="256px"
+            src="/images/logo.svg"
+          />
+        </div>
         <div className="errors">
           {errors.map((error) => {
             return error.body;
@@ -96,6 +104,11 @@ export default function LoginPage(props: LoginPageProps) {
         <Link to={SignupPagePath}>
           <Button size="small">Sign Up</Button>
         </Link>
+        <div style={{ float: "right" }}>
+          <Link to={{ pathname: "https://engramhq.xyz" }} target="_blank">
+            <Button size="small">About</Button>
+          </Link>
+        </div>
       </div>
     </div>
   );

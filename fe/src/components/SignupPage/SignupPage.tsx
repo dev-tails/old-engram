@@ -1,13 +1,13 @@
-import './SignupPage.scss';
+import "./SignupPage.scss";
 
-import { Button, Divider, TextField } from '@material-ui/core';
-import React, { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Button, Divider, TextField } from "@material-ui/core";
+import React, { useState } from "react";
+import { Link, useHistory } from "react-router-dom";
 
-import { TermsOfServicePagePath } from '../../TermsOfServicePage/TermsOfServicePage';
-import { signUp } from '../../UsersApi';
-import { Note } from '../notes/NotesApi';
-import { PrivacyPolicyPagePath } from '../PrivacyPolicyPage/PrivacyPolicyPage';
+import { TermsOfServicePagePath } from "../../TermsOfServicePage/TermsOfServicePage";
+import { signUp } from "../../UsersApi";
+import { Note } from "../notes/NotesApi";
+import { PrivacyPolicyPagePath } from "../PrivacyPolicyPage/PrivacyPolicyPage";
 
 export type SignupPageProps = {};
 
@@ -56,6 +56,14 @@ export default function SignupPage(props: SignupPageProps) {
   return (
     <div className="signup-page">
       <div className="container">
+        <div className="logo">
+          <img
+            alt="engram logo"
+            width="auto"
+            height="256px"
+            src="/images/logo.svg"
+          />
+        </div>
         <div className="errors">
           {errors.map((error) => {
             return error;
@@ -104,6 +112,11 @@ export default function SignupPage(props: SignupPageProps) {
         <Link to="/login">
           <Button size="small">Log In</Button>
         </Link>
+        <div style={{ float: "right" }}>
+          <Link to={{ pathname: "https://engramhq.xyz" }} target="_blank">
+            <Button size="small">About</Button>
+          </Link>
+        </div>
       </div>
     </div>
   );
