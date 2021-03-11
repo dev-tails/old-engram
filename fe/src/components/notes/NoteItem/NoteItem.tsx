@@ -1,6 +1,6 @@
 import "./NoteItem.scss";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 
 import { BulletIcon } from "../BulletIcon/BulletIcon";
 import { Note } from "../NotesApi";
@@ -10,11 +10,11 @@ type NoteItemProps = {
   focused?: boolean;
   onSave?: (note: Partial<Note>) => void;
   onDelete?: (note: Partial<Note>) => void;
+  onSelect?: (note: Partial<Note>) => void;
 };
 
 export const NoteItem: React.FC<NoteItemProps> = (props) => {
   const noteBodyRef = useRef<HTMLDivElement>(null);
-  const [focused, setFocused] = useState(false);
 
   useEffect(() => {
     if (props.focused) {
@@ -24,7 +24,7 @@ export const NoteItem: React.FC<NoteItemProps> = (props) => {
 
   useEffect(() => {
     function keyDownListener(event: KeyboardEvent) {
-      if (!focused) {
+      if (!props.focused) {
         return;
       }
 
@@ -55,11 +55,12 @@ export const NoteItem: React.FC<NoteItemProps> = (props) => {
   });
 
   const handleFocus = () => {
-    setFocused(true);
+    if (props.onSelect) {
+      props.onSelect(props.note);
+    }
   };
 
   const handleBlur = (e: React.FocusEvent<HTMLDivElement>) => {
-    setFocused(false);
     const newText = e.target.innerText;
     if (newText === props.note.body) {
       return;
