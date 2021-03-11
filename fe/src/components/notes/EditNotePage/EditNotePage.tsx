@@ -34,16 +34,50 @@ export function indentNote(noteIndex: number, notes: Note[]) {
   };
 }
 
+export function unindentNote(noteIndex: number, notes: Note[]) {
+  const note = notes[noteIndex];
+  if (!note) {
+    return null;
+  }
+
+  let parentId = note.parent; // "1"
+  let parent = null;
+
+  for (let i = noteIndex - 1; i >= 0; i--) {
+    const currentNote = notes[i];
+    if (currentNote._id === parentId) {
+      parent = currentNote;
+      break;
+    }
+  }
+
+  return {
+    ...note,
+    parent: parent?.parent,
+  };
+}
+
 export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
   const params = useParams<EditNotePageParams>();
   const [activeNoteIndex, setActiveNoteIndex] = useState<number>(0);
   const [notes, setNotes] = useState<Note[]>([]);
 
-  const handleIndent = () => {
+  const handleIndent = async () => {
     const indentedNote = indentNote(activeNoteIndex, notes);
     if (indentedNote) {
       const notesCopy = [...notes];
       notesCopy.splice(activeNoteIndex, 1, indentedNote);
+      await handleSaveNote(indentedNote);
+      setNotes(notesCopy);
+    }
+  };
+
+  const handleUnindent = async () => {
+    const unindentedNote = unindentNote(activeNoteIndex, notes);
+    if (unindentedNote) {
+      const notesCopy = [...notes];
+      notesCopy.splice(activeNoteIndex, 1, unindentedNote);
+      await handleSaveNote(unindentedNote);
       setNotes(notesCopy);
     }
   };
@@ -55,6 +89,7 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
         event.stopPropagation();
 
         if (event.shiftKey) {
+          handleUnindent();
         } else {
           handleIndent();
         }
@@ -181,7 +216,6 @@ const NoteItemWithChildren: React.FC<NoteItemWithChildrenProps> = ({
         onSave={onSave}
         onDelete={onDelete}
         onSelect={onSelect}
-        focused={note.index === activeNoteIndex}
       />
       {note.children?.map((childNote) => {
         return (
