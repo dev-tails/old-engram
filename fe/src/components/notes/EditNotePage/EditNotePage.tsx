@@ -12,14 +12,66 @@ type EditNotePageParams = {
   id: string;
 };
 
+export function indentNote(noteIndex: number, notes: Note[]) {
+  const note = notes[noteIndex];
+  if (!note) {
+    return null;
+  }
+
+  let parent = note.parent;
+
+  for (let i = noteIndex - 1; i >= 0; i--) {
+    const currentNote = notes[i];
+    if (currentNote.parent === parent) {
+      parent = currentNote._id;
+      break;
+    }
+  }
+
+  return {
+    ...note,
+    parent,
+  };
+}
+
 export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
   const params = useParams<EditNotePageParams>();
-  const [notes, setNotes] = useState<Note[] | null>(null);
+  const [activeNoteIndex, setActiveNoteIndex] = useState<number>(0);
+  const [notes, setNotes] = useState<Note[]>([]);
+
+  const handleIndent = () => {
+    const indentedNote = indentNote(activeNoteIndex, notes);
+    if (indentedNote) {
+      const notesCopy = [...notes];
+      notesCopy.splice(activeNoteIndex, 1, indentedNote);
+      setNotes(notesCopy);
+    }
+  };
+
+  useEffect(() => {
+    function keyDownListener(event: KeyboardEvent) {
+      if (event.key === "Tab") {
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (event.shiftKey) {
+        } else {
+          handleIndent();
+        }
+      }
+    }
+    document.addEventListener("keydown", keyDownListener);
+
+    return () => {
+      document.removeEventListener("keydown", keyDownListener);
+    };
+  });
 
   useEffect(() => {
     async function fetchNote() {
       const fetchedNotes = await getNote({ id: params.id });
       setNotes(fetchedNotes);
+      setActiveNoteIndex(fetchedNotes.length);
     }
     fetchNote();
   }, [params.id]);
@@ -81,10 +133,17 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
         {topLevelNoteWithChildren.children?.map((note) => {
           return (
             <NoteItemWithChildren
+              activeNoteIndex={activeNoteIndex}
               key={note._id}
               note={note}
               onSave={handleSaveNote}
               onDelete={handleRemoveNote}
+              onSelect={(selectedNote) => {
+                const index = notes.findIndex(
+                  (n) => n._id === selectedNote._id
+                );
+                setActiveNoteIndex(index);
+              }}
             />
           );
         })}
@@ -92,7 +151,7 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
           key={notes.length}
           note={{ type: "note", body: "" }}
           onSave={handleNewNote}
-          focused={true}
+          focused={activeNoteIndex === notes.length}
         />
       </div>
     </div>
@@ -100,27 +159,39 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
 };
 
 type NoteItemWithChildrenProps = {
+  activeNoteIndex: number;
   note: CollapsibleNote;
   focused?: boolean;
   onSave?: (note: Partial<Note>) => void;
   onDelete?: (note: Partial<Note>) => void;
+  onSelect?: (note: Partial<Note>) => void;
 };
 
 const NoteItemWithChildren: React.FC<NoteItemWithChildrenProps> = ({
   note,
   onSave,
   onDelete,
+  onSelect,
+  activeNoteIndex,
 }) => {
   return (
     <div className="note-item-with-children">
-      <NoteItem note={note} onSave={onSave} onDelete={onDelete} />
+      <NoteItem
+        note={note}
+        onSave={onSave}
+        onDelete={onDelete}
+        onSelect={onSelect}
+        focused={note.index === activeNoteIndex}
+      />
       {note.children?.map((childNote) => {
         return (
           <div key={childNote._id} style={{ marginLeft: "12px" }}>
             <NoteItemWithChildren
+              activeNoteIndex={activeNoteIndex}
               note={childNote}
               onSave={onSave}
               onDelete={onDelete}
+              onSelect={onSelect}
             />
           </div>
         );
