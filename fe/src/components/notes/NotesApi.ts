@@ -3,6 +3,8 @@ import moment from "moment";
 import * as Api from "../../Api";
 import * as db from "../../db/db";
 import { isObjectId } from "../../utils/ObjectId";
+import querystring from "query-string";
+import axios from "axios";
 
 export type Note = db.Note;
 export type NoteType = db.NoteType;
@@ -18,13 +20,7 @@ export async function createNote(note: Partial<Note>) {
   let noteToCreate = { ...note, localId: db.getId() };
   await db.addNote(noteToCreate);
 
-  // const res = await axios.post(
-  //   "/api/notes",
-  //   { ...note },
-  //   { withCredentials: true }
-  // );
-
-  // const newNote = res.data;
+  axios.post("/api/notes", { ...note }).catch((err) => {});
 
   if (notes) {
     notes.push(noteToCreate);
@@ -66,21 +62,30 @@ export async function getNote(params: { id: string }): Promise<Note[]> {
   }
 }
 
-let notesPromise: Promise<any[]> | null = null;
+let getAllPromise: Promise<any> | null = null;
 let notes: Note[] | null = null;
 export async function getAllNotes(): Promise<any[]> {
-  if (!notesPromise) {
-    // notesPromise = Api.get(`/api/notes`);
-    notesPromise = db.getAllNotes();
+  if (!getAllPromise) {
+    const offlineNotesPromise = db.getAllNotes();
+
+    const lastSyncDate: Date | null = null;
+    const qs = querystring.stringify({
+      lastSyncDate,
+    });
+    const serverNotesPromise = Api.get(`/api/notes?${qs}`).catch((err) => {
+      // Intentionally ignore errors
+    });
+
+    getAllPromise = Promise.all([offlineNotesPromise, serverNotesPromise]);
   }
-  return notesPromise;
-  // const res = await notesPromise;
 
-  // if (!notes) {
-  //   notes = res.data;
-  // }
+  const [offlineNotes, res] = await getAllPromise;
 
-  // return notes;
+  if (!notes) {
+    notes = [...offlineNotes, ...(res ? res.data : [])];
+  }
+
+  return notes;
 }
 
 export type GetNotesParams = {
@@ -161,11 +166,7 @@ export async function getNotes(params: GetNotesParams = {}): Promise<Note[]> {
 export async function updateNote(note: Partial<Note>): Promise<Note> {
   await db.putNote(note);
 
-  // const res = await axios.put(`/api/notes/${note._id}`, note, {
-  //   withCredentials: true,
-  // });
-
-  // const updatedNote = res.data;
+  axios.put(`/api/notes/${note._id}`, note).catch(() => {});
 
   let updatedNote = note;
 
@@ -189,7 +190,7 @@ export async function removeNote(noteId?: string | null | undefined) {
 
   await db.deleteNote(noteId);
 
-  // await axios.delete(`/api/notes/${noteId}`);
+  axios.delete(`/api/notes/${noteId}`).catch((err) => {});
 
   if (notes) {
     const noteToRemoveIndex = notes.findIndex((note) => note._id === noteId);

@@ -20,7 +20,7 @@ import {
   TermsOfServicePage,
   TermsOfServicePagePath,
 } from "../TermsOfServicePage/TermsOfServicePage";
-import { hasLocalUser } from "../UsersApi";
+import { hasLocalDevice } from "../DeviceApi";
 
 function getStartDate(date: Date, dateRangeValue: string) {
   switch (dateRangeValue) {
@@ -199,7 +199,7 @@ const AuthenticatedRoute: React.FC<{ exact: boolean; path: string }> = ({
 
   useEffect(() => {
     async function checkLocalUser() {
-      setIsLocalUser(await hasLocalUser());
+      setIsLocalUser(await hasLocalDevice());
       setLoading(false);
     }
     checkLocalUser();

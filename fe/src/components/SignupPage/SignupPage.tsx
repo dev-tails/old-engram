@@ -5,7 +5,8 @@ import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 
 import { TermsOfServicePagePath } from "../../TermsOfServicePage/TermsOfServicePage";
-import { createLocalUser, signUp } from "../../UsersApi";
+import { signUp } from "../../UsersApi";
+import { createLocalDevice } from "../../DeviceApi";
 import { Note } from "../notes/NotesApi";
 import { PrivacyPolicyPagePath } from "../PrivacyPolicyPage/PrivacyPolicyPage";
 import { DividerWithText } from "../login/DividerWithText/DividerWithText";
@@ -55,7 +56,7 @@ export default function SignupPage(props: SignupPageProps) {
   };
 
   const handleUseWithoutAccount = async () => {
-    await createLocalUser();
+    await createLocalDevice();
     history.push("/");
   };
 

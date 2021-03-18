@@ -9,7 +9,7 @@ import { objectIdFromDate } from "../../utils/ObjectId";
 import { Note } from "../notes/NotesApi";
 import { SignupPagePath } from "../SignupPage/SignupPage";
 import { DividerWithText } from "./DividerWithText/DividerWithText";
-import { createLocalUser } from "../../UsersApi";
+import { createLocalDevice } from "../../DeviceApi";
 
 export type LoginPageProps = {};
 
@@ -53,7 +53,7 @@ export default function LoginPage(props: LoginPageProps) {
   };
 
   const handleUseWithoutAccount = async () => {
-    await createLocalUser();
+    await createLocalDevice();
     navigateToHome();
   };
 

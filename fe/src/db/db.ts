@@ -22,7 +22,7 @@ export type Note = {
 };
 
 interface MyDB extends DBSchema {
-  users: {
+  devices: {
     value: {
       localId?: string;
     };
@@ -50,7 +50,7 @@ export async function initializeDb() {
 
       notesStore.createIndex("parent", "parent");
 
-      db.createObjectStore("users", {
+      db.createObjectStore("devices", {
         keyPath: "localId",
       });
     },
@@ -93,16 +93,16 @@ export async function getNotesByParent(parent: string) {
   return db.getAllFromIndex("notes", "parent", parent);
 }
 
-export async function addUser() {
+export async function addDevice() {
   const db = await initializeDb();
-  const newUser = { localId: getId() };
-  await db.add("users", newUser);
-  console.log(newUser);
-  return newUser;
+  const newDevice = { localId: getId() };
+  await db.add("devices", newDevice);
+  console.log(newDevice);
+  return newDevice;
 }
 
-export async function getUser() {
+export async function getDevice() {
   const db = await initializeDb();
-  const users = await db.getAll("users");
-  return users[0];
+  const devices = await db.getAll("devices");
+  return devices[0];
 }
