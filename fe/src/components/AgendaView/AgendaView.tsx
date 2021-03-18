@@ -79,7 +79,7 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
                 });
                 if (!itemForMinutes) {
                   itemForMinutes = {
-                    _id: `${key}-${minutes}`,
+                    localId: `${key}-${minutes}`,
                     body: "",
                     start: startDate,
                   };
@@ -91,7 +91,7 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
                     key={`${date}-${index}-${minutes}`}
                   >
                     <CollapsibleNoteItem
-                      activeId={activeId}
+                      active={activeId === itemForMinutes.localId}
                       defaultType={type}
                       note={itemForMinutes}
                       onSave={onSave}

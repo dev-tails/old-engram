@@ -5,7 +5,6 @@ import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import React, { useEffect, useRef, useState } from "react";
 
-import { isObjectId } from "../../../utils/ObjectId";
 import { Markdown } from "../../Markdown/Markdown";
 import { BulletIcon } from "../BulletIcon/BulletIcon";
 import { Note, NoteType } from "../NotesApi";
@@ -13,9 +12,10 @@ import { Link } from "react-router-dom";
 
 export type CollapsibleNote = {
   _id?: string;
+  localId?: string;
   start?: Date;
   type?: NoteType;
-  body: string;
+  body?: string;
   prev?: string;
   parent?: string;
   children?: CollapsibleNote[];
@@ -24,7 +24,7 @@ export type CollapsibleNote = {
 type CollapsibleNoteItemProps = {
   note: CollapsibleNote;
   defaultType?: NoteType;
-  activeId: string | null;
+  active: boolean;
   onSave: (note: CollapsibleNote) => void;
   onUnindent?: (note: CollapsibleNote) => void;
   onIndent?: (note: CollapsibleNote) => void;
@@ -42,7 +42,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   const [type, setType] = useState(props.note.type || props.defaultType);
   const [collapsed, setCollapsed] = useState(false);
 
-  const isActive = props.note._id === props.activeId;
+  const isActive = props.active;
   const hasChildren = props.note.children && props.note.children.length > 0;
 
   const note = {
@@ -74,7 +74,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
 
           handleSave();
 
-          if (props.note._id) {
+          if (props.note.localId) {
             handleNewNote();
           }
         }
@@ -109,9 +109,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   };
 
   const handleSave = (update?: Partial<Note>) => {
-    const idValidNote = isObjectId(note._id);
-
-    if (!body && idValidNote) {
+    if (!body && note.localId) {
       props.onDelete(note);
       return;
     }
@@ -162,7 +160,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   };
 
   function getBodyForMarkdown() {
-    return body.replaceAll("\n\n", `\n&nbsp;\n`);
+    return body?.replaceAll("\n\n", `\n&nbsp;\n`) || "";
   }
 
   return (
@@ -214,7 +212,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
             return (
               <CollapsibleNoteItem
                 {...props}
-                key={childNote._id}
+                key={childNote.localId}
                 note={childNote}
               />
             );
