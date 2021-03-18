@@ -1,8 +1,14 @@
-import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import moment from "moment";
+import React, { useEffect, useState } from "react";
 
-import { AgendaView } from '../AgendaView/AgendaView';
-import { createOrUpdateNote, getNotes, Note, NoteType, removeNote } from '../notes/NotesApi';
+import { AgendaView } from "../AgendaView/AgendaView";
+import {
+  createOrUpdateNote,
+  getNotes,
+  Note,
+  NoteType,
+  removeNote,
+} from "../notes/NotesApi";
 
 type AgendaViewProps = {
   date: Date;
@@ -35,7 +41,7 @@ export const AgendaViewPage: React.FC<AgendaViewProps> = ({ date, type }) => {
     const itemsCopy = Array.from(items);
 
     const indexInItemsArray = itemsCopy.findIndex(
-      (item) => item._id === updatedNote._id
+      (item) => item.localId === updatedNote.localId
     );
     if (indexInItemsArray >= 0) {
       itemsCopy[indexInItemsArray] = updatedNote;
@@ -49,13 +55,13 @@ export const AgendaViewPage: React.FC<AgendaViewProps> = ({ date, type }) => {
     const itemsCopy = Array.from(items);
 
     const indexInItemsArray = itemsCopy.findIndex(
-      (item) => item._id === note._id
+      (item) => item.localId === note.localId
     );
 
     itemsCopy.splice(indexInItemsArray, 1);
     setItems(itemsCopy);
 
-    await removeNote(note._id);
+    await removeNote(note.localId);
   };
 
   return (

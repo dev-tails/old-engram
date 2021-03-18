@@ -96,7 +96,7 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
                       note={itemForMinutes}
                       onSave={onSave}
                       onActivate={(note) => {
-                        setActiveId(note._id || "");
+                        setActiveId(note.localId || "");
                       }}
                       onDelete={onDelete}
                       onBlur={handleNoteBlur}
