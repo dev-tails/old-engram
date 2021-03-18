@@ -5,6 +5,7 @@ import * as db from "../../db/db";
 import { isObjectId } from "../../utils/ObjectId";
 import querystring from "query-string";
 import axios from "axios";
+import { updateDevice } from "../../DeviceApi";
 
 export type Note = db.Note;
 export type NoteType = db.NoteType;
@@ -65,16 +66,35 @@ export async function getNote(params: { id: string }): Promise<Note[]> {
 let getAllPromise: Promise<any> | null = null;
 let notes: Note[] | null = null;
 export async function getAllNotes(): Promise<any[]> {
+  const device = await db.getDevice();
+
   if (!getAllPromise) {
     const offlineNotesPromise = db.getAllNotes();
 
-    const lastSyncDate: Date | null = null;
-    const qs = querystring.stringify({
-      lastSyncDate,
-    });
-    const serverNotesPromise = Api.get(`/api/notes?${qs}`).catch((err) => {
-      // Intentionally ignore errors
-    });
+    const lastSyncDate = device?.syncedAt;
+    let qs = "";
+    if (lastSyncDate) {
+      qs = querystring.stringify({
+        lastSyncDate: lastSyncDate.toISOString(),
+      });
+    }
+    const syncDate = new Date();
+    const serverNotesPromise = Api.get(`/api/notes?${qs}`)
+      .then(async (res) => {
+        if (device) {
+          const newServerNotes = res.data;
+          for (const note of newServerNotes) {
+            await db.insertOrUpdateNote(note);
+          }
+
+          await updateDevice({ ...device, syncedAt: syncDate });
+        }
+        return res;
+      })
+      .catch((err) => {
+        // Intentionally ignore errors
+        console.error(err);
+      });
 
     getAllPromise = Promise.all([offlineNotesPromise, serverNotesPromise]);
   }
@@ -89,8 +109,6 @@ export async function getAllNotes(): Promise<any[]> {
 }
 
 export type GetNotesParams = {
-  since_id?: string;
-  max_id?: string;
   startsBefore?: Date;
   startsAfter?: Date;
   since?: Date;
@@ -110,14 +128,6 @@ export async function getNotes(params: GetNotesParams = {}): Promise<Note[]> {
     searchRegex = new RegExp(params.search, "i");
   }
   const notesToReturn = notes.filter((note) => {
-    let id = note._id as string;
-
-    if (params.since_id && id < params.since_id) {
-      return false;
-    }
-    if (params.max_id && id > params.max_id) {
-      return false;
-    }
     if (params.type && note.type !== params.type) {
       if (params.type === "task" && note.type === "task_completed") {
       } else {
@@ -166,7 +176,9 @@ export async function getNotes(params: GetNotesParams = {}): Promise<Note[]> {
 export async function updateNote(note: Partial<Note>): Promise<Note> {
   await db.putNote(note);
 
-  axios.put(`/api/notes/${note._id}`, note).catch(() => {});
+  if (note._id) {
+    axios.put(`/api/notes/${note._id}`, note).catch(() => {});
+  }
 
   let updatedNote = note;
 
@@ -188,9 +200,12 @@ export async function removeNote(noteId?: string | null | undefined) {
     return;
   }
 
+  const note = await db.getNote(noteId);
   await db.deleteNote(noteId);
 
-  axios.delete(`/api/notes/${noteId}`).catch((err) => {});
+  if (note && note._id) {
+    axios.delete(`/api/notes/${note._id}`).catch((err) => {});
+  }
 
   if (notes) {
     const noteToRemoveIndex = notes.findIndex((note) => note._id === noteId);

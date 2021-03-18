@@ -1,4 +1,4 @@
-import { addDevice, getDevice } from "./db/db";
+import { addDevice, getDevice, putDevice } from "./db/db";
 
 export async function createLocalDevice() {
   const localDevice = await hasLocalDevice();
@@ -10,4 +10,11 @@ export async function createLocalDevice() {
 export async function hasLocalDevice(): Promise<boolean> {
   const device = await getDevice();
   return device ? true : false;
+}
+
+export async function updateDevice(device: {
+  localId: string;
+  syncedAt: Date;
+}) {
+  putDevice(device);
 }

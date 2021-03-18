@@ -18,41 +18,18 @@ export function initializeNotesRouter() {
     const querySchema = yup.object().shape({
       count: yup.number(),
       type: yup.string().nullable(),
-      max_id: new ObjectIdSchema(),
-      since_id: new ObjectIdSchema(),
       before: yup.date(),
       since: yup.date(),
       sort: yup.string().oneOf(["start"]),
+      lastSyncDate: yup.date().nullable(),
     });
     const parsedQuery = querySchema.cast(req.query);
 
-    const {
-      count,
-      since_id: sinceId,
-      max_id: maxId,
-      since,
-      before,
-      type,
-      sort,
-    } = parsedQuery;
+    const { count, since, before, type, sort, lastSyncDate } = parsedQuery;
 
     let findOptions = {
       user: ObjectId(user),
     };
-    if (sinceId && maxId) {
-      findOptions._id = {
-        $gt: sinceId,
-        $lte: maxId,
-      };
-    } else if (sinceId) {
-      findOptions._id = {
-        $gt: sinceId,
-      };
-    } else if (maxId) {
-      findOptions._id = {
-        $lte: maxId,
-      };
-    }
 
     if (since && before) {
       findOptions.start = {
@@ -64,10 +41,11 @@ export function initializeNotesRouter() {
         $gte: since,
       };
     } else if (before) {
-      findOptions._id = {
+      findOptions.start = {
         $lte: before,
       };
     }
+
     if (type) {
       if (type !== "task") {
         findOptions.type = type;
@@ -76,6 +54,12 @@ export function initializeNotesRouter() {
           $in: ["task", "task_completed"],
         };
       }
+    }
+
+    if (lastSyncDate) {
+      findOptions.syncedAt = {
+        $gt: lastSyncDate,
+      };
     }
 
     const query = db.collection("notes").find(findOptions);

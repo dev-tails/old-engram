@@ -8,6 +8,19 @@ export type NoteType =
   | "event"
   | "workspace";
 
+export type DBNote = {
+  _id?: string;
+  localId: string;
+  date?: string;
+  body?: string;
+  checked?: boolean;
+  archived?: boolean;
+  type?: NoteType;
+  start?: Date;
+  parent?: string;
+  prev?: string;
+};
+
 export type Note = {
   _id?: string;
   localId?: string;
@@ -24,7 +37,8 @@ export type Note = {
 interface MyDB extends DBSchema {
   devices: {
     value: {
-      localId?: string;
+      localId: string;
+      syncedAt?: Date;
     };
     key: string;
   };
@@ -70,12 +84,21 @@ export async function getNote(id: string) {
 
 export async function addNote(value: MyDB["notes"]["value"]) {
   const db = await initializeDb();
-  await db.add("notes", value);
+  await db.add("notes", { ...value, localId: uuidv4() });
 }
 
 export async function putNote(value: MyDB["notes"]["value"]) {
   const db = await initializeDb();
   await db.put("notes", value);
+}
+
+export async function insertOrUpdateNote(value: DBNote) {
+  const item = value.localId ? await getNote(value.localId) : null;
+  if (!item) {
+    await addNote(value);
+  } else {
+    await putNote(value);
+  }
 }
 
 export async function deleteNote(id: string) {
@@ -97,7 +120,6 @@ export async function addDevice() {
   const db = await initializeDb();
   const newDevice = { localId: getId() };
   await db.add("devices", newDevice);
-  console.log(newDevice);
   return newDevice;
 }
 
@@ -105,4 +127,10 @@ export async function getDevice() {
   const db = await initializeDb();
   const devices = await db.getAll("devices");
   return devices[0];
+}
+
+export async function putDevice(value: MyDB["devices"]["value"]) {
+  const db = await initializeDb();
+  await db.put("devices", value);
+  return value;
 }
