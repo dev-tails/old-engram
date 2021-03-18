@@ -138,6 +138,7 @@ export function initializeNotesRouter() {
       prev: new ObjectIdSchema(),
       archived: yup.boolean(),
       checked: yup.boolean(),
+      localId: yup.string(),
     });
 
     const update = await bodySchema.validate(req.body, { stripUnknown: true });
@@ -158,6 +159,7 @@ export function initializeNotesRouter() {
       {
         $set: {
           ...update,
+          syncedAt: new Date(),
         },
       }
     );
@@ -177,6 +179,7 @@ export function initializeNotesRouter() {
       type: yup.string().default("note"),
       parent: new ObjectIdSchema(),
       prev: new ObjectIdSchema(),
+      localId: yup.string(),
     });
 
     const noteToCreate = await bodySchema.validate(req.body, {
@@ -188,6 +191,7 @@ export function initializeNotesRouter() {
     const insertOpResult = await db.collection("notes").insertOne({
       user: ObjectId(user),
       ...noteToCreate,
+      syncedAt: new Date(),
     });
 
     const newNote = await db.collection("notes").findOne({

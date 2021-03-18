@@ -92,14 +92,15 @@ export async function addNote(value: MyDB["notes"]["value"]) {
 export async function putNote(value: MyDB["notes"]["value"]) {
   const db = await initializeDb();
   await db.put("notes", value);
+  return value;
 }
 
 export async function insertOrUpdateNote(value: DBNote) {
   const item = value.localId ? await getNote(value.localId) : null;
   if (!item) {
-    await addNote(value);
+    return addNote(value);
   } else {
-    await putNote(value);
+    return putNote(value);
   }
 }
 

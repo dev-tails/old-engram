@@ -1,6 +1,6 @@
-import yup from 'yup';
+import yup from "yup";
 
-import { ObjectIdSchema } from './ObjectIdSchema.js';
+import { ObjectIdSchema } from "./ObjectIdSchema.js";
 
 export default yup.object().shape({
   _id: yup.string().required(),
@@ -14,4 +14,5 @@ export default yup.object().shape({
     .oneOf(["note", "task", "task_complete", "event"]),
   parent: new ObjectIdSchema().default(""),
   prev: new ObjectIdSchema().default(""),
+  localId: yup.string(),
 });

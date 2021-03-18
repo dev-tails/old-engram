@@ -6,6 +6,7 @@ import { isObjectId } from "../../utils/ObjectId";
 import querystring from "query-string";
 import axios from "axios";
 import { updateDevice } from "../../DeviceApi";
+import { sortBy, uniqBy } from "lodash";
 
 export type Note = db.Note;
 export type NoteType = db.NoteType;
@@ -20,7 +21,13 @@ export async function createOrUpdateNote(note: Partial<Note>) {
 export async function createNote(note: Partial<Note>) {
   let noteToCreate = await db.addNote(note);
 
-  axios.post("/api/notes", { ...note }).catch((err) => {});
+  axios
+    .post("/api/notes", noteToCreate)
+    .then((res) => {
+      const addedNote = res.data;
+      return db.putNote(addedNote);
+    })
+    .catch((err) => {});
 
   if (notes) {
     notes.push(noteToCreate);
@@ -80,15 +87,17 @@ export async function getAllNotes(): Promise<any[]> {
     const syncDate = new Date();
     const serverNotesPromise = Api.get(`/api/notes?${qs}`)
       .then(async (res) => {
+        const serverNotes = [];
         if (device) {
           const newServerNotes = res.data;
           for (const note of newServerNotes) {
-            await db.insertOrUpdateNote(note);
+            const noteWithLocalId = await db.insertOrUpdateNote(note);
+            serverNotes.push(noteWithLocalId);
           }
 
           await updateDevice({ ...device, syncedAt: syncDate });
         }
-        return res;
+        return serverNotes;
       })
       .catch((err) => {
         // Intentionally ignore errors
@@ -98,10 +107,10 @@ export async function getAllNotes(): Promise<any[]> {
     getAllPromise = Promise.all([offlineNotesPromise, serverNotesPromise]);
   }
 
-  const [offlineNotes, res] = await getAllPromise;
+  const [offlineNotes, serverNotes] = await getAllPromise;
 
   if (!notes) {
-    notes = [...offlineNotes, ...(res ? res.data : [])];
+    notes = sortBy(uniqBy([...serverNotes, ...offlineNotes], "localId"), "_id");
   }
 
   return notes;
@@ -176,7 +185,13 @@ export async function updateNote(note: Partial<Note>): Promise<Note> {
   await db.putNote(note);
 
   if (note._id) {
-    axios.put(`/api/notes/${note._id}`, note).catch(() => {});
+    axios
+      .put(`/api/notes/${note._id}`, note)
+      .then((res) => {
+        const updatedNote = res.data;
+        return db.putNote(updatedNote);
+      })
+      .catch(() => {});
   }
 
   let updatedNote = note;
