@@ -1,5 +1,5 @@
 import moment from "moment";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Redirect, Route, Switch, useLocation } from "react-router-dom";
 
 import { Header } from "../components/header/Header";
@@ -20,6 +20,7 @@ import {
   TermsOfServicePage,
   TermsOfServicePagePath,
 } from "../TermsOfServicePage/TermsOfServicePage";
+import { hasLocalUser } from "../UsersApi";
 
 function getStartDate(date: Date, dateRangeValue: string) {
   switch (dateRangeValue) {
@@ -131,7 +132,6 @@ export default function Routes() {
   ) => {
     setActiveParentId(id);
     setWorkspaceName(name);
-    console.log(name);
   };
 
   if (workspaceName) {
@@ -148,7 +148,7 @@ export default function Routes() {
         activeParentId={activeParentId}
       />
       <Switch>
-        <Route exact path="/">
+        <AuthenticatedRoute exact={true} path="/">
           <HomePage
             dateRangeValue={dateRangeValue}
             date={date}
@@ -159,7 +159,7 @@ export default function Routes() {
             onDateChange={handleDateChanged}
             onDateRangeChange={handleDateRangeChanged}
           />
-        </Route>
+        </AuthenticatedRoute>
         <Route exact path="/notes/:id">
           <EditNotePage />
         </Route>
@@ -189,3 +189,32 @@ export default function Routes() {
     </>
   );
 }
+
+const AuthenticatedRoute: React.FC<{ exact: boolean; path: string }> = ({
+  children,
+  ...rest
+}) => {
+  const [isLocalUser, setIsLocalUser] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function checkLocalUser() {
+      setIsLocalUser(await hasLocalUser());
+      setLoading(false);
+    }
+    checkLocalUser();
+  });
+
+  if (loading) {
+    return null;
+  }
+
+  return (
+    <Route
+      {...rest}
+      render={() => {
+        return isLocalUser === true ? children : <Redirect to="/login" />;
+      }}
+    />
+  );
+};

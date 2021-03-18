@@ -63,12 +63,15 @@ export async function getAllNotes() {
   return db.getAll("notes");
 }
 
-export async function addUser(value: MyDB["users"]["value"]) {
+export async function addUser() {
   const db = await initializeDb();
-  await db.add("users", value);
+  const newUser = { localId: getId() };
+  await db.add("users", newUser);
+  console.log(newUser);
+  return newUser;
 }
 
-export async function getUser(value: MyDB["users"]["value"]) {
+export async function getUser() {
   const db = await initializeDb();
   const users = await db.getAll("users");
   return users[0];

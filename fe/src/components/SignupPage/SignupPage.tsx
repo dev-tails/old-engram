@@ -5,9 +5,10 @@ import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 
 import { TermsOfServicePagePath } from "../../TermsOfServicePage/TermsOfServicePage";
-import { signUp } from "../../UsersApi";
+import { createLocalUser, signUp } from "../../UsersApi";
 import { Note } from "../notes/NotesApi";
 import { PrivacyPolicyPagePath } from "../PrivacyPolicyPage/PrivacyPolicyPage";
+import { DividerWithText } from "../login/DividerWithText/DividerWithText";
 
 export type SignupPageProps = {};
 
@@ -53,6 +54,11 @@ export default function SignupPage(props: SignupPageProps) {
     setEmail(event.target.value);
   };
 
+  const handleUseWithoutAccount = async () => {
+    await createLocalUser();
+    history.push("/");
+  };
+
   return (
     <div className="signup-page">
       <div className="container">
@@ -64,6 +70,19 @@ export default function SignupPage(props: SignupPageProps) {
             src="/images/logo.svg"
           />
         </div>
+
+        <div id="use-without-account">
+          <Button
+            onClick={handleUseWithoutAccount}
+            variant="contained"
+            color="primary"
+          >
+            Use Without Account
+          </Button>
+        </div>
+
+        <DividerWithText>Or</DividerWithText>
+
         <div className="errors">
           {errors.map((error) => {
             return error;
