@@ -2,6 +2,12 @@ import { openDB, DBSchema, IDBPDatabase } from "idb";
 import { v4 as uuidv4 } from "uuid";
 
 interface MyDB extends DBSchema {
+  users: {
+    value: {
+      localId?: string;
+    };
+    key: string;
+  };
   notes: {
     value: {
       _id?: string;
@@ -22,6 +28,9 @@ export async function initializeDb() {
   _db = await openDB<MyDB>("engram-db", 1, {
     upgrade(db) {
       db.createObjectStore("notes", {
+        keyPath: "localId",
+      });
+      db.createObjectStore("users", {
         keyPath: "localId",
       });
     },
@@ -52,4 +61,15 @@ export async function deleteNote(id: string) {
 export async function getAllNotes() {
   const db = await initializeDb();
   return db.getAll("notes");
+}
+
+export async function addUser(value: MyDB["users"]["value"]) {
+  const db = await initializeDb();
+  await db.add("users", value);
+}
+
+export async function getUser(value: MyDB["users"]["value"]) {
+  const db = await initializeDb();
+  const users = await db.getAll("users");
+  return users[0];
 }
