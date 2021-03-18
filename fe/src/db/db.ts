@@ -1,6 +1,26 @@
 import { openDB, DBSchema, IDBPDatabase } from "idb";
 import { v4 as uuidv4 } from "uuid";
 
+export type NoteType =
+  | "note"
+  | "task"
+  | "task_completed"
+  | "event"
+  | "workspace";
+
+export type Note = {
+  _id?: string;
+  localId?: string;
+  date?: string;
+  body?: string;
+  checked?: boolean;
+  archived?: boolean;
+  type?: NoteType;
+  start?: Date;
+  parent?: string;
+  prev?: string;
+};
+
 interface MyDB extends DBSchema {
   users: {
     value: {
@@ -9,12 +29,9 @@ interface MyDB extends DBSchema {
     key: string;
   };
   notes: {
-    value: {
-      _id?: string;
-      body?: string;
-      localId?: string;
-    };
+    value: Note;
     key: string;
+    indexes: { parent: string };
   };
 }
 
@@ -27,9 +44,12 @@ export async function initializeDb() {
 
   _db = await openDB<MyDB>("engram-db", 1, {
     upgrade(db) {
-      db.createObjectStore("notes", {
+      const notesStore = db.createObjectStore("notes", {
         keyPath: "localId",
       });
+
+      notesStore.createIndex("parent", "parent");
+
       db.createObjectStore("users", {
         keyPath: "localId",
       });
@@ -41,6 +61,11 @@ export async function initializeDb() {
 
 export function getId() {
   return uuidv4();
+}
+
+export async function getNote(id: string) {
+  const db = await initializeDb();
+  return db.get("notes", id);
 }
 
 export async function addNote(value: MyDB["notes"]["value"]) {
@@ -61,6 +86,11 @@ export async function deleteNote(id: string) {
 export async function getAllNotes() {
   const db = await initializeDb();
   return db.getAll("notes");
+}
+
+export async function getNotesByParent(parent: string) {
+  const db = await initializeDb();
+  return db.getAllFromIndex("notes", "parent", parent);
 }
 
 export async function addUser() {

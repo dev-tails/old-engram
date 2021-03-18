@@ -23,7 +23,7 @@ export function indentNote(noteIndex: number, notes: Note[]) {
   for (let i = noteIndex - 1; i >= 0; i--) {
     const currentNote = notes[i];
     if (currentNote.parent === parent) {
-      parent = currentNote._id;
+      parent = currentNote.localId;
       break;
     }
   }
@@ -45,7 +45,7 @@ export function unindentNote(noteIndex: number, notes: Note[]) {
 
   for (let i = noteIndex - 1; i >= 0; i--) {
     const currentNote = notes[i];
-    if (currentNote._id === parentId) {
+    if (currentNote.localId === parentId) {
       parent = currentNote;
       break;
     }
@@ -127,7 +127,7 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
       return;
     }
     updateNote({
-      _id: params.id,
+      localId: params.id,
       body: e.target.innerText,
     });
   };
@@ -147,9 +147,9 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
   };
 
   const handleRemoveNote = async (note: Partial<Note>) => {
-    await removeNote(note._id);
+    await removeNote(note.localId);
     const notesCopy = [...notes];
-    const index = notesCopy.findIndex((n) => n._id === note._id);
+    const index = notesCopy.findIndex((n) => n.localId === note.localId);
     notesCopy.splice(index, 1);
     setNotes(notesCopy);
   };
@@ -169,13 +169,13 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
           return (
             <NoteItemWithChildren
               activeNoteIndex={activeNoteIndex}
-              key={note._id}
+              key={note.localId}
               note={note}
               onSave={handleSaveNote}
               onDelete={handleRemoveNote}
               onSelect={(selectedNote) => {
                 const index = notes.findIndex(
-                  (n) => n._id === selectedNote._id
+                  (n) => n.localId === selectedNote.localId
                 );
                 setActiveNoteIndex(index);
               }}
@@ -219,7 +219,7 @@ const NoteItemWithChildren: React.FC<NoteItemWithChildrenProps> = ({
       />
       {note.children?.map((childNote) => {
         return (
-          <div key={childNote._id} style={{ marginLeft: "12px" }}>
+          <div key={childNote.localId} style={{ marginLeft: "12px" }}>
             <NoteItemWithChildren
               activeNoteIndex={activeNoteIndex}
               note={childNote}

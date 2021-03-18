@@ -4,25 +4,8 @@ import * as Api from "../../Api";
 import * as db from "../../db/db";
 import { isObjectId } from "../../utils/ObjectId";
 
-export type NoteType =
-  | "note"
-  | "task"
-  | "task_completed"
-  | "event"
-  | "workspace";
-
-export type Note = {
-  _id?: string;
-  localId?: string;
-  date?: string;
-  body?: string;
-  checked?: boolean;
-  archived?: boolean;
-  type?: NoteType;
-  start?: Date;
-  parent?: string;
-  prev?: string;
-};
+export type Note = db.Note;
+export type NoteType = db.NoteType;
 
 export async function createOrUpdateNote(note: Partial<Note>) {
   if (isObjectId(note._id)) {
@@ -51,10 +34,36 @@ export async function createNote(note: Partial<Note>) {
 }
 
 export async function getNote(params: { id: string }): Promise<Note[]> {
-  const res = await Api.get(`/api/notes/${params.id}`, {
-    withCredentials: true,
-  });
-  return res.data;
+  if (isObjectId(params.id)) {
+    const res = await Api.get(`/api/notes/${params.id}`, {
+      withCredentials: true,
+    });
+    return res.data;
+  } else {
+    let notes: Note[] = [];
+    let parentNote = await db.getNote(params.id);
+    if (parentNote) {
+      notes.push(parentNote);
+    }
+
+    let depth = 1;
+    const maxDepth = 10;
+    let parentIds = [params.id];
+    do {
+      let childrenNotes: Note[] = [];
+      for (const parentId of parentIds) {
+        const childNotes = await db.getNotesByParent(parentId);
+        childrenNotes = childrenNotes.concat(childNotes);
+      }
+
+      parentIds = childrenNotes.map((childNote) => childNote.localId || "");
+
+      notes = [...notes, ...childrenNotes];
+      depth++;
+    } while (parentIds.length > 0 && depth < maxDepth);
+
+    return notes;
+  }
 }
 
 let notesPromise: Promise<any[]> | null = null;
