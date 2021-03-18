@@ -84,7 +84,9 @@ export async function getNote(id: string) {
 
 export async function addNote(value: MyDB["notes"]["value"]) {
   const db = await initializeDb();
-  await db.add("notes", { ...value, localId: uuidv4() });
+  const noteToAdd = { ...value, localId: getId() };
+  await db.add("notes", noteToAdd);
+  return noteToAdd;
 }
 
 export async function putNote(value: MyDB["notes"]["value"]) {

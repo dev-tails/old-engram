@@ -18,8 +18,7 @@ export async function createOrUpdateNote(note: Partial<Note>) {
 }
 
 export async function createNote(note: Partial<Note>) {
-  let noteToCreate = { ...note, localId: db.getId() };
-  await db.addNote(noteToCreate);
+  let noteToCreate = await db.addNote(note);
 
   axios.post("/api/notes", { ...note }).catch((err) => {});
 
