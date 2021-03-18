@@ -19,7 +19,7 @@ export async function createOrUpdateNote(note: Partial<Note>) {
 }
 
 export async function createNote(note: Partial<Note>) {
-  let noteToCreate = await db.addNote(note);
+  let noteToCreate = await db.addNote({ ...note, localId: db.getId() });
 
   axios
     .post("/api/notes", noteToCreate)
@@ -91,7 +91,10 @@ export async function getAllNotes(): Promise<any[]> {
         if (device) {
           const newServerNotes = res.data;
           for (const note of newServerNotes) {
-            const noteWithLocalId = await db.insertOrUpdateNote(note);
+            const noteWithLocalId = await db.insertOrUpdateNote({
+              ...note,
+              localId: note.localId || note._id,
+            });
             serverNotes.push(noteWithLocalId);
           }
 

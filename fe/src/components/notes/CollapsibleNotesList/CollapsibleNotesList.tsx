@@ -27,7 +27,7 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
   props
 ) => {
   const [activeParentId, setActiveParentId] = useState<string>("");
-  const [activeNoteId, setActiveNoteId] = useState<string>("");
+  const [activeNoteId, setActiveNoteId] = useState<string | undefined>("");
   const [notes, setNotes] = useState<Note[]>(props.notes);
 
   useEffect(() => {
