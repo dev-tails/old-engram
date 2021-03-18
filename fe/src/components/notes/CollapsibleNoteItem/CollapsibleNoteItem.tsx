@@ -179,7 +179,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
             <ArrowDropDownIcon fontSize="small" />
           )}
         </span>
-        <Link to={`/notes/${note._id || note.localId}`}>
+        <Link to={`/notes/${note.localId}`}>
           <span className={`block-edit`} onClick={handleToggleExpand}>
             <svg height="8" width="8" fill="#FFF">
               <circle cx="4" cy="1" r="1" />

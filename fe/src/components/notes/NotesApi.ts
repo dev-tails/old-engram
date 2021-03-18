@@ -37,36 +37,29 @@ export async function createNote(note: Partial<Note>) {
 }
 
 export async function getNote(params: { id: string }): Promise<Note[]> {
-  if (isObjectId(params.id)) {
-    const res = await Api.get(`/api/notes/${params.id}`, {
-      withCredentials: true,
-    });
-    return res.data;
-  } else {
-    let notes: Note[] = [];
-    let parentNote = await db.getNote(params.id);
-    if (parentNote) {
-      notes.push(parentNote);
+  let notes: Note[] = [];
+  let parentNote = await db.getNote(params.id);
+  if (parentNote) {
+    notes.push(parentNote);
+  }
+
+  let depth = 1;
+  const maxDepth = 10;
+  let parentIds = [params.id];
+  do {
+    let childrenNotes: Note[] = [];
+    for (const parentId of parentIds) {
+      const childNotes = await db.getNotesByParent(parentId);
+      childrenNotes = childrenNotes.concat(childNotes);
     }
 
-    let depth = 1;
-    const maxDepth = 10;
-    let parentIds = [params.id];
-    do {
-      let childrenNotes: Note[] = [];
-      for (const parentId of parentIds) {
-        const childNotes = await db.getNotesByParent(parentId);
-        childrenNotes = childrenNotes.concat(childNotes);
-      }
+    parentIds = childrenNotes.map((childNote) => childNote.localId || "");
 
-      parentIds = childrenNotes.map((childNote) => childNote.localId || "");
+    notes = [...notes, ...childrenNotes];
+    depth++;
+  } while (parentIds.length > 0 && depth < maxDepth);
 
-      notes = [...notes, ...childrenNotes];
-      depth++;
-    } while (parentIds.length > 0 && depth < maxDepth);
-
-    return notes;
-  }
+  return notes;
 }
 
 let getAllPromise: Promise<any> | null = null;
