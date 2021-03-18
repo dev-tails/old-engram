@@ -142,6 +142,7 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
         );
       })}
       <CollapsibleNoteItem
+        key={notes.length}
         note={{ body: "" }}
         defaultType={props.type}
         active={activeNoteId === "empty"}
