@@ -1,12 +1,12 @@
-import moment from "moment";
+import axios from 'axios';
+import { sortBy, uniqBy } from 'lodash';
+import moment from 'moment';
+import querystring from 'query-string';
 
-import * as Api from "../../Api";
-import * as db from "../../db/db";
-import { isObjectId } from "../../utils/ObjectId";
-import querystring from "query-string";
-import axios from "axios";
-import { updateDevice } from "../../DeviceApi";
-import { sortBy, uniqBy } from "lodash";
+import * as Api from '../../Api';
+import * as db from '../../db/db';
+import { updateDevice } from '../../DeviceApi';
+import { isObjectId } from '../../utils/ObjectId';
 
 export type Note = db.Note;
 export type NoteType = db.NoteType;
@@ -98,6 +98,7 @@ export async function getAllNotes(): Promise<any[]> {
       .catch((err) => {
         // Intentionally ignore errors
         console.error(err);
+        return [];
       });
 
     getAllPromise = Promise.all([offlineNotesPromise, serverNotesPromise]);
