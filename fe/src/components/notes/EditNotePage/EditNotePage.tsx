@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
-import { CollapsibleNote } from "../CollapsibleNoteItem/CollapsibleNoteItem";
-import { NoteItem } from "../NoteItem/NoteItem";
-import { createNote, getNote, Note, removeNote, updateNote } from "../NotesApi";
-import { getNoteWithChildren } from "../NoteUtils";
-import "./EditNotePage.scss";
+import './EditNotePage.scss';
+
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router';
+
+import { CollapsibleNote } from '../CollapsibleNoteItem/CollapsibleNoteItem';
+import { NoteItem } from '../NoteItem/NoteItem';
+import { createNote, getNote, Note, removeNote, updateNote } from '../NotesApi';
+import { getNoteWithChildren } from '../NoteUtils';
 
 type EditNotePageProps = {};
 
@@ -138,12 +140,18 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
       parent: params.id,
     });
     setNotes([...notes, createdNote]);
+    setActiveNoteIndex(notes.length + 1);
   };
 
   const handleSaveNote = async (note: Partial<Note>) => {
     await updateNote({
       ...note,
     });
+  };
+
+  const handleSubmitNote = async (note: Partial<Note>) => {
+    await handleSaveNote(note);
+    setActiveNoteIndex(activeNoteIndex + 1);
   };
 
   const handleRemoveNote = async (note: Partial<Note>) => {
@@ -153,6 +161,9 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
     notesCopy.splice(index, 1);
     setNotes(notesCopy);
   };
+
+  const activeNote =
+    activeNoteIndex < notes.length ? notes[activeNoteIndex] : null;
 
   return (
     <div className="edit-note-page">
@@ -168,10 +179,11 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
         {topLevelNoteWithChildren.children?.map((note) => {
           return (
             <NoteItemWithChildren
-              activeNoteIndex={activeNoteIndex}
+              activeNoteId={activeNote?._id}
               key={note.localId}
               note={note}
               onSave={handleSaveNote}
+              onSubmit={handleSubmitNote}
               onDelete={handleRemoveNote}
               onSelect={(selectedNote) => {
                 const index = notes.findIndex(
@@ -186,7 +198,11 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
           key={notes.length}
           note={{ type: "note", body: "" }}
           onSave={handleNewNote}
+          onSubmit={handleNewNote}
           focused={activeNoteIndex === notes.length}
+          onSelect={() => {
+            setActiveNoteIndex(notes.length);
+          }}
         />
       </div>
     </div>
@@ -194,38 +210,43 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
 };
 
 type NoteItemWithChildrenProps = {
-  activeNoteIndex: number;
+  activeNoteId?: string;
   note: CollapsibleNote;
   focused?: boolean;
   onSave?: (note: Partial<Note>) => void;
   onDelete?: (note: Partial<Note>) => void;
   onSelect?: (note: Partial<Note>) => void;
+  onSubmit?: (note: Partial<Note>) => void;
 };
 
 const NoteItemWithChildren: React.FC<NoteItemWithChildrenProps> = ({
+  activeNoteId,
   note,
   onSave,
   onDelete,
   onSelect,
-  activeNoteIndex,
+  onSubmit,
 }) => {
   return (
     <div className="note-item-with-children">
       <NoteItem
+        focused={activeNoteId === note._id}
         note={note}
         onSave={onSave}
         onDelete={onDelete}
         onSelect={onSelect}
+        onSubmit={onSubmit}
       />
       {note.children?.map((childNote) => {
         return (
           <div key={childNote.localId} style={{ marginLeft: "12px" }}>
             <NoteItemWithChildren
-              activeNoteIndex={activeNoteIndex}
+              activeNoteId={activeNoteId}
               note={childNote}
               onSave={onSave}
               onDelete={onDelete}
               onSelect={onSelect}
+              onSubmit={onSubmit}
             />
           </div>
         );

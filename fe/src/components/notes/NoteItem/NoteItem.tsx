@@ -1,9 +1,9 @@
-import "./NoteItem.scss";
+import './NoteItem.scss';
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from 'react';
 
-import { BulletIcon } from "../BulletIcon/BulletIcon";
-import { Note } from "../NotesApi";
+import { BulletIcon } from '../BulletIcon/BulletIcon';
+import { Note } from '../NotesApi';
 
 type NoteItemProps = {
   note: Note;
@@ -11,6 +11,7 @@ type NoteItemProps = {
   onSave?: (note: Partial<Note>) => void;
   onDelete?: (note: Partial<Note>) => void;
   onSelect?: (note: Partial<Note>) => void;
+  onSubmit?: (note: Partial<Note>) => void;
 };
 
 export const NoteItem: React.FC<NoteItemProps> = (props) => {
@@ -43,7 +44,9 @@ export const NoteItem: React.FC<NoteItemProps> = (props) => {
         if (!event.shiftKey) {
           event.preventDefault();
 
-          handleSave({ body });
+          if (props.onSubmit) {
+            props.onSubmit({ ...props.note, body });
+          }
         }
       }
     }
@@ -73,7 +76,7 @@ export const NoteItem: React.FC<NoteItemProps> = (props) => {
   const handleSave = (update: Partial<Note>) => {
     if (props.onSave) {
       props.onSave({
-        _id: props.note._id,
+        ...props.note,
         ...update,
       });
     }
