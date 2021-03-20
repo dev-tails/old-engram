@@ -1,12 +1,12 @@
-import './EditNotePage.scss';
+import "./EditNotePage.scss";
 
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router";
 
-import { CollapsibleNote } from '../CollapsibleNoteItem/CollapsibleNoteItem';
-import { NoteItem } from '../NoteItem/NoteItem';
-import { createNote, getNote, Note, removeNote, updateNote } from '../NotesApi';
-import { getNoteWithChildren } from '../NoteUtils';
+import { CollapsibleNote } from "../CollapsibleNoteItem/CollapsibleNoteItem";
+import { NoteItem } from "../NoteItem/NoteItem";
+import { createNote, getNote, Note, removeNote, updateNote } from "../NotesApi";
+import { getNoteWithChildren } from "../NoteUtils";
 
 type EditNotePageProps = {};
 
@@ -141,7 +141,7 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
       return;
     }
     updateNote({
-      localId: params.id,
+      ...topLevelNoteWithChildren,
       body: e.target.innerText,
     });
   };
