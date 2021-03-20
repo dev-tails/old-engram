@@ -1,12 +1,13 @@
-import axios from 'axios';
-import { sortBy, uniqBy } from 'lodash';
-import moment from 'moment';
-import querystring from 'query-string';
+import axios from "axios";
+import { sortBy, uniqBy } from "lodash";
+import moment from "moment";
+import querystring from "query-string";
 
-import * as Api from '../../Api';
-import * as db from '../../db/db';
-import { updateDevice } from '../../DeviceApi';
-import { isObjectId } from '../../utils/ObjectId';
+import * as Api from "../../Api";
+import * as db from "../../db/db";
+import * as UsersApi from "../../UsersApi";
+import { updateDevice } from "../../DeviceApi";
+import { isObjectId } from "../../utils/ObjectId";
 
 export type Note = db.Note;
 export type NoteType = db.NoteType;
@@ -21,13 +22,16 @@ export async function createOrUpdateNote(note: Partial<Note>) {
 export async function createNote(note: Partial<Note>) {
   let noteToCreate = await db.addNote({ ...note, localId: db.getId() });
 
-  axios
-    .post("/api/notes", noteToCreate)
-    .then((res) => {
-      const addedNote = res.data;
-      return db.putNote(addedNote);
-    })
-    .catch((err) => {});
+  const isAuthenticatedUser = await UsersApi.isAuthenticatedUser();
+  if (isAuthenticatedUser) {
+    axios
+      .post("/api/notes", noteToCreate)
+      .then((res) => {
+        const addedNote = res.data;
+        return db.putNote(addedNote);
+      })
+      .catch((err) => {});
+  }
 
   if (notes) {
     notes.push(noteToCreate);
@@ -69,45 +73,53 @@ export async function getAllNotes(): Promise<any[]> {
 
   if (!getAllPromise) {
     const offlineNotesPromise = db.getAllNotes();
+    const promises = [offlineNotesPromise];
 
-    const lastSyncDate = device?.syncedAt;
-    let qs = "";
-    if (lastSyncDate) {
-      qs = querystring.stringify({
-        lastSyncDate: lastSyncDate.toISOString(),
-      });
-    }
-    const syncDate = new Date();
-    const serverNotesPromise = Api.get(`/api/notes?${qs}`)
-      .then(async (res) => {
-        const serverNotes = [];
-        if (device) {
-          const newServerNotes = res.data;
-          for (const note of newServerNotes) {
-            const noteWithLocalId = await db.insertOrUpdateNote({
-              ...note,
-              localId: note.localId || note._id,
-            });
-            serverNotes.push(noteWithLocalId);
+    const isAuthenticatedUser = await UsersApi.isAuthenticatedUser();
+    if (isAuthenticatedUser) {
+      const lastSyncDate = device?.syncedAt;
+      let qs = "";
+      if (lastSyncDate) {
+        qs = querystring.stringify({
+          lastSyncDate: lastSyncDate.toISOString(),
+        });
+      }
+      const syncDate = new Date();
+      const serverNotesPromise = Api.get(`/api/notes?${qs}`)
+        .then(async (res) => {
+          const serverNotes = [];
+          if (device) {
+            const newServerNotes = res.data;
+            for (const note of newServerNotes) {
+              const noteWithLocalId = await db.insertOrUpdateNote({
+                ...note,
+                localId: note.localId || note._id,
+              });
+              serverNotes.push(noteWithLocalId);
+            }
+
+            await updateDevice({ ...device, syncedAt: syncDate });
           }
+          return serverNotes;
+        })
+        .catch((err) => {
+          // Intentionally ignore errors
+          console.error(err);
+          return [];
+        });
+      promises.push(serverNotesPromise);
+    }
 
-          await updateDevice({ ...device, syncedAt: syncDate });
-        }
-        return serverNotes;
-      })
-      .catch((err) => {
-        // Intentionally ignore errors
-        console.error(err);
-        return [];
-      });
-
-    getAllPromise = Promise.all([offlineNotesPromise, serverNotesPromise]);
+    getAllPromise = Promise.all(promises);
   }
 
   const [offlineNotes, serverNotes] = await getAllPromise;
 
   if (!notes) {
-    notes = sortBy(uniqBy([...serverNotes, ...offlineNotes], "localId"), "_id");
+    notes = sortBy(
+      uniqBy([...(serverNotes ? serverNotes : []), ...offlineNotes], "localId"),
+      "_id"
+    );
   }
 
   return notes;
@@ -181,7 +193,7 @@ export async function getNotes(params: GetNotesParams = {}): Promise<Note[]> {
 export async function updateNote(note: Partial<Note>): Promise<Note> {
   await db.putNote(note);
 
-  if (note._id) {
+  if (note._id && (await UsersApi.isAuthenticatedUser())) {
     axios
       .put(`/api/notes/${note._id}`, note)
       .then((res) => {
@@ -214,7 +226,7 @@ export async function removeNote(noteId?: string | null | undefined) {
   const note = await db.getNote(noteId);
   await db.deleteNote(noteId);
 
-  if (note && note._id) {
+  if (note && note._id && (await UsersApi.isAuthenticatedUser())) {
     axios.delete(`/api/notes/${note._id}`).catch((err) => {});
   }
 

@@ -39,6 +39,15 @@ export async function getMe() {
   return res.data;
 }
 
+export async function isAuthenticatedUser() {
+  try {
+    await getMe();
+    return true;
+  } catch (err) {}
+
+  return false;
+}
+
 export async function clearCache() {
   getMePromise = null;
 }
