@@ -71,11 +71,6 @@ export const PagesPage: React.FC<PagesPageProps> = () => {
           }}
         ></DataGrid>
       </div>
-      {/* <div className="add-page-button">
-        <FloatingActionButton
-          onClick={handleCreatePageClicked}
-        ></FloatingActionButton>
-      </div> */}
     </div>
   );
 };
