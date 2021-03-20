@@ -19,6 +19,9 @@ export type DBNote = {
   start?: Date;
   parent?: string;
   prev?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  syncedAt?: Date;
 };
 
 export type Note = {
@@ -32,12 +35,17 @@ export type Note = {
   start?: Date;
   parent?: string;
   prev?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  syncedAt?: Date;
 };
 
 interface MyDB extends DBSchema {
   devices: {
     value: {
       localId: string;
+      createdAt?: Date;
+      updatedAt?: Date;
       syncedAt?: Date;
     };
     key: string;
@@ -85,14 +93,17 @@ export async function getNote(id: string) {
 export async function addNote(value: MyDB["notes"]["value"]) {
   const db = await initializeDb();
 
-  await db.add("notes", value);
-  return value;
+  const date = new Date();
+  const addedNote = { ...value, createdAt: date, updatedAt: date };
+  await db.add("notes", addedNote);
+  return addedNote;
 }
 
 export async function putNote(value: MyDB["notes"]["value"]) {
   const db = await initializeDb();
-  await db.put("notes", value);
-  return value;
+  const updatedNote = { ...value, updatedAt: new Date() };
+  await db.put("notes", updatedNote);
+  return updatedNote;
 }
 
 export async function insertOrUpdateNote(value: DBNote) {
@@ -121,7 +132,8 @@ export async function getNotesByParent(parent: string) {
 
 export async function addDevice() {
   const db = await initializeDb();
-  const newDevice = { localId: getId() };
+  const date = new Date();
+  const newDevice = { localId: getId(), createdAt: date, updatedAt: date };
   await db.add("devices", newDevice);
   return newDevice;
 }
@@ -134,6 +146,6 @@ export async function getDevice() {
 
 export async function putDevice(value: MyDB["devices"]["value"]) {
   const db = await initializeDb();
-  await db.put("devices", value);
+  await db.put("devices", { ...value, updatedAt: new Date() });
   return value;
 }

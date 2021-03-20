@@ -1,5 +1,5 @@
 import axios from "axios";
-import { sortBy, uniqBy } from "lodash";
+import { orderBy, uniqBy } from "lodash";
 import moment from "moment";
 import querystring from "query-string";
 
@@ -116,7 +116,7 @@ export async function getAllNotes(): Promise<any[]> {
   const [offlineNotes, serverNotes] = await getAllPromise;
 
   if (!notes) {
-    notes = sortBy(
+    notes = orderBy(
       uniqBy([...(serverNotes ? serverNotes : []), ...offlineNotes], "localId"),
       "_id"
     );
@@ -187,30 +187,27 @@ export async function getNotes(params: GetNotesParams = {}): Promise<Note[]> {
     return true;
   });
 
-  return notesToReturn;
+  return orderBy(notesToReturn, ["createdAt", "_id"], ["asc", "asc"]);
 }
 
 export async function updateNote(note: Partial<Note>): Promise<Note> {
-  await db.putNote(note);
+  const updatedNote = await db.putNote(note);
 
   if (note._id && (await UsersApi.isAuthenticatedUser())) {
     axios
-      .put(`/api/notes/${note._id}`, note)
+      .put(`/api/notes/${updatedNote._id}`, updatedNote)
       .then((res) => {
-        const updatedNote = res.data;
-        return db.putNote(updatedNote);
+        const serverUpdatedNote = res.data;
+        return db.putNote(serverUpdatedNote);
       })
       .catch(() => {});
   }
-
-  let updatedNote = note;
 
   if (notes) {
     const noteToUpdateIndex = notes.findIndex(
       (n) => n.localId === note.localId
     );
     if (noteToUpdateIndex > -1) {
-      updatedNote = { ...notes[noteToUpdateIndex], ...note };
       notes.splice(noteToUpdateIndex, 1, updatedNote);
     }
   }

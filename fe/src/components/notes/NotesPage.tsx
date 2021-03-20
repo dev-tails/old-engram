@@ -67,6 +67,7 @@ export default function NotesPage({
         });
       }
 
+      console.log(notes);
       setNotes(notes);
       setLastUpdate(moment().format());
     });

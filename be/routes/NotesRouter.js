@@ -139,6 +139,8 @@ export function initializeNotesRouter() {
       archived: yup.boolean(),
       checked: yup.boolean(),
       localId: yup.string(),
+      createdAt: yup.date(),
+      updatedAt: yup.date(),
     });
 
     const update = await bodySchema.validate(req.body, { stripUnknown: true });
@@ -180,6 +182,8 @@ export function initializeNotesRouter() {
       parent: new ObjectIdSchema(),
       prev: new ObjectIdSchema(),
       localId: yup.string(),
+      createdAt: yup.date(),
+      updatedAt: yup.date(),
     });
 
     const noteToCreate = await bodySchema.validate(req.body, {
