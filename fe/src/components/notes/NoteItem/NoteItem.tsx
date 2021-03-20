@@ -1,9 +1,9 @@
-import './NoteItem.scss';
+import "./NoteItem.scss";
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from "react";
 
-import { BulletIcon } from '../BulletIcon/BulletIcon';
-import { Note } from '../NotesApi';
+import { BulletIcon } from "../BulletIcon/BulletIcon";
+import { Note } from "../NotesApi";
 
 type NoteItemProps = {
   note: Note;
@@ -90,7 +90,7 @@ export const NoteItem: React.FC<NoteItemProps> = (props) => {
         ref={noteBodyRef}
         contentEditable
         suppressContentEditableWarning
-        onFocus={handleFocus}
+        onClick={handleFocus}
         onBlur={handleBlur}
       >
         {props.note.body}
