@@ -21,7 +21,7 @@ import {
 } from "@material-ui/core";
 import { Menu as MenuIcon, Search as SearchIcon } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import { Holdable } from "../Holdable/Holdable";
 import {
@@ -106,6 +106,8 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const classes = useStyles();
 
+  const history = useHistory();
+
   const [search, setSearch] = useState<string | null>(null);
   const isSearchOpen = search !== null;
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false);
@@ -170,6 +172,7 @@ export const Header: React.FC<HeaderProps> = ({
   const handleWorkspaceSelected = (workspace: Note | null) => {
     onWorkspaceSelected(workspace?._id, workspace?.body);
     setLeftDrawerOpen(false);
+    history.push("/");
   };
 
   const handleWorkspaceLongPress = (
@@ -281,7 +284,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <ListItemText primary="Home" />
               </ListItem>
               <Divider />
-              <Link to="/pages">
+              <Link to="/pages" onClick={setLeftDrawerOpen.bind(this, false)}>
                 <ListItem button>
                   <ListItemText primary={"Pages"} />
                 </ListItem>
