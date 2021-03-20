@@ -173,6 +173,7 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
     const index = notesCopy.findIndex((n) => n.localId === note.localId);
     notesCopy.splice(index, 1);
     setNotes(notesCopy);
+    setActiveNoteIndex(activeNoteIndex - 1);
   };
 
   const activeNote =
