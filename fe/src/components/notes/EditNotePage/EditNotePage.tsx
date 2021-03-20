@@ -10,7 +10,6 @@ import {
   getNote,
   Note,
   removeNote,
-  updateNote,
   updatePartialNote,
 } from "../NotesApi";
 import { getNoteWithChildren } from "../NoteUtils";
@@ -164,7 +163,7 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
   };
 
   const handleSaveNote = async (note: Partial<Note>) => {
-    await updateNote({
+    await updatePartialNote({
       ...note,
     });
   };

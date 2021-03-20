@@ -76,7 +76,7 @@ export const NoteItem: React.FC<NoteItemProps> = (props) => {
   const handleSave = (update: Partial<Note>) => {
     if (props.onSave) {
       props.onSave({
-        ...props.note,
+        localId: props.note.localId,
         ...update,
       });
     }
