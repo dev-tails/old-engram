@@ -1,5 +1,5 @@
-import dotenv from 'dotenv';
-import fs from 'fs';
+import dotenv from "dotenv";
+import fs from "fs";
 
 let env = null;
 
@@ -19,6 +19,7 @@ export function initializeEnv() {
     origin: process.env.ORIGIN,
     port: Number(process.env.PORT) || 4000,
     production: process.env.NODE_ENV === "production",
+    maxUsers: process.env.MAX_USERS_ALLOWED || 150,
   };
 }
 

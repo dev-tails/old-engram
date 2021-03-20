@@ -1,7 +1,7 @@
 import "./SignupPage.scss";
 
 import { Button, Divider, TextField } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 
 import { TermsOfServicePagePath } from "../../TermsOfServicePage/TermsOfServicePage";
@@ -10,6 +10,7 @@ import { createLocalDevice } from "../../DeviceApi";
 import { Note } from "../notes/NotesApi";
 import { PrivacyPolicyPagePath } from "../PrivacyPolicyPage/PrivacyPolicyPage";
 import { DividerWithText } from "../login/DividerWithText/DividerWithText";
+import Axios from "axios";
 
 export type SignupPageProps = {};
 
@@ -21,6 +22,15 @@ export default function SignupPage(props: SignupPageProps) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [errors, setErrors] = useState<Note[]>([]);
+  const [enabled, setEnabled] = useState(true);
+
+  useEffect(() => {
+    async function getSignupEnabled() {
+      const res = await Axios.get("/api/users/signup/enabled");
+      setEnabled(res.data.enabled);
+    }
+    getSignupEnabled();
+  }, []);
 
   const handleSignUp = async () => {
     try {
@@ -78,56 +88,70 @@ export default function SignupPage(props: SignupPageProps) {
             variant="contained"
             color="primary"
           >
-            Use Without Account
+            Use Offline Without Account
           </Button>
         </div>
 
         <DividerWithText>Or</DividerWithText>
 
-        <div className="errors">
-          {errors.map((error) => {
-            return error;
-          })}
-        </div>
-        <TextField
-          id="username"
-          autoComplete="off"
-          autoCapitalize="none"
-          autoFocus={true}
-          label="Username"
-          fullWidth
-          onChange={handleUsernameChanged}
-        />
-        <TextField
-          id="email"
-          type="email"
-          autoCapitalize="none"
-          label="Email"
-          fullWidth
-          onChange={handleEmailChanged}
-        />
-        <TextField
-          id="password"
-          label="Password"
-          type="password"
-          autoComplete="off"
-          autoCapitalize="none"
-          fullWidth
-          onChange={handlePasswordChanged}
-        />
-        <Button
-          id="signup-button"
-          fullWidth
-          onClick={handleSignUp}
-          variant="contained"
-        >
-          Sign Up
-        </Button>
-        <p style={{ textAlign: "center" }}>
-          By signing up, you agree to our{" "}
-          <Link to={TermsOfServicePagePath}>Terms</Link> and{" "}
-          <Link to={PrivacyPolicyPagePath}>Privacy Policy</Link>
-        </p>
+        {enabled ? (
+          <div className="signup">
+            <div className="errors">
+              {errors.map((error) => {
+                return error;
+              })}
+            </div>
+            <TextField
+              id="username"
+              autoComplete="off"
+              autoCapitalize="none"
+              autoFocus={true}
+              label="Username"
+              fullWidth
+              onChange={handleUsernameChanged}
+            />
+            <TextField
+              id="email"
+              type="email"
+              autoCapitalize="none"
+              label="Email"
+              fullWidth
+              onChange={handleEmailChanged}
+            />
+            <TextField
+              id="password"
+              label="Password"
+              type="password"
+              autoComplete="off"
+              autoCapitalize="none"
+              fullWidth
+              onChange={handlePasswordChanged}
+            />
+            <Button
+              id="signup-button"
+              fullWidth
+              onClick={handleSignUp}
+              variant="contained"
+            >
+              Sign Up
+            </Button>
+            <p style={{ textAlign: "center" }}>
+              By signing up, you agree to our{" "}
+              <Link to={TermsOfServicePagePath}>Terms</Link> and{" "}
+              <Link to={PrivacyPolicyPagePath}>Privacy Policy</Link>
+            </p>
+          </div>
+        ) : (
+          <p>
+            The full version of engram is currently in beta. Add your email to
+            the{" "}
+            <a href="https://mailchi.mp/f3d84b89e0d3/engram-beta-waitlist">
+              waitlist
+            </a>{" "}
+            to be contacted as soon as more spots open!
+          </p>
+        )}
+
         <Divider />
         <Link to="/login">
           <Button size="small">Log In</Button>

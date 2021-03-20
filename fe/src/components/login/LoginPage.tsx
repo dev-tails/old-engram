@@ -79,7 +79,7 @@ export default function LoginPage(props: LoginPageProps) {
             variant="contained"
             color="primary"
           >
-            Use Without Account
+            Use Offline Without Account
           </Button>
         </div>
 
