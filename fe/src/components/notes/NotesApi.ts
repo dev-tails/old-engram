@@ -1,5 +1,5 @@
 import axios from "axios";
-import { orderBy, uniqBy } from "lodash";
+import { filter, orderBy, uniqBy } from "lodash";
 import moment from "moment";
 import querystring from "query-string";
 
@@ -188,7 +188,33 @@ export async function getNotes(params: GetNotesParams = {}): Promise<Note[]> {
     return true;
   });
 
-  return orderBy(notesToReturn, ["createdAt", "_id"], ["asc", "asc"]);
+  return sortNotes(notesToReturn);
+}
+
+export function sortNotes(notes: Note[]) {
+  const notesWithoutPrev = [];
+  const notesWithPrev = [];
+  for (const note of notes) {
+    if (note.prev) {
+      notesWithPrev.push(note);
+    } else {
+      notesWithoutPrev.push(note);
+    }
+  }
+  const orderedNotesByCreatedAt = orderBy(
+    notesWithoutPrev,
+    ["createdAt", "_id"],
+    ["asc", "asc"]
+  );
+
+  for (const noteWithPrev of notesWithPrev) {
+    const indexOfPrev = orderedNotesByCreatedAt.findIndex(
+      (note) => note.localId === noteWithPrev.prev
+    );
+    orderedNotesByCreatedAt.splice(indexOfPrev + 1, 0, noteWithPrev);
+  }
+
+  return orderedNotesByCreatedAt;
 }
 
 export async function updatePartialNote(noteUpdate: Partial<Note>) {
