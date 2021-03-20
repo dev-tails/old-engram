@@ -1,5 +1,15 @@
 import axios from "axios";
 
+export type LoginParams = {
+  username: string;
+  password: string;
+};
+
+export async function login(params: LoginParams) {
+  await axios.post("/api/users/login", params);
+  clearCache();
+}
+
 export type SignUpParams = {
   username: string;
   password: string;
@@ -7,16 +17,28 @@ export type SignUpParams = {
 };
 
 export async function signUp(params: SignUpParams) {
-  return axios.post("/api/users/signup", params, {
+  const res = await axios.post("/api/users/signup", params, {
     validateStatus: (status) => status === 200,
   });
+  clearCache();
+  return res;
 }
 
 export async function logout() {
   await axios.post("/api/users/logout");
+  clearCache();
 }
 
+let getMePromise: Promise<any> | null = null;
+
 export async function getMe() {
-  const res = await axios.get("/api/users/me");
+  if (!getMePromise) {
+    getMePromise = axios.get("/api/users/me");
+  }
+  const res = await getMePromise;
   return res.data;
+}
+
+export async function clearCache() {
+  getMePromise = null;
 }

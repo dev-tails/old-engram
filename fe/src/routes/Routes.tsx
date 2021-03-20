@@ -21,6 +21,7 @@ import {
   TermsOfServicePagePath,
 } from "../TermsOfServicePage/TermsOfServicePage";
 import { hasLocalDevice } from "../DeviceApi";
+import { getMe } from "../UsersApi";
 
 function getStartDate(date: Date, dateRangeValue: string) {
   switch (dateRangeValue) {
@@ -195,11 +196,16 @@ const AuthenticatedRoute: React.FC<{ exact: boolean; path: string }> = ({
   ...rest
 }) => {
   const [isLocalUser, setIsLocalUser] = useState(false);
+  const [isAuthenticatedUser, setIsAuthenticatedUser] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function checkLocalUser() {
       setIsLocalUser(await hasLocalDevice());
+      try {
+        await getMe();
+        setIsAuthenticatedUser(true);
+      } catch (err) {}
       setLoading(false);
     }
     checkLocalUser();
@@ -209,11 +215,17 @@ const AuthenticatedRoute: React.FC<{ exact: boolean; path: string }> = ({
     return null;
   }
 
+  const hasLocalOrAuthenticatedAccount = isLocalUser || isAuthenticatedUser;
+
   return (
     <Route
       {...rest}
       render={() => {
-        return isLocalUser === true ? children : <Redirect to="/login" />;
+        return hasLocalOrAuthenticatedAccount === true ? (
+          children
+        ) : (
+          <Redirect to="/login" />
+        );
       }}
     />
   );
