@@ -1,4 +1,4 @@
-import './Header.scss';
+import "./Header.scss";
 
 import {
   AppBar,
@@ -18,13 +18,18 @@ import {
   TextField,
   Toolbar,
   Typography,
-} from '@material-ui/core';
-import { Menu as MenuIcon, Search as SearchIcon } from '@material-ui/icons';
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+} from "@material-ui/core";
+import { Menu as MenuIcon, Search as SearchIcon } from "@material-ui/icons";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-import { Holdable } from '../Holdable/Holdable';
-import { createOrUpdateNote, getNotes, Note, removeNote } from '../notes/NotesApi';
+import { Holdable } from "../Holdable/Holdable";
+import {
+  createOrUpdateNote,
+  getNotes,
+  Note,
+  removeNote,
+} from "../notes/NotesApi";
 
 type HeaderProps = {
   title?: string;
@@ -275,6 +280,12 @@ export const Header: React.FC<HeaderProps> = ({
               >
                 <ListItemText primary="Home" />
               </ListItem>
+              <Divider />
+              <Link to="/pages">
+                <ListItem button>
+                  <ListItemText primary={"Pages"} />
+                </ListItem>
+              </Link>
               <Divider />
               <ListSubheader>Workspaces</ListSubheader>
               <List component="div" disablePadding>

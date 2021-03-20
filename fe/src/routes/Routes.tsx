@@ -22,6 +22,7 @@ import {
 } from "../TermsOfServicePage/TermsOfServicePage";
 import { hasLocalDevice } from "../DeviceApi";
 import { getMe } from "../UsersApi";
+import { PagesPage } from "../components/PagesPage/PagesPage";
 
 function getStartDate(date: Date, dateRangeValue: string) {
   switch (dateRangeValue) {
@@ -110,6 +111,10 @@ export default function Routes() {
     case "/help/zapier":
       title = "Help";
       break;
+    case "/pages":
+      title = "Pages";
+      isPublicRoute = false;
+      break;
     default:
       isPublicRoute = false;
       break;
@@ -160,6 +165,9 @@ export default function Routes() {
             onDateChange={handleDateChanged}
             onDateRangeChange={handleDateRangeChanged}
           />
+        </AuthenticatedRoute>
+        <AuthenticatedRoute exact={true} path="/pages">
+          <PagesPage />
         </AuthenticatedRoute>
         <Route exact path="/notes/:id">
           <EditNotePage />

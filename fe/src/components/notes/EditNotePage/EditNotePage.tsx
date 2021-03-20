@@ -1,6 +1,6 @@
 import "./EditNotePage.scss";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
 
 import { CollapsibleNote } from "../CollapsibleNoteItem/CollapsibleNoteItem";
@@ -69,6 +69,11 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
   const params = useParams<EditNotePageParams>();
   const [activeNoteIndex, setActiveNoteIndex] = useState<number>(0);
   const [notes, setNotes] = useState<Note[]>([]);
+  const titleRef = useCallback((node) => {
+    if (node !== null) {
+      node.focus();
+    }
+  }, []);
 
   const handleIndent = async () => {
     const indentedNote = indentNote(activeNoteIndex, notes);
@@ -126,7 +131,6 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
     async function fetchNote() {
       const fetchedNotes = await getNote({ id: params.id });
       setNotes(fetchedNotes);
-      setActiveNoteIndex(fetchedNotes.length);
     }
     fetchNote();
   }, [params.id]);
@@ -189,6 +193,7 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
     <div className="edit-note-page">
       <div className="edit-note-page-content">
         <div
+          ref={titleRef}
           className="title"
           contentEditable={true}
           onClick={() => {

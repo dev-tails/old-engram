@@ -6,7 +6,8 @@ export type NoteType =
   | "task"
   | "task_completed"
   | "event"
-  | "workspace";
+  | "workspace"
+  | "page";
 
 export type DBNote = {
   _id?: string;

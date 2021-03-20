@@ -1,0 +1,11 @@
+.pages-page {
+  position: fixed;
+  top: 64px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  overflow-y: scroll;
+  .page-content {
+    margin: 16px;
+  }
+}
