@@ -1,7 +1,5 @@
 import yup from "yup";
 
-import { ObjectIdSchema } from "./ObjectIdSchema.js";
-
 export default yup.object().shape({
   _id: yup.string().required(),
   date: yup.string(),
@@ -12,7 +10,10 @@ export default yup.object().shape({
     .nullable()
     .default("note")
     .oneOf(["note", "task", "task_complete", "event"]),
-  parent: yup.string().default(""),
-  prev: yup.string().default(""),
+  parent: yup.string().nullable().default(""),
+  prev: yup.string().nullable().default(""),
   localId: yup.string(),
+  createdAt: yup.date(),
+  updatedAt: yup.date(),
+  syncedAt: yup.date(),
 });

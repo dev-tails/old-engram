@@ -5,7 +5,6 @@ import { ObjectId } from "../Database.js";
 import { UnauthorizedError } from "../middleware/AuthMiddleware.js";
 import { AuthRequiredMiddleware } from "../middleware/AuthRequiredMiddleware.js";
 import NoteSchema from "../schemas/NoteSchema.js";
-import { ObjectIdSchema } from "../schemas/ObjectIdSchema.js";
 import { handleNewNote } from "../vendor/zapier/Zapier.js";
 
 export function initializeNotesRouter() {
