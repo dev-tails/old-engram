@@ -12,7 +12,7 @@ export default yup.object().shape({
     .nullable()
     .default("note")
     .oneOf(["note", "task", "task_complete", "event"]),
-  parent: new ObjectIdSchema().default(""),
-  prev: new ObjectIdSchema().default(""),
+  parent: yup.string().default(""),
+  prev: yup.string().default(""),
   localId: yup.string(),
 });
