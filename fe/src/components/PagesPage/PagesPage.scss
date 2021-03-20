@@ -5,7 +5,16 @@
   left: 0px;
   right: 0px;
   overflow-y: scroll;
+
   .page-content {
-    margin: 16px;
+    position: absolute;
+    right: 16px;
+    left: 16px;
+    top: 16px;
+    bottom: 16px;
+
+    .actions {
+      margin-bottom: 16px;
+    }
   }
 }

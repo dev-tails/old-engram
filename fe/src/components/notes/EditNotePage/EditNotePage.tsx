@@ -1,6 +1,6 @@
 import "./EditNotePage.scss";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router";
 
 import { CollapsibleNote } from "../CollapsibleNoteItem/CollapsibleNoteItem";
