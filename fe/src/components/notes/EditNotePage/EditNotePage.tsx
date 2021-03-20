@@ -96,6 +96,18 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
           handleIndent();
         }
       }
+
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        if (activeNoteIndex < notes.length) {
+          setActiveNoteIndex(activeNoteIndex + 1);
+        }
+      } else if (event.key === "ArrowUp") {
+        event.preventDefault();
+        if (activeNoteIndex > 0) {
+          setActiveNoteIndex(activeNoteIndex - 1);
+        }
+      }
     }
     document.addEventListener("keydown", keyDownListener);
 
@@ -179,7 +191,7 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
         {topLevelNoteWithChildren.children?.map((note) => {
           return (
             <NoteItemWithChildren
-              activeNoteId={activeNote?._id}
+              activeNoteId={activeNote?.localId}
               key={note.localId}
               note={note}
               onSave={handleSaveNote}
@@ -230,7 +242,7 @@ const NoteItemWithChildren: React.FC<NoteItemWithChildrenProps> = ({
   return (
     <div className="note-item-with-children">
       <NoteItem
-        focused={activeNoteId === note._id}
+        focused={activeNoteId === note.localId}
         note={note}
         onSave={onSave}
         onDelete={onDelete}
