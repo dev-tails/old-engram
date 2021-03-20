@@ -5,7 +5,14 @@ import { useParams } from "react-router";
 
 import { CollapsibleNote } from "../CollapsibleNoteItem/CollapsibleNoteItem";
 import { NoteItem } from "../NoteItem/NoteItem";
-import { createNote, getNote, Note, removeNote, updateNote } from "../NotesApi";
+import {
+  createNote,
+  getNote,
+  Note,
+  removeNote,
+  updateNote,
+  updatePartialNote,
+} from "../NotesApi";
 import { getNoteWithChildren } from "../NoteUtils";
 
 type EditNotePageProps = {};
@@ -141,8 +148,8 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
       return;
     }
 
-    updateNote({
-      ...topLevelNoteWithChildren,
+    updatePartialNote({
+      localId: params.id,
       body: e.target.innerText,
     });
   };

@@ -191,7 +191,19 @@ export async function getNotes(params: GetNotesParams = {}): Promise<Note[]> {
   return orderBy(notesToReturn, ["createdAt", "_id"], ["asc", "asc"]);
 }
 
-export async function updateNote(note: Partial<Note>): Promise<Note> {
+export async function updatePartialNote(noteUpdate: Partial<Note>) {
+  if (!noteUpdate.localId) {
+    throw new Error("localId not specified");
+  }
+
+  const existingNote = await db.getNote(noteUpdate.localId);
+  return updateNote({
+    ...existingNote,
+    ...noteUpdate,
+  });
+}
+
+export async function updateNote(note: Note): Promise<Note> {
   const updatedNote = await db.putNote(note);
 
   if (await UsersApi.isAuthenticatedUser()) {
