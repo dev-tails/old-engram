@@ -140,6 +140,7 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
     if (newText === topLevelNoteWithChildren.body) {
       return;
     }
+
     updateNote({
       ...topLevelNoteWithChildren,
       body: e.target.innerText,
@@ -183,6 +184,9 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
         <div
           className="title"
           contentEditable={true}
+          onClick={() => {
+            setActiveNoteIndex(0);
+          }}
           onBlur={(e) => handleTitleChanged(e)}
           suppressContentEditableWarning={true}
         >
