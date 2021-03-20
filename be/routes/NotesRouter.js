@@ -146,9 +146,17 @@ export function initializeNotesRouter() {
     const update = await bodySchema.validate(req.body, { stripUnknown: true });
 
     const Note = db.collection("notes");
-    const note = await Note.findOne({
-      _id: ObjectId(id),
-    });
+
+    let findOptions = {
+      localId: id,
+    };
+    if (ObjectId.isValid(id)) {
+      findOptions = {
+        _id: ObjectId(id),
+      };
+    }
+
+    const note = await Note.findOne(findOptions);
 
     if (!note || String(note.user) !== user) {
       throw new UnauthorizedError();
@@ -156,7 +164,7 @@ export function initializeNotesRouter() {
 
     const updateResultOp = await Note.updateOne(
       {
-        _id: ObjectId(id),
+        _id: note._id,
       },
       {
         $set: {
@@ -167,7 +175,7 @@ export function initializeNotesRouter() {
     );
 
     const updatedNote = await db.collection("notes").findOne({
-      _id: ObjectId(id),
+      _id: note._id,
     });
 
     return res.json(updatedNote);

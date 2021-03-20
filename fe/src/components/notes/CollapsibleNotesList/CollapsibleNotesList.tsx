@@ -129,7 +129,7 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
         }
         return (
           <CollapsibleNoteItem
-            key={note.localId}
+            key={note._id || note.localId}
             note={note}
             defaultType={props.type}
             active={activeNoteId === note.localId}

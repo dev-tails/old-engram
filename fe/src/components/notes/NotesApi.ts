@@ -28,6 +28,7 @@ export async function createNote(note: Partial<Note>) {
       .post("/api/notes", noteToCreate)
       .then((res) => {
         const addedNote = res.data;
+        updateCachedNoteByLocalId(addedNote);
         return db.putNote(addedNote);
       })
       .catch((err) => {});
@@ -193,26 +194,32 @@ export async function getNotes(params: GetNotesParams = {}): Promise<Note[]> {
 export async function updateNote(note: Partial<Note>): Promise<Note> {
   const updatedNote = await db.putNote(note);
 
-  if (note._id && (await UsersApi.isAuthenticatedUser())) {
+  if (await UsersApi.isAuthenticatedUser()) {
+    const id = updatedNote._id || updatedNote.localId;
     axios
-      .put(`/api/notes/${updatedNote._id}`, updatedNote)
-      .then((res) => {
+      .put(`/api/notes/${id}`, updatedNote)
+      .then(async (res) => {
         const serverUpdatedNote = res.data;
-        return db.putNote(serverUpdatedNote);
+        updateCachedNoteByLocalId(serverUpdatedNote);
+        await db.putNote(serverUpdatedNote);
       })
       .catch(() => {});
   }
 
+  updateCachedNoteByLocalId(updatedNote);
+
+  return updatedNote;
+}
+
+function updateCachedNoteByLocalId(updatedNote: Note) {
   if (notes) {
     const noteToUpdateIndex = notes.findIndex(
-      (n) => n.localId === note.localId
+      (n) => n.localId === updatedNote.localId
     );
     if (noteToUpdateIndex > -1) {
       notes.splice(noteToUpdateIndex, 1, updatedNote);
     }
   }
-
-  return updatedNote;
 }
 
 export async function removeNote(noteId?: string | null | undefined) {
