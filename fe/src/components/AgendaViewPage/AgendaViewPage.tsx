@@ -14,7 +14,6 @@ export const AgendaViewPage: React.FC<AgendaViewProps> = ({ date, type }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log("AgendaViewPage useEffect");
     async function fetchNotes() {
       setLoading(true);
       const dateAsMoment = moment(date);

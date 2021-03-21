@@ -1,4 +1,4 @@
-import * as NotesApi from "../NotesApi";
+import * as NotesApi from '../NotesApi';
 
 describe("NotesApi", () => {
   describe("sortNotes", () => {
@@ -37,6 +37,26 @@ describe("NotesApi", () => {
       expect(sortedNotes[0].localId).toBe("3");
       expect(sortedNotes[1].localId).toBe("2");
       expect(sortedNotes[2].localId).toBe("1");
+    });
+
+    it("should sort by prev when multiple prevs", () => {
+      const notes = [
+        {
+          localId: "2",
+          prev: "1",
+        },
+        {
+          localId: "1",
+          prev: "3",
+        },
+        {
+          localId: "3",
+        },
+      ];
+      const sortedNotes = NotesApi.sortNotes(notes);
+      expect(sortedNotes[0].localId).toBe("3");
+      expect(sortedNotes[1].localId).toBe("1");
+      expect(sortedNotes[2].localId).toBe("2");
     });
   });
 });

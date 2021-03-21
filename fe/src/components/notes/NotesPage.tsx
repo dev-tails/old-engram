@@ -29,8 +29,6 @@ export default function NotesPage({
   const [lastUpdate, setLastUpdate] = useState("");
 
   useEffect(() => {
-    console.log("Notes page useEffect");
-
     const getNotesParams: GetNotesParams = {};
     if (type !== "task") {
       if (startDate) {

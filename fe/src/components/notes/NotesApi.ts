@@ -117,9 +117,8 @@ export async function getAllNotes(): Promise<any[]> {
   const [offlineNotes, serverNotes] = await getAllPromise;
 
   if (!notes) {
-    notes = orderBy(
-      uniqBy([...(serverNotes ? serverNotes : []), ...offlineNotes], "localId"),
-      "_id"
+    notes = sortNotes(
+      uniqBy([...(serverNotes ? serverNotes : []), ...offlineNotes], "localId")
     );
   }
 
@@ -201,18 +200,36 @@ export function sortNotes(notes: Note[]) {
       notesWithoutPrev.push(note);
     }
   }
+
   const orderedNotesByCreatedAt = orderBy(
     notesWithoutPrev,
     ["createdAt", "_id"],
     ["asc", "asc"]
   );
 
-  for (const noteWithPrev of notesWithPrev) {
-    const indexOfPrev = orderedNotesByCreatedAt.findIndex(
-      (note) => note.localId === noteWithPrev.prev
-    );
-    orderedNotesByCreatedAt.splice(indexOfPrev + 1, 0, noteWithPrev);
-  }
+  let found = false;
+  do {
+    found = false;
+    for (
+      let noteWithPrevIndex = 0;
+      noteWithPrevIndex < notesWithPrev.length;
+      noteWithPrevIndex++
+    ) {
+      const noteWithPrev = notesWithPrev[noteWithPrevIndex];
+      const indexOfPrev = orderedNotesByCreatedAt.findIndex(
+        (note) => note.localId === noteWithPrev.prev
+      );
+
+      if (indexOfPrev < 0) {
+        continue;
+      }
+
+      notesWithPrev.splice(noteWithPrevIndex, 1);
+      orderedNotesByCreatedAt.splice(indexOfPrev + 1, 0, noteWithPrev);
+      found = true;
+      break;
+    }
+  } while (found && notesWithPrev.length > 0);
 
   return orderedNotesByCreatedAt;
 }
