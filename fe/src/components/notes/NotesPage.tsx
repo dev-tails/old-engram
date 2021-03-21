@@ -1,10 +1,10 @@
-import "./NotesPage.scss";
+import './NotesPage.scss';
 
-import moment from "moment";
-import React, { useEffect, useState } from "react";
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
 
-import { CollapsibleNotesList } from "./CollapsibleNotesList/CollapsibleNotesList";
-import { getNotes, GetNotesParams, Note, NoteType } from "./NotesApi";
+import { CollapsibleNotesList } from './CollapsibleNotesList/CollapsibleNotesList';
+import { getNotes, GetNotesParams, Note, NoteType } from './NotesApi';
 
 export type NotesPageProps = {
   date: Date;
@@ -29,6 +29,8 @@ export default function NotesPage({
   const [lastUpdate, setLastUpdate] = useState("");
 
   useEffect(() => {
+    console.log("Notes page useEffect");
+
     const getNotesParams: GetNotesParams = {};
     if (type !== "task") {
       if (startDate) {

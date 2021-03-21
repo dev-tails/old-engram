@@ -1,14 +1,8 @@
-import moment from "moment";
-import React, { useEffect, useState } from "react";
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
 
-import { AgendaView } from "../AgendaView/AgendaView";
-import {
-  createOrUpdateNote,
-  getNotes,
-  Note,
-  NoteType,
-  removeNote,
-} from "../notes/NotesApi";
+import { AgendaView } from '../AgendaView/AgendaView';
+import { createOrUpdateNote, getNotes, Note, NoteType, removeNote } from '../notes/NotesApi';
 
 type AgendaViewProps = {
   date: Date;
@@ -20,6 +14,7 @@ export const AgendaViewPage: React.FC<AgendaViewProps> = ({ date, type }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log("AgendaViewPage useEffect");
     async function fetchNotes() {
       setLoading(true);
       const dateAsMoment = moment(date);

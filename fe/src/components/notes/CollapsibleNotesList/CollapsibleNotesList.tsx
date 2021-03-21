@@ -109,6 +109,7 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
   const handleDrop = async (note: Note) => {
     await updateNote({
       ...note,
+      date: props.date?.toISOString(),
       type: props.type,
     });
     history.push(history.location.pathname);

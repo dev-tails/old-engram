@@ -1,10 +1,10 @@
-import "./AgendaView.scss";
+import './AgendaView.scss';
 
-import moment from "moment";
-import React, { useEffect, useRef, useState } from "react";
+import moment from 'moment';
+import React, { useEffect, useRef, useState } from 'react';
 
-import { CollapsibleNoteItem } from "../notes/CollapsibleNoteItem/CollapsibleNoteItem";
-import { Note, NoteType } from "../notes/NotesApi";
+import { CollapsibleNoteItem } from '../notes/CollapsibleNoteItem/CollapsibleNoteItem';
+import { Note, NoteType } from '../notes/NotesApi';
 
 type AgendaViewProps = {
   type: NoteType;
@@ -45,6 +45,18 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
 
   const handleNoteBlur = () => {
     setActiveId("");
+  };
+
+  const handleDrop = async (itemDropped: Note, itemForMinutes?: Note) => {
+    if (!itemForMinutes) {
+      return;
+    }
+
+    onSave({
+      ...itemDropped,
+      type: "event",
+      start: itemForMinutes.start,
+    });
   };
 
   return (
@@ -100,6 +112,9 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
                       }}
                       onDelete={onDelete}
                       onBlur={handleNoteBlur}
+                      onDrop={(droppedItem) => {
+                        handleDrop(droppedItem, itemForMinutes);
+                      }}
                     />
                   </div>
                 );
