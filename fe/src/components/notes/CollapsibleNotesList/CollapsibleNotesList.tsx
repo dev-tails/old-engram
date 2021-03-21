@@ -106,11 +106,34 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
     setActiveNoteId("");
   };
 
-  const handleDrop = async (note: Note) => {
+  const handleDrop = async (droppedNote: Note, noteDroppedOnto: Note) => {
+    if (droppedNote.localId === noteDroppedOnto.localId) {
+      return;
+    }
+
+    const droppedNoteNext = notes.find((n) => n.prev === droppedNote.localId);
+    if (droppedNoteNext) {
+      await updateNote({
+        ...droppedNoteNext,
+        prev: droppedNote.prev,
+      });
+    }
+
+    const noteDroppedOntoPrev = notes.find(
+      (n) => n.prev === noteDroppedOnto.localId
+    );
+    if (noteDroppedOntoPrev) {
+      await updateNote({
+        ...noteDroppedOntoPrev,
+        prev: droppedNote.localId,
+      });
+    }
+
     await updateNote({
-      ...note,
+      ...droppedNote,
       date: props.date?.toISOString(),
       type: props.type,
+      prev: noteDroppedOnto.localId,
     });
     history.push(history.location.pathname);
   };
@@ -155,7 +178,6 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
         onActivate={handleNoteActivate}
         onDelete={handleDelete}
         onBlur={handleBlur}
-        onDrop={handleDrop}
       />
     </div>
   );

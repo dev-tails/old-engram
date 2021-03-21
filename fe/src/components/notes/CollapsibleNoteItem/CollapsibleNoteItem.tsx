@@ -33,7 +33,7 @@ type CollapsibleNoteItemProps = {
   onActivate: (note: CollapsibleNote) => void;
   onDelete: (note: CollapsibleNote) => void;
   onBlur: () => void;
-  onDrop?: (item: any) => void;
+  onDrop?: (droppedItem: Note, itemDroppedOnto: Note) => void;
 };
 
 export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
@@ -55,9 +55,9 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   const [{ isOver }, drop] = useDrop(
     () => ({
       accept: ["note", "task", "event", "task_completed"],
-      drop: (item) => {
+      drop: (droppedItem: Note) => {
         if (props.onDrop) {
-          props.onDrop(item);
+          props.onDrop(droppedItem, props.note);
         }
       },
       collect(monitor) {
