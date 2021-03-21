@@ -1,13 +1,13 @@
-import axios from "axios";
-import { filter, orderBy, uniqBy } from "lodash";
-import moment from "moment";
-import querystring from "query-string";
+import axios from 'axios';
+import { orderBy, uniqBy } from 'lodash';
+import moment from 'moment';
+import querystring from 'query-string';
 
-import * as Api from "../../Api";
-import * as db from "../../db/db";
-import * as UsersApi from "../../UsersApi";
-import { updateDevice } from "../../DeviceApi";
-import { isObjectId } from "../../utils/ObjectId";
+import * as Api from '../../Api';
+import * as db from '../../db/db';
+import { updateDevice } from '../../DeviceApi';
+import * as UsersApi from '../../UsersApi';
+import { isObjectId } from '../../utils/ObjectId';
 
 export type Note = db.Note;
 export type NoteType = db.NoteType;

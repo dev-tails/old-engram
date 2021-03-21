@@ -1,19 +1,11 @@
-import "./CollapsibleNotesList.scss";
+import './CollapsibleNotesList.scss';
 
-import moment from "moment";
-import React, { useEffect, useState } from "react";
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 
-import {
-  CollapsibleNote,
-  CollapsibleNoteItem,
-} from "../CollapsibleNoteItem/CollapsibleNoteItem";
-import {
-  createNote,
-  Note,
-  NoteType,
-  removeNote,
-  updateNote,
-} from "../NotesApi";
+import { CollapsibleNote, CollapsibleNoteItem } from '../CollapsibleNoteItem/CollapsibleNoteItem';
+import { createNote, Note, NoteType, removeNote, updateNote } from '../NotesApi';
 
 type CollapsibleNotesListProps = {
   date?: Date;
@@ -26,6 +18,8 @@ type CollapsibleNotesListProps = {
 export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
   props
 ) => {
+  const history = useHistory();
+
   const [activeParentId, setActiveParentId] = useState<string>("");
   const [activeNoteId, setActiveNoteId] = useState<string | undefined>("");
   const [notes, setNotes] = useState<Note[]>(props.notes);
@@ -112,6 +106,14 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
     setActiveNoteId("");
   };
 
+  const handleDrop = async (note: Note) => {
+    await updateNote({
+      ...note,
+      type: props.type,
+    });
+    history.push(history.location.pathname);
+  };
+
   const title = props.date
     ? Intl.DateTimeFormat(navigator.language, {
         weekday: "long",
@@ -138,6 +140,7 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
             onActivate={handleNoteActivate}
             onDelete={handleDelete}
             onBlur={handleBlur}
+            onDrop={handleDrop}
           />
         );
       })}
@@ -151,6 +154,7 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
         onActivate={handleNoteActivate}
         onDelete={handleDelete}
         onBlur={handleBlur}
+        onDrop={handleDrop}
       />
     </div>
   );

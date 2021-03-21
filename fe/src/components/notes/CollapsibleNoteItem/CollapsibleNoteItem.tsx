@@ -33,6 +33,7 @@ type CollapsibleNoteItemProps = {
   onActivate: (note: CollapsibleNote) => void;
   onDelete: (note: CollapsibleNote) => void;
   onBlur: () => void;
+  onDrop?: (item: any) => void;
 };
 
 export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
@@ -43,8 +44,9 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   const [type, setType] = useState(props.note.type || props.defaultType);
   const [collapsed, setCollapsed] = useState(false);
 
-  const [{ isDragging }, drag] = useDrag(() => ({
+  const [isDragging, drag] = useDrag(() => ({
     type: type as string,
+    item: props.note,
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
@@ -53,7 +55,11 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   const [{ isOver }, drop] = useDrop(
     () => ({
       accept: ["note", "task", "event", "task_completed"],
-      drop: () => {},
+      drop: (item) => {
+        if (props.onDrop) {
+          props.onDrop(item);
+        }
+      },
       collect(monitor) {
         return {
           isOver: !!monitor.isOver(),
@@ -192,7 +198,9 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
     <div className={`collapsible-note-item-wrapper ${type}`}>
       <div
         ref={drag}
-        className={`collapsible-note-item ${!props.note.body ? "empty" : ""}`}
+        className={`collapsible-note-item ${!props.note.body ? "empty" : ""} ${
+          isDragging ? "dragging" : ""
+        }`}
         onClick={handleNoteClicked}
       >
         <div ref={drop} className="drop-container">
