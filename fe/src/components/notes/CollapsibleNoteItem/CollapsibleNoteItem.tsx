@@ -1,14 +1,15 @@
-import "./CollapsibleNoteItem.scss";
+import './CollapsibleNoteItem.scss';
 
-import { TextareaAutosize } from "@material-ui/core";
-import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
-import ArrowRightIcon from "@material-ui/icons/ArrowRight";
-import React, { useEffect, useRef, useState } from "react";
+import { TextareaAutosize } from '@material-ui/core';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import React, { useEffect, useRef, useState } from 'react';
+import { useDrag, useDrop } from 'react-dnd';
+import { Link } from 'react-router-dom';
 
-import { Markdown } from "../../Markdown/Markdown";
-import { BulletIcon } from "../BulletIcon/BulletIcon";
-import { Note, NoteType } from "../NotesApi";
-import { Link } from "react-router-dom";
+import { Markdown } from '../../Markdown/Markdown';
+import { BulletIcon } from '../BulletIcon/BulletIcon';
+import { Note, NoteType } from '../NotesApi';
 
 export type CollapsibleNote = {
   _id?: string;
@@ -41,6 +42,26 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   const [body, setBody] = useState(props.note.body);
   const [type, setType] = useState(props.note.type || props.defaultType);
   const [collapsed, setCollapsed] = useState(false);
+
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: type as string,
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  }));
+
+  const [{ isOver }, drop] = useDrop(
+    () => ({
+      accept: ["note", "task", "event", "task_completed"],
+      drop: () => {},
+      collect(monitor) {
+        return {
+          isOver: !!monitor.isOver(),
+        };
+      },
+    }),
+    []
+  );
 
   const isActive = props.active;
   const hasChildren = props.note.children && props.note.children.length > 0;
@@ -170,46 +191,49 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   return (
     <div className={`collapsible-note-item-wrapper ${type}`}>
       <div
+        ref={drag}
         className={`collapsible-note-item ${!props.note.body ? "empty" : ""}`}
         onClick={handleNoteClicked}
       >
-        <span
-          className={`block-expand ${hasChildren ? "" : "hidden"}`}
-          onClick={handleToggleExpand}
-        >
-          {collapsed ? (
-            <ArrowRightIcon fontSize="small" />
-          ) : (
-            <ArrowDropDownIcon fontSize="small" />
-          )}
-        </span>
-        <Link to={`/notes/${note.localId}`}>
-          <span className={`block-edit`} onClick={handleToggleExpand}>
-            <svg height="8" width="8" fill="#FFF">
-              <circle cx="4" cy="1" r="1" />
-              <circle cx="4" cy="4" r="1" />
-              <circle cx="4" cy="7" r="1" />
-            </svg>
+        <div ref={drop} className="drop-container">
+          <span
+            className={`block-expand ${hasChildren ? "" : "hidden"}`}
+            onClick={handleToggleExpand}
+          >
+            {collapsed ? (
+              <ArrowRightIcon fontSize="small" />
+            ) : (
+              <ArrowDropDownIcon fontSize="small" />
+            )}
           </span>
-        </Link>
-        <div className="bullet-icon-wrapper" onClick={handleChangeType}>
-          <BulletIcon note={note} />
-        </div>
-
-        {isActive ? (
-          <TextareaAutosize
-            ref={textAreaRef}
-            value={body}
-            onChange={handleTextChanged}
-            onBlur={handleTextAreaBlur}
-            autoFocus={isActive}
-          />
-        ) : (
-          <div className="note-inactive">
-            <Markdown body={getBodyForMarkdown()} />
+          <Link to={`/notes/${note.localId}`}>
+            <span className={`block-edit`} onClick={handleToggleExpand}>
+              <svg height="8" width="8" fill="#FFF">
+                <circle cx="4" cy="1" r="1" />
+                <circle cx="4" cy="4" r="1" />
+                <circle cx="4" cy="7" r="1" />
+              </svg>
+            </span>
+          </Link>
+          <div className="bullet-icon-wrapper" onClick={handleChangeType}>
+            <BulletIcon note={note} />
           </div>
-        )}
+          {isActive ? (
+            <TextareaAutosize
+              ref={textAreaRef}
+              value={body}
+              onChange={handleTextChanged}
+              onBlur={handleTextAreaBlur}
+              autoFocus={isActive}
+            />
+          ) : (
+            <div className="note-inactive">
+              <Markdown body={getBodyForMarkdown()} />
+            </div>
+          )}
+        </div>
       </div>
+      <div className={`divider ${isOver ? "highlight" : ""}`} />
       {!collapsed && props.note.children && (
         <div style={{ marginLeft: "12px" }}>
           {props.note.children.map((childNote) => {
