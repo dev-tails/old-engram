@@ -42,31 +42,10 @@ export default function NotesPage({
     if (type) {
       getNotesParams.type = type;
     }
-    if (type === "event") {
-      getNotesParams.sort = "start";
-    }
     getNotesParams.search = search;
     getNotesParams.parent = activeParentId;
 
     getNotes(getNotesParams).then((notes) => {
-      let sortedNotes = notes;
-
-      if (type === "task") {
-        sortedNotes.sort((a, b) => {
-          if (a.type !== b.type) {
-            if (b.type === "task_completed") {
-              return -1;
-            }
-          }
-
-          if (!a._id || !b._id) {
-            return 0;
-          }
-
-          return a._id > b._id ? 1 : -1;
-        });
-      }
-
       setNotes(notes);
       setLastUpdate(moment().format());
     });
