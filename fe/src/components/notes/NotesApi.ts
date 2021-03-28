@@ -7,13 +7,12 @@ import * as Api from '../../Api';
 import * as db from '../../db/db';
 import { updateDevice } from '../../DeviceApi';
 import * as UsersApi from '../../UsersApi';
-import { isObjectId } from '../../utils/ObjectId';
 
 export type Note = db.Note;
 export type NoteType = db.NoteType;
 
 export async function createOrUpdateNote(note: Partial<Note>) {
-  if (isObjectId(note._id)) {
+  if (note.localId) {
     return updateNote(note);
   }
   return createNote(note);
