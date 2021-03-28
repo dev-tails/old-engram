@@ -2,7 +2,6 @@ import './CollapsibleNotesList.scss';
 
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
 
 import { CollapsibleNote, CollapsibleNoteItem } from '../CollapsibleNoteItem/CollapsibleNoteItem';
 import { createNote, Note, NoteType, removeNote, updateNote } from '../NotesApi';
@@ -13,13 +12,12 @@ type CollapsibleNotesListProps = {
   type?: NoteType;
   readOnly?: boolean;
   activeParentId?: string | null | undefined;
+  onChange: () => void;
 };
 
 export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
   props
 ) => {
-  const history = useHistory();
-
   const [activeParentId, setActiveParentId] = useState<string>("");
   const [activeNoteId, setActiveNoteId] = useState<string | undefined>("");
   const [notes, setNotes] = useState<Note[]>(props.notes);
@@ -77,6 +75,7 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
       setNotes(newNotes);
       activateNextEmptyNote(newNotes);
     }
+    props.onChange();
   };
 
   function activateNextEmptyNote(notes: Note[]) {
@@ -135,7 +134,8 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
       type: props.type,
       prev: noteDroppedOnto.localId,
     });
-    history.push(history.location.pathname);
+
+    props.onChange();
   };
 
   const title = props.date

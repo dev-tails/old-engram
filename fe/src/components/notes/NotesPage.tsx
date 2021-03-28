@@ -14,6 +14,7 @@ export type NotesPageProps = {
   readOnly?: boolean;
   search?: string;
   activeParentId?: string | null | undefined;
+  onChange: () => void;
 };
 
 export default function NotesPage({
@@ -24,6 +25,7 @@ export default function NotesPage({
   readOnly,
   search,
   activeParentId,
+  onChange,
 }: NotesPageProps) {
   const [notes, setNotes] = useState<Note[]>([]);
   const [lastUpdate, setLastUpdate] = useState("");
@@ -71,6 +73,7 @@ export default function NotesPage({
           return (
             <CollapsibleNotesList
               key={date.getDate()}
+              onChange={onChange}
               date={date}
               notes={notesForDate}
               type={type}
@@ -98,6 +101,7 @@ export default function NotesPage({
         type={type}
         readOnly={readOnly}
         activeParentId={activeParentId}
+        onChange={onChange}
       />
     );
   }

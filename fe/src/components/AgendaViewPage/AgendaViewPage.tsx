@@ -1,75 +1,41 @@
-import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import { AgendaView } from '../AgendaView/AgendaView';
-import { createOrUpdateNote, getNotes, Note, NoteType, removeNote } from '../notes/NotesApi';
+import { createOrUpdateNote, Note, removeNote } from '../notes/NotesApi';
 
 type AgendaViewProps = {
+  notes: Note[];
   date: Date;
-  type: NoteType;
+  onSave: () => void;
+  onDelete: () => void;
 };
 
-export const AgendaViewPage: React.FC<AgendaViewProps> = ({ date, type }) => {
-  const [items, setItems] = useState<Note[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchNotes() {
-      setLoading(true);
-      const dateAsMoment = moment(date);
-
-      const newItems = await getNotes({
-        startsAfter: dateAsMoment.startOf("day").toDate(),
-        startsBefore: dateAsMoment.endOf("day").toDate(),
-        type,
-      });
-      setItems(newItems);
-      setLoading(false);
-    }
-
-    fetchNotes();
-  }, [date, type]);
-
+export const AgendaViewPage: React.FC<AgendaViewProps> = ({
+  notes,
+  date,
+  onSave,
+  onDelete,
+}) => {
   const handleNoteSaved = async (note: Note) => {
-    const updatedNote = await createOrUpdateNote(note);
-    const itemsCopy = Array.from(items);
-
-    const indexInItemsArray = itemsCopy.findIndex(
-      (item) => item.localId === updatedNote.localId
-    );
-    if (indexInItemsArray >= 0) {
-      itemsCopy[indexInItemsArray] = updatedNote;
-    } else {
-      itemsCopy.push(updatedNote);
-    }
-    setItems(itemsCopy);
+    await createOrUpdateNote(note);
+    onSave();
   };
 
   const handleNoteDeleted = async (note: Note) => {
-    const itemsCopy = Array.from(items);
-
-    const indexInItemsArray = itemsCopy.findIndex(
-      (item) => item.localId === note.localId
-    );
-
-    itemsCopy.splice(indexInItemsArray, 1);
-    setItems(itemsCopy);
-
     await removeNote(note.localId);
+    onDelete();
   };
 
   return (
     <div className="agenda-view">
       <div className="agenda-view-content">
-        {!loading && (
-          <AgendaView
-            type={type}
-            date={date}
-            items={items}
-            onSave={handleNoteSaved}
-            onDelete={handleNoteDeleted}
-          />
-        )}
+        <AgendaView
+          type={"event"}
+          date={date}
+          items={notes}
+          onSave={handleNoteSaved}
+          onDelete={handleNoteDeleted}
+        />
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import axios from 'axios';
 import { orderBy, uniqBy } from 'lodash';
 import moment from 'moment';
 import querystring from 'query-string';
+import { validate as validateUuid } from 'uuid';
 
 import * as Api from '../../Api';
 import * as db from '../../db/db';
@@ -12,7 +13,7 @@ export type Note = db.Note;
 export type NoteType = db.NoteType;
 
 export async function createOrUpdateNote(note: Partial<Note>) {
-  if (note.localId) {
+  if (validateUuid(note.localId || "")) {
     return updateNote(note);
   }
   return createNote(note);
