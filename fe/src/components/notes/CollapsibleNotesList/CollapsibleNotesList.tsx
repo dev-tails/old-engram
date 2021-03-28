@@ -178,6 +178,7 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
         onActivate={handleNoteActivate}
         onDelete={handleDelete}
         onBlur={handleBlur}
+        onDrop={handleDrop}
       />
     </div>
   );
