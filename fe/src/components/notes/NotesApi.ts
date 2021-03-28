@@ -64,7 +64,7 @@ export async function getNote(params: { id: string }): Promise<Note[]> {
     depth++;
   } while (parentIds.length > 0 && depth < maxDepth);
 
-  return notes;
+  return sortNotes(notes);
 }
 
 let getAllPromise: Promise<any> | null = null;
