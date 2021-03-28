@@ -104,7 +104,11 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
                 return (
                   <div
                     className="agenda-view-slot"
-                    key={`${date}-${index}-${minutes}`}
+                    key={
+                      itemForMinutes.localId
+                        ? itemForMinutes.localId
+                        : `${date}-${index}-${minutes}`
+                    }
                   >
                     <CollapsibleNoteItem
                       active={activeId === itemForMinutes.localId}
