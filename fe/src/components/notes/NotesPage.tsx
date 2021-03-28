@@ -14,6 +14,7 @@ export type NotesPageProps = {
   readOnly?: boolean;
   search?: string;
   activeParentId?: string | null | undefined;
+  versionNumber: number;
   onChange: () => void;
 };
 
@@ -25,6 +26,7 @@ export default function NotesPage({
   readOnly,
   search,
   activeParentId,
+  versionNumber,
   onChange,
 }: NotesPageProps) {
   const [notes, setNotes] = useState<Note[]>([]);
@@ -51,7 +53,7 @@ export default function NotesPage({
       setNotes(notes);
       setLastUpdate(moment().format());
     });
-  }, [type, startDate, endDate, search, activeParentId]);
+  }, [type, startDate, endDate, search, activeParentId, versionNumber]);
 
   const renderNotesByDate = () => {
     const dates = [];

@@ -79,6 +79,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           search={search}
           activeParentId={activeParentId}
           onChange={handleAgendaChanged}
+          versionNumber={versionNumber}
         />
       </div>
       <div className={`tasks ${bottomNavValue === "task" ? "visible" : ""}`}>
@@ -90,6 +91,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           search={search}
           activeParentId={activeParentId}
           onChange={handleAgendaChanged}
+          versionNumber={versionNumber}
         />
       </div>
       <div className={`events ${bottomNavValue === "event" ? "visible" : ""}`}>
