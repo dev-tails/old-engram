@@ -11,6 +11,7 @@ type NoteItemProps = {
   onSave?: (note: Partial<Note>) => void;
   onDelete?: (note: Partial<Note>) => void;
   onSelect?: (note: Partial<Note>) => void;
+  onSubmit?: (note: Partial<Note>) => void;
 };
 
 export const NoteItem: React.FC<NoteItemProps> = (props) => {
@@ -43,7 +44,9 @@ export const NoteItem: React.FC<NoteItemProps> = (props) => {
         if (!event.shiftKey) {
           event.preventDefault();
 
-          handleSave({ body });
+          if (props.onSubmit) {
+            props.onSubmit({ ...props.note, body });
+          }
         }
       }
     }
@@ -73,7 +76,7 @@ export const NoteItem: React.FC<NoteItemProps> = (props) => {
   const handleSave = (update: Partial<Note>) => {
     if (props.onSave) {
       props.onSave({
-        _id: props.note._id,
+        localId: props.note.localId,
         ...update,
       });
     }
@@ -87,7 +90,7 @@ export const NoteItem: React.FC<NoteItemProps> = (props) => {
         ref={noteBodyRef}
         contentEditable
         suppressContentEditableWarning
-        onFocus={handleFocus}
+        onClick={handleFocus}
         onBlur={handleBlur}
       >
         {props.note.body}

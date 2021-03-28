@@ -1,10 +1,10 @@
-import "./AgendaView.scss";
+import './AgendaView.scss';
 
-import moment from "moment";
-import React, { useEffect, useRef, useState } from "react";
+import moment from 'moment';
+import React, { useEffect, useRef, useState } from 'react';
 
-import { CollapsibleNoteItem } from "../notes/CollapsibleNoteItem/CollapsibleNoteItem";
-import { Note, NoteType } from "../notes/NotesApi";
+import { CollapsibleNoteItem } from '../notes/CollapsibleNoteItem/CollapsibleNoteItem';
+import { Note, NoteType } from '../notes/NotesApi';
 
 type AgendaViewProps = {
   type: NoteType;
@@ -47,6 +47,18 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
     setActiveId("");
   };
 
+  const handleDrop = async (itemDropped: Note, itemForMinutes?: Note) => {
+    if (!itemForMinutes) {
+      return;
+    }
+
+    onSave({
+      ...itemDropped,
+      type: "event",
+      start: itemForMinutes.start,
+    });
+  };
+
   return (
     <div className="agenda-view">
       {itemsByHour.map((items, index) => {
@@ -79,7 +91,7 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
                 });
                 if (!itemForMinutes) {
                   itemForMinutes = {
-                    _id: `${key}-${minutes}`,
+                    localId: `${key}-${minutes}`,
                     body: "",
                     start: startDate,
                   };
@@ -88,18 +100,21 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
                 return (
                   <div
                     className="agenda-view-slot"
-                    key={`${date}-${index}-${minutes}`}
+                    key={itemForMinutes.localId}
                   >
                     <CollapsibleNoteItem
-                      activeId={activeId}
+                      active={activeId === itemForMinutes.localId}
                       defaultType={type}
                       note={itemForMinutes}
                       onSave={onSave}
                       onActivate={(note) => {
-                        setActiveId(note._id || "");
+                        setActiveId(note.localId || "");
                       }}
                       onDelete={onDelete}
                       onBlur={handleNoteBlur}
+                      onDrop={(droppedItem) => {
+                        handleDrop(droppedItem, itemForMinutes);
+                      }}
                     />
                   </div>
                 );

@@ -1,12 +1,12 @@
-import bcrypt from 'bcrypt';
-import express from 'express';
-import jwt from 'jsonwebtoken';
-import yup from 'yup';
+import bcrypt from "bcrypt";
+import express from "express";
+import jwt from "jsonwebtoken";
+import yup from "yup";
 
-import { ObjectId } from '../Database.js';
-import { getEnv } from '../env.js';
-import { AuthAPIKeyMiddleware } from '../middleware/AuthAPIKeyMiddleware.js';
-import { AuthRequiredMiddleware } from '../middleware/AuthRequiredMiddleware.js';
+import { ObjectId } from "../Database.js";
+import { getEnv } from "../env.js";
+import { AuthAPIKeyMiddleware } from "../middleware/AuthAPIKeyMiddleware.js";
+import { AuthRequiredMiddleware } from "../middleware/AuthRequiredMiddleware.js";
 
 async function setToken(res, user) {
   const { jwtSecret, production } = getEnv();
@@ -35,10 +35,32 @@ async function setToken(res, user) {
   });
 }
 
+async function isMaxUsersReached(db) {
+  const User = db.collection("users");
+  const userCount = await User.count();
+  if (userCount >= getEnv().maxUsers) {
+    return true;
+  }
+  return false;
+}
+
 export function initializeUserRouter() {
   const router = express.Router();
 
+  router.get("/signup/enabled", async function (req, res) {
+    const { db } = req;
+    const maxUsersReached = await isMaxUsersReached(db);
+    return res.json({ enabled: !maxUsersReached });
+  });
+
   router.post("/signup", async function (req, res) {
+    const { db } = req;
+    if (await isMaxUsersReached(db)) {
+      return res.status(400).json({
+        errors: ["Maximum user count reached"],
+      });
+    }
+
     const schema = yup.object().shape({
       username: yup
         .string()
@@ -57,10 +79,8 @@ export function initializeUserRouter() {
 
     schema.validateSync(req.body);
 
-    const { db } = req;
     const { username, password, email } = req.body;
 
-    const User = db.collection("users");
     const existingUser = await User.findOne({
       username,
     });

@@ -5,7 +5,6 @@ import { ObjectId } from "../Database.js";
 import { UnauthorizedError } from "../middleware/AuthMiddleware.js";
 import { AuthRequiredMiddleware } from "../middleware/AuthRequiredMiddleware.js";
 import NoteSchema from "../schemas/NoteSchema.js";
-import { ObjectIdSchema } from "../schemas/ObjectIdSchema.js";
 import { handleNewNote } from "../vendor/zapier/Zapier.js";
 
 export function initializeNotesRouter() {
@@ -18,41 +17,18 @@ export function initializeNotesRouter() {
     const querySchema = yup.object().shape({
       count: yup.number(),
       type: yup.string().nullable(),
-      max_id: new ObjectIdSchema(),
-      since_id: new ObjectIdSchema(),
       before: yup.date(),
       since: yup.date(),
       sort: yup.string().oneOf(["start"]),
+      lastSyncDate: yup.date().nullable(),
     });
     const parsedQuery = querySchema.cast(req.query);
 
-    const {
-      count,
-      since_id: sinceId,
-      max_id: maxId,
-      since,
-      before,
-      type,
-      sort,
-    } = parsedQuery;
+    const { count, since, before, type, sort, lastSyncDate } = parsedQuery;
 
     let findOptions = {
       user: ObjectId(user),
     };
-    if (sinceId && maxId) {
-      findOptions._id = {
-        $gt: sinceId,
-        $lte: maxId,
-      };
-    } else if (sinceId) {
-      findOptions._id = {
-        $gt: sinceId,
-      };
-    } else if (maxId) {
-      findOptions._id = {
-        $lte: maxId,
-      };
-    }
 
     if (since && before) {
       findOptions.start = {
@@ -64,10 +40,11 @@ export function initializeNotesRouter() {
         $gte: since,
       };
     } else if (before) {
-      findOptions._id = {
+      findOptions.start = {
         $lte: before,
       };
     }
+
     if (type) {
       if (type !== "task") {
         findOptions.type = type;
@@ -76,6 +53,12 @@ export function initializeNotesRouter() {
           $in: ["task", "task_completed"],
         };
       }
+    }
+
+    if (lastSyncDate) {
+      findOptions.syncedAt = {
+        $gt: lastSyncDate,
+      };
     }
 
     const query = db.collection("notes").find(findOptions);
@@ -150,18 +133,29 @@ export function initializeNotesRouter() {
       start: yup.date(),
       body: yup.string(),
       type: yup.string().default("note"),
-      parent: new ObjectIdSchema(),
-      prev: new ObjectIdSchema(),
+      parent: yup.string(),
+      prev: yup.string(),
       archived: yup.boolean(),
       checked: yup.boolean(),
+      localId: yup.string(),
+      createdAt: yup.date(),
+      updatedAt: yup.date(),
     });
 
     const update = await bodySchema.validate(req.body, { stripUnknown: true });
 
     const Note = db.collection("notes");
-    const note = await Note.findOne({
-      _id: ObjectId(id),
-    });
+
+    let findOptions = {
+      localId: id,
+    };
+    if (ObjectId.isValid(id)) {
+      findOptions = {
+        _id: ObjectId(id),
+      };
+    }
+
+    const note = await Note.findOne(findOptions);
 
     if (!note || String(note.user) !== user) {
       throw new UnauthorizedError();
@@ -169,17 +163,18 @@ export function initializeNotesRouter() {
 
     const updateResultOp = await Note.updateOne(
       {
-        _id: ObjectId(id),
+        _id: note._id,
       },
       {
         $set: {
           ...update,
+          syncedAt: new Date(),
         },
       }
     );
 
     const updatedNote = await db.collection("notes").findOne({
-      _id: ObjectId(id),
+      _id: note._id,
     });
 
     return res.json(updatedNote);
@@ -191,8 +186,11 @@ export function initializeNotesRouter() {
       date: yup.string(),
       body: yup.string().default(""),
       type: yup.string().default("note"),
-      parent: new ObjectIdSchema(),
-      prev: new ObjectIdSchema(),
+      parent: yup.string(),
+      prev: yup.string(),
+      localId: yup.string(),
+      createdAt: yup.date(),
+      updatedAt: yup.date(),
     });
 
     const noteToCreate = await bodySchema.validate(req.body, {
@@ -204,6 +202,7 @@ export function initializeNotesRouter() {
     const insertOpResult = await db.collection("notes").insertOne({
       user: ObjectId(user),
       ...noteToCreate,
+      syncedAt: new Date(),
     });
 
     const newNote = await db.collection("notes").findOne({

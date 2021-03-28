@@ -1,5 +1,5 @@
 import moment from "moment";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Redirect, Route, Switch, useLocation } from "react-router-dom";
 
 import { Header } from "../components/header/Header";
@@ -20,6 +20,9 @@ import {
   TermsOfServicePage,
   TermsOfServicePagePath,
 } from "../TermsOfServicePage/TermsOfServicePage";
+import { hasLocalDevice } from "../DeviceApi";
+import { getMe } from "../UsersApi";
+import { PagesPage } from "../components/PagesPage/PagesPage";
 
 function getStartDate(date: Date, dateRangeValue: string) {
   switch (dateRangeValue) {
@@ -108,6 +111,10 @@ export default function Routes() {
     case "/help/zapier":
       title = "Help";
       break;
+    case "/pages":
+      title = "Pages";
+      isPublicRoute = false;
+      break;
     default:
       isPublicRoute = false;
       break;
@@ -131,7 +138,6 @@ export default function Routes() {
   ) => {
     setActiveParentId(id);
     setWorkspaceName(name);
-    console.log(name);
   };
 
   if (workspaceName) {
@@ -148,7 +154,7 @@ export default function Routes() {
         activeParentId={activeParentId}
       />
       <Switch>
-        <Route exact path="/">
+        <AuthenticatedRoute exact={true} path="/">
           <HomePage
             dateRangeValue={dateRangeValue}
             date={date}
@@ -159,7 +165,10 @@ export default function Routes() {
             onDateChange={handleDateChanged}
             onDateRangeChange={handleDateRangeChanged}
           />
-        </Route>
+        </AuthenticatedRoute>
+        <AuthenticatedRoute exact={true} path="/pages">
+          <PagesPage />
+        </AuthenticatedRoute>
         <Route exact path="/notes/:id">
           <EditNotePage />
         </Route>
@@ -189,3 +198,43 @@ export default function Routes() {
     </>
   );
 }
+
+const AuthenticatedRoute: React.FC<{ exact: boolean; path: string }> = ({
+  children,
+  ...rest
+}) => {
+  const [isLocalUser, setIsLocalUser] = useState(false);
+  const [isAuthenticatedUser, setIsAuthenticatedUser] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function checkLocalUser() {
+      setIsLocalUser(await hasLocalDevice());
+      try {
+        await getMe();
+        setIsAuthenticatedUser(true);
+      } catch (err) {}
+      setLoading(false);
+    }
+    checkLocalUser();
+  });
+
+  if (loading) {
+    return null;
+  }
+
+  const hasLocalOrAuthenticatedAccount = isLocalUser || isAuthenticatedUser;
+
+  return (
+    <Route
+      {...rest}
+      render={() => {
+        return hasLocalOrAuthenticatedAccount === true ? (
+          children
+        ) : (
+          <Redirect to="/login" />
+        );
+      }}
+    />
+  );
+};

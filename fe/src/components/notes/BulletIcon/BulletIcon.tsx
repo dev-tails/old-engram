@@ -33,10 +33,11 @@ const TaskIcon = (props: IconProps) => {
       <circle
         cx="4"
         cy="4"
-        r="1"
+        r="3"
         style={{
           stroke: props.color,
           strokeWidth: 1,
+          fill: props.color,
         }}
       />
     </svg>

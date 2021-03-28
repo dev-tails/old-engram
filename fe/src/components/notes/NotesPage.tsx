@@ -1,10 +1,10 @@
-import "./NotesPage.scss";
+import './NotesPage.scss';
 
-import moment from "moment";
-import React, { useEffect, useState } from "react";
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
 
-import { CollapsibleNotesList } from "./CollapsibleNotesList/CollapsibleNotesList";
-import { getNotes, GetNotesParams, Note, NoteType } from "./NotesApi";
+import { CollapsibleNotesList } from './CollapsibleNotesList/CollapsibleNotesList';
+import { getNotes, GetNotesParams, Note, NoteType } from './NotesApi';
 
 export type NotesPageProps = {
   date: Date;
@@ -14,6 +14,8 @@ export type NotesPageProps = {
   readOnly?: boolean;
   search?: string;
   activeParentId?: string | null | undefined;
+  versionNumber: number;
+  onChange: () => void;
 };
 
 export default function NotesPage({
@@ -24,6 +26,8 @@ export default function NotesPage({
   readOnly,
   search,
   activeParentId,
+  versionNumber,
+  onChange,
 }: NotesPageProps) {
   const [notes, setNotes] = useState<Note[]>([]);
   const [lastUpdate, setLastUpdate] = useState("");
@@ -42,35 +46,14 @@ export default function NotesPage({
     if (type) {
       getNotesParams.type = type;
     }
-    if (type === "event") {
-      getNotesParams.sort = "start";
-    }
     getNotesParams.search = search;
     getNotesParams.parent = activeParentId;
 
     getNotes(getNotesParams).then((notes) => {
-      let sortedNotes = notes;
-
-      if (type === "task") {
-        sortedNotes.sort((a, b) => {
-          if (a.type !== b.type) {
-            if (b.type === "task_completed") {
-              return -1;
-            }
-          }
-
-          if (!a._id || !b._id) {
-            return 0;
-          }
-
-          return a._id > b._id ? 1 : -1;
-        });
-      }
-
       setNotes(notes);
       setLastUpdate(moment().format());
     });
-  }, [type, startDate, endDate, search, activeParentId]);
+  }, [type, startDate, endDate, search, activeParentId, versionNumber]);
 
   const renderNotesByDate = () => {
     const dates = [];
@@ -92,6 +75,7 @@ export default function NotesPage({
           return (
             <CollapsibleNotesList
               key={date.getDate()}
+              onChange={onChange}
               date={date}
               notes={notesForDate}
               type={type}
@@ -119,6 +103,7 @@ export default function NotesPage({
         type={type}
         readOnly={readOnly}
         activeParentId={activeParentId}
+        onChange={onChange}
       />
     );
   }

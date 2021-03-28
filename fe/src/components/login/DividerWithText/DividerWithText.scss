@@ -1,0 +1,13 @@
+.divider-with-text {
+  display: flex;
+  align-items: center;
+
+  .border {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    width: 100%;
+  }
+
+  .content {
+    padding: 0 12px;
+  }
+}

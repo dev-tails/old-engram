@@ -1,12 +1,14 @@
-import "./HomePage.scss";
+import './HomePage.scss';
 
-import { BottomNavigation, BottomNavigationAction } from "@material-ui/core";
-import React, { useState } from "react";
+import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
 
-import { AgendaViewPage } from "../AgendaViewPage/AgendaViewPage";
-import { BulletIcon } from "../notes/BulletIcon/BulletIcon";
-import NotesPage from "../notes/NotesPage";
-import { DateHeader } from "../DateHeader/DateHeader";
+import { AgendaViewPage } from '../AgendaViewPage/AgendaViewPage';
+import { DateHeader } from '../DateHeader/DateHeader';
+import { BulletIcon } from '../notes/BulletIcon/BulletIcon';
+import { getNotes, Note } from '../notes/NotesApi';
+import NotesPage from '../notes/NotesPage';
 
 type HomePageProps = {
   date: Date;
@@ -30,9 +32,30 @@ export const HomePage: React.FC<HomePageProps> = ({
   onDateRangeChange,
 }) => {
   const [bottomNavValue, setBottomNavValue] = useState("note");
+  const [agendaNotes, setAgendaNotes] = useState<Note[]>([]);
+  const [versionNumber, setVersionNumber] = useState(0);
+
+  useEffect(() => {
+    const fetchNotes = async () => {
+      const dateAsMoment = moment(date);
+
+      const newItems = await getNotes({
+        startsAfter: dateAsMoment.startOf("day").toDate(),
+        startsBefore: dateAsMoment.endOf("day").toDate(),
+        type: "event",
+      });
+
+      setAgendaNotes(newItems);
+    };
+    fetchNotes();
+  }, [date, versionNumber]);
 
   const handleChange = (event: any, newValue: string) => {
     setBottomNavValue(newValue);
+  };
+
+  const handleAgendaChanged = () => {
+    setVersionNumber(versionNumber + 1);
   };
 
   if (!date) {
@@ -55,6 +78,8 @@ export const HomePage: React.FC<HomePageProps> = ({
           endDate={endDate}
           search={search}
           activeParentId={activeParentId}
+          onChange={handleAgendaChanged}
+          versionNumber={versionNumber}
         />
       </div>
       <div className={`tasks ${bottomNavValue === "task" ? "visible" : ""}`}>
@@ -65,10 +90,17 @@ export const HomePage: React.FC<HomePageProps> = ({
           endDate={endDate}
           search={search}
           activeParentId={activeParentId}
+          onChange={handleAgendaChanged}
+          versionNumber={versionNumber}
         />
       </div>
       <div className={`events ${bottomNavValue === "event" ? "visible" : ""}`}>
-        <AgendaViewPage date={date} type="event" />
+        <AgendaViewPage
+          notes={agendaNotes}
+          date={date}
+          onSave={handleAgendaChanged}
+          onDelete={handleAgendaChanged}
+        />
       </div>
       <div className="bottom-navigation">
         <BottomNavigation

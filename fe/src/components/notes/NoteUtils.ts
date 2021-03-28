@@ -5,7 +5,7 @@ export function getNoteWithChildren(
   notes: Note[],
   noteId: string | undefined | null
 ): CollapsibleNote | null {
-  const note = notes.find((note) => note._id === noteId);
+  const note = notes.find((note) => note.localId === noteId);
   if (!note) {
     return null;
   }
@@ -13,7 +13,7 @@ export function getNoteWithChildren(
   const children = notes.filter((note) => note.parent === noteId);
   const sortedChildren: CollapsibleNote[] = [];
   for (const child of children) {
-    const childNoteWithChildren = getNoteWithChildren(notes, child._id);
+    const childNoteWithChildren = getNoteWithChildren(notes, child.localId);
     if (childNoteWithChildren) {
       sortedChildren.push(childNoteWithChildren);
     }

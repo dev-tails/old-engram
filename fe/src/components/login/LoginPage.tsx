@@ -8,6 +8,8 @@ import { Link, useHistory } from "react-router-dom";
 import { objectIdFromDate } from "../../utils/ObjectId";
 import { Note } from "../notes/NotesApi";
 import { SignupPagePath } from "../SignupPage/SignupPage";
+import { DividerWithText } from "./DividerWithText/DividerWithText";
+import { createLocalDevice } from "../../DeviceApi";
 
 export type LoginPageProps = {};
 
@@ -22,9 +24,7 @@ export default function LoginPage(props: LoginPageProps) {
   const handleSignIn = () => {
     axios
       .post("/api/users/login", { username, password })
-      .then((res) => {
-        history.push("/");
-      })
+      .then(navigateToHome)
       .catch((err) => {
         let errorMessage = err.message;
         if (err.response.status === 400) {
@@ -52,6 +52,15 @@ export default function LoginPage(props: LoginPageProps) {
     setPassword(event.target.value);
   };
 
+  const handleUseWithoutAccount = async () => {
+    await createLocalDevice();
+    navigateToHome();
+  };
+
+  const navigateToHome = () => {
+    history.push("/");
+  };
+
   return (
     <div className="login-page">
       <div className="container">
@@ -63,6 +72,19 @@ export default function LoginPage(props: LoginPageProps) {
             src="/images/logo.svg"
           />
         </div>
+
+        <div id="use-without-account">
+          <Button
+            onClick={handleUseWithoutAccount}
+            variant="contained"
+            color="primary"
+          >
+            Use Offline Without Account
+          </Button>
+        </div>
+
+        <DividerWithText>Or</DividerWithText>
+
         <div className="errors">
           {errors.map((error) => {
             return error.body;
@@ -91,7 +113,6 @@ export default function LoginPage(props: LoginPageProps) {
           fullWidth
           onClick={handleSignIn}
           variant="contained"
-          color="primary"
         >
           Log In
         </Button>
