@@ -88,15 +88,29 @@ export async function getAllNotes(): Promise<any[]> {
       const syncDate = new Date();
       const serverNotesPromise = Api.get(`/api/notes?${qs}`)
         .then(async (res) => {
-          const serverNotes = [];
+          const serverNotes: Note[] = [];
           if (device) {
             const newServerNotes = res.data;
+            let promises = [];
+            const batchSize = 500;
             for (const note of newServerNotes) {
-              const noteWithLocalId = await db.insertOrUpdateNote({
-                ...note,
-                localId: note.localId || note._id,
-              });
-              serverNotes.push(noteWithLocalId);
+              promises.push(
+                db
+                  .insertOrUpdateNote({
+                    ...note,
+                    localId: note.localId || note._id,
+                  })
+                  .then((noteWithLocalId) => {
+                    serverNotes.push(noteWithLocalId);
+                  })
+              );
+              if (promises.length === batchSize) {
+                await Promise.all(promises);
+                promises = [];
+              }
+            }
+            if (promises.length > 0) {
+              await Promise.all(promises);
             }
 
             await updateDevice({ ...device, syncedAt: syncDate });
