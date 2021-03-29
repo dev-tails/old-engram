@@ -1,5 +1,5 @@
-import { openDB, DBSchema, IDBPDatabase } from "idb";
-import { v4 as uuidv4 } from "uuid";
+import { DBSchema, IDBPDatabase, openDB } from 'idb';
+import { v4 as uuidv4 } from 'uuid';
 
 export type NoteType =
   | "note"
@@ -41,14 +41,16 @@ export type Note = {
   syncedAt?: Date;
 };
 
+type Device = {
+  localId: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  syncedAt?: Date;
+};
+
 interface MyDB extends DBSchema {
   devices: {
-    value: {
-      localId: string;
-      createdAt?: Date;
-      updatedAt?: Date;
-      syncedAt?: Date;
-    };
+    value: Device;
     key: string;
   };
   notes: {
@@ -131,7 +133,7 @@ export async function getNotesByParent(parent: string) {
   return db.getAllFromIndex("notes", "parent", parent);
 }
 
-export async function addDevice() {
+export async function addDevice(): Promise<Device> {
   const db = await initializeDb();
   const date = new Date();
   const newDevice = { localId: getId(), createdAt: date, updatedAt: date };
@@ -139,10 +141,19 @@ export async function addDevice() {
   return newDevice;
 }
 
+let addDevicePromise: Promise<Device>;
+
 export async function getDevice() {
   const db = await initializeDb();
   const devices = await db.getAll("devices");
-  return devices[0];
+  if (devices.length) {
+    return devices[0];
+  } else {
+    if (!addDevicePromise) {
+      addDevicePromise = addDevice();
+    }
+    return addDevicePromise;
+  }
 }
 
 export async function putDevice(value: MyDB["devices"]["value"]) {
