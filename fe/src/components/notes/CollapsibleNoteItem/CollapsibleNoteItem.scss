@@ -8,9 +8,7 @@
   }
 
   .collapsible-note-item {
-
     .drop-container {
-
       display: flex;
     }
 
@@ -35,7 +33,6 @@
     }
 
     &:hover {
-
       .block-edit,
       .block-expand {
         visibility: visible;
@@ -71,7 +68,7 @@
       width: 100%;
     }
 
-    .note-inactive {
+    .note-text {
       margin: 1px;
       white-space: pre-wrap;
       width: 100%;

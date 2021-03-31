@@ -1,15 +1,14 @@
-import './CollapsibleNoteItem.scss';
+import "./CollapsibleNoteItem.scss";
 
-import { TextareaAutosize } from '@material-ui/core';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-import React, { useEffect, useRef, useState } from 'react';
-import { useDrag, useDrop } from 'react-dnd';
-import { Link } from 'react-router-dom';
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import ArrowRightIcon from "@material-ui/icons/ArrowRight";
+import React, { useEffect, useRef, useState } from "react";
+import { useDrag, useDrop } from "react-dnd";
+import { Link } from "react-router-dom";
 
-import { Markdown } from '../../Markdown/Markdown';
-import { BulletIcon } from '../BulletIcon/BulletIcon';
-import { Note, NoteType } from '../NotesApi';
+import { BulletIcon } from "../BulletIcon/BulletIcon";
+import { Note, NoteType } from "../NotesApi";
+import { Markdown } from "../../Markdown/Markdown";
 
 export type CollapsibleNote = {
   _id?: string;
@@ -39,8 +38,7 @@ type CollapsibleNoteItemProps = {
 export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   props
 ) => {
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  const [body, setBody] = useState(props.note.body);
+  const noteBodyRef = useRef<HTMLDivElement>(null);
   const [type, setType] = useState(props.note.type || props.defaultType);
   const [collapsed, setCollapsed] = useState(false);
 
@@ -74,7 +72,6 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
 
   const note = {
     ...props.note,
-    body,
     type,
   };
 
@@ -85,7 +82,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
       }
 
       if (event.key === "Backspace") {
-        if (body === "") {
+        if (getBody() === "") {
           event.preventDefault();
           return props.onDelete(props.note);
         }
@@ -131,24 +128,27 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
     };
   });
 
-  const handleTextChanged = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setBody(event.currentTarget.value);
-  };
-
   const handleSave = (update?: Partial<Note>) => {
-    if (!body && note.localId) {
+    if (!getBody() && note.localId) {
       props.onDelete(note);
       return;
     }
 
     props.onSave({
       ...note,
+      body: getBody(),
       ...update,
     });
   };
 
+  const getBody = () => {
+    return noteBodyRef.current?.innerText;
+  };
+
   const handleTextAreaBlur = () => {
     props.onBlur();
+
+    const body = noteBodyRef.current?.innerText;
 
     if (body === props.note.body) {
       return;
@@ -191,7 +191,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   };
 
   function getBodyForMarkdown() {
-    return body?.replaceAll("\n\n", `\n&nbsp;\n`) || "";
+    return props.note.body?.replaceAll("\n\n", `\n&nbsp;\n`) || "";
   }
 
   return (
@@ -226,19 +226,19 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
           <div className="bullet-icon-wrapper" onClick={handleChangeType}>
             <BulletIcon note={note} />
           </div>
-          {isActive ? (
-            <TextareaAutosize
-              ref={textAreaRef}
-              value={body}
-              onChange={handleTextChanged}
-              onBlur={handleTextAreaBlur}
-              autoFocus={isActive}
-            />
-          ) : (
-            <div className="note-inactive">
-              <Markdown body={getBodyForMarkdown()} />
-            </div>
-          )}
+          <div
+            className="note-text"
+            ref={noteBodyRef}
+            contentEditable={isActive}
+            suppressContentEditableWarning
+            onBlur={handleTextAreaBlur}
+          >
+            {isActive ? (
+              props.note.body
+            ) : (
+              <Markdown body={getBodyForMarkdown()}></Markdown>
+            )}
+          </div>
         </div>
       </div>
       <div className={`divider ${isOver ? "highlight" : ""}`} />
