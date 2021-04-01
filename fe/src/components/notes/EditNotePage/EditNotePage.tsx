@@ -96,9 +96,16 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
   }
 
   const handleNewNote = async (note: Partial<Note>) => {
+    const activeNote = notes[activeNoteIndex];
+
+    const parent =
+      activeNote.localId === params.id ? params.id : activeNote.parent;
+    const prev = parent !== params.id ? "" : activeNote.localId;
+
     const createdNote = await createNote({
       body: "",
-      parent: params.id,
+      parent,
+      prev,
     });
 
     const notesCopy = [...notes];
