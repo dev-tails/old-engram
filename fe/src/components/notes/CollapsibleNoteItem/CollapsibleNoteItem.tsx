@@ -121,6 +121,11 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
         } else if (!event.shiftKey) {
           event.preventDefault();
 
+          // TODO: This is a hack to get this working in both HomePage and EditNotePage
+          if (isUndefined(props.active) === false) {
+            handleSave();
+          }
+
           if (props.note.localId) {
             handleNewNote();
           }
