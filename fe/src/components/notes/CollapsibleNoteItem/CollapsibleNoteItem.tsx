@@ -76,6 +76,12 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   };
 
   useEffect(() => {
+    if (isActive) {
+      noteBodyRef.current?.focus();
+    }
+  }, [isActive]);
+
+  useEffect(() => {
     function keyDownListener(event: KeyboardEvent) {
       if (!isActive) {
         return;
