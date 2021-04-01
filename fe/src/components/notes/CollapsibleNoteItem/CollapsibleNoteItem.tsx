@@ -26,6 +26,8 @@ type CollapsibleNoteItemProps = {
   defaultType?: NoteType;
   active?: boolean;
   activeId?: string;
+  onUnindent?: (note: CollapsibleNote) => void;
+  onIndent?: (note: CollapsibleNote) => void;
   onSave: (note: CollapsibleNote) => void;
   onNewNote?: (note: CollapsibleNote) => void;
   onActivate: (note: CollapsibleNote) => void;
@@ -86,6 +88,21 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
         return;
       }
 
+      if (event.key === "Tab") {
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (event.shiftKey) {
+          if (props.onUnindent) {
+            props.onUnindent(getCurrentNote());
+          }
+        } else {
+          if (props.onIndent) {
+            props.onIndent(getCurrentNote());
+          }
+        }
+      }
+
       if (event.key === "Backspace") {
         if (getBody() === "") {
           event.preventDefault();
@@ -113,6 +130,14 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
       document.removeEventListener("keydown", keyDownListener);
     };
   });
+
+  const getCurrentNote = () => {
+    return {
+      ...note,
+      type,
+      body: getBody(),
+    };
+  };
 
   const handleSave = (update?: Partial<Note>) => {
     props.onSave({

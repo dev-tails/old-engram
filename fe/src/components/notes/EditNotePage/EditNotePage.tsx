@@ -30,21 +30,27 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
   const [activeNoteIndex, setActiveNoteIndex] = useState<number>(0);
   const [notes, setNotes] = useState<Note[]>([]);
 
-  const handleIndent = async () => {
+  const handleIndent = async (note: Note) => {
     const indentedNote = indentNote(activeNoteIndex, notes);
     if (indentedNote) {
       const notesCopy = [...notes];
-      notesCopy.splice(activeNoteIndex, 1, indentedNote);
+      notesCopy.splice(activeNoteIndex, 1, {
+        ...indentedNote,
+        body: note.body,
+      });
       await handleSaveNote(indentedNote);
       setNotes(notesCopy);
     }
   };
 
-  const handleUnindent = async () => {
+  const handleUnindent = async (note: Note) => {
     const unindentedNote = unindentNote(activeNoteIndex, notes);
     if (unindentedNote) {
       const notesCopy = [...notes];
-      notesCopy.splice(activeNoteIndex, 1, unindentedNote);
+      notesCopy.splice(activeNoteIndex, 1, {
+        ...unindentedNote,
+        body: note.body,
+      });
       await handleSaveNote(unindentedNote);
       setNotes(notesCopy);
     }
@@ -52,17 +58,6 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
 
   useEffect(() => {
     function keyDownListener(event: KeyboardEvent) {
-      if (event.key === "Tab") {
-        event.preventDefault();
-        event.stopPropagation();
-
-        if (event.shiftKey) {
-          handleUnindent();
-        } else {
-          handleIndent();
-        }
-      }
-
       if (event.key === "ArrowDown") {
         event.preventDefault();
         if (activeNoteIndex < notes.length) {
@@ -118,6 +113,13 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
     await updatePartialNote({
       ...note,
     });
+
+    const notesCopy = [...notes];
+
+    const updatedNote = notesCopy[activeNoteIndex];
+    notesCopy.splice(activeNoteIndex, 1, updatedNote);
+
+    setNotes(notesCopy);
   };
 
   const handleRemoveNote = async (note: Partial<Note>) => {
@@ -139,6 +141,8 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
           note={topLevelNoteWithChildren}
           defaultType="note"
           activeId={activeNote?.localId}
+          onUnindent={handleUnindent}
+          onIndent={handleIndent}
           onSave={handleSaveNote}
           onNewNote={handleNewNote}
           onActivate={(selectedNote) => {
