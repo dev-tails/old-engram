@@ -6,7 +6,9 @@
   right: 0px;
   overflow-y: scroll;
   .edit-note-page-content {
-    margin: 16px;
+    max-width: 960px;
+    padding: 16px;
+    margin: 0 auto;
   }
 
   .title {
