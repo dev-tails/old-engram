@@ -5,6 +5,8 @@ import { getNotes, Note } from "../notes/NotesApi";
 import { useHistory } from "react-router-dom";
 import { DataGrid, GridCellParams } from "@material-ui/data-grid";
 import moment from "moment";
+import { Button } from "@material-ui/core";
+import { destroyDb } from "../../db/db";
 
 type DebugNotesPageProps = {};
 
@@ -26,10 +28,16 @@ export const DebugNotesPage: React.FC<DebugNotesPageProps> = () => {
     return moment(params.value as Date).format("YYYY-MM-DD HH:mm");
   }
 
+  const handleClearLocalDB = () => {
+    destroyDb();
+  };
+
   return (
     <div className="debug-notes-page">
       <div className="page-content">
-        <div className="actions" style={{ textAlign: "right" }}></div>
+        <div className="actions" style={{ textAlign: "right" }}>
+          <Button onClick={handleClearLocalDB}>Clear Local DB</Button>
+        </div>
         <DataGrid
           autoHeight={true}
           disableColumnResize={undefined}

@@ -1,5 +1,5 @@
-import { DBSchema, IDBPDatabase, openDB } from 'idb';
-import { v4 as uuidv4 } from 'uuid';
+import { DBSchema, IDBPDatabase, openDB } from "idb";
+import { v4 as uuidv4 } from "uuid";
 
 export type NoteType =
   | "note"
@@ -82,6 +82,11 @@ export async function initializeDb() {
   });
 
   return _db;
+}
+
+export function destroyDb() {
+  _db?.clear("devices");
+  _db?.clear("notes");
 }
 
 export function getId() {
