@@ -44,8 +44,13 @@ export const DebugNotesPage: React.FC<DebugNotesPageProps> = () => {
           rows={notes}
           columns={[
             {
-              field: "localId",
+              field: "_id",
               headerName: "ID",
+              width: 310,
+            },
+            {
+              field: "localId",
+              headerName: "localID",
               width: 310,
             },
             { field: "body", headerName: "Body", flex: 1 },
