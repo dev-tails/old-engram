@@ -1,15 +1,16 @@
 import "./EditNotePage.scss";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
-import { CollapsibleNote } from "../CollapsibleNoteItem/CollapsibleNoteItem";
-import { NoteItem } from "../NoteItem/NoteItem";
+import { CollapsibleNoteItem } from "../CollapsibleNoteItem/CollapsibleNoteItem";
 import {
   createNote,
   getNote,
+  indentNote,
   Note,
   removeNote,
+  unindentNote,
   updatePartialNote,
 } from "../NotesApi";
 import { getNoteWithChildren } from "../NoteUtils";
@@ -20,76 +21,32 @@ type EditNotePageParams = {
   id: string;
 };
 
-export function indentNote(noteIndex: number, notes: Note[]) {
-  const note = notes[noteIndex];
-  if (!note) {
-    return null;
-  }
-
-  let parent = note.parent;
-
-  for (let i = noteIndex - 1; i >= 0; i--) {
-    const currentNote = notes[i];
-    if (currentNote.parent === parent) {
-      parent = currentNote.localId;
-      break;
-    }
-  }
-
-  return {
-    ...note,
-    parent,
-  };
-}
-
-export function unindentNote(noteIndex: number, notes: Note[]) {
-  const note = notes[noteIndex];
-  if (!note) {
-    return null;
-  }
-
-  let parentId = note.parent; // "1"
-  let parent = null;
-
-  for (let i = noteIndex - 1; i >= 0; i--) {
-    const currentNote = notes[i];
-    if (currentNote.localId === parentId) {
-      parent = currentNote;
-      break;
-    }
-  }
-
-  return {
-    ...note,
-    parent: parent?.parent,
-  };
-}
-
 export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
   const params = useParams<EditNotePageParams>();
   const [activeNoteIndex, setActiveNoteIndex] = useState<number>(0);
   const [notes, setNotes] = useState<Note[]>([]);
-  const titleRef = useCallback((node) => {
-    if (node !== null) {
-      node.focus();
-    }
-  }, []);
 
-  const handleIndent = async () => {
+  const handleIndent = async (note: Note) => {
     const indentedNote = indentNote(activeNoteIndex, notes);
     if (indentedNote) {
       const notesCopy = [...notes];
-      notesCopy.splice(activeNoteIndex, 1, indentedNote);
+      notesCopy.splice(activeNoteIndex, 1, {
+        ...indentedNote,
+        body: note.body,
+      });
       await handleSaveNote(indentedNote);
       setNotes(notesCopy);
     }
   };
 
-  const handleUnindent = async () => {
+  const handleUnindent = async (note: Note) => {
     const unindentedNote = unindentNote(activeNoteIndex, notes);
     if (unindentedNote) {
       const notesCopy = [...notes];
-      notesCopy.splice(activeNoteIndex, 1, unindentedNote);
+      notesCopy.splice(activeNoteIndex, 1, {
+        ...unindentedNote,
+        body: note.body,
+      });
       await handleSaveNote(unindentedNote);
       setNotes(notesCopy);
     }
@@ -97,17 +54,6 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
 
   useEffect(() => {
     function keyDownListener(event: KeyboardEvent) {
-      if (event.key === "Tab") {
-        event.preventDefault();
-        event.stopPropagation();
-
-        if (event.shiftKey) {
-          handleUnindent();
-        } else {
-          handleIndent();
-        }
-      }
-
       if (event.key === "ArrowDown") {
         event.preventDefault();
         if (activeNoteIndex < notes.length) {
@@ -145,36 +91,38 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
     return null;
   }
 
-  const handleTitleChanged = (e: React.FocusEvent<HTMLDivElement>) => {
-    const newText = e.target.innerText;
-    if (newText === topLevelNoteWithChildren.body) {
-      return;
-    }
-
-    updatePartialNote({
-      localId: params.id,
-      body: e.target.innerText,
-    });
-  };
-
   const handleNewNote = async (note: Partial<Note>) => {
+    const activeNote = notes[activeNoteIndex];
+
+    const parent =
+      activeNote.localId === params.id ? params.id : activeNote.parent;
+    const prev = parent !== params.id ? "" : activeNote.localId;
+
     const createdNote = await createNote({
-      ...note,
-      parent: params.id,
+      body: "",
+      parent,
+      prev,
     });
-    setNotes([...notes, createdNote]);
-    setActiveNoteIndex(notes.length + 1);
+
+    const notesCopy = [...notes];
+    const newNoteIndex = activeNoteIndex + 1;
+    notesCopy.splice(newNoteIndex, 0, createdNote);
+
+    setNotes(notesCopy);
+    setActiveNoteIndex(newNoteIndex);
   };
 
   const handleSaveNote = async (note: Partial<Note>) => {
     await updatePartialNote({
       ...note,
     });
-  };
 
-  const handleSubmitNote = async (note: Partial<Note>) => {
-    await handleSaveNote(note);
-    setActiveNoteIndex(activeNoteIndex + 1);
+    const notesCopy = [...notes];
+
+    const updatedNote = notesCopy[activeNoteIndex];
+    notesCopy.splice(activeNoteIndex, 1, updatedNote);
+
+    setNotes(notesCopy);
   };
 
   const handleRemoveNote = async (note: Partial<Note>) => {
@@ -192,93 +140,25 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
   return (
     <div className="edit-note-page">
       <div className="edit-note-page-content">
-        <div
-          ref={titleRef}
-          className="title"
-          contentEditable={true}
-          onClick={() => {
-            setActiveNoteIndex(0);
+        <CollapsibleNoteItem
+          note={topLevelNoteWithChildren}
+          defaultType="note"
+          activeId={activeNote?.localId}
+          onUnindent={handleUnindent}
+          onIndent={handleIndent}
+          onSave={handleSaveNote}
+          onNewNote={handleNewNote}
+          onActivate={(selectedNote) => {
+            const index = notes.findIndex(
+              (n) => n.localId === selectedNote.localId
+            );
+            setActiveNoteIndex(index);
           }}
-          onBlur={(e) => handleTitleChanged(e)}
-          suppressContentEditableWarning={true}
-        >
-          {topLevelNoteWithChildren.body}
-        </div>
-        {topLevelNoteWithChildren.children?.map((note) => {
-          return (
-            <NoteItemWithChildren
-              activeNoteId={activeNote?.localId}
-              key={note.localId}
-              note={note}
-              onSave={handleSaveNote}
-              onSubmit={handleSubmitNote}
-              onDelete={handleRemoveNote}
-              onSelect={(selectedNote) => {
-                const index = notes.findIndex(
-                  (n) => n.localId === selectedNote.localId
-                );
-                setActiveNoteIndex(index);
-              }}
-            />
-          );
-        })}
-        <NoteItem
-          key={notes.length}
-          note={{ type: "note", body: "" }}
-          onSave={handleNewNote}
-          onSubmit={handleNewNote}
-          focused={activeNoteIndex === notes.length}
-          onSelect={() => {
-            setActiveNoteIndex(notes.length);
-          }}
+          onDelete={handleRemoveNote}
+          onBlur={() => {}}
+          onDrop={() => {}}
         />
       </div>
-    </div>
-  );
-};
-
-type NoteItemWithChildrenProps = {
-  activeNoteId?: string;
-  note: CollapsibleNote;
-  focused?: boolean;
-  onSave?: (note: Partial<Note>) => void;
-  onDelete?: (note: Partial<Note>) => void;
-  onSelect?: (note: Partial<Note>) => void;
-  onSubmit?: (note: Partial<Note>) => void;
-};
-
-const NoteItemWithChildren: React.FC<NoteItemWithChildrenProps> = ({
-  activeNoteId,
-  note,
-  onSave,
-  onDelete,
-  onSelect,
-  onSubmit,
-}) => {
-  return (
-    <div className="note-item-with-children">
-      <NoteItem
-        focused={activeNoteId === note.localId}
-        note={note}
-        onSave={onSave}
-        onDelete={onDelete}
-        onSelect={onSelect}
-        onSubmit={onSubmit}
-      />
-      {note.children?.map((childNote) => {
-        return (
-          <div key={childNote.localId} style={{ marginLeft: "12px" }}>
-            <NoteItemWithChildren
-              activeNoteId={activeNoteId}
-              note={childNote}
-              onSave={onSave}
-              onDelete={onDelete}
-              onSelect={onSelect}
-              onSubmit={onSubmit}
-            />
-          </div>
-        );
-      })}
     </div>
   );
 };

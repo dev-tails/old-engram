@@ -23,6 +23,7 @@ import {
 import { hasLocalDevice } from "../DeviceApi";
 import { getMe } from "../UsersApi";
 import { PagesPage } from "../components/PagesPage/PagesPage";
+import { DebugNotesPage } from "../components/DebugNotesPage/DebugNotesPage";
 
 function getStartDate(date: Date, dateRangeValue: string) {
   switch (dateRangeValue) {
@@ -193,6 +194,9 @@ export default function Routes() {
         <Route exact path={TermsOfServicePagePath}>
           <TermsOfServicePage />
         </Route>
+        <AuthenticatedRoute exact path="/debug/notes">
+          <DebugNotesPage />
+        </AuthenticatedRoute>
         <Redirect to="/" />
       </Switch>
     </>

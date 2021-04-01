@@ -1,10 +1,19 @@
-import './CollapsibleNotesList.scss';
+import "./CollapsibleNotesList.scss";
 
-import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import moment from "moment";
+import React, { useEffect, useState } from "react";
 
-import { CollapsibleNote, CollapsibleNoteItem } from '../CollapsibleNoteItem/CollapsibleNoteItem';
-import { createNote, Note, NoteType, removeNote, updateNote } from '../NotesApi';
+import {
+  CollapsibleNote,
+  CollapsibleNoteItem,
+} from "../CollapsibleNoteItem/CollapsibleNoteItem";
+import {
+  createNote,
+  Note,
+  NoteType,
+  removeNote,
+  updateNote,
+} from "../NotesApi";
 
 type CollapsibleNotesListProps = {
   date?: Date;
@@ -75,7 +84,6 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
       setNotes(newNotes);
       activateNextEmptyNote(newNotes);
     }
-    props.onChange();
   };
 
   function activateNextEmptyNote(notes: Note[]) {
@@ -160,7 +168,7 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
             defaultType={props.type}
             active={activeNoteId === note.localId}
             onSave={handleSave}
-            onNewNote={props.readOnly ? handleNewNote : () => {}}
+            onNewNote={handleNewNote}
             onActivate={handleNoteActivate}
             onDelete={handleDelete}
             onBlur={handleBlur}
@@ -174,7 +182,7 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
         defaultType={props.type}
         active={activeNoteId === "empty"}
         onSave={handleSave}
-        onNewNote={props.readOnly ? handleNewNote : () => {}}
+        onNewNote={handleNewNote}
         onActivate={handleNoteActivate}
         onDelete={handleDelete}
         onBlur={handleBlur}

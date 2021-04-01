@@ -1,13 +1,13 @@
-import axios from 'axios';
-import { orderBy, uniqBy } from 'lodash';
-import moment from 'moment';
-import querystring from 'query-string';
-import { validate as validateUuid } from 'uuid';
+import axios from "axios";
+import { orderBy, uniqBy } from "lodash";
+import moment from "moment";
+import querystring from "query-string";
+import { validate as validateUuid } from "uuid";
 
-import * as Api from '../../Api';
-import * as db from '../../db/db';
-import { updateDevice } from '../../DeviceApi';
-import * as UsersApi from '../../UsersApi';
+import * as Api from "../../Api";
+import * as db from "../../db/db";
+import { updateDevice } from "../../DeviceApi";
+import * as UsersApi from "../../UsersApi";
 
 export type Note = db.Note;
 export type NoteType = db.NoteType;
@@ -230,9 +230,15 @@ export function sortNotes(notes: Note[]) {
       noteWithPrevIndex++
     ) {
       const noteWithPrev = notesWithPrev[noteWithPrevIndex];
-      const indexOfPrev = orderedNotesByCreatedAt.findIndex(
+      let indexOfPrev = orderedNotesByCreatedAt.findIndex(
         (note) => note.localId === noteWithPrev.prev
       );
+
+      // If we made it all the way through notesWithPrev, we insert notes with "floating" prevs
+      const isLastNote = noteWithPrevIndex === notesWithPrev.length - 1;
+      if (isLastNote) {
+        indexOfPrev = orderedNotesByCreatedAt.length - 1;
+      }
 
       if (indexOfPrev < 0) {
         continue;
@@ -309,4 +315,49 @@ export async function removeNote(noteId?: string | null | undefined) {
       notes.splice(noteToRemoveIndex, 1);
     }
   }
+}
+
+export function indentNote(noteIndex: number, notes: Note[]) {
+  const note = notes[noteIndex];
+  if (!note) {
+    return null;
+  }
+
+  let parent = note.parent;
+
+  for (let i = noteIndex - 1; i >= 0; i--) {
+    const currentNote = notes[i];
+    if (currentNote.parent === parent) {
+      parent = currentNote.localId;
+      break;
+    }
+  }
+
+  return {
+    ...note,
+    parent,
+  };
+}
+
+export function unindentNote(noteIndex: number, notes: Note[]) {
+  const note = notes[noteIndex];
+  if (!note) {
+    return null;
+  }
+
+  let parentId = note.parent; // "1"
+  let parent = null;
+
+  for (let i = noteIndex - 1; i >= 0; i--) {
+    const currentNote = notes[i];
+    if (currentNote.localId === parentId) {
+      parent = currentNote;
+      break;
+    }
+  }
+
+  return {
+    ...note,
+    parent: parent?.parent,
+  };
 }

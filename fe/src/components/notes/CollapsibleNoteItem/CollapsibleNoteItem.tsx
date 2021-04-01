@@ -1,15 +1,15 @@
-import './CollapsibleNoteItem.scss';
+import "./CollapsibleNoteItem.scss";
 
-import { TextareaAutosize } from '@material-ui/core';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-import React, { useEffect, useRef, useState } from 'react';
-import { useDrag, useDrop } from 'react-dnd';
-import { Link } from 'react-router-dom';
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import ArrowRightIcon from "@material-ui/icons/ArrowRight";
+import React, { useEffect, useRef, useState } from "react";
+import { useDrag, useDrop } from "react-dnd";
+import { Link } from "react-router-dom";
 
-import { Markdown } from '../../Markdown/Markdown';
-import { BulletIcon } from '../BulletIcon/BulletIcon';
-import { Note, NoteType } from '../NotesApi';
+import { BulletIcon } from "../BulletIcon/BulletIcon";
+import { Note, NoteType } from "../NotesApi";
+import { Markdown } from "../../Markdown/Markdown";
+import { isUndefined } from "lodash";
 
 export type CollapsibleNote = {
   _id?: string;
@@ -25,10 +25,11 @@ export type CollapsibleNote = {
 type CollapsibleNoteItemProps = {
   note: CollapsibleNote;
   defaultType?: NoteType;
-  active: boolean;
-  onSave: (note: CollapsibleNote) => void;
+  active?: boolean;
+  activeId?: string;
   onUnindent?: (note: CollapsibleNote) => void;
   onIndent?: (note: CollapsibleNote) => void;
+  onSave: (note: CollapsibleNote) => void;
   onNewNote?: (note: CollapsibleNote) => void;
   onActivate: (note: CollapsibleNote) => void;
   onDelete: (note: CollapsibleNote) => void;
@@ -39,8 +40,7 @@ type CollapsibleNoteItemProps = {
 export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   props
 ) => {
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  const [body, setBody] = useState(props.note.body);
+  const noteBodyRef = useRef<HTMLDivElement>(null);
   const [type, setType] = useState(props.note.type || props.defaultType);
   const [collapsed, setCollapsed] = useState(false);
 
@@ -69,14 +69,21 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
     []
   );
 
-  const isActive = props.active;
+  const isActive = isUndefined(props.active)
+    ? props.activeId === props.note.localId
+    : props.active;
   const hasChildren = props.note.children && props.note.children.length > 0;
 
   const note = {
     ...props.note,
-    body,
     type,
   };
+
+  useEffect(() => {
+    if (isActive) {
+      noteBodyRef.current?.focus();
+    }
+  }, [isActive]);
 
   useEffect(() => {
     function keyDownListener(event: KeyboardEvent) {
@@ -84,8 +91,23 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
         return;
       }
 
+      if (event.key === "Tab") {
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (event.shiftKey) {
+          if (props.onUnindent) {
+            props.onUnindent(getCurrentNote());
+          }
+        } else {
+          if (props.onIndent) {
+            props.onIndent(getCurrentNote());
+          }
+        }
+      }
+
       if (event.key === "Backspace") {
-        if (body === "") {
+        if (getBody() === "") {
           event.preventDefault();
           return props.onDelete(props.note);
         }
@@ -99,30 +121,16 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
         } else if (!event.shiftKey) {
           event.preventDefault();
 
-          handleSave();
+          // TODO: This is a hack to get this working in both HomePage and EditNotePage
+          if (isUndefined(props.active) === false) {
+            handleSave();
+          }
 
           if (props.note.localId) {
             handleNewNote();
           }
         }
       }
-
-      // Temporarily disable indenting until working better
-      // if (event.key === "Tab") {
-      //   event.preventDefault();
-      //   event.stopPropagation();
-
-      //   const updatedNote = {
-      //     ...props.note,
-      //     body,
-      //   };
-
-      //   if (event.shiftKey) {
-      //     props.onUnindent && props.onUnindent(updatedNote);
-      //   } else {
-      //     props.onIndent && props.onIndent(updatedNote);
-      //   }
-      // }
     }
     document.addEventListener("keydown", keyDownListener);
 
@@ -131,28 +139,34 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
     };
   });
 
-  const handleTextChanged = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setBody(event.currentTarget.value);
+  const getCurrentNote = () => {
+    return {
+      ...note,
+      type,
+      body: getBody(),
+    };
   };
 
   const handleSave = (update?: Partial<Note>) => {
-    if (!body && note.localId) {
-      props.onDelete(note);
-      return;
-    }
-
     props.onSave({
       ...note,
+      body: getBody(),
       ...update,
     });
+  };
+
+  const getBody = () => {
+    return noteBodyRef.current?.innerText;
   };
 
   const handleTextAreaBlur = () => {
     props.onBlur();
 
+    const body = noteBodyRef.current?.innerText;
     if (body === props.note.body) {
       return;
     }
+
     handleSave({
       body,
     });
@@ -191,16 +205,14 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   };
 
   function getBodyForMarkdown() {
-    return body?.replaceAll("\n\n", `\n&nbsp;\n`) || "";
+    return props.note.body?.replaceAll("\n\n", `\n&nbsp;\n`) || "";
   }
 
   return (
     <div className={`collapsible-note-item-wrapper ${type}`}>
       <div
         ref={drag}
-        className={`collapsible-note-item ${!props.note.body ? "empty" : ""} ${
-          isDragging ? "dragging" : ""
-        }`}
+        className={`collapsible-note-item ${isDragging ? "dragging" : ""}`}
         onClick={handleNoteClicked}
       >
         <div ref={drop} className="drop-container">
@@ -226,19 +238,17 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
           <div className="bullet-icon-wrapper" onClick={handleChangeType}>
             <BulletIcon note={note} />
           </div>
-          {isActive ? (
-            <TextareaAutosize
-              ref={textAreaRef}
-              value={body}
-              onChange={handleTextChanged}
-              onBlur={handleTextAreaBlur}
-              autoFocus={isActive}
-            />
-          ) : (
-            <div className="note-inactive">
-              <Markdown body={getBodyForMarkdown()} />
-            </div>
-          )}
+          <div
+            className="note-text"
+            ref={noteBodyRef}
+            contentEditable={true}
+            suppressContentEditableWarning
+            onBlur={handleTextAreaBlur}
+          >
+            <Markdown
+              body={isActive ? props.note.body || "" : getBodyForMarkdown()}
+            ></Markdown>
+          </div>
         </div>
       </div>
       <div className={`divider ${isOver ? "highlight" : ""}`} />
