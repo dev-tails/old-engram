@@ -24,10 +24,9 @@ export type CollapsibleNote = {
 type CollapsibleNoteItemProps = {
   note: CollapsibleNote;
   defaultType?: NoteType;
-  active: boolean;
+  active?: boolean;
+  activeId?: string;
   onSave: (note: CollapsibleNote) => void;
-  onUnindent?: (note: CollapsibleNote) => void;
-  onIndent?: (note: CollapsibleNote) => void;
   onNewNote?: (note: CollapsibleNote) => void;
   onActivate: (note: CollapsibleNote) => void;
   onDelete: (note: CollapsibleNote) => void;
@@ -67,7 +66,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
     []
   );
 
-  const isActive = props.active;
+  const isActive = props.active || props.activeId === props.note.localId;
   const hasChildren = props.note.children && props.note.children.length > 0;
 
   const note = {
@@ -102,30 +101,11 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
         } else if (!event.shiftKey) {
           event.preventDefault();
 
-          handleSave();
-
           if (props.note.localId) {
             handleNewNote();
           }
         }
       }
-
-      // Temporarily disable indenting until working better
-      // if (event.key === "Tab") {
-      //   event.preventDefault();
-      //   event.stopPropagation();
-
-      //   const updatedNote = {
-      //     ...props.note,
-      //     body,
-      //   };
-
-      //   if (event.shiftKey) {
-      //     props.onUnindent && props.onUnindent(updatedNote);
-      //   } else {
-      //     props.onIndent && props.onIndent(updatedNote);
-      //   }
-      // }
     }
     document.addEventListener("keydown", keyDownListener);
 
@@ -135,11 +115,6 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   });
 
   const handleSave = (update?: Partial<Note>) => {
-    if (!getBody() && note.localId) {
-      props.onDelete(note);
-      return;
-    }
-
     props.onSave({
       ...note,
       body: getBody(),
@@ -155,10 +130,10 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
     props.onBlur();
 
     const body = noteBodyRef.current?.innerText;
-
     if (body === props.note.body) {
       return;
     }
+
     handleSave({
       body,
     });
@@ -204,9 +179,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
     <div className={`collapsible-note-item-wrapper ${type}`}>
       <div
         ref={drag}
-        className={`collapsible-note-item ${!props.note.body ? "empty" : ""} ${
-          isDragging ? "dragging" : ""
-        }`}
+        className={`collapsible-note-item ${isDragging ? "dragging" : ""}`}
         onClick={handleNoteClicked}
       >
         <div ref={drop} className="drop-container">
@@ -235,15 +208,13 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
           <div
             className="note-text"
             ref={noteBodyRef}
-            contentEditable={isActive}
+            contentEditable={true}
             suppressContentEditableWarning
             onBlur={handleTextAreaBlur}
           >
-            {isActive ? (
-              props.note.body
-            ) : (
-              <Markdown body={getBodyForMarkdown()}></Markdown>
-            )}
+            <Markdown
+              body={isActive ? props.note.body || "" : getBodyForMarkdown()}
+            ></Markdown>
           </div>
         </div>
       </div>
