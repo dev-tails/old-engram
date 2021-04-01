@@ -8,8 +8,10 @@ import { NoteItem } from "../NoteItem/NoteItem";
 import {
   createNote,
   getNote,
+  indentNote,
   Note,
   removeNote,
+  unindentNote,
   updatePartialNote,
 } from "../NotesApi";
 import { getNoteWithChildren } from "../NoteUtils";
@@ -19,51 +21,6 @@ type EditNotePageProps = {};
 type EditNotePageParams = {
   id: string;
 };
-
-export function indentNote(noteIndex: number, notes: Note[]) {
-  const note = notes[noteIndex];
-  if (!note) {
-    return null;
-  }
-
-  let parent = note.parent;
-
-  for (let i = noteIndex - 1; i >= 0; i--) {
-    const currentNote = notes[i];
-    if (currentNote.parent === parent) {
-      parent = currentNote.localId;
-      break;
-    }
-  }
-
-  return {
-    ...note,
-    parent,
-  };
-}
-
-export function unindentNote(noteIndex: number, notes: Note[]) {
-  const note = notes[noteIndex];
-  if (!note) {
-    return null;
-  }
-
-  let parentId = note.parent; // "1"
-  let parent = null;
-
-  for (let i = noteIndex - 1; i >= 0; i--) {
-    const currentNote = notes[i];
-    if (currentNote.localId === parentId) {
-      parent = currentNote;
-      break;
-    }
-  }
-
-  return {
-    ...note,
-    parent: parent?.parent,
-  };
-}
 
 export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
   const params = useParams<EditNotePageParams>();
