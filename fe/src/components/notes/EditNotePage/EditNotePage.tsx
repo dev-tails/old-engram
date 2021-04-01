@@ -3,11 +3,7 @@ import "./EditNotePage.scss";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
-import {
-  CollapsibleNote,
-  CollapsibleNoteItem,
-} from "../CollapsibleNoteItem/CollapsibleNoteItem";
-import { NoteItem } from "../NoteItem/NoteItem";
+import { CollapsibleNoteItem } from "../CollapsibleNoteItem/CollapsibleNoteItem";
 import {
   createNote,
   getNote,

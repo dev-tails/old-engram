@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import { BulletIcon } from "../BulletIcon/BulletIcon";
 import { Note, NoteType } from "../NotesApi";
 import { Markdown } from "../../Markdown/Markdown";
+import { isUndefined } from "lodash";
 
 export type CollapsibleNote = {
   _id?: string;
@@ -68,7 +69,9 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
     []
   );
 
-  const isActive = props.active || props.activeId === props.note.localId;
+  const isActive = isUndefined(props.active)
+    ? props.activeId === props.note.localId
+    : props.active;
   const hasChildren = props.note.children && props.note.children.length > 0;
 
   const note = {

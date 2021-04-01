@@ -168,7 +168,7 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
             defaultType={props.type}
             active={activeNoteId === note.localId}
             onSave={handleSave}
-            onNewNote={props.readOnly ? handleNewNote : () => {}}
+            onNewNote={handleNewNote}
             onActivate={handleNoteActivate}
             onDelete={handleDelete}
             onBlur={handleBlur}
@@ -182,7 +182,7 @@ export const CollapsibleNotesList: React.FC<CollapsibleNotesListProps> = (
         defaultType={props.type}
         active={activeNoteId === "empty"}
         onSave={handleSave}
-        onNewNote={props.readOnly ? handleNewNote : () => {}}
+        onNewNote={handleNewNote}
         onActivate={handleNoteActivate}
         onDelete={handleDelete}
         onBlur={handleBlur}
