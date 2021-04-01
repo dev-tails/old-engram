@@ -38,7 +38,7 @@ export const DebugNotesPage: React.FC<DebugNotesPageProps> = () => {
             {
               field: "localId",
               headerName: "ID",
-              width: 300,
+              width: 310,
             },
             { field: "body", headerName: "Body", flex: 1 },
             {
@@ -59,7 +59,7 @@ export const DebugNotesPage: React.FC<DebugNotesPageProps> = () => {
             {
               field: "prev",
               headerName: "Prev",
-              width: 300,
+              width: 310,
             },
             {
               field: "parent",
