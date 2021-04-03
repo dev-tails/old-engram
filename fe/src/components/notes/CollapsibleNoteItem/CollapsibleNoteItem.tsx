@@ -1,15 +1,15 @@
-import "./CollapsibleNoteItem.scss";
+import './CollapsibleNoteItem.scss';
 
-import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
-import ArrowRightIcon from "@material-ui/icons/ArrowRight";
-import React, { useEffect, useRef, useState } from "react";
-import { useDrag, useDrop } from "react-dnd";
-import { Link } from "react-router-dom";
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import { isUndefined } from 'lodash';
+import React, { useEffect, useRef, useState } from 'react';
+import { useDrag, useDrop } from 'react-dnd';
+import { Link } from 'react-router-dom';
 
-import { BulletIcon } from "../BulletIcon/BulletIcon";
-import { Note, NoteType } from "../NotesApi";
-import { Markdown } from "../../Markdown/Markdown";
-import { isUndefined } from "lodash";
+import { Markdown } from '../../Markdown/Markdown';
+import { BulletIcon } from '../BulletIcon/BulletIcon';
+import { Note, NoteType } from '../NotesApi';
 
 export type CollapsibleNote = {
   _id?: string;
@@ -40,9 +40,10 @@ type CollapsibleNoteItemProps = {
 export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   props
 ) => {
-  const noteBodyRef = useRef<HTMLDivElement>(null);
+  const noteBodyRef = useRef<HTMLTextAreaElement>(null);
   const [type, setType] = useState(props.note.type || props.defaultType);
   const [collapsed, setCollapsed] = useState(false);
+  const [body, setBody] = useState(props.note.body);
 
   const [isDragging, drag] = useDrag(() => ({
     type: type as string,
@@ -82,8 +83,14 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   useEffect(() => {
     if (isActive) {
       noteBodyRef.current?.focus();
+      noteBodyRef.current?.setSelectionRange(-1, -1);
+      updateTextAreaHeight();
     }
   }, [isActive]);
+
+  useEffect(() => {
+    updateTextAreaHeight();
+  }, [body]);
 
   useEffect(() => {
     function keyDownListener(event: KeyboardEvent) {
@@ -156,13 +163,18 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   };
 
   const getBody = () => {
-    return noteBodyRef.current?.innerText;
+    return body;
+  };
+
+  const handleTextAreaChanged: React.TextareaHTMLAttributes<HTMLTextAreaElement>["onChange"] = (
+    event
+  ) => {
+    setBody(event.target.value);
   };
 
   const handleTextAreaBlur = () => {
     props.onBlur();
 
-    const body = noteBodyRef.current?.innerText;
     if (body === props.note.body) {
       return;
     }
@@ -205,8 +217,14 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   };
 
   function getBodyForMarkdown() {
-    return props.note.body?.replaceAll("\n\n", `\n&nbsp;\n`) || "";
+    return body?.replaceAll("\n\n", `\n&nbsp;\n`) || "";
   }
+
+  const updateTextAreaHeight = () => {
+    if (noteBodyRef.current) {
+      noteBodyRef.current.style.height = `${noteBodyRef.current.scrollHeight}px`;
+    }
+  };
 
   return (
     <div className={`collapsible-note-item-wrapper ${type}`}>
@@ -238,17 +256,23 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
           <div className="bullet-icon-wrapper" onClick={handleChangeType}>
             <BulletIcon note={note} />
           </div>
-          <div
-            className="note-text"
-            ref={noteBodyRef}
-            contentEditable={true}
-            suppressContentEditableWarning
-            onBlur={handleTextAreaBlur}
-          >
-            <Markdown
-              body={isActive ? props.note.body || "" : getBodyForMarkdown()}
-            ></Markdown>
-          </div>
+          {isActive ? (
+            <textarea
+              ref={noteBodyRef}
+              className="note-text"
+              onBlur={handleTextAreaBlur}
+              onChange={handleTextAreaChanged}
+              value={body}
+              rows={1}
+              style={{
+                display: isActive ? "block" : "none",
+              }}
+            />
+          ) : (
+            <div className="note-text" style={{ marginBottom: "1px" }}>
+              <Markdown body={getBodyForMarkdown()} />
+            </div>
+          )}
         </div>
       </div>
       <div className={`divider ${isOver ? "highlight" : ""}`} />

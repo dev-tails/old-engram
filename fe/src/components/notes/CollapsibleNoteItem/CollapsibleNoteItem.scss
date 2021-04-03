@@ -69,9 +69,11 @@
     }
 
     .note-text {
-      margin: 1px;
       white-space: pre-wrap;
       width: 100%;
+
+      padding: 0;
+      line-height: 1;
 
       overflow-wrap: break-word;
       word-wrap: break-word;
@@ -89,8 +91,9 @@
       hyphens: auto;
     }
 
-    p {
+    textarea, p {
       margin: 0;
+      margin: 5px 0;
     }
   }
 
