@@ -206,7 +206,7 @@ export async function getNotes(params: GetNotesParams = {}): Promise<Note[]> {
 
 export function sortNotes(notes: Note[]) {
   const notesWithoutPrev = [];
-  const notesWithPrevOrParent = [];
+  let notesWithPrevOrParent = [];
   for (const note of notes) {
     if (note.prev || note.parent) {
       notesWithPrevOrParent.push(note);
@@ -214,6 +214,12 @@ export function sortNotes(notes: Note[]) {
       notesWithoutPrev.push(note);
     }
   }
+
+  notesWithPrevOrParent = orderBy(
+    notesWithPrevOrParent,
+    ["createdAt", "_id"],
+    ["desc", "desc"]
+  );
 
   const orderedNotesByCreatedAt = orderBy(
     notesWithoutPrev,

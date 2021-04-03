@@ -109,6 +109,35 @@ describe("NotesApi", () => {
       expect(sortedNotes[3].localId).toBe("4");
     });
 
+    fit("should sort child notes by createdAt if prev doesn't exist", () => {
+      const notes = [
+        {
+          localId: "1",
+        },
+        {
+          localId: "2",
+          parent: "1",
+        },
+        {
+          localId: "3",
+          parent: "2",
+          createdAt: new Date("2021-04-01"),
+        },
+        {
+          localId: "4",
+          parent: "2",
+          createdAt: new Date("2021-04-02"),
+        },
+      ];
+      const sortedNotes = NotesApi.sortNotes(notes);
+
+      expect(sortedNotes.length).toBe(4);
+      expect(sortedNotes[0].localId).toBe("1");
+      expect(sortedNotes[1].localId).toBe("2");
+      expect(sortedNotes[2].localId).toBe("3");
+      expect(sortedNotes[3].localId).toBe("4");
+    });
+
     it("should sort be able to sort a prev point to a floating prev", () => {
       const notes = [
         {
