@@ -55,7 +55,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   };
 
   const handleAgendaChanged = () => {
-    setVersionNumber(versionNumber + 1);
+    setVersionNumber((prevVersion) => prevVersion + 1);
   };
 
   if (!date) {
