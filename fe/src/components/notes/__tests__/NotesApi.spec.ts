@@ -1,4 +1,4 @@
-import * as NotesApi from "../NotesApi";
+import * as NotesApi from '../NotesApi';
 
 describe("NotesApi", () => {
   describe("sortNotes", () => {
@@ -79,6 +79,34 @@ describe("NotesApi", () => {
       expect(sortedNotes[0].localId).toBe("1");
       expect(sortedNotes[1].localId).toBe("2");
       expect(sortedNotes[2].localId).toBe("3");
+    });
+
+    it("should sort notes with parents in visual order", () => {
+      const notes = [
+        {
+          localId: "1",
+        },
+        {
+          localId: "2",
+          parent: "1",
+        },
+        {
+          localId: "4",
+          parent: "1",
+          prev: "2",
+        },
+        {
+          localId: "3",
+          parent: "2",
+        },
+      ];
+      const sortedNotes = NotesApi.sortNotes(notes);
+
+      expect(sortedNotes.length).toBe(4);
+      expect(sortedNotes[0].localId).toBe("1");
+      expect(sortedNotes[1].localId).toBe("2");
+      expect(sortedNotes[2].localId).toBe("3");
+      expect(sortedNotes[3].localId).toBe("4");
     });
 
     it("should sort be able to sort a prev point to a floating prev", () => {

@@ -114,7 +114,7 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
       }
 
       if (event.key === "Backspace") {
-        if (getBody() === "") {
+        if (body === "") {
           event.preventDefault();
           return props.onDelete(props.note);
         }
@@ -150,20 +150,16 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
     return {
       ...note,
       type,
-      body: getBody(),
+      body,
     };
   };
 
   const handleSave = (update?: Partial<Note>) => {
     props.onSave({
       ...note,
-      body: getBody(),
+      body,
       ...update,
     });
-  };
-
-  const getBody = () => {
-    return body;
   };
 
   const handleTextAreaChanged: React.TextareaHTMLAttributes<HTMLTextAreaElement>["onChange"] = (
@@ -256,23 +252,23 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
           <div className="bullet-icon-wrapper" onClick={handleChangeType}>
             <BulletIcon note={note} />
           </div>
-          {isActive ? (
-            <textarea
-              ref={noteBodyRef}
-              className="note-text"
-              onBlur={handleTextAreaBlur}
-              onChange={handleTextAreaChanged}
-              value={body}
-              rows={1}
-              style={{
-                display: isActive ? "block" : "none",
-              }}
-            />
-          ) : (
+
+          <textarea
+            ref={noteBodyRef}
+            className="note-text"
+            onBlur={handleTextAreaBlur}
+            onChange={handleTextAreaChanged}
+            value={body}
+            rows={1}
+            style={{
+              display: isActive ? "block" : "none",
+            }}
+          />
+          {!isActive ? (
             <div className="note-text" style={{ marginBottom: "1px" }}>
               <Markdown body={getBodyForMarkdown()} />
             </div>
-          )}
+          ) : null}
         </div>
       </div>
       <div className={`divider ${isOver ? "highlight" : ""}`} />

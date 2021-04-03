@@ -1,13 +1,13 @@
-import axios from "axios";
-import { orderBy, uniqBy } from "lodash";
-import moment from "moment";
-import querystring from "query-string";
-import { validate as validateUuid } from "uuid";
+import axios from 'axios';
+import { orderBy, uniqBy } from 'lodash';
+import moment from 'moment';
+import querystring from 'query-string';
+import { validate as validateUuid } from 'uuid';
 
-import * as Api from "../../Api";
-import * as db from "../../db/db";
-import { updateDevice } from "../../DeviceApi";
-import * as UsersApi from "../../UsersApi";
+import * as Api from '../../Api';
+import * as db from '../../db/db';
+import { updateDevice } from '../../DeviceApi';
+import * as UsersApi from '../../UsersApi';
 
 export type Note = db.Note;
 export type NoteType = db.NoteType;
@@ -206,10 +206,10 @@ export async function getNotes(params: GetNotesParams = {}): Promise<Note[]> {
 
 export function sortNotes(notes: Note[]) {
   const notesWithoutPrev = [];
-  const notesWithPrev = [];
+  const notesWithPrevOrParent = [];
   for (const note of notes) {
-    if (note.prev) {
-      notesWithPrev.push(note);
+    if (note.prev || note.parent) {
+      notesWithPrevOrParent.push(note);
     } else {
       notesWithoutPrev.push(note);
     }
@@ -225,31 +225,39 @@ export function sortNotes(notes: Note[]) {
   do {
     found = false;
     for (
-      let noteWithPrevIndex = 0;
-      noteWithPrevIndex < notesWithPrev.length;
-      noteWithPrevIndex++
+      let noteToInsertIndex = 0;
+      noteToInsertIndex < notesWithPrevOrParent.length;
+      noteToInsertIndex++
     ) {
-      const noteWithPrev = notesWithPrev[noteWithPrevIndex];
-      let indexOfPrev = orderedNotesByCreatedAt.findIndex(
-        (note) => note.localId === noteWithPrev.prev
-      );
+      const noteToInsert = notesWithPrevOrParent[noteToInsertIndex];
 
-      // If we made it all the way through notesWithPrev, we insert notes with "floating" prevs
-      const isLastNote = noteWithPrevIndex === notesWithPrev.length - 1;
-      if (isLastNote) {
-        indexOfPrev = orderedNotesByCreatedAt.length - 1;
+      let indexToInsertTo = -1;
+      if (noteToInsert.prev) {
+        indexToInsertTo = orderedNotesByCreatedAt.findIndex(
+          (note) => note.localId === noteToInsert.prev
+        );
+      } else if (noteToInsert.parent) {
+        indexToInsertTo = orderedNotesByCreatedAt.findIndex(
+          (note) => note.localId === noteToInsert.parent
+        );
       }
 
-      if (indexOfPrev < 0) {
+      // If we made it all the way through notesWithPrev, we insert notes with "floating" prevs
+      const isLastNote = noteToInsertIndex === notesWithPrevOrParent.length - 1;
+      if (indexToInsertTo < 0 && isLastNote) {
+        indexToInsertTo = orderedNotesByCreatedAt.length - 1;
+      }
+
+      if (indexToInsertTo < 0) {
         continue;
       }
 
-      notesWithPrev.splice(noteWithPrevIndex, 1);
-      orderedNotesByCreatedAt.splice(indexOfPrev + 1, 0, noteWithPrev);
+      notesWithPrevOrParent.splice(noteToInsertIndex, 1);
+      orderedNotesByCreatedAt.splice(indexToInsertTo + 1, 0, noteToInsert);
       found = true;
       break;
     }
-  } while (found && notesWithPrev.length > 0);
+  } while (found && notesWithPrevOrParent.length > 0);
 
   return orderedNotesByCreatedAt;
 }
