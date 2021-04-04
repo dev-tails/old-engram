@@ -1,5 +1,6 @@
 import './CollapsibleNoteItem.scss';
 
+import { Menu, MenuItem } from '@material-ui/core';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import { isUndefined } from 'lodash';
@@ -44,6 +45,9 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
   const [type, setType] = useState(props.note.type || props.defaultType);
   const [collapsed, setCollapsed] = useState(false);
   const [body, setBody] = useState(props.note.body);
+  const [menuAnchorEl, setMenuAnchorEl] = React.useState<null | HTMLElement>(
+    null
+  );
 
   const [isDragging, drag] = useDrag(() => ({
     type: type as string,
@@ -222,6 +226,22 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
     }
   };
 
+  const handleMoreClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setMenuAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseMenu = () => {
+    setMenuAnchorEl(null);
+  };
+
+  const handleShareClicked = () => {
+    if (navigator) {
+      navigator.share({
+        text: body,
+      });
+    }
+  };
+
   return (
     <div className={`collapsible-note-item-wrapper ${type}`}>
       <div
@@ -240,15 +260,26 @@ export const CollapsibleNoteItem: React.FC<CollapsibleNoteItemProps> = (
               <ArrowDropDownIcon fontSize="small" />
             )}
           </span>
-          <Link to={`/notes/${note.localId}`}>
-            <span className={`block-edit`} onClick={handleToggleExpand}>
-              <svg height="8" width="8" fill="#FFF">
-                <circle cx="4" cy="1" r="1" />
-                <circle cx="4" cy="4" r="1" />
-                <circle cx="4" cy="7" r="1" />
-              </svg>
-            </span>
-          </Link>
+          <span className={`block-edit`} onClick={handleMoreClicked}>
+            <svg height="8" width="8" fill="#FFF">
+              <circle cx="4" cy="1" r="1" />
+              <circle cx="4" cy="4" r="1" />
+              <circle cx="4" cy="7" r="1" />
+            </svg>
+          </span>
+          <Menu
+            anchorEl={menuAnchorEl}
+            keepMounted
+            open={Boolean(menuAnchorEl)}
+            onClose={handleCloseMenu}
+          >
+            <Link to={`/notes/${note.localId}`}>
+              <MenuItem>Edit</MenuItem>
+            </Link>
+            {(navigator as any)?.share ? (
+              <MenuItem onClick={handleShareClicked}>Share...</MenuItem>
+            ) : null}
+          </Menu>
           <div className="bullet-icon-wrapper" onClick={handleChangeType}>
             <BulletIcon note={note} />
           </div>
