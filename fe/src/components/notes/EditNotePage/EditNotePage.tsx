@@ -7,10 +7,12 @@ import { CollapsibleNoteItem } from "../CollapsibleNoteItem/CollapsibleNoteItem"
 import {
   createNote,
   getNote,
+  getUpdatesToPositionNote,
   indentNote,
   Note,
   removeNote,
   unindentNote,
+  updateNote,
   updatePartialNote,
 } from "../NotesApi";
 import { getNoteWithChildren } from "../NoteUtils";
@@ -81,12 +83,16 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
     fetchNote();
   }, [params.id]);
 
+  async function refetchNote() {
+    const fetchedNotes = await getNote({ id: params.id });
+    setNotes(fetchedNotes);
+  }
+
   if (!notes) {
     return null;
   }
 
   const topLevelNoteWithChildren = getNoteWithChildren(notes, params.id);
-
   if (!topLevelNoteWithChildren) {
     return null;
   }
@@ -96,7 +102,7 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
 
     const parent =
       activeNote.localId === params.id ? params.id : activeNote.parent;
-    const prev = parent !== params.id ? "" : activeNote.localId;
+    const prev = parent === params.id ? "" : activeNote.localId;
 
     const createdNote = await createNote({
       body: "",
@@ -134,6 +140,26 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
     setActiveNoteIndex(activeNoteIndex - 1);
   };
 
+  const handleDropNote = async (droppedNote: Note, noteDroppedOnto: Note) => {
+    if (droppedNote.localId === noteDroppedOnto.localId) {
+      return;
+    }
+
+    const updates = getUpdatesToPositionNote(
+      droppedNote,
+      noteDroppedOnto,
+      notes
+    );
+
+    await Promise.all(
+      updates.map((update) => {
+        return updateNote(update);
+      })
+    );
+
+    await refetchNote();
+  };
+
   const activeNote =
     activeNoteIndex < notes.length ? notes[activeNoteIndex] : null;
 
@@ -156,7 +182,7 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
           }}
           onDelete={handleRemoveNote}
           onBlur={() => {}}
-          onDrop={() => {}}
+          onDrop={handleDropNote}
         />
       </div>
     </div>
