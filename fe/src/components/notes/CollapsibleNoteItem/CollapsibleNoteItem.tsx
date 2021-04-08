@@ -1,16 +1,16 @@
-import './CollapsibleNoteItem.scss';
+import "./CollapsibleNoteItem.scss";
 
-import { Menu, MenuItem } from '@material-ui/core';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-import { isUndefined } from 'lodash';
-import React, { useEffect, useRef, useState } from 'react';
-import { useDrag, useDrop } from 'react-dnd';
-import { Link } from 'react-router-dom';
+import { Menu, MenuItem } from "@material-ui/core";
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import ArrowRightIcon from "@material-ui/icons/ArrowRight";
+import { isUndefined } from "lodash";
+import React, { useEffect, useRef, useState } from "react";
+import { useDrag, useDrop } from "react-dnd";
+import { Link } from "react-router-dom";
 
-import { Markdown } from '../../Markdown/Markdown';
-import { BulletIcon } from '../BulletIcon/BulletIcon';
-import { Note, NoteType } from '../NotesApi';
+import { Markdown } from "../../Markdown/Markdown";
+import { BulletIcon } from "../BulletIcon/BulletIcon";
+import { Note, NoteType } from "../NotesApi";
 
 export type CollapsibleNote = {
   _id?: string;

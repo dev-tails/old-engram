@@ -7,10 +7,12 @@ import { CollapsibleNoteItem } from "../CollapsibleNoteItem/CollapsibleNoteItem"
 import {
   createNote,
   getNote,
+  getUpdatesToPositionNote,
   indentNote,
   Note,
   removeNote,
   unindentNote,
+  updateNote,
   updatePartialNote,
 } from "../NotesApi";
 import { getNoteWithChildren } from "../NoteUtils";
@@ -81,12 +83,16 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
     fetchNote();
   }, [params.id]);
 
+  async function refetchNote() {
+    const fetchedNotes = await getNote({ id: params.id });
+    setNotes(fetchedNotes);
+  }
+
   if (!notes) {
     return null;
   }
 
   const topLevelNoteWithChildren = getNoteWithChildren(notes, params.id);
-
   if (!topLevelNoteWithChildren) {
     return null;
   }
@@ -96,7 +102,7 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
 
     const parent =
       activeNote.localId === params.id ? params.id : activeNote.parent;
-    const prev = parent !== params.id ? "" : activeNote.localId;
+    const prev = activeNote.localId === params.id ? "" : activeNote.localId;
 
     const createdNote = await createNote({
       body: "",
@@ -113,13 +119,11 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
   };
 
   const handleSaveNote = async (note: Partial<Note>) => {
-    await updatePartialNote({
+    const notesCopy = [...notes];
+    const updatedNote = await updateNote({
       ...note,
     });
 
-    const notesCopy = [...notes];
-
-    const updatedNote = notesCopy[activeNoteIndex];
     notesCopy.splice(activeNoteIndex, 1, updatedNote);
 
     setNotes(notesCopy);
@@ -132,6 +136,33 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
     notesCopy.splice(index, 1);
     setNotes(notesCopy);
     setActiveNoteIndex(activeNoteIndex - 1);
+  };
+
+  const handleDropNote = async (droppedNote: Note, noteDroppedOnto: Note) => {
+    const upToDateDroppedNote = notes.find(
+      (n) => n.localId === droppedNote.localId
+    );
+    const upToDateNoteDroppedOnto = notes.find(
+      (n) => n.localId === noteDroppedOnto.localId
+    );
+
+    if (!upToDateDroppedNote || !upToDateNoteDroppedOnto) {
+      return;
+    }
+
+    const updates = getUpdatesToPositionNote(
+      upToDateDroppedNote,
+      upToDateNoteDroppedOnto,
+      notes
+    );
+
+    await Promise.all(
+      updates.map((update) => {
+        return updateNote(update);
+      })
+    );
+
+    await refetchNote();
   };
 
   const activeNote =
@@ -156,7 +187,7 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
           }}
           onDelete={handleRemoveNote}
           onBlur={() => {}}
-          onDrop={() => {}}
+          onDrop={handleDropNote}
         />
       </div>
     </div>

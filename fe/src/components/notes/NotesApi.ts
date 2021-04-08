@@ -1,13 +1,13 @@
-import axios from 'axios';
-import { orderBy, uniqBy } from 'lodash';
-import moment from 'moment';
-import querystring from 'query-string';
-import { validate as validateUuid } from 'uuid';
+import axios from "axios";
+import { orderBy, uniqBy, update } from "lodash";
+import moment from "moment";
+import querystring from "query-string";
+import { validate as validateUuid } from "uuid";
 
-import * as Api from '../../Api';
-import * as db from '../../db/db';
-import { updateDevice } from '../../DeviceApi';
-import * as UsersApi from '../../UsersApi';
+import * as Api from "../../Api";
+import * as db from "../../db/db";
+import { updateDevice } from "../../DeviceApi";
+import * as UsersApi from "../../UsersApi";
 
 export type Note = db.Note;
 export type NoteType = db.NoteType;
@@ -374,4 +374,50 @@ export function unindentNote(noteIndex: number, notes: Note[]) {
     ...note,
     parent: parent?.parent,
   };
+}
+
+export function getUpdatesToPositionNote(
+  noteToPosition: Note,
+  newPrev: Note,
+  sortedNotes: Note[]
+) {
+  const updates: Note[] = [];
+
+  if (noteToPosition.localId === newPrev.localId) {
+    return updates;
+  }
+
+  updates.push({
+    ...noteToPosition,
+    prev: newPrev.localId,
+    parent: newPrev.parent,
+  });
+
+  const noteAfterNewPrev = sortedNotes.find((n) => n.prev === newPrev.localId);
+  if (noteAfterNewPrev) {
+    if (noteAfterNewPrev.localId === noteToPosition.localId) {
+      throw new Error("Attempting to create circular reference");
+    }
+
+    updates.push({
+      ...noteAfterNewPrev,
+      prev: noteToPosition.localId,
+    });
+  }
+
+  const noteAfterNoteToPosition = sortedNotes.find(
+    (n) => n.prev === noteToPosition.localId
+  );
+  if (noteAfterNoteToPosition) {
+    if (noteAfterNoteToPosition.localId === noteToPosition.prev) {
+      throw new Error("Attempting to create circular reference");
+    }
+
+    updates.push({
+      ...noteAfterNoteToPosition,
+      prev: noteToPosition.prev,
+    });
+  }
+
+  return updates;
 }

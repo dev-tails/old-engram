@@ -1,4 +1,4 @@
-import * as NotesApi from '../NotesApi';
+import * as NotesApi from "../NotesApi";
 
 describe("NotesApi", () => {
   describe("sortNotes", () => {
@@ -109,7 +109,7 @@ describe("NotesApi", () => {
       expect(sortedNotes[3].localId).toBe("4");
     });
 
-    fit("should sort child notes by createdAt if prev doesn't exist", () => {
+    it("should sort child notes by createdAt if prev doesn't exist", () => {
       const notes = [
         {
           localId: "1",
@@ -278,6 +278,103 @@ describe("NotesApi", () => {
       ] as Note[]);
 
       expect(unindentedNote.parent).toBe("0");
+    });
+  });
+
+  describe("getUpdatesToPositionNote", () => {
+    it("should set prev to localId of newPrev", () => {
+      const notes = [
+        {
+          localId: "1",
+        },
+        {
+          localId: "2",
+        },
+      ];
+      const updates = NotesApi.getUpdatesToPositionNote(
+        notes[0],
+        notes[1],
+        notes
+      );
+      expect(updates.length).toBe(1);
+      expect(updates[0].localId).toBe("1");
+      expect(updates[0].prev).toBe("2");
+    });
+
+    it("should set parent to parent of newPrev", () => {
+      const notes = [
+        {
+          localId: "1",
+        },
+        {
+          localId: "2",
+          parent: "0",
+        },
+      ];
+      const updates = NotesApi.getUpdatesToPositionNote(
+        notes[0],
+        notes[1],
+        notes
+      );
+      expect(updates.length).toBe(1);
+      expect(updates[0].localId).toBe("1");
+      expect(updates[0].prev).toBe("2");
+      expect(updates[0].parent).toBe("0");
+    });
+
+    it("should set prev of note after newPrev to dropped note", () => {
+      const notes = [
+        {
+          localId: "1",
+        },
+        {
+          localId: "2",
+        },
+        {
+          localId: "3",
+          prev: "2",
+        },
+      ];
+      const updates = NotesApi.getUpdatesToPositionNote(
+        notes[0],
+        notes[1],
+        notes
+      );
+      expect(updates.length).toBe(2);
+      expect(updates[0].localId).toBe("1");
+      expect(updates[0].prev).toBe("2");
+      expect(updates[1].localId).toBe("3");
+      expect(updates[1].prev).toBe("1");
+    });
+
+    it("should set prev of note after newPrev to dropped note", () => {
+      const notes = [
+        {
+          localId: "0",
+        },
+        {
+          localId: "1",
+          prev: "0",
+        },
+        {
+          localId: "2",
+          prev: "1",
+        },
+        {
+          localId: "3",
+        },
+        // Moving localId 1 to here
+      ];
+      const updates = NotesApi.getUpdatesToPositionNote(
+        notes[1],
+        notes[3],
+        notes
+      );
+      expect(updates.length).toBe(2);
+      expect(updates[0].localId).toBe("1");
+      expect(updates[0].prev).toBe("3");
+      expect(updates[1].localId).toBe("2");
+      expect(updates[1].prev).toBe("0");
     });
   });
 });
