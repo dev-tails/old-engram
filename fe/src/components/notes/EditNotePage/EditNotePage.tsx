@@ -102,7 +102,7 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
 
     const parent =
       activeNote.localId === params.id ? params.id : activeNote.parent;
-    const prev = parent === params.id ? "" : activeNote.localId;
+    const prev = activeNote.localId === params.id ? "" : activeNote.localId;
 
     const createdNote = await createNote({
       body: "",
@@ -119,13 +119,11 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
   };
 
   const handleSaveNote = async (note: Partial<Note>) => {
-    await updatePartialNote({
+    const notesCopy = [...notes];
+    const updatedNote = await updateNote({
       ...note,
     });
 
-    const notesCopy = [...notes];
-
-    const updatedNote = notesCopy[activeNoteIndex];
     notesCopy.splice(activeNoteIndex, 1, updatedNote);
 
     setNotes(notesCopy);
@@ -141,13 +139,20 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
   };
 
   const handleDropNote = async (droppedNote: Note, noteDroppedOnto: Note) => {
-    if (droppedNote.localId === noteDroppedOnto.localId) {
+    const upToDateDroppedNote = notes.find(
+      (n) => n.localId === droppedNote.localId
+    );
+    const upToDateNoteDroppedOnto = notes.find(
+      (n) => n.localId === noteDroppedOnto.localId
+    );
+
+    if (!upToDateDroppedNote || !upToDateNoteDroppedOnto) {
       return;
     }
 
     const updates = getUpdatesToPositionNote(
-      droppedNote,
-      noteDroppedOnto,
+      upToDateDroppedNote,
+      upToDateNoteDroppedOnto,
       notes
     );
 

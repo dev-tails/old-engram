@@ -395,6 +395,10 @@ export function getUpdatesToPositionNote(
 
   const noteAfterNewPrev = sortedNotes.find((n) => n.prev === newPrev.localId);
   if (noteAfterNewPrev) {
+    if (noteAfterNewPrev.localId === noteToPosition.localId) {
+      throw new Error("Attempting to create circular reference");
+    }
+
     updates.push({
       ...noteAfterNewPrev,
       prev: noteToPosition.localId,
@@ -405,6 +409,10 @@ export function getUpdatesToPositionNote(
     (n) => n.prev === noteToPosition.localId
   );
   if (noteAfterNoteToPosition) {
+    if (noteAfterNoteToPosition.localId === noteToPosition.prev) {
+      throw new Error("Attempting to create circular reference");
+    }
+
     updates.push({
       ...noteAfterNoteToPosition,
       prev: noteToPosition.prev,

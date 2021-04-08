@@ -376,38 +376,5 @@ describe("NotesApi", () => {
       expect(updates[1].localId).toBe("2");
       expect(updates[1].prev).toBe("0");
     });
-
-    it("should set prev of note after newPrev to dropped note", () => {
-      const notes = [
-        {
-          localId: "0",
-        },
-        {
-          localId: "1",
-          parent: "0",
-          prev: "4",
-        },
-        {
-          localId: "2",
-          parent: "0",
-        },
-        {
-          localId: "3",
-          parent: "0",
-        },
-        {
-          localId: "4",
-          parent: "0",
-        },
-      ];
-      const updates = NotesApi.getUpdatesToPositionNote(
-        notes[2],
-        notes[1],
-        notes
-      );
-      expect(updates.length).toBe(1);
-      expect(updates[0].localId).toBe("2");
-      expect(updates[0].prev).toBe("1");
-    });
   });
 });
