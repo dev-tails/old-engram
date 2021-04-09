@@ -1,0 +1,15 @@
+body {
+  width: 300px;
+  margin: 8px;
+}
+
+input {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 8px;
+}
+
+button {
+  display: block;
+  text-align: center;
+}
