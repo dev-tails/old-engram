@@ -1,5 +1,5 @@
 import axios from "axios";
-import { orderBy, uniqBy, update } from "lodash";
+import { orderBy, uniqBy } from "lodash";
 import moment from "moment";
 import querystring from "query-string";
 import { validate as validateUuid } from "uuid";

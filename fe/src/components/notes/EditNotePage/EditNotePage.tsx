@@ -1,9 +1,9 @@
-import "./EditNotePage.scss";
+import './EditNotePage.scss';
 
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router';
 
-import { CollapsibleNoteItem } from "../CollapsibleNoteItem/CollapsibleNoteItem";
+import { CollapsibleNoteItem } from '../CollapsibleNoteItem/CollapsibleNoteItem';
 import {
   createNote,
   getNote,
@@ -13,9 +13,8 @@ import {
   removeNote,
   unindentNote,
   updateNote,
-  updatePartialNote,
-} from "../NotesApi";
-import { getNoteWithChildren } from "../NoteUtils";
+} from '../NotesApi';
+import { getNoteWithChildren } from '../NoteUtils';
 
 type EditNotePageProps = {};
 
