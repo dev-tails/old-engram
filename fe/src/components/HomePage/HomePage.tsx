@@ -66,6 +66,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   };
 
   const handleSyncClicked = async () => {
+    NotesApi.clearGetAllCache();
     syncLocalNotes();
     handleAgendaChanged();
   };

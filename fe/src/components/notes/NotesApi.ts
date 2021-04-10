@@ -144,6 +144,11 @@ export async function getAllNotes(): Promise<any[]> {
   return notes;
 }
 
+export function clearGetAllCache() {
+  getAllPromise = null;
+  notes = null;
+}
+
 export type GetNotesParams = {
   startsBefore?: Date;
   startsAfter?: Date;
