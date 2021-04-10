@@ -1,13 +1,13 @@
-import axios from "axios";
-import { orderBy, uniqBy } from "lodash";
-import moment from "moment";
-import querystring from "query-string";
-import { validate as validateUuid } from "uuid";
+import axios from 'axios';
+import { orderBy, uniqBy } from 'lodash';
+import moment from 'moment';
+import querystring from 'query-string';
+import { validate as validateUuid } from 'uuid';
 
-import * as Api from "../../Api";
-import * as db from "../../db/db";
-import { updateDevice } from "../../DeviceApi";
-import * as UsersApi from "../../UsersApi";
+import * as Api from '../../Api';
+import * as db from '../../db/db';
+import { updateDevice } from '../../DeviceApi';
+import * as UsersApi from '../../UsersApi';
 
 export type Note = db.Note;
 export type NoteType = db.NoteType;
@@ -131,8 +131,9 @@ export async function getAllNotes(): Promise<any[]> {
   const [offlineNotes, serverNotes] = await getAllPromise;
 
   if (!notes) {
-    notes = sortNotes(
-      uniqBy([...(serverNotes ? serverNotes : []), ...offlineNotes], "localId")
+    notes = uniqBy(
+      [...(serverNotes ? serverNotes : []), ...offlineNotes],
+      "localId"
     );
   }
 
@@ -158,6 +159,7 @@ export async function getNotes(params: GetNotesParams = {}): Promise<Note[]> {
   if (params.search) {
     searchRegex = new RegExp(params.search, "i");
   }
+
   const notesToReturn = notes.filter((note) => {
     if (params.type && note.type !== params.type) {
       if (params.type === "task" && note.type === "task_completed") {
