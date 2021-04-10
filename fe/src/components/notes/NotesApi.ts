@@ -1,13 +1,13 @@
-import axios from "axios";
-import { orderBy, uniqBy } from "lodash";
-import moment from "moment";
-import querystring from "query-string";
-import { validate as validateUuid } from "uuid";
+import axios from 'axios';
+import { orderBy, uniqBy } from 'lodash';
+import moment from 'moment';
+import querystring from 'query-string';
+import { validate as validateUuid } from 'uuid';
 
-import * as Api from "../../Api";
-import * as db from "../../db/db";
-import { updateDevice } from "../../DeviceApi";
-import * as UsersApi from "../../UsersApi";
+import * as Api from '../../Api';
+import * as db from '../../db/db';
+import { updateDevice } from '../../DeviceApi';
+import * as UsersApi from '../../UsersApi';
 
 export type Note = db.Note;
 export type NoteType = db.NoteType;
@@ -22,10 +22,20 @@ export async function createOrUpdateNote(note: Partial<Note>) {
 export async function createNote(note: Partial<Note>) {
   let noteToCreate = await db.addNote({ ...note, localId: db.getId() });
 
+  await createRemoteNote(noteToCreate);
+
+  if (notes) {
+    notes.push(noteToCreate);
+  }
+
+  return noteToCreate;
+}
+
+export async function createRemoteNote(note: Partial<Note>) {
   const isAuthenticatedUser = await UsersApi.isAuthenticatedUser();
   if (isAuthenticatedUser) {
     axios
-      .post("/api/notes", noteToCreate)
+      .post("/api/notes", note)
       .then((res) => {
         const addedNote = res.data;
         updateCachedNoteByLocalId(addedNote);
@@ -33,12 +43,6 @@ export async function createNote(note: Partial<Note>) {
       })
       .catch((err) => {});
   }
-
-  if (notes) {
-    notes.push(noteToCreate);
-  }
-
-  return noteToCreate;
 }
 
 export async function getNote(params: { id: string }): Promise<Note[]> {
@@ -131,12 +135,18 @@ export async function getAllNotes(): Promise<any[]> {
   const [offlineNotes, serverNotes] = await getAllPromise;
 
   if (!notes) {
-    notes = sortNotes(
-      uniqBy([...(serverNotes ? serverNotes : []), ...offlineNotes], "localId")
+    notes = uniqBy(
+      [...(serverNotes ? serverNotes : []), ...offlineNotes],
+      "localId"
     );
   }
 
   return notes;
+}
+
+export function clearGetAllCache() {
+  getAllPromise = null;
+  notes = null;
 }
 
 export type GetNotesParams = {
@@ -158,6 +168,7 @@ export async function getNotes(params: GetNotesParams = {}): Promise<Note[]> {
   if (params.search) {
     searchRegex = new RegExp(params.search, "i");
   }
+
   const notesToReturn = notes.filter((note) => {
     if (params.type && note.type !== params.type) {
       if (params.type === "task" && note.type === "task_completed") {
@@ -324,7 +335,9 @@ export async function removeNote(noteId?: string | null | undefined) {
   }
 
   if (notes) {
-    const noteToRemoveIndex = notes.findIndex((note) => note._id === noteId);
+    const noteToRemoveIndex = notes.findIndex(
+      (note) => note.localId === noteId
+    );
     if (noteToRemoveIndex > -1) {
       notes.splice(noteToRemoveIndex, 1);
     }
@@ -420,4 +433,19 @@ export function getUpdatesToPositionNote(
   }
 
   return updates;
+}
+
+export async function getLocalOnlyNotes() {
+  const notes = await getAllNotes();
+  return notes.filter((note) => {
+    return !note._id;
+  });
+}
+
+export async function syncLocalNotes() {
+  const localNotesToSync = await getLocalOnlyNotes();
+
+  for (const note of localNotesToSync) {
+    await createRemoteNote(note);
+  }
 }

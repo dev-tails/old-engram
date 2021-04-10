@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { AgendaViewPage } from '../AgendaViewPage/AgendaViewPage';
 import { DateHeader } from '../DateHeader/DateHeader';
 import { BulletIcon } from '../notes/BulletIcon/BulletIcon';
-import { getNotes, Note } from '../notes/NotesApi';
+import * as NotesApi from '../notes/NotesApi';
 import NotesPage from '../notes/NotesPage';
 
 type HomePageProps = {
@@ -31,22 +31,29 @@ export const HomePage: React.FC<HomePageProps> = ({
   onDateChange,
   onDateRangeChange,
 }) => {
+  const [syncingRemoteNotes, setSyncingRemoteNotes] = useState(false);
+  const [syncingLocalNotes, setSyncingLocalNotes] = useState(false);
   const [bottomNavValue, setBottomNavValue] = useState("note");
-  const [agendaNotes, setAgendaNotes] = useState<Note[]>([]);
+  const [agendaNotes, setAgendaNotes] = useState<NotesApi.Note[]>([]);
   const [versionNumber, setVersionNumber] = useState(0);
+
+  const syncing = syncingLocalNotes || syncingRemoteNotes;
 
   useEffect(() => {
     const fetchNotes = async () => {
+      setSyncingRemoteNotes(true);
       const dateAsMoment = moment(date);
 
-      const newItems = await getNotes({
+      const newItems = await NotesApi.getNotes({
         startsAfter: dateAsMoment.startOf("day").toDate(),
         startsBefore: dateAsMoment.endOf("day").toDate(),
         type: "event",
       });
 
       setAgendaNotes(newItems);
+      setSyncingRemoteNotes(false);
     };
+
     fetchNotes();
   }, [date, versionNumber]);
 
@@ -58,6 +65,20 @@ export const HomePage: React.FC<HomePageProps> = ({
     setVersionNumber((prevVersion) => prevVersion + 1);
   };
 
+  const handleSyncClicked = async () => {
+    NotesApi.clearGetAllCache();
+    syncLocalNotes();
+    handleAgendaChanged();
+  };
+
+  const syncLocalNotes = async () => {
+    setSyncingLocalNotes(true);
+
+    await NotesApi.syncLocalNotes();
+
+    setSyncingLocalNotes(false);
+  };
+
   if (!date) {
     return null;
   }
@@ -66,9 +87,11 @@ export const HomePage: React.FC<HomePageProps> = ({
     <div className="home-page">
       <DateHeader
         date={date}
+        syncing={syncing}
         dateRangeValue={dateRangeValue}
         onDateRangeChange={onDateRangeChange}
         onDateChange={onDateChange}
+        onSyncClicked={handleSyncClicked}
       />
       <div className={`notes ${bottomNavValue === "note" ? "visible" : ""}`}>
         <NotesPage

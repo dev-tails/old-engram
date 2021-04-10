@@ -1,7 +1,7 @@
 import './DateHeader.scss';
 
 import { IconButton, Select } from '@material-ui/core';
-import { ChevronLeft, ChevronRight } from '@material-ui/icons';
+import { ChevronLeft, ChevronRight, Sync as SyncIcon } from '@material-ui/icons';
 import { DatePicker } from '@material-ui/pickers';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import moment, { DurationInputArg2 } from 'moment';
@@ -9,16 +9,20 @@ import React, { useEffect } from 'react';
 
 export type DateHeaderProps = {
   dateRangeValue: string;
+  syncing: boolean;
   date?: Date;
   onDateChange: (date: Date) => void;
   onDateRangeChange: (dateRange: string) => void;
+  onSyncClicked: () => void;
 };
 
 export const DateHeader: React.FC<DateHeaderProps> = ({
   date,
+  syncing,
   dateRangeValue,
   onDateChange,
   onDateRangeChange,
+  onSyncClicked,
 }) => {
   useEffect(() => {
     function keyDownListener(event: KeyboardEvent) {
@@ -92,7 +96,6 @@ export const DateHeader: React.FC<DateHeaderProps> = ({
       <>
         <Select
           className="date-range-button"
-          autoWidth={true}
           native
           value={dateRangeValue}
           onChange={(e) => {
@@ -121,6 +124,7 @@ export const DateHeader: React.FC<DateHeaderProps> = ({
           color="inherit"
           onClick={handleNavigateDate.bind(this, "left")}
           title="Alt+LeftArrow"
+          edge="end"
         >
           <ChevronLeft />
         </IconButton>
@@ -139,8 +143,17 @@ export const DateHeader: React.FC<DateHeaderProps> = ({
           color="inherit"
           onClick={handleNavigateDate.bind(this, "right")}
           title="Alt+RightArrow"
+          edge="start"
         >
           <ChevronRight />
+        </IconButton>
+
+        <IconButton
+          className={`sync-icon ${syncing ? "syncing" : ""}`}
+          aria-label="sync"
+          onClick={onSyncClicked}
+        >
+          <SyncIcon />
         </IconButton>
       </div>
     </div>
