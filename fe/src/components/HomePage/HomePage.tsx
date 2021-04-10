@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { AgendaViewPage } from '../AgendaViewPage/AgendaViewPage';
 import { DateHeader } from '../DateHeader/DateHeader';
 import { BulletIcon } from '../notes/BulletIcon/BulletIcon';
-import { getNotes, Note } from '../notes/NotesApi';
+import * as NotesApi from '../notes/NotesApi';
 import NotesPage from '../notes/NotesPage';
 
 type HomePageProps = {
@@ -31,24 +31,27 @@ export const HomePage: React.FC<HomePageProps> = ({
   onDateChange,
   onDateRangeChange,
 }) => {
-  const [syncing, setSyncing] = useState(false);
+  const [syncingRemoteNotes, setSyncingRemoteNotes] = useState(false);
+  const [syncingLocalNotes, setSyncingLocalNotes] = useState(false);
   const [bottomNavValue, setBottomNavValue] = useState("note");
-  const [agendaNotes, setAgendaNotes] = useState<Note[]>([]);
+  const [agendaNotes, setAgendaNotes] = useState<NotesApi.Note[]>([]);
   const [versionNumber, setVersionNumber] = useState(0);
+
+  const syncing = syncingLocalNotes || syncingRemoteNotes;
 
   useEffect(() => {
     const fetchNotes = async () => {
-      setSyncing(true);
+      setSyncingRemoteNotes(true);
       const dateAsMoment = moment(date);
 
-      const newItems = await getNotes({
+      const newItems = await NotesApi.getNotes({
         startsAfter: dateAsMoment.startOf("day").toDate(),
         startsBefore: dateAsMoment.endOf("day").toDate(),
         type: "event",
       });
 
       setAgendaNotes(newItems);
-      setSyncing(false);
+      setSyncingRemoteNotes(false);
     };
 
     fetchNotes();
@@ -63,8 +66,16 @@ export const HomePage: React.FC<HomePageProps> = ({
   };
 
   const handleSyncClicked = async () => {
-    setSyncing(true);
+    syncLocalNotes();
     handleAgendaChanged();
+  };
+
+  const syncLocalNotes = async () => {
+    setSyncingLocalNotes(true);
+
+    await NotesApi.syncLocalNotes();
+
+    setSyncingLocalNotes(false);
   };
 
   if (!date) {

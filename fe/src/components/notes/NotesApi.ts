@@ -22,10 +22,20 @@ export async function createOrUpdateNote(note: Partial<Note>) {
 export async function createNote(note: Partial<Note>) {
   let noteToCreate = await db.addNote({ ...note, localId: db.getId() });
 
+  await createRemoteNote(noteToCreate);
+
+  if (notes) {
+    notes.push(noteToCreate);
+  }
+
+  return noteToCreate;
+}
+
+export async function createRemoteNote(note: Partial<Note>) {
   const isAuthenticatedUser = await UsersApi.isAuthenticatedUser();
   if (isAuthenticatedUser) {
     axios
-      .post("/api/notes", noteToCreate)
+      .post("/api/notes", note)
       .then((res) => {
         const addedNote = res.data;
         updateCachedNoteByLocalId(addedNote);
@@ -33,12 +43,6 @@ export async function createNote(note: Partial<Note>) {
       })
       .catch((err) => {});
   }
-
-  if (notes) {
-    notes.push(noteToCreate);
-  }
-
-  return noteToCreate;
 }
 
 export async function getNote(params: { id: string }): Promise<Note[]> {
@@ -326,7 +330,9 @@ export async function removeNote(noteId?: string | null | undefined) {
   }
 
   if (notes) {
-    const noteToRemoveIndex = notes.findIndex((note) => note._id === noteId);
+    const noteToRemoveIndex = notes.findIndex(
+      (note) => note.localId === noteId
+    );
     if (noteToRemoveIndex > -1) {
       notes.splice(noteToRemoveIndex, 1);
     }
@@ -422,4 +428,19 @@ export function getUpdatesToPositionNote(
   }
 
   return updates;
+}
+
+export async function getLocalOnlyNotes() {
+  const notes = await getAllNotes();
+  return notes.filter((note) => {
+    return !note._id;
+  });
+}
+
+export async function syncLocalNotes() {
+  const localNotesToSync = await getLocalOnlyNotes();
+
+  for (const note of localNotesToSync) {
+    await createRemoteNote(note);
+  }
 }
