@@ -1,0 +1,44 @@
+.log-page {
+  position: fixed;
+  top: 64px;
+  bottom: 0px;
+  width: 100%;
+
+  .log-page__content {
+    position: relative;
+    max-width: 960px;
+    margin: 0 auto;
+    height: 100%;
+  }
+
+  .log-page__notes-container {
+    position: absolute;
+    top: 0px;
+    bottom: 74px;
+    width: 100%;
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .log-page__notes {
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column-reverse;
+    padding: 0px 16px;
+
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+    scrollbar-width: none; /* Firefox */
+  
+    &::-webkit-scrollbar {
+      display: none; /* Safari and Chrome */
+    }
+  }
+
+  .log-page__footer {
+    position: absolute;
+    bottom: 0px;
+    width: 100%
+  }
+}

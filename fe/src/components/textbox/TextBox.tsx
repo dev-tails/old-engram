@@ -1,26 +1,19 @@
-import { IconButton, TextField } from "@material-ui/core";
-import React, { useRef, useState } from "react";
-import {
-  FiberManualRecord,
-  RadioButtonUnchecked,
-  CheckBoxOutlineBlank,
-  ArrowUpward,
-} from "@material-ui/icons";
-import "./TextBox.scss";
-import { Note, NoteType } from "../notes/NotesApi";
-import { isMobileUserAgent } from "../../utils/UserAgentUtils";
+import './TextBox.scss';
+
+import { IconButton, TextField } from '@material-ui/core';
+import { ArrowUpward } from '@material-ui/icons';
+import React, { useRef, useState } from 'react';
+
+import { isMobileUserAgent } from '../../utils/UserAgentUtils';
+import { Note } from '../notes/NotesApi';
 
 type TextBoxProps = {
   onSubmit: (note: Partial<Note>) => void;
 };
 
-const noteTypes: NoteType[] = ["note", "task", "event"];
-
 export default function TextBox(props: TextBoxProps) {
   const textFieldRef = useRef<HTMLInputElement | null>(null);
   const [note, setNote] = useState("");
-  const [noteTypeIndex, setNoteTypeIndex] = React.useState(0);
-  const noteType = noteTypes[noteTypeIndex];
 
   const handleNoteChanged: React.TextareaHTMLAttributes<HTMLTextAreaElement>["onChange"] = (
     event
@@ -29,19 +22,9 @@ export default function TextBox(props: TextBoxProps) {
     setNote(newNote);
   };
 
-  const handleToggleType = () => {
-    let newNoteTypeIndex = noteTypeIndex + 1;
-    if (newNoteTypeIndex >= noteTypes.length) {
-      newNoteTypeIndex = 0;
-    }
-    setNoteTypeIndex(newNoteTypeIndex);
-    refocusInput();
-  };
-
   const handleKeyDown: React.DOMAttributes<HTMLDivElement>["onKeyDown"] = (
     event
   ) => {
-
     if (event.key === "Enter" && !event.shiftKey && !isMobileUserAgent()) {
       event.preventDefault();
       handleSubmit();
@@ -53,7 +36,6 @@ export default function TextBox(props: TextBoxProps) {
   ) => {
     props.onSubmit({
       body: note,
-      type: noteTypes[noteTypeIndex],
     });
 
     setNote("");
@@ -69,12 +51,6 @@ export default function TextBox(props: TextBoxProps) {
 
   return (
     <div className="textbox">
-      <IconButton edge="start" size="small" onClick={handleToggleType}>
-        {noteType === "note" && <FiberManualRecord />}
-        {noteType === "task" && <CheckBoxOutlineBlank />}
-        {noteType === "event" && <RadioButtonUnchecked />}
-      </IconButton>
-
       <TextField
         inputRef={textFieldRef}
         autoFocus

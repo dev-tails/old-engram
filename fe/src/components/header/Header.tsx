@@ -1,4 +1,4 @@
-import "./Header.scss";
+import './Header.scss';
 
 import {
   AppBar,
@@ -18,18 +18,13 @@ import {
   TextField,
   Toolbar,
   Typography,
-} from "@material-ui/core";
-import { Menu as MenuIcon, Search as SearchIcon } from "@material-ui/icons";
-import React, { useEffect, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+} from '@material-ui/core';
+import { Menu as MenuIcon, Search as SearchIcon } from '@material-ui/icons';
+import React, { useEffect, useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 
-import { Holdable } from "../Holdable/Holdable";
-import {
-  createOrUpdateNote,
-  getNotes,
-  Note,
-  removeNote,
-} from "../notes/NotesApi";
+import { Holdable } from '../Holdable/Holdable';
+import { createOrUpdateNote, getNotes, Note, removeNote } from '../notes/NotesApi';
 
 type HeaderProps = {
   title?: string;
@@ -281,8 +276,14 @@ export const Header: React.FC<HeaderProps> = ({
                 button
                 onClick={handleWorkspaceSelected.bind(this, null)}
               >
-                <ListItemText primary="Home" />
+                <ListItemText primary="Dashboard" />
               </ListItem>
+              <Divider />
+              <Link to="/log" onClick={setLeftDrawerOpen.bind(this, false)}>
+                <ListItem button>
+                  <ListItemText primary={"Log"} />
+                </ListItem>
+              </Link>
               <Divider />
               <Link to="/pages" onClick={setLeftDrawerOpen.bind(this, false)}>
                 <ListItem button>

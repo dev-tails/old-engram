@@ -20,7 +20,8 @@ export async function createOrUpdateNote(note: Partial<Note>) {
 }
 
 export async function createNote(note: Partial<Note>) {
-  let noteToCreate = await db.addNote({ ...note, localId: db.getId() });
+  const date = note.date || moment().format("YYYY-MM-DD");
+  let noteToCreate = await db.addNote({ ...note, localId: db.getId(), date });
 
   await createRemoteNote(noteToCreate);
 
