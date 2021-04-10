@@ -31,12 +31,14 @@ export const HomePage: React.FC<HomePageProps> = ({
   onDateChange,
   onDateRangeChange,
 }) => {
+  const [syncing, setSyncing] = useState(false);
   const [bottomNavValue, setBottomNavValue] = useState("note");
   const [agendaNotes, setAgendaNotes] = useState<Note[]>([]);
   const [versionNumber, setVersionNumber] = useState(0);
 
   useEffect(() => {
     const fetchNotes = async () => {
+      setSyncing(true);
       const dateAsMoment = moment(date);
 
       const newItems = await getNotes({
@@ -46,7 +48,9 @@ export const HomePage: React.FC<HomePageProps> = ({
       });
 
       setAgendaNotes(newItems);
+      setSyncing(false);
     };
+
     fetchNotes();
   }, [date, versionNumber]);
 
@@ -58,6 +62,11 @@ export const HomePage: React.FC<HomePageProps> = ({
     setVersionNumber((prevVersion) => prevVersion + 1);
   };
 
+  const handleSyncClicked = async () => {
+    setSyncing(true);
+    handleAgendaChanged();
+  };
+
   if (!date) {
     return null;
   }
@@ -66,9 +75,11 @@ export const HomePage: React.FC<HomePageProps> = ({
     <div className="home-page">
       <DateHeader
         date={date}
+        syncing={syncing}
         dateRangeValue={dateRangeValue}
         onDateRangeChange={onDateRangeChange}
         onDateChange={onDateChange}
+        onSyncClicked={handleSyncClicked}
       />
       <div className={`notes ${bottomNavValue === "note" ? "visible" : ""}`}>
         <NotesPage

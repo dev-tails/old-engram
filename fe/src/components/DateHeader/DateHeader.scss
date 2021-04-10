@@ -7,18 +7,51 @@
 
   .date-range-button {
     position: absolute;
-    right: 8px;
+    left: 8px;
+    width: 80px;
     height: 48px;
   }
 
   .date {
     display: inline;
+
     .date-picker {
       width: 116px;
       padding: 8px 0;
+
       input {
         text-align: center;
       }
+    }
+  }
+
+  .sync-icon {
+    position: absolute;
+    right: 8px;
+
+    &.syncing {
+      -webkit-animation: spin 4s linear infinite;
+      -moz-animation: spin 4s linear infinite;
+      animation: spin 4s linear infinite;
+    }
+  }
+
+  @-moz-keyframes spin {
+    100% {
+      -moz-transform: rotate(-360deg);
+    }
+  }
+
+  @-webkit-keyframes spin {
+    100% {
+      -webkit-transform: rotate(-360deg);
+    }
+  }
+
+  @keyframes spin {
+    100% {
+      -webkit-transform: rotate(-360deg);
+      transform: rotate(-360deg);
     }
   }
 }
