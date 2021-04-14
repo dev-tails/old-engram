@@ -279,9 +279,12 @@ export const Header: React.FC<HeaderProps> = ({
                 <ListItemText primary="Dashboard" />
               </ListItem>
               <Divider />
-              <Link to="/log" onClick={setLeftDrawerOpen.bind(this, false)}>
+              <Link
+                to="/quick-capture"
+                onClick={setLeftDrawerOpen.bind(this, false)}
+              >
                 <ListItem button>
-                  <ListItemText primary={"Log"} />
+                  <ListItemText primary={"Quick Capture"} />
                 </ListItem>
               </Link>
               <Divider />

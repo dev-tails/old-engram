@@ -148,7 +148,7 @@ export default function Routes() {
         activeParentId={activeParentId}
       />
       <Switch>
-        <AuthenticatedRoute exact={true} path="/log">
+        <AuthenticatedRoute exact={true} path="/quick-capture">
           <LogPage />
         </AuthenticatedRoute>
         <AuthenticatedRoute exact={true} path="/">

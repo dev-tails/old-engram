@@ -8,12 +8,13 @@ import { isMobileUserAgent } from '../../utils/UserAgentUtils';
 import { Note } from '../notes/NotesApi';
 
 type TextBoxProps = {
+  initialBody: string;
   onSubmit: (note: Partial<Note>) => void;
 };
 
 export default function TextBox(props: TextBoxProps) {
   const textFieldRef = useRef<HTMLInputElement | null>(null);
-  const [note, setNote] = useState("");
+  const [note, setNote] = useState(props.initialBody);
 
   const handleNoteChanged: React.TextareaHTMLAttributes<HTMLTextAreaElement>["onChange"] = (
     event
