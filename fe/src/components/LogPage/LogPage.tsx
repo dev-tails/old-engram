@@ -19,7 +19,14 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
   };
 
   const { query } = querystring.parseUrl(location.search);
-  const body = query.body as string;
+  const { body, text, url, title } = query;
+
+  let initialBody = body as string;
+  if (title && url) {
+    initialBody = `[${title}](${url})`;
+  } else if (text) {
+    initialBody = text as string;
+  }
 
   return (
     <div className="log-page">
@@ -32,7 +39,7 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
           </div>
         </div>
         <div className="log-page__footer">
-          <TextBox initialBody={body} onSubmit={handleSubmit} />
+          <TextBox initialBody={initialBody} onSubmit={handleSubmit} />
         </div>
       </div>
     </div>
