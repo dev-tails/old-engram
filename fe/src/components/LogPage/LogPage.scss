@@ -50,6 +50,12 @@
   .log-page__footer {
     position: absolute;
     bottom: 0px;
-    width: 100%
+    width: 100%;
+    background-color: #424242;
+  }
+
+  .log-page__textBox {
+    max-width: 960px;
+    margin: 0 auto;
   }
 }

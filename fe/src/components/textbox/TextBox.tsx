@@ -1,6 +1,6 @@
 import './TextBox.scss';
 
-import { Divider, IconButton, List, ListItem, ListItemText, SvgIcon, TextField } from '@material-ui/core';
+import { IconButton, List, ListItem, ListItemText, SvgIcon, TextField } from '@material-ui/core';
 import { ArrowUpward } from '@material-ui/icons';
 import React, { useRef, useState } from 'react';
 
@@ -56,7 +56,6 @@ export default function TextBox(props: TextBoxProps) {
   return (
     <div className="textbox">
       <List disablePadding={true}>
-        <Divider />
         <ListItem>
           <IconButton edge="start" onClick={handleSubmit}>
             <SvgIcon component={iconComponent} />

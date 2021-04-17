@@ -138,7 +138,9 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
             </Menu>
           </div>
         </div>
-        <div className="log-page__footer">
+      </div>
+      <div className="log-page__footer">
+        <div className="log-page__textBox">
           <TextBox initialBody={initialBody} onSubmit={handleSubmit} />
         </div>
       </div>
