@@ -205,7 +205,6 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
               open={Boolean(menuAnchoEl)}
               onClose={setMenuAnchorEl.bind(this, null)}
               TransitionComponent={Fade}
-              anchorOrigin={{ vertical: "center", horizontal: "right" }}
             >
               <Link
                 to={`/notes/${selectedNoteId}`}
