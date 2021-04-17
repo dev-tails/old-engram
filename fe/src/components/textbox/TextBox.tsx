@@ -2,7 +2,7 @@ import './TextBox.scss';
 
 import { IconButton, List, ListItem, ListItemText, SvgIcon, TextField } from '@material-ui/core';
 import { ArrowUpward } from '@material-ui/icons';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { isMobileUserAgent } from '../../utils/UserAgentUtils';
 import { ReactComponent as NoteIcon } from '../icons/NoteIcon.svg';
@@ -10,12 +10,25 @@ import { Note } from '../notes/NotesApi';
 
 type TextBoxProps = {
   initialBody: string;
+  focused: boolean;
   onSubmit: (note: Partial<Note>) => void;
 };
 
 export default function TextBox(props: TextBoxProps) {
   const textFieldRef = useRef<HTMLInputElement | null>(null);
   const [note, setNote] = useState(props.initialBody);
+
+  useEffect(() => {
+    if (props.focused) {
+      refocusInput();
+    }
+  }, [props.focused]);
+
+  useEffect(() => {
+    if (props.initialBody) {
+      setNote(props.initialBody);
+    }
+  }, [props.initialBody]);
 
   const handleNoteChanged: React.TextareaHTMLAttributes<HTMLTextAreaElement>["onChange"] = (
     event

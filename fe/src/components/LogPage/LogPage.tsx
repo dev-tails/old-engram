@@ -27,6 +27,8 @@ type LogPageProps = {};
 
 export const LogPage: React.FC<LogPageProps> = (props) => {
   const location = useLocation();
+  const [textBoxFocused, setTextBoxFocused] = useState(false);
+  const [noteToEdit, setNoteToEdit] = useState<NotesApi.Note | null>(null);
   const [selectedNoteId, setSelectedNoteId] = useState<string>("");
   const [notes, setNotes] = useState<NotesApi.Note[]>([]);
   const [menuAnchoEl, setMenuAnchorEl] = React.useState<null | HTMLDivElement>(
@@ -34,15 +36,34 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
   );
 
   const handleSubmit = async (note: NotesApi.Note) => {
-    const createdNote = await NotesApi.createNote(note);
-    setNotes([...notes, createdNote]);
+    setTextBoxFocused(false);
+    if (noteToEdit) {
+      const updatedNote = await NotesApi.updateNote({
+        ...noteToEdit,
+        ...note,
+      });
+      const notesCopy = [...notes];
+      const index = notesCopy.findIndex(
+        (note) => note.localId === noteToEdit.localId
+      );
+      notesCopy.splice(index, 1, updatedNote);
+      setNotes(notesCopy);
+      setNoteToEdit(null);
+    } else {
+      const createdNote = await NotesApi.createNote(note);
+      setNotes([...notes, createdNote]);
+    }
+    setTextBoxFocused(true);
   };
 
   const { query } = querystring.parseUrl(location.search);
   const { body, text, url, title } = query;
 
   let initialBody = body as string;
-  if (title && url) {
+
+  if (noteToEdit) {
+    initialBody = noteToEdit.body || "";
+  } else if (title && url) {
     initialBody = `[${title}](${url})`;
   } else if (text) {
     initialBody = text as string;
@@ -82,6 +103,14 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
     setMenuAnchorEl(null);
   }
 
+  function handleNoteClicked(note: NotesApi.Note) {
+    setTextBoxFocused(false);
+    setNoteToEdit(note);
+    setImmediate(() => {
+      setTextBoxFocused(true);
+    });
+  }
+
   const isShareEnabled = Boolean(navigator.share);
 
   return (
@@ -94,7 +123,10 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
                 return (
                   <div key={note.localId}>
                     <Divider />
-                    <ListItem button>
+                    <ListItem
+                      button
+                      onClick={handleNoteClicked.bind(this, note)}
+                    >
                       <ListItemIcon>
                         <IconButton edge="start">
                           <SvgIcon component={NoteIcon}></SvgIcon>
@@ -141,7 +173,11 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
       </div>
       <div className="log-page__footer">
         <div className="log-page__textBox">
-          <TextBox initialBody={initialBody} onSubmit={handleSubmit} />
+          <TextBox
+            initialBody={initialBody}
+            focused={textBoxFocused}
+            onSubmit={handleSubmit}
+          />
         </div>
       </div>
     </div>
