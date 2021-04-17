@@ -18,7 +18,10 @@ import React, { useState } from 'react';
 import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
 
+import { ReactComponent as EventIcon } from '../icons/EventIcon.svg';
 import { ReactComponent as NoteIcon } from '../icons/NoteIcon.svg';
+import { ReactComponent as TaskCompletedIcon } from '../icons/TaskCompletedIcon.svg';
+import { ReactComponent as TaskIcon } from '../icons/TaskIcon.svg';
 import { Markdown } from '../Markdown/Markdown';
 import * as NotesApi from '../notes/NotesApi';
 import TextBox from '../textbox/TextBox';
@@ -38,16 +41,10 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
   const handleSubmit = async (note: NotesApi.Note) => {
     setTextBoxFocused(false);
     if (noteToEdit) {
-      const updatedNote = await NotesApi.updateNote({
+      await handleNoteUpdated({
         ...noteToEdit,
         ...note,
       });
-      const notesCopy = [...notes];
-      const index = notesCopy.findIndex(
-        (note) => note.localId === noteToEdit.localId
-      );
-      notesCopy.splice(index, 1, updatedNote);
-      setNotes(notesCopy);
       setNoteToEdit(null);
     } else {
       const createdNote = await NotesApi.createNote(note);
@@ -67,6 +64,20 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
     initialBody = `[${title}](${url})`;
   } else if (text) {
     initialBody = text as string;
+  }
+
+  const initialType = noteToEdit ? noteToEdit.type : "note";
+
+  async function handleNoteUpdated(noteToUpdate: NotesApi.Note) {
+    const updatedNote = await NotesApi.updateNote({
+      ...noteToUpdate,
+    });
+    const notesCopy = [...notes];
+    const index = notesCopy.findIndex(
+      (note) => note.localId === updatedNote.localId
+    );
+    notesCopy.splice(index, 1, updatedNote);
+    setNotes(notesCopy);
   }
 
   const handleMoreClicked = (note: NotesApi.Note, event: any) => {
@@ -111,6 +122,34 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
     });
   }
 
+  const types: NotesApi.NoteType[] = [
+    "note",
+    "task",
+    "task_completed",
+    "event",
+  ];
+  async function handleToggleType(note: NotesApi.Note) {
+    const currentTypeIndex = types.indexOf(note.type || "note");
+    let nextTypeIndex = (currentTypeIndex + 1) % types.length;
+    await handleNoteUpdated({
+      ...note,
+      type: types[nextTypeIndex],
+    });
+  }
+
+  function getNoteIcon(note: NotesApi.Note) {
+    const type = note.type || "note";
+
+    const iconByType = {
+      note: NoteIcon,
+      task: TaskIcon,
+      task_completed: TaskCompletedIcon,
+      event: EventIcon,
+    };
+
+    return <SvgIcon component={(iconByType as any)[type]}></SvgIcon>;
+  }
+
   const isShareEnabled = Boolean(navigator.share);
 
   return (
@@ -128,8 +167,15 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
                       onClick={handleNoteClicked.bind(this, note)}
                     >
                       <ListItemIcon>
-                        <IconButton edge="start">
-                          <SvgIcon component={NoteIcon}></SvgIcon>
+                        <IconButton
+                          edge="start"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleToggleType(note);
+                          }}
+                        >
+                          {getNoteIcon(note)}
                         </IconButton>
                       </ListItemIcon>
                       <ListItemText>
@@ -138,7 +184,11 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
                       <ListItemIcon>
                         <IconButton
                           edge="end"
-                          onClick={handleMoreClicked.bind(this, note)}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleMoreClicked(note, e);
+                          }}
                         >
                           <MoreVertIcon />
                         </IconButton>
@@ -175,6 +225,7 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
         <div className="log-page__textBox">
           <TextBox
             initialBody={initialBody}
+            initialType={initialType || "note"}
             focused={textBoxFocused}
             onSubmit={handleSubmit}
           />
