@@ -148,10 +148,13 @@ export default function Routes() {
         activeParentId={activeParentId}
       />
       <Switch>
+        <Route exact={true} path="/">
+          <Redirect to="/quick-capture" />
+        </Route>
         <AuthenticatedRoute exact={true} path="/quick-capture">
           <LogPage />
         </AuthenticatedRoute>
-        <AuthenticatedRoute exact={true} path="/">
+        <AuthenticatedRoute exact={true} path="/dashboard">
           <HomePage
             dateRangeValue={dateRangeValue}
             date={date}

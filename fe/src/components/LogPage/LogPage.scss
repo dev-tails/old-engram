@@ -14,10 +14,9 @@
   .log-page__notes-container {
     position: absolute;
     top: 0px;
-    bottom: 74px;
+    bottom: 65px;
     width: 100%;
     display: flex;
-    flex-direction: column-reverse;
   }
 
   .log-page__notes {
@@ -26,13 +25,25 @@
     overflow-y: scroll;
     display: flex;
     flex-direction: column-reverse;
-    padding: 0px 16px;
 
-    -ms-overflow-style: none; /* Internet Explorer 10+ */
-    scrollbar-width: none; /* Firefox */
-  
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+
+    -ms-word-break: break-all;
+    /* This is the dangerous one in WebKit, as it breaks things wherever */
+    word-break: break-all;
+    /* Instead use this non-standard one: */
+    word-break: break-word;
+
+    -ms-overflow-style: none;
+    /* Internet Explorer 10+ */
+    scrollbar-width: none;
+    /* Firefox */
+
     &::-webkit-scrollbar {
-      display: none; /* Safari and Chrome */
+      display: none;
+      /* Safari and Chrome */
     }
   }
 

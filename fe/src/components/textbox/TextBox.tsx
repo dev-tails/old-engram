@@ -1,10 +1,11 @@
 import './TextBox.scss';
 
-import { IconButton, TextField } from '@material-ui/core';
+import { Divider, IconButton, List, ListItem, ListItemText, SvgIcon, TextField } from '@material-ui/core';
 import { ArrowUpward } from '@material-ui/icons';
 import React, { useRef, useState } from 'react';
 
 import { isMobileUserAgent } from '../../utils/UserAgentUtils';
+import { ReactComponent as NoteIcon } from '../icons/NoteIcon.svg';
 import { Note } from '../notes/NotesApi';
 
 type TextBoxProps = {
@@ -50,23 +51,36 @@ export default function TextBox(props: TextBoxProps) {
     }
   };
 
+  const iconComponent = NoteIcon;
+
   return (
     <div className="textbox">
-      <TextField
-        inputRef={textFieldRef}
-        autoFocus
-        multiline
-        rowsMax={2}
-        value={note}
-        onKeyDown={handleKeyDown}
-        onChange={handleNoteChanged}
-        fullWidth
-        focused={true}
-      />
+      <List disablePadding={true}>
+        <Divider />
+        <ListItem>
+          <IconButton edge="start" onClick={handleSubmit}>
+            <SvgIcon component={iconComponent} />
+          </IconButton>
 
-      <IconButton edge="end" size="small" onClick={handleSubmit}>
-        <ArrowUpward />
-      </IconButton>
+          <ListItemText>
+            <TextField
+              inputRef={textFieldRef}
+              autoFocus
+              multiline
+              rowsMax={8}
+              value={note}
+              onKeyDown={handleKeyDown}
+              onChange={handleNoteChanged}
+              fullWidth
+              focused={true}
+            />
+          </ListItemText>
+
+          <IconButton edge="end" onClick={handleSubmit}>
+            <ArrowUpward />
+          </IconButton>
+        </ListItem>
+      </List>
     </div>
   );
 }
