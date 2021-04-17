@@ -74,7 +74,6 @@ export default function Routes() {
 
   const [date, setDate] = useState(moment().startOf("day").toDate());
   const [dateRangeValue, setDateRangeValue] = useState("Day");
-  const [search, setSearch] = useState("");
   const [activeParentId, setActiveParentId] = useState<
     string | null | undefined
   >(null);
@@ -122,10 +121,6 @@ export default function Routes() {
     setDateRangeValue(dateRange);
   };
 
-  const handleSearchSubmitted = (search: string) => {
-    setSearch(search);
-  };
-
   const handleWorkspaceSelected = (
     id: string | null | undefined,
     name?: string
@@ -143,21 +138,22 @@ export default function Routes() {
       <Header
         title={title}
         isPublicRoute={isPublicRoute}
-        onSearchSubmit={handleSearchSubmitted}
         onWorkspaceSelected={handleWorkspaceSelected}
         activeParentId={activeParentId}
       />
       <Switch>
+        <Route exact={true} path="/">
+          <Redirect to="/dashboard" />
+        </Route>
         <AuthenticatedRoute exact={true} path="/quick-capture">
           <LogPage />
         </AuthenticatedRoute>
-        <AuthenticatedRoute exact={true} path="/">
+        <AuthenticatedRoute exact={true} path="/dashboard">
           <HomePage
             dateRangeValue={dateRangeValue}
             date={date}
             startDate={startDate}
             endDate={endDate}
-            search={search}
             activeParentId={activeParentId}
             onDateChange={handleDateChanged}
             onDateRangeChange={handleDateRangeChanged}

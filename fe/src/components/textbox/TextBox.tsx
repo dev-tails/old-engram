@@ -1,20 +1,45 @@
 import './TextBox.scss';
 
-import { IconButton, TextField } from '@material-ui/core';
+import { IconButton, List, ListItem, ListItemText, SvgIcon, TextField } from '@material-ui/core';
 import { ArrowUpward } from '@material-ui/icons';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { isMobileUserAgent } from '../../utils/UserAgentUtils';
-import { Note } from '../notes/NotesApi';
+import { ReactComponent as EventIcon } from '../icons/EventIcon.svg';
+import { ReactComponent as NoteIcon } from '../icons/NoteIcon.svg';
+import { ReactComponent as TaskCompletedIcon } from '../icons/TaskCompletedIcon.svg';
+import { ReactComponent as TaskIcon } from '../icons/TaskIcon.svg';
+import * as NotesApi from '../notes/NotesApi';
 
 type TextBoxProps = {
   initialBody: string;
-  onSubmit: (note: Partial<Note>) => void;
+  initialType: NotesApi.NoteType;
+  focused: boolean;
+  onSubmit: (note: Partial<NotesApi.Note>) => void;
 };
 
 export default function TextBox(props: TextBoxProps) {
   const textFieldRef = useRef<HTMLInputElement | null>(null);
+  const [type, setType] = useState<NotesApi.NoteType>(props.initialType);
   const [note, setNote] = useState(props.initialBody);
+
+  useEffect(() => {
+    if (props.focused) {
+      refocusInput();
+    }
+  }, [props.focused]);
+
+  useEffect(() => {
+    if (props.initialBody) {
+      setNote(props.initialBody);
+    }
+  }, [props.initialBody]);
+
+  useEffect(() => {
+    if (props.initialType) {
+      setType(props.initialType);
+    }
+  }, [props.initialType]);
 
   const handleNoteChanged: React.TextareaHTMLAttributes<HTMLTextAreaElement>["onChange"] = (
     event
@@ -37,6 +62,7 @@ export default function TextBox(props: TextBoxProps) {
   ) => {
     props.onSubmit({
       body: note,
+      type,
     });
 
     setNote("");
@@ -50,23 +76,58 @@ export default function TextBox(props: TextBoxProps) {
     }
   };
 
+  function getNoteIcon(note: NotesApi.Note) {
+    const type = note.type || "note";
+
+    const iconByType = {
+      note: NoteIcon,
+      task: TaskIcon,
+      task_completed: TaskCompletedIcon,
+      event: EventIcon,
+    };
+
+    return <SvgIcon component={(iconByType as any)[type]}></SvgIcon>;
+  }
+
+  const types: NotesApi.NoteType[] = [
+    "note",
+    "task",
+    "task_completed",
+    "event",
+  ];
+  function handleToggleType() {
+    const currentTypeIndex = types.indexOf(type);
+    let nextTypeIndex = (currentTypeIndex + 1) % types.length;
+    setType(types[nextTypeIndex]);
+  }
+
   return (
     <div className="textbox">
-      <TextField
-        inputRef={textFieldRef}
-        autoFocus
-        multiline
-        rowsMax={2}
-        value={note}
-        onKeyDown={handleKeyDown}
-        onChange={handleNoteChanged}
-        fullWidth
-        focused={true}
-      />
+      <List disablePadding={true}>
+        <ListItem>
+          <IconButton edge="start" onClick={handleToggleType}>
+            {getNoteIcon({ type })}
+          </IconButton>
 
-      <IconButton edge="end" size="small" onClick={handleSubmit}>
-        <ArrowUpward />
-      </IconButton>
+          <ListItemText>
+            <TextField
+              inputRef={textFieldRef}
+              autoFocus
+              multiline
+              rowsMax={8}
+              value={note}
+              onKeyDown={handleKeyDown}
+              onChange={handleNoteChanged}
+              fullWidth
+              focused={true}
+            />
+          </ListItemText>
+
+          <IconButton edge="end" onClick={handleSubmit}>
+            <ArrowUpward />
+          </IconButton>
+        </ListItem>
+      </List>
     </div>
   );
 }
