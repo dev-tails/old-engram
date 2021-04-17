@@ -15,7 +15,7 @@ import {
 import { MoreVert as MoreVertIcon } from '@material-ui/icons';
 import querystring from 'query-string';
 import React, { useState } from 'react';
-import { useHistory, useLocation } from 'react-router';
+import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
 
 import { ReactComponent as NoteIcon } from '../icons/NoteIcon.svg';
@@ -26,7 +26,6 @@ import TextBox from '../textbox/TextBox';
 type LogPageProps = {};
 
 export const LogPage: React.FC<LogPageProps> = (props) => {
-  const history = useHistory();
   const location = useLocation();
   const [selectedNoteId, setSelectedNoteId] = useState<string>("");
   const [notes, setNotes] = useState<NotesApi.Note[]>([]);

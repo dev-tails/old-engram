@@ -7,7 +7,6 @@ import {
   Fade,
   fade,
   IconButton,
-  InputBase,
   List,
   ListItem,
   ListItemText,
@@ -19,7 +18,7 @@ import {
   Toolbar,
   Typography,
 } from '@material-ui/core';
-import { Menu as MenuIcon, Search as SearchIcon } from '@material-ui/icons';
+import { Menu as MenuIcon } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
@@ -30,7 +29,6 @@ type HeaderProps = {
   title?: string;
   isPublicRoute: boolean;
   activeParentId: string | undefined | null;
-  onSearchSubmit: (search: string) => void;
   onWorkspaceSelected: (id: string | null | undefined, name?: string) => void;
 };
 
@@ -96,15 +94,12 @@ export const Header: React.FC<HeaderProps> = ({
   title,
   activeParentId,
   isPublicRoute,
-  onSearchSubmit,
   onWorkspaceSelected,
 }) => {
   const classes = useStyles();
 
   const history = useHistory();
 
-  const [search, setSearch] = useState<string | null>(null);
-  const isSearchOpen = search !== null;
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false);
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<
     string | undefined | null
@@ -167,7 +162,7 @@ export const Header: React.FC<HeaderProps> = ({
   const handleWorkspaceSelected = (workspace: Note | null) => {
     onWorkspaceSelected(workspace?._id, workspace?.body);
     setLeftDrawerOpen(false);
-    history.push("/");
+    history.push("/dashboard");
   };
 
   const handleWorkspaceLongPress = (
@@ -192,7 +187,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <div className="header">
-      <AppBar className={`${isSearchOpen ? "search" : ""}`}>
+      <AppBar>
         <Toolbar>
           {!isPublicRoute && (
             <IconButton
@@ -207,61 +202,20 @@ export const Header: React.FC<HeaderProps> = ({
 
           <div className="spacer" />
 
-          {title ? (
-            <Typography variant="h6">{title}</Typography>
-          ) : (
-            <Link to="/">
-              <IconButton className="logo" color="inherit">
-                <img
-                  alt="engram logo"
-                  width="36"
-                  height="36"
-                  src="/images/logo.svg"
-                />
-              </IconButton>
-            </Link>
-          )}
+          {title ? <Typography variant="h6">{title}</Typography> : null}
 
           <div className="spacer" />
 
-          {!isPublicRoute && !isSearchOpen && (
-            <IconButton
-              edge="end"
-              color="inherit"
-              aria-label="menu"
-              onClick={setSearch.bind(this, "")}
-            >
-              <SearchIcon />
-            </IconButton>
-          )}
-
-          {!isPublicRoute && isSearchOpen && (
-            <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>
-              <InputBase
-                placeholder="Search…"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-                autoFocus
-                inputProps={{ "aria-label": "search" }}
-                value={search}
-                onChange={(event) => {
-                  const newSearch = event.currentTarget.value;
-                  setSearch(newSearch);
-                  onSearchSubmit(newSearch);
-                }}
-                onBlur={() => {
-                  if (!search) {
-                    setSearch(null);
-                  }
-                }}
+          <Link to="/quick-capture">
+            <IconButton className="logo" edge="end">
+              <img
+                alt="engram logo"
+                width="36"
+                height="36"
+                src="/images/logo.svg"
               />
-            </div>
-          )}
+            </IconButton>
+          </Link>
         </Toolbar>
       </AppBar>
       <React.Fragment>
