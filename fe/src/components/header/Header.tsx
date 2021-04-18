@@ -111,6 +111,7 @@ export const Header: React.FC<HeaderProps> = ({
   const classes = useStyles();
 
   const history = useHistory();
+  const path = history.location.pathname;
 
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false);
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<
@@ -144,7 +145,10 @@ export const Header: React.FC<HeaderProps> = ({
         if (digit < 0) {
           onWorkspaceSelected(null);
         } else if (digit < workspaces.length) {
-          onWorkspaceSelected(workspaces[digit]._id, workspaces[digit].body);
+          onWorkspaceSelected(
+            workspaces[digit].localId,
+            workspaces[digit].body
+          );
         }
         event.preventDefault();
       }
@@ -172,7 +176,7 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   const handleWorkspaceSelected = (workspace: Note | null) => {
-    onWorkspaceSelected(workspace?._id, workspace?.body);
+    onWorkspaceSelected(workspace?.localId, workspace?.body);
     setLeftDrawerOpen(false);
     history.push("/dashboard");
   };
@@ -182,7 +186,7 @@ export const Header: React.FC<HeaderProps> = ({
     event: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
   ) => {
     setWorkspaceAnchorEl(event.target as any);
-    setSelectedWorkspaceId(workspace._id || null);
+    setSelectedWorkspaceId(workspace.localId || null);
   };
 
   const handleRemoveWorkspace = async () => {
@@ -191,7 +195,7 @@ export const Header: React.FC<HeaderProps> = ({
     setWorkspaceAnchorEl(null);
     const workspacesCopy = Array.from(workspaces);
     const index = workspacesCopy.findIndex(
-      (w) => w._id === selectedWorkspaceId
+      (w) => w.localId === selectedWorkspaceId
     );
     workspacesCopy.splice(index, 1);
     setWorkspaces(workspacesCopy);
@@ -242,7 +246,7 @@ export const Header: React.FC<HeaderProps> = ({
                 to="/quick-capture"
                 onClick={setLeftDrawerOpen.bind(this, false)}
               >
-                <ListItem button>
+                <ListItem button selected={path === "/quick-capture"}>
                   <ListItemIcon>
                     <SvgIcon
                       component={EngramLogo}
@@ -260,6 +264,7 @@ export const Header: React.FC<HeaderProps> = ({
                   <ListItem
                     button
                     onClick={handleWorkspaceSelected.bind(this, null)}
+                    selected={path === "/dashboard" && !activeParentId}
                   >
                     <ListItemIcon>
                       <Dashboard />
@@ -276,7 +281,7 @@ export const Header: React.FC<HeaderProps> = ({
                     to="/pages"
                     onClick={setLeftDrawerOpen.bind(this, false)}
                   >
-                    <ListItem button>
+                    <ListItem button selected={path === "/pages"}>
                       <ListItemIcon>
                         <MenuBook />
                       </ListItemIcon>
@@ -293,7 +298,7 @@ export const Header: React.FC<HeaderProps> = ({
                     {workspaces.map((workspace) => {
                       return (
                         <Holdable
-                          key={workspace._id}
+                          key={workspace.localId}
                           onLongPress={handleWorkspaceLongPress.bind(
                             this,
                             workspace
@@ -304,8 +309,8 @@ export const Header: React.FC<HeaderProps> = ({
                           )}
                         >
                           <ListItem
-                            key={workspace._id}
-                            selected={workspace._id === activeParentId}
+                            key={workspace.localId}
+                            selected={workspace.localId === activeParentId}
                             button
                             className={classes.nested}
                           >
@@ -344,7 +349,7 @@ export const Header: React.FC<HeaderProps> = ({
                 to={`/settings`}
                 onClick={setLeftDrawerOpen.bind(this, false)}
               >
-                <ListItem button>
+                <ListItem button selected={path === "/settings"}>
                   <ListItemIcon>
                     <Settings />
                   </ListItemIcon>
