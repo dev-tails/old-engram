@@ -20,7 +20,15 @@ import {
   Toolbar,
   Typography,
 } from '@material-ui/core';
-import { ExitToApp as ExitIcon, Help, Menu as MenuIcon, NewReleases, Settings } from '@material-ui/icons';
+import {
+  Dashboard,
+  ExitToApp as ExitIcon,
+  Help,
+  Menu as MenuIcon,
+  MenuBook,
+  NewReleases,
+  Settings,
+} from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
@@ -230,17 +238,6 @@ export const Header: React.FC<HeaderProps> = ({
         >
           <div className="drawer-contents">
             <List>
-              {isPluginEnabled(PluginName.PLUGIN_DASHBOARD) ? (
-                <>
-                  <ListItem
-                    button
-                    onClick={handleWorkspaceSelected.bind(this, null)}
-                  >
-                    <ListItemText primary="Dashboard" />
-                  </ListItem>
-                  <Divider />
-                </>
-              ) : null}
               <Link
                 to="/quick-capture"
                 onClick={setLeftDrawerOpen.bind(this, false)}
@@ -258,6 +255,21 @@ export const Header: React.FC<HeaderProps> = ({
               </Link>
               <Divider />
 
+              {isPluginEnabled(PluginName.PLUGIN_DASHBOARD) ? (
+                <>
+                  <ListItem
+                    button
+                    onClick={handleWorkspaceSelected.bind(this, null)}
+                  >
+                    <ListItemIcon>
+                      <Dashboard />
+                    </ListItemIcon>
+                    <ListItemText primary="Dashboard" />
+                  </ListItem>
+                  <Divider />
+                </>
+              ) : null}
+
               {isPluginEnabled(PluginName.PLUGIN_PAGES) ? (
                 <>
                   <Link
@@ -265,6 +277,9 @@ export const Header: React.FC<HeaderProps> = ({
                     onClick={setLeftDrawerOpen.bind(this, false)}
                   >
                     <ListItem button>
+                      <ListItemIcon>
+                        <MenuBook />
+                      </ListItemIcon>
                       <ListItemText primary={"Pages"} />
                     </ListItem>
                   </Link>
