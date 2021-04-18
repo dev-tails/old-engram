@@ -20,7 +20,7 @@ import {
   Toolbar,
   Typography,
 } from '@material-ui/core';
-import { ExitToApp as ExitIcon, Menu as MenuIcon } from '@material-ui/icons';
+import { ExitToApp as ExitIcon, Help, Menu as MenuIcon, NewReleases, Settings } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
@@ -325,6 +325,30 @@ export const Header: React.FC<HeaderProps> = ({
                   </List>
                 </>
               ) : null}
+              <Link to={`/settings`}>
+                <ListItem button>
+                  <ListItemIcon>
+                    <Settings />
+                  </ListItemIcon>
+                  <ListItemText primary={"Settings"} />
+                </ListItem>
+              </Link>
+              <a href={`https://engramhq.xyz/help`} target="_blank">
+                <ListItem button>
+                  <ListItemIcon>
+                    <Help />
+                  </ListItemIcon>
+                  <ListItemText primary={"Help"} />
+                </ListItem>
+              </a>
+              <a href={`https://engramhq.xyz/blog`} target="_blank">
+                <ListItem button>
+                  <ListItemIcon>
+                    <NewReleases />
+                  </ListItemIcon>
+                  <ListItemText primary={"Updates"} />
+                </ListItem>
+              </a>
               <Link to={`/logout`}>
                 <ListItem button>
                   <ListItemIcon>
