@@ -9,20 +9,23 @@ import {
   IconButton,
   List,
   ListItem,
+  ListItemIcon,
   ListItemText,
   ListSubheader,
   makeStyles,
   Menu,
   MenuItem,
+  SvgIcon,
   TextField,
   Toolbar,
   Typography,
 } from '@material-ui/core';
-import { Menu as MenuIcon } from '@material-ui/icons';
+import { ExitToApp as ExitIcon, Menu as MenuIcon } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
 import { FF_DASHBOARD, FF_PAGES, FF_WORKSPACES, isFFEnabled } from '../../FeatureFlags';
+import { ReactComponent as EngramLogo } from '../../logo.svg';
 import { Holdable } from '../Holdable/Holdable';
 import { createOrUpdateNote, getNotes, Note, removeNote } from '../notes/NotesApi';
 
@@ -243,6 +246,13 @@ export const Header: React.FC<HeaderProps> = ({
                 onClick={setLeftDrawerOpen.bind(this, false)}
               >
                 <ListItem button>
+                  <ListItemIcon>
+                    <SvgIcon
+                      component={EngramLogo}
+                      viewBox="0 0 1024 1024"
+                      style={{ color: "black" }}
+                    />
+                  </ListItemIcon>
                   <ListItemText primary={"Brain Dump"} />
                 </ListItem>
               </Link>
@@ -317,6 +327,9 @@ export const Header: React.FC<HeaderProps> = ({
               ) : null}
               <Link to={`/logout`}>
                 <ListItem button>
+                  <ListItemIcon>
+                    <ExitIcon />
+                  </ListItemIcon>
                   <ListItemText primary={"Logout"} />
                 </ListItem>
               </Link>
