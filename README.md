@@ -1,21 +1,30 @@
-# engram
+<p align="center">
+  <img src="fe/public/logo512.png" alt="engram logo"/>
+</p>
 
-engram - a hypothetical permanent change in the brain accounting for the existence of memory; a memory trace.
+<h1 align="center">engram</h1>
 
-A MongoDB, Express, React, Node (MERN) stack application for quickly gathering thoughts.
+> a hypothetical permanent change in the brain accounting for the existence of memory; a memory trace.
+
+An open source application for quickly gathering thoughts.
 
 # Table of Contents
 
-- [Installation](#installation)
-  - [Local Development](#local-development)
-  - [Self Hosted](#self-hosted)
-- [Configuration](#configuration)
-  - [Environment Variables](#environment-variables)
-  - [Sample .env File](#sample-env-file)
+- [Introduction](https://engramhq.xyz/2020/11/21/introducing-engram/)
+  - [Purpose](https://engramhq.xyz/help/about/philosophy-behind-engram/)
+  - [Core engram Concepts](https://engramhq.xyz/help/about/core-engram-concepts/)
+  - [FAQs](https://engramhq.xyz/faqs/)
+- [Getting started](https://engramhq.xyz/help/#getting-started)
+  - [engram in the Browser](https://engramhq.xyz/help/getting-started/engram-in-your-browser/)
+  - [Installing engram on Your Devices](https://engramhq.xyz/help/getting-started/install-engram-on-your-devices/)
+  - [Settings up Send to engram](https://engramhq.xyz/help/getting-started/how-to-setup-send-to-engram/)
+- [Local Development](#local-development)
+- [Self Hosted](#self-hosted)
+  - [Configuration](#configuration)
+    - [Environment Variables](#environment-variables)
+    - [Sample .env File](#sample-env-file)
 
-# Installation
-
-## Local Development
+# Local Development
 
 1. Install [nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 2. Install [Node.js using nvm](https://github.com/nvm-sh/nvm#usage)
@@ -31,7 +40,7 @@ A MongoDB, Express, React, Node (MERN) stack application for quickly gathering t
    node index.js
    ```
 
-## Self Hosted
+# Self Hosted
 
 1. Spin up a server on your preferred hosting provider
 2. Install [nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
@@ -99,16 +108,16 @@ A MongoDB, Express, React, Node (MERN) stack application for quickly gathering t
 
     ![Bluehost Add DNS Record](images/add-dns-bluehost.png)
 
-# Configuration
+## Configuration
 
 Secrets and configuration are managed in be/.env and loaded using the [dotenv](https://github.com/motdotla/dotenv) library.
 
-## Environment Variables
+### Environment Variables
 
 - DB_URL - [MongoDB connection string](https://docs.mongodb.com/manual/reference/connection-string/)
 - PORT - Port to run API on (Default: 4000)
 
-## Sample .env File
+### Sample .env File
 
 ```
 DB_URL=mongodb://mongodb0.example.com:27017
