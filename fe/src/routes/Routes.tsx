@@ -13,8 +13,10 @@ import { LogPage } from '../components/LogPage/LogPage';
 import { EditNotePage } from '../components/notes/EditNotePage/EditNotePage';
 import { PagesPage } from '../components/PagesPage/PagesPage';
 import { PrivacyPolicyPage, PrivacyPolicyPagePath } from '../components/PrivacyPolicyPage/PrivacyPolicyPage';
+import { SettingsPage } from '../components/SettingsPage/SettingsPage';
 import SignupPage, { SignupPagePath } from '../components/SignupPage/SignupPage';
 import { hasLocalDevice } from '../DeviceApi';
+import { isPluginEnabled, PluginName } from '../FeatureFlags';
 import { TermsOfServicePage, TermsOfServicePagePath } from '../TermsOfServicePage/TermsOfServicePage';
 import { getMe } from '../UsersApi';
 
@@ -143,22 +145,28 @@ export default function Routes() {
       />
       <Switch>
         <Route exact={true} path="/">
-          <Redirect to="/dashboard" />
+          {isPluginEnabled(PluginName.PLUGIN_DASHBOARD) ? (
+            <Redirect to="/dashboard" />
+          ) : (
+            <Redirect to="/quick-capture" />
+          )}
         </Route>
         <AuthenticatedRoute exact={true} path="/quick-capture">
           <LogPage />
         </AuthenticatedRoute>
-        <AuthenticatedRoute exact={true} path="/dashboard">
-          <HomePage
-            dateRangeValue={dateRangeValue}
-            date={date}
-            startDate={startDate}
-            endDate={endDate}
-            activeParentId={activeParentId}
-            onDateChange={handleDateChanged}
-            onDateRangeChange={handleDateRangeChanged}
-          />
-        </AuthenticatedRoute>
+        {isPluginEnabled(PluginName.PLUGIN_DASHBOARD) ? (
+          <AuthenticatedRoute exact={true} path="/dashboard">
+            <HomePage
+              dateRangeValue={dateRangeValue}
+              date={date}
+              startDate={startDate}
+              endDate={endDate}
+              activeParentId={activeParentId}
+              onDateChange={handleDateChanged}
+              onDateRangeChange={handleDateRangeChanged}
+            />
+          </AuthenticatedRoute>
+        ) : null}
         <AuthenticatedRoute exact={true} path="/pages">
           <PagesPage />
         </AuthenticatedRoute>
@@ -173,6 +181,9 @@ export default function Routes() {
         </Route>
         <Route exact path="/logout">
           <LogoutPage />
+        </Route>
+        <Route exact path="/settings">
+          <SettingsPage />
         </Route>
         <Route exact path="/help">
           <HelpPage />

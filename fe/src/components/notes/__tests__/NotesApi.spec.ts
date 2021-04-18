@@ -1,7 +1,19 @@
-import * as NotesApi from "../NotesApi";
+import * as NotesApi from '../NotesApi';
 
 describe("NotesApi", () => {
   describe("sortNotes", () => {
+    it("should return single note with a parent not in list", () => {
+      const notes = [
+        {
+          localId: "1",
+          parent: "2",
+        },
+      ];
+      const sortedNotes = NotesApi.sortNotes(notes);
+      expect(sortedNotes.length).toBe(1);
+      expect(sortedNotes[0].localId).toBe("1");
+    });
+
     it("should sort by createdAt", () => {
       const notes = [
         {

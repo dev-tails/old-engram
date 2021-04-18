@@ -9,19 +9,31 @@ import {
   IconButton,
   List,
   ListItem,
+  ListItemIcon,
   ListItemText,
   ListSubheader,
   makeStyles,
   Menu,
   MenuItem,
+  SvgIcon,
   TextField,
   Toolbar,
   Typography,
 } from '@material-ui/core';
-import { Menu as MenuIcon } from '@material-ui/icons';
+import {
+  Dashboard,
+  ExitToApp as ExitIcon,
+  Help,
+  Menu as MenuIcon,
+  MenuBook,
+  NewReleases,
+  Settings,
+} from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
+import { isPluginEnabled, PluginName } from '../../FeatureFlags';
+import { ReactComponent as EngramLogo } from '../../logo.svg';
 import { Holdable } from '../Holdable/Holdable';
 import { createOrUpdateNote, getNotes, Note, removeNote } from '../notes/NotesApi';
 
@@ -99,6 +111,7 @@ export const Header: React.FC<HeaderProps> = ({
   const classes = useStyles();
 
   const history = useHistory();
+  const path = history.location.pathname;
 
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false);
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<
@@ -132,7 +145,10 @@ export const Header: React.FC<HeaderProps> = ({
         if (digit < 0) {
           onWorkspaceSelected(null);
         } else if (digit < workspaces.length) {
-          onWorkspaceSelected(workspaces[digit]._id, workspaces[digit].body);
+          onWorkspaceSelected(
+            workspaces[digit].localId,
+            workspaces[digit].body
+          );
         }
         event.preventDefault();
       }
@@ -160,7 +176,7 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   const handleWorkspaceSelected = (workspace: Note | null) => {
-    onWorkspaceSelected(workspace?._id, workspace?.body);
+    onWorkspaceSelected(workspace?.localId, workspace?.body);
     setLeftDrawerOpen(false);
     history.push("/dashboard");
   };
@@ -170,7 +186,7 @@ export const Header: React.FC<HeaderProps> = ({
     event: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
   ) => {
     setWorkspaceAnchorEl(event.target as any);
-    setSelectedWorkspaceId(workspace._id || null);
+    setSelectedWorkspaceId(workspace.localId || null);
   };
 
   const handleRemoveWorkspace = async () => {
@@ -179,7 +195,7 @@ export const Header: React.FC<HeaderProps> = ({
     setWorkspaceAnchorEl(null);
     const workspacesCopy = Array.from(workspaces);
     const index = workspacesCopy.findIndex(
-      (w) => w._id === selectedWorkspaceId
+      (w) => w.localId === selectedWorkspaceId
     );
     workspacesCopy.splice(index, 1);
     setWorkspaces(workspacesCopy);
@@ -226,80 +242,154 @@ export const Header: React.FC<HeaderProps> = ({
         >
           <div className="drawer-contents">
             <List>
-              <ListItem
-                button
-                onClick={handleWorkspaceSelected.bind(this, null)}
-              >
-                <ListItemText primary="Dashboard" />
-              </ListItem>
-              <Divider />
               <Link
                 to="/quick-capture"
                 onClick={setLeftDrawerOpen.bind(this, false)}
               >
-                <ListItem button>
-                  <ListItemText primary={"Quick Capture"} />
-                </ListItem>
-              </Link>
-              <Divider />
-              <Link to="/pages" onClick={setLeftDrawerOpen.bind(this, false)}>
-                <ListItem button>
-                  <ListItemText primary={"Pages"} />
-                </ListItem>
-              </Link>
-              <Divider />
-              <ListSubheader>Workspaces</ListSubheader>
-              <List component="div" disablePadding>
-                {workspaces.map((workspace) => {
-                  return (
-                    <Holdable
-                      key={workspace._id}
-                      onLongPress={handleWorkspaceLongPress.bind(
-                        this,
-                        workspace
-                      )}
-                      onClick={handleWorkspaceSelected.bind(this, workspace)}
-                    >
-                      <ListItem
-                        key={workspace._id}
-                        selected={workspace._id === activeParentId}
-                        button
-                        className={classes.nested}
-                      >
-                        <ListItemText primary={workspace.body} />
-                      </ListItem>
-                    </Holdable>
-                  );
-                })}
-                <ListItem
-                  button
-                  className={classes.nested}
-                  onClick={() => {
-                    setWorkspaceBody("");
-                  }}
-                >
-                  {workspaceBody !== null ? (
-                    <TextField
-                      onChange={(event) => {
-                        setWorkspaceBody(event.currentTarget.value);
-                      }}
-                      value={workspaceBody}
-                      autoFocus
-                      onBlur={handleSubmitWorkspace}
+                <ListItem button selected={path === "/quick-capture"}>
+                  <ListItemIcon>
+                    <SvgIcon
+                      component={EngramLogo}
+                      viewBox="0 0 1024 1024"
+                      style={{ color: "black" }}
                     />
-                  ) : (
-                    <>
-                      <ListItemText primary={"Create Workspace"} />
-                    </>
-                  )}
+                  </ListItemIcon>
+                  <ListItemText primary={"Brain Dump"} />
                 </ListItem>
-                <Divider />
-                <Link to={`/logout`}>
-                  <ListItem button>
-                    <ListItemText primary={"Logout"} />
+              </Link>
+              <Divider />
+
+              {isPluginEnabled(PluginName.PLUGIN_DASHBOARD) ? (
+                <>
+                  <ListItem
+                    button
+                    onClick={handleWorkspaceSelected.bind(this, null)}
+                    selected={path === "/dashboard" && !activeParentId}
+                  >
+                    <ListItemIcon>
+                      <Dashboard />
+                    </ListItemIcon>
+                    <ListItemText primary="Dashboard" />
                   </ListItem>
-                </Link>
-              </List>
+                  <Divider />
+                </>
+              ) : null}
+
+              {isPluginEnabled(PluginName.PLUGIN_PAGES) ? (
+                <>
+                  <Link
+                    to="/pages"
+                    onClick={setLeftDrawerOpen.bind(this, false)}
+                  >
+                    <ListItem button selected={path === "/pages"}>
+                      <ListItemIcon>
+                        <MenuBook />
+                      </ListItemIcon>
+                      <ListItemText primary={"Pages"} />
+                    </ListItem>
+                  </Link>
+                  <Divider />
+                </>
+              ) : null}
+              {isPluginEnabled(PluginName.PLUGIN_WORKSPACES) ? (
+                <>
+                  <ListSubheader>Workspaces</ListSubheader>
+                  <List component="div" disablePadding>
+                    {workspaces.map((workspace) => {
+                      return (
+                        <Holdable
+                          key={workspace.localId}
+                          onLongPress={handleWorkspaceLongPress.bind(
+                            this,
+                            workspace
+                          )}
+                          onClick={handleWorkspaceSelected.bind(
+                            this,
+                            workspace
+                          )}
+                        >
+                          <ListItem
+                            key={workspace.localId}
+                            selected={workspace.localId === activeParentId}
+                            button
+                            className={classes.nested}
+                          >
+                            <ListItemText primary={workspace.body} />
+                          </ListItem>
+                        </Holdable>
+                      );
+                    })}
+                    <ListItem
+                      button
+                      className={classes.nested}
+                      onClick={() => {
+                        setWorkspaceBody("");
+                      }}
+                    >
+                      {workspaceBody !== null ? (
+                        <TextField
+                          onChange={(event) => {
+                            setWorkspaceBody(event.currentTarget.value);
+                          }}
+                          value={workspaceBody}
+                          autoFocus
+                          onBlur={handleSubmitWorkspace}
+                        />
+                      ) : (
+                        <>
+                          <ListItemText primary={"Create Workspace"} />
+                        </>
+                      )}
+                    </ListItem>
+                    <Divider />
+                  </List>
+                </>
+              ) : null}
+              <Link
+                to={`/settings`}
+                onClick={setLeftDrawerOpen.bind(this, false)}
+              >
+                <ListItem button selected={path === "/settings"}>
+                  <ListItemIcon>
+                    <Settings />
+                  </ListItemIcon>
+                  <ListItemText primary={"Settings"} />
+                </ListItem>
+              </Link>
+              <a
+                href={`https://engramhq.xyz/help`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={setLeftDrawerOpen.bind(this, false)}
+              >
+                <ListItem button>
+                  <ListItemIcon>
+                    <Help />
+                  </ListItemIcon>
+                  <ListItemText primary={"Help"} />
+                </ListItem>
+              </a>
+              <a
+                href={`https://engramhq.xyz/blog`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={setLeftDrawerOpen.bind(this, false)}
+              >
+                <ListItem button>
+                  <ListItemIcon>
+                    <NewReleases />
+                  </ListItemIcon>
+                  <ListItemText primary={"Updates"} />
+                </ListItem>
+              </a>
+              <Link to={`/logout`}>
+                <ListItem button>
+                  <ListItemIcon>
+                    <ExitIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={"Logout"} />
+                </ListItem>
+              </Link>
             </List>
             <Menu
               id="fade-menu"

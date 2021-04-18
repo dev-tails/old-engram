@@ -9,6 +9,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { BrowserRouter as Router } from 'react-router-dom';
 
+import { initializePlugins } from './FeatureFlags';
 import Routes from './routes/Routes';
 
 let theme = createMuiTheme({
@@ -19,6 +20,8 @@ let theme = createMuiTheme({
 });
 
 function App() {
+  initializePlugins();
+
   return (
     <ThemeProvider theme={theme}>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
