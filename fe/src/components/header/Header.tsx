@@ -22,6 +22,7 @@ import { Menu as MenuIcon } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
+import { FF_DASHBOARD, isFFEnabled } from '../../FeatureFlags';
 import { Holdable } from '../Holdable/Holdable';
 import { createOrUpdateNote, getNotes, Note, removeNote } from '../notes/NotesApi';
 
@@ -226,13 +227,17 @@ export const Header: React.FC<HeaderProps> = ({
         >
           <div className="drawer-contents">
             <List>
-              <ListItem
-                button
-                onClick={handleWorkspaceSelected.bind(this, null)}
-              >
-                <ListItemText primary="Dashboard" />
-              </ListItem>
-              <Divider />
+              {isFFEnabled(FF_DASHBOARD) ? (
+                <>
+                  <ListItem
+                    button
+                    onClick={handleWorkspaceSelected.bind(this, null)}
+                  >
+                    <ListItemText primary="Dashboard" />
+                  </ListItem>
+                  <Divider />
+                </>
+              ) : null}
               <Link
                 to="/quick-capture"
                 onClick={setLeftDrawerOpen.bind(this, false)}

@@ -15,6 +15,7 @@ import { PagesPage } from '../components/PagesPage/PagesPage';
 import { PrivacyPolicyPage, PrivacyPolicyPagePath } from '../components/PrivacyPolicyPage/PrivacyPolicyPage';
 import SignupPage, { SignupPagePath } from '../components/SignupPage/SignupPage';
 import { hasLocalDevice } from '../DeviceApi';
+import { FF_DASHBOARD, isFFEnabled } from '../FeatureFlags';
 import { TermsOfServicePage, TermsOfServicePagePath } from '../TermsOfServicePage/TermsOfServicePage';
 import { getMe } from '../UsersApi';
 
@@ -143,22 +144,28 @@ export default function Routes() {
       />
       <Switch>
         <Route exact={true} path="/">
-          <Redirect to="/dashboard" />
+          {isFFEnabled(FF_DASHBOARD) ? (
+            <Redirect to="/dashboard" />
+          ) : (
+            <Redirect to="/quick-capture" />
+          )}
         </Route>
         <AuthenticatedRoute exact={true} path="/quick-capture">
           <LogPage />
         </AuthenticatedRoute>
-        <AuthenticatedRoute exact={true} path="/dashboard">
-          <HomePage
-            dateRangeValue={dateRangeValue}
-            date={date}
-            startDate={startDate}
-            endDate={endDate}
-            activeParentId={activeParentId}
-            onDateChange={handleDateChanged}
-            onDateRangeChange={handleDateRangeChanged}
-          />
-        </AuthenticatedRoute>
+        {isFFEnabled(FF_DASHBOARD) ? (
+          <AuthenticatedRoute exact={true} path="/dashboard">
+            <HomePage
+              dateRangeValue={dateRangeValue}
+              date={date}
+              startDate={startDate}
+              endDate={endDate}
+              activeParentId={activeParentId}
+              onDateChange={handleDateChanged}
+              onDateRangeChange={handleDateRangeChanged}
+            />
+          </AuthenticatedRoute>
+        ) : null}
         <AuthenticatedRoute exact={true} path="/pages">
           <PagesPage />
         </AuthenticatedRoute>
