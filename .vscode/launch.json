@@ -15,9 +15,31 @@
       "type": "node",
       "request": "launch",
       "name": "Launch API",
-      "skipFiles": ["<node_internals>/**"],
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
       "program": "${workspaceFolder}/be/index.js",
       "cwd": "${workspaceFolder}/be"
+    },
+    {
+      "name": "Debug CRA Tests",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "${workspaceRoot}/fe/node_modules/.bin/react-scripts",
+      "args": [
+        "test",
+        "--runInBand",
+        "--no-cache",
+        "--watchAll=false"
+      ],
+      "cwd": "${workspaceRoot}/fe",
+      "protocol": "inspector",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "env": {
+        "CI": "true"
+      },
+      "disableOptimisticBPs": true
     }
   ]
 }

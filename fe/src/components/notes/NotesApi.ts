@@ -69,7 +69,8 @@ export async function getNote(params: { id: string }): Promise<Note[]> {
     depth++;
   } while (parentIds.length > 0 && depth < maxDepth);
 
-  return sortNotes(notes);
+  const sortedNotes = sortNotes(notes);
+  return sortedNotes;
 }
 
 let getAllPromise: Promise<any> | null = null;
@@ -263,7 +264,11 @@ export function sortNotes(notes: Note[]) {
       // If we made it all the way through notesWithPrev, we insert notes with "floating" prevs
       const isLastNote = noteToInsertIndex === notesWithPrevOrParent.length - 1;
       if (indexToInsertTo < 0 && isLastNote) {
-        indexToInsertTo = orderedNotesByCreatedAt.length - 1;
+        if (orderedNotesByCreatedAt.length) {
+          indexToInsertTo = orderedNotesByCreatedAt.length - 1;
+        } else {
+          indexToInsertTo = 0;
+        }
       }
 
       if (indexToInsertTo < 0) {
