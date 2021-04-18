@@ -22,7 +22,7 @@ import { Menu as MenuIcon } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
-import { FF_DASHBOARD, FF_WORKSPACES, isFFEnabled } from '../../FeatureFlags';
+import { FF_DASHBOARD, FF_PAGES, FF_WORKSPACES, isFFEnabled } from '../../FeatureFlags';
 import { Holdable } from '../Holdable/Holdable';
 import { createOrUpdateNote, getNotes, Note, removeNote } from '../notes/NotesApi';
 
@@ -243,16 +243,24 @@ export const Header: React.FC<HeaderProps> = ({
                 onClick={setLeftDrawerOpen.bind(this, false)}
               >
                 <ListItem button>
-                  <ListItemText primary={"Quick Capture"} />
+                  <ListItemText primary={"Brain Dump"} />
                 </ListItem>
               </Link>
               <Divider />
-              <Link to="/pages" onClick={setLeftDrawerOpen.bind(this, false)}>
-                <ListItem button>
-                  <ListItemText primary={"Pages"} />
-                </ListItem>
-              </Link>
-              <Divider />
+
+              {isFFEnabled(FF_PAGES) ? (
+                <>
+                  <Link
+                    to="/pages"
+                    onClick={setLeftDrawerOpen.bind(this, false)}
+                  >
+                    <ListItem button>
+                      <ListItemText primary={"Pages"} />
+                    </ListItem>
+                  </Link>
+                  <Divider />
+                </>
+              ) : null}
               {isFFEnabled(FF_WORKSPACES) ? (
                 <>
                   <ListSubheader>Workspaces</ListSubheader>
