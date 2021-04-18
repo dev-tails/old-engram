@@ -22,7 +22,7 @@ import { Menu as MenuIcon } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
-import { FF_DASHBOARD, isFFEnabled } from '../../FeatureFlags';
+import { FF_DASHBOARD, FF_WORKSPACES, isFFEnabled } from '../../FeatureFlags';
 import { Holdable } from '../Holdable/Holdable';
 import { createOrUpdateNote, getNotes, Note, removeNote } from '../notes/NotesApi';
 
@@ -253,58 +253,65 @@ export const Header: React.FC<HeaderProps> = ({
                 </ListItem>
               </Link>
               <Divider />
-              <ListSubheader>Workspaces</ListSubheader>
-              <List component="div" disablePadding>
-                {workspaces.map((workspace) => {
-                  return (
-                    <Holdable
-                      key={workspace._id}
-                      onLongPress={handleWorkspaceLongPress.bind(
-                        this,
-                        workspace
-                      )}
-                      onClick={handleWorkspaceSelected.bind(this, workspace)}
-                    >
-                      <ListItem
-                        key={workspace._id}
-                        selected={workspace._id === activeParentId}
-                        button
-                        className={classes.nested}
-                      >
-                        <ListItemText primary={workspace.body} />
-                      </ListItem>
-                    </Holdable>
-                  );
-                })}
-                <ListItem
-                  button
-                  className={classes.nested}
-                  onClick={() => {
-                    setWorkspaceBody("");
-                  }}
-                >
-                  {workspaceBody !== null ? (
-                    <TextField
-                      onChange={(event) => {
-                        setWorkspaceBody(event.currentTarget.value);
+              {isFFEnabled(FF_WORKSPACES) ? (
+                <>
+                  <ListSubheader>Workspaces</ListSubheader>
+                  <List component="div" disablePadding>
+                    {workspaces.map((workspace) => {
+                      return (
+                        <Holdable
+                          key={workspace._id}
+                          onLongPress={handleWorkspaceLongPress.bind(
+                            this,
+                            workspace
+                          )}
+                          onClick={handleWorkspaceSelected.bind(
+                            this,
+                            workspace
+                          )}
+                        >
+                          <ListItem
+                            key={workspace._id}
+                            selected={workspace._id === activeParentId}
+                            button
+                            className={classes.nested}
+                          >
+                            <ListItemText primary={workspace.body} />
+                          </ListItem>
+                        </Holdable>
+                      );
+                    })}
+                    <ListItem
+                      button
+                      className={classes.nested}
+                      onClick={() => {
+                        setWorkspaceBody("");
                       }}
-                      value={workspaceBody}
-                      autoFocus
-                      onBlur={handleSubmitWorkspace}
-                    />
-                  ) : (
-                    <>
-                      <ListItemText primary={"Create Workspace"} />
-                    </>
-                  )}
+                    >
+                      {workspaceBody !== null ? (
+                        <TextField
+                          onChange={(event) => {
+                            setWorkspaceBody(event.currentTarget.value);
+                          }}
+                          value={workspaceBody}
+                          autoFocus
+                          onBlur={handleSubmitWorkspace}
+                        />
+                      ) : (
+                        <>
+                          <ListItemText primary={"Create Workspace"} />
+                        </>
+                      )}
+                    </ListItem>
+                    <Divider />
+                  </List>
+                </>
+              ) : null}
+              <Link to={`/logout`}>
+                <ListItem button>
+                  <ListItemText primary={"Logout"} />
                 </ListItem>
-                <Divider />
-                <Link to={`/logout`}>
-                  <ListItem button>
-                    <ListItemText primary={"Logout"} />
-                  </ListItem>
-                </Link>
-              </List>
+              </Link>
             </List>
             <Menu
               id="fade-menu"

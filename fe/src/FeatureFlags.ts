@@ -1,4 +1,5 @@
 export const FF_DASHBOARD = "dashboard";
+export const FF_WORKSPACES = "workspaces";
 
 const featureFlags: { [key: string]: boolean } = {};
 
