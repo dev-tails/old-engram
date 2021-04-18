@@ -148,12 +148,15 @@ export default function Routes() {
           {isPluginEnabled(PluginName.PLUGIN_DASHBOARD) ? (
             <Redirect to="/dashboard" />
           ) : (
-            <Redirect to="/quick-capture" />
+            <Redirect to="/daily" />
           )}
         </Route>
         <AuthenticatedRoute exact={true} path="/quick-capture">
           <LogPage />
         </AuthenticatedRoute>
+        <Route exact path="/daily">
+          <LogPage daily={true} />
+        </Route>
         {isPluginEnabled(PluginName.PLUGIN_DASHBOARD) ? (
           <AuthenticatedRoute exact={true} path="/dashboard">
             <HomePage

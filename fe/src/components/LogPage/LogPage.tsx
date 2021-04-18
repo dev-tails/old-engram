@@ -13,8 +13,9 @@ import {
   SvgIcon,
 } from '@material-ui/core';
 import { MoreVert as MoreVertIcon } from '@material-ui/icons';
+import moment from 'moment';
 import querystring from 'query-string';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
 
@@ -26,7 +27,9 @@ import { Markdown } from '../Markdown/Markdown';
 import * as NotesApi from '../notes/NotesApi';
 import TextBox from '../textbox/TextBox';
 
-type LogPageProps = {};
+type LogPageProps = {
+  daily?: boolean;
+};
 
 export const LogPage: React.FC<LogPageProps> = (props) => {
   const location = useLocation();
@@ -37,6 +40,21 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
   const [menuAnchoEl, setMenuAnchorEl] = React.useState<null | HTMLDivElement>(
     null
   );
+
+  useEffect(() => {
+    async function fetchNotes() {
+      if (props.daily) {
+        const fetchedNotes = await NotesApi.getNotes({
+          since: moment().startOf("d").toDate(),
+          before: moment().startOf("d").toDate(),
+        });
+        setNotes(fetchedNotes);
+      } else {
+        setNotes([]);
+      }
+    }
+    fetchNotes();
+  }, [props.daily]);
 
   const handleSubmit = async (note: NotesApi.Note) => {
     setTextBoxFocused(false);

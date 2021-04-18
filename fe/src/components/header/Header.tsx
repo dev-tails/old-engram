@@ -28,6 +28,7 @@ import {
   MenuBook,
   NewReleases,
   Settings,
+  ViewDay,
 } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
@@ -255,6 +256,15 @@ export const Header: React.FC<HeaderProps> = ({
                     />
                   </ListItemIcon>
                   <ListItemText primary={"Brain Dump"} />
+                </ListItem>
+              </Link>
+              <Divider />
+              <Link to="/daily" onClick={setLeftDrawerOpen.bind(this, false)}>
+                <ListItem button selected={path === "/daily"}>
+                  <ListItemIcon>
+                    <ViewDay />
+                  </ListItemIcon>
+                  <ListItemText primary={"Daily Notes"} />
                 </ListItem>
               </Link>
               <Divider />
