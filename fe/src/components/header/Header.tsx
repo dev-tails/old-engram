@@ -24,7 +24,7 @@ import { ExitToApp as ExitIcon, Help, Menu as MenuIcon, NewReleases, Settings } 
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
-import { FF_DASHBOARD, FF_PAGES, FF_WORKSPACES, isFFEnabled } from '../../FeatureFlags';
+import { isPluginEnabled, PluginName } from '../../FeatureFlags';
 import { ReactComponent as EngramLogo } from '../../logo.svg';
 import { Holdable } from '../Holdable/Holdable';
 import { createOrUpdateNote, getNotes, Note, removeNote } from '../notes/NotesApi';
@@ -230,7 +230,7 @@ export const Header: React.FC<HeaderProps> = ({
         >
           <div className="drawer-contents">
             <List>
-              {isFFEnabled(FF_DASHBOARD) ? (
+              {isPluginEnabled(PluginName.PLUGIN_DASHBOARD) ? (
                 <>
                   <ListItem
                     button
@@ -258,7 +258,7 @@ export const Header: React.FC<HeaderProps> = ({
               </Link>
               <Divider />
 
-              {isFFEnabled(FF_PAGES) ? (
+              {isPluginEnabled(PluginName.PLUGIN_PAGES) ? (
                 <>
                   <Link
                     to="/pages"
@@ -271,7 +271,7 @@ export const Header: React.FC<HeaderProps> = ({
                   <Divider />
                 </>
               ) : null}
-              {isFFEnabled(FF_WORKSPACES) ? (
+              {isPluginEnabled(PluginName.PLUGIN_WORKSPACES) ? (
                 <>
                   <ListSubheader>Workspaces</ListSubheader>
                   <List component="div" disablePadding>
@@ -325,7 +325,10 @@ export const Header: React.FC<HeaderProps> = ({
                   </List>
                 </>
               ) : null}
-              <Link to={`/settings`}>
+              <Link
+                to={`/settings`}
+                onClick={setLeftDrawerOpen.bind(this, false)}
+              >
                 <ListItem button>
                   <ListItemIcon>
                     <Settings />
@@ -333,7 +336,12 @@ export const Header: React.FC<HeaderProps> = ({
                   <ListItemText primary={"Settings"} />
                 </ListItem>
               </Link>
-              <a href={`https://engramhq.xyz/help`} target="_blank">
+              <a
+                href={`https://engramhq.xyz/help`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={setLeftDrawerOpen.bind(this, false)}
+              >
                 <ListItem button>
                   <ListItemIcon>
                     <Help />
@@ -341,7 +349,12 @@ export const Header: React.FC<HeaderProps> = ({
                   <ListItemText primary={"Help"} />
                 </ListItem>
               </a>
-              <a href={`https://engramhq.xyz/blog`} target="_blank">
+              <a
+                href={`https://engramhq.xyz/blog`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={setLeftDrawerOpen.bind(this, false)}
+              >
                 <ListItem button>
                   <ListItemIcon>
                     <NewReleases />
