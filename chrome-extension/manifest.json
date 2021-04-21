@@ -1,9 +1,10 @@
 {
-  "name": "engram",
-  "description": "Save to engram",
+  "name": "engram Web Clipper",
+  "description": "Send any website to engram",
   "version": "1.0",
   "manifest_version": 3,
   "action": {
+    "default_title": "Send to engram",
     "default_popup": "popup.html",
     "default_icon": {
       "16": "/images/logo16.png",
@@ -18,6 +19,6 @@
     "48": "/images/logo48.png",
     "128": "/images/logo128.png"
   },
-  "permissions": ["cookies", "tabs"],
+  "permissions": ["tabs"],
   "host_permissions": ["https://engram.xyzdigital.com/"]
 }
