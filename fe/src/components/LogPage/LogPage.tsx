@@ -17,7 +17,6 @@ import moment from 'moment';
 import querystring from 'query-string';
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
-import { Link } from 'react-router-dom';
 
 import { DateHeader } from '../DateHeader/DateHeader';
 import { ReactComponent as EventIcon } from '../icons/EventIcon.svg';
@@ -140,7 +139,12 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
     setMenuAnchorEl(null);
   }
 
-  function handleNoteClicked(note: NotesApi.Note) {
+  function handleEditNote() {
+    const note = getNoteById(selectedNoteId);
+    if (!note) {
+      return;
+    }
+
     setTextBoxFocused(false);
     setNoteToEdit(note);
     setImmediate(() => {
@@ -202,10 +206,7 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
                   return (
                     <div key={note.localId}>
                       <Divider />
-                      <ListItem
-                        button
-                        onClick={handleNoteClicked.bind(this, note)}
-                      >
+                      <ListItem>
                         <ListItemIcon>
                           <IconButton
                             edge="start"
@@ -246,12 +247,7 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
                 onClose={setMenuAnchorEl.bind(this, null)}
                 TransitionComponent={Fade}
               >
-                <Link
-                  to={`/notes/${selectedNoteId}`}
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  <MenuItem>Edit</MenuItem>
-                </Link>
+                <MenuItem onClick={handleEditNote}>Edit</MenuItem>
                 {isShareEnabled ? (
                   <MenuItem onClick={handleShareClicked}>Share...</MenuItem>
                 ) : null}
