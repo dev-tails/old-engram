@@ -155,7 +155,7 @@ export default function Routes() {
           <LogPage />
         </AuthenticatedRoute>
         <Route exact path="/daily">
-          <LogPage daily={true} />
+          <LogPage date={date} onDateChanged={handleDateChanged} />
         </Route>
         {isPluginEnabled(PluginName.PLUGIN_DASHBOARD) ? (
           <AuthenticatedRoute exact={true} path="/dashboard">

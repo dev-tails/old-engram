@@ -9,11 +9,11 @@ import React, { useEffect } from 'react';
 
 export type DateHeaderProps = {
   dateRangeValue: string;
-  syncing: boolean;
+  syncing?: boolean;
   date?: Date;
   onDateChange: (date: Date) => void;
-  onDateRangeChange: (dateRange: string) => void;
-  onSyncClicked: () => void;
+  onDateRangeChange?: (dateRange: string) => void;
+  onSyncClicked?: () => void;
 };
 
 export const DateHeader: React.FC<DateHeaderProps> = ({
@@ -88,36 +88,40 @@ export const DateHeader: React.FC<DateHeaderProps> = ({
   };
 
   const handleDateRangeChanged = (newValue: string) => {
-    onDateRangeChange(newValue);
+    if (onDateRangeChange) {
+      onDateRangeChange(newValue);
+    }
   };
 
   return (
     <div className="date-header">
-      <>
-        <Select
-          className="date-range-button"
-          native
-          value={dateRangeValue}
-          onChange={(e) => {
-            handleDateRangeChanged(e.target.value as string);
-          }}
-          disableUnderline={true}
-        >
-          {["Day", "Week", "Fortnight", "Month", "Quarter", "Year"].map(
-            (option) => {
-              return (
-                <option
-                  key={option}
-                  value={option}
-                  title={`Alt + ${option[0]}`}
-                >
-                  {option}
-                </option>
-              );
-            }
-          )}
-        </Select>
-      </>
+      {onDateRangeChange ? (
+        <>
+          <Select
+            className="date-range-button"
+            native
+            value={dateRangeValue}
+            onChange={(e) => {
+              handleDateRangeChanged(e.target.value as string);
+            }}
+            disableUnderline={true}
+          >
+            {["Day", "Week", "Fortnight", "Month", "Quarter", "Year"].map(
+              (option) => {
+                return (
+                  <option
+                    key={option}
+                    value={option}
+                    title={`Alt + ${option[0]}`}
+                  >
+                    {option}
+                  </option>
+                );
+              }
+            )}
+          </Select>
+        </>
+      ) : null}
 
       <div className="date">
         <IconButton
@@ -148,13 +152,15 @@ export const DateHeader: React.FC<DateHeaderProps> = ({
           <ChevronRight />
         </IconButton>
 
-        <IconButton
-          className={`sync-icon ${syncing ? "syncing" : ""}`}
-          aria-label="sync"
-          onClick={onSyncClicked}
-        >
-          <SyncIcon />
-        </IconButton>
+        {onSyncClicked ? (
+          <IconButton
+            className={`sync-icon ${syncing ? "syncing" : ""}`}
+            aria-label="sync"
+            onClick={onSyncClicked}
+          >
+            <SyncIcon />
+          </IconButton>
+        ) : null}
       </div>
     </div>
   );

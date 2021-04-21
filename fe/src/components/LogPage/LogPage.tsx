@@ -19,6 +19,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
 
+import { DateHeader } from '../DateHeader/DateHeader';
 import { ReactComponent as EventIcon } from '../icons/EventIcon.svg';
 import { ReactComponent as NoteIcon } from '../icons/NoteIcon.svg';
 import { ReactComponent as TaskCompletedIcon } from '../icons/TaskCompletedIcon.svg';
@@ -28,7 +29,8 @@ import * as NotesApi from '../notes/NotesApi';
 import TextBox from '../textbox/TextBox';
 
 type LogPageProps = {
-  daily?: boolean;
+  date?: Date;
+  onDateChanged?: (date: Date) => void;
 };
 
 export const LogPage: React.FC<LogPageProps> = (props) => {
@@ -43,10 +45,10 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
 
   useEffect(() => {
     async function fetchNotes() {
-      if (props.daily) {
+      if (props.date) {
         const fetchedNotes = await NotesApi.getNotes({
-          since: moment().startOf("d").toDate(),
-          before: moment().startOf("d").toDate(),
+          since: moment(props.date).startOf("d").toDate(),
+          before: moment(props.date).startOf("d").toDate(),
         });
         setNotes(fetchedNotes);
       } else {
@@ -54,18 +56,24 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
       }
     }
     fetchNotes();
-  }, [props.daily]);
+  }, [props.date]);
 
   const handleSubmit = async (note: NotesApi.Note) => {
+    const date = props.date || new Date();
+    const noteWithDate = {
+      ...note,
+      date: moment(date).format("YYYY-MM-DD"),
+    };
+
     setTextBoxFocused(false);
     if (noteToEdit) {
       await handleNoteUpdated({
         ...noteToEdit,
-        ...note,
+        ...noteWithDate,
       });
       setNoteToEdit(null);
     } else {
-      const createdNote = await NotesApi.createNote(note);
+      const createdNote = await NotesApi.createNote(noteWithDate);
       setNotes([...notes, createdNote]);
     }
     setTextBoxFocused(true);
@@ -168,86 +176,101 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
     return <SvgIcon component={(iconByType as any)[type]}></SvgIcon>;
   }
 
+  function handleDateChanged(date: Date) {
+    if (props.onDateChanged) {
+      props.onDateChanged(date);
+    }
+  }
+
   const isShareEnabled = Boolean(navigator.share);
 
   return (
-    <div className="log-page">
-      <div className="log-page__content">
-        <div className="log-page__notes-container">
-          <div className="log-page__notes">
-            <List disablePadding={true}>
-              {notes.map((note) => {
-                return (
-                  <div key={note.localId}>
-                    <Divider />
-                    <ListItem
-                      button
-                      onClick={handleNoteClicked.bind(this, note)}
-                    >
-                      <ListItemIcon>
-                        <IconButton
-                          edge="start"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            handleToggleType(note);
-                          }}
-                        >
-                          {getNoteIcon(note)}
-                        </IconButton>
-                      </ListItemIcon>
-                      <ListItemText>
-                        <Markdown body={note.body || ""} />
-                      </ListItemText>
-                      <ListItemIcon>
-                        <IconButton
-                          edge="end"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            handleMoreClicked(note, e);
-                          }}
-                        >
-                          <MoreVertIcon />
-                        </IconButton>
-                      </ListItemIcon>
-                    </ListItem>
-                  </div>
-                );
-              })}
-            </List>
-            <Menu
-              id="fade-menu"
-              anchorEl={menuAnchoEl}
-              keepMounted
-              open={Boolean(menuAnchoEl)}
-              onClose={setMenuAnchorEl.bind(this, null)}
-              TransitionComponent={Fade}
-            >
-              <Link
-                to={`/notes/${selectedNoteId}`}
-                style={{ textDecoration: "none", color: "inherit" }}
+    <>
+      {props.date ? (
+        <DateHeader
+          date={props.date}
+          dateRangeValue="Day"
+          onDateChange={handleDateChanged}
+        />
+      ) : null}
+      <div className="log-page">
+        <div className="log-page__content">
+          <div className="log-page__notes-container">
+            <div className="log-page__notes">
+              <List disablePadding={true} dense={true}>
+                {notes.map((note) => {
+                  return (
+                    <div key={note.localId}>
+                      <Divider />
+                      <ListItem
+                        button
+                        onClick={handleNoteClicked.bind(this, note)}
+                      >
+                        <ListItemIcon>
+                          <IconButton
+                            edge="start"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleToggleType(note);
+                            }}
+                          >
+                            {getNoteIcon(note)}
+                          </IconButton>
+                        </ListItemIcon>
+                        <ListItemText>
+                          <Markdown body={note.body || ""} />
+                        </ListItemText>
+                        <ListItemIcon>
+                          <IconButton
+                            edge="end"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleMoreClicked(note, e);
+                            }}
+                          >
+                            <MoreVertIcon />
+                          </IconButton>
+                        </ListItemIcon>
+                      </ListItem>
+                    </div>
+                  );
+                })}
+              </List>
+              <Menu
+                id="fade-menu"
+                anchorEl={menuAnchoEl}
+                keepMounted
+                open={Boolean(menuAnchoEl)}
+                onClose={setMenuAnchorEl.bind(this, null)}
+                TransitionComponent={Fade}
               >
-                <MenuItem>Edit</MenuItem>
-              </Link>
-              {isShareEnabled ? (
-                <MenuItem onClick={handleShareClicked}>Share...</MenuItem>
-              ) : null}
-              <MenuItem onClick={handleRemoveClicked}>Remove</MenuItem>
-            </Menu>
+                <Link
+                  to={`/notes/${selectedNoteId}`}
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  <MenuItem>Edit</MenuItem>
+                </Link>
+                {isShareEnabled ? (
+                  <MenuItem onClick={handleShareClicked}>Share...</MenuItem>
+                ) : null}
+                <MenuItem onClick={handleRemoveClicked}>Remove</MenuItem>
+              </Menu>
+            </div>
+          </div>
+        </div>
+        <div className="log-page__footer">
+          <div className="log-page__textBox">
+            <TextBox
+              initialBody={initialBody}
+              initialType={initialType || "note"}
+              focused={textBoxFocused}
+              onSubmit={handleSubmit}
+            />
           </div>
         </div>
       </div>
-      <div className="log-page__footer">
-        <div className="log-page__textBox">
-          <TextBox
-            initialBody={initialBody}
-            initialType={initialType || "note"}
-            focused={textBoxFocused}
-            onSubmit={handleSubmit}
-          />
-        </div>
-      </div>
-    </div>
+    </>
   );
 };
