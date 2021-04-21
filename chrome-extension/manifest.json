@@ -1,5 +1,5 @@
 {
-  "name": "engram Web Clipper",
+  "name": "Send to engram",
   "description": "Send any website to engram",
   "version": "1.0",
   "manifest_version": 3,
@@ -19,6 +19,5 @@
     "48": "/images/logo48.png",
     "128": "/images/logo128.png"
   },
-  "permissions": ["tabs"],
-  "host_permissions": ["https://engram.xyzdigital.com/"]
+  "permissions": ["tabs"]
 }
