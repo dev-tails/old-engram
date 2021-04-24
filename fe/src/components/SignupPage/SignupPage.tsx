@@ -1,16 +1,16 @@
-import "./SignupPage.scss";
+import './SignupPage.scss';
 
-import { Button, Divider, TextField } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Button, Divider, TextField } from '@material-ui/core';
+import Axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 
-import { TermsOfServicePagePath } from "../../TermsOfServicePage/TermsOfServicePage";
-import { signUp } from "../../UsersApi";
-import { createLocalDevice } from "../../DeviceApi";
-import { Note } from "../notes/NotesApi";
-import { PrivacyPolicyPagePath } from "../PrivacyPolicyPage/PrivacyPolicyPage";
-import { DividerWithText } from "../login/DividerWithText/DividerWithText";
-import Axios from "axios";
+import { createLocalDevice } from '../../DeviceApi';
+import { TermsOfServicePagePath } from '../../TermsOfServicePage/TermsOfServicePage';
+import { signUp } from '../../UsersApi';
+import { DividerWithText } from '../login/DividerWithText/DividerWithText';
+import { Note } from '../notes/NotesApi';
+import { PrivacyPolicyPagePath } from '../PrivacyPolicyPage/PrivacyPolicyPage';
 
 export type SignupPageProps = {};
 
@@ -82,18 +82,6 @@ export default function SignupPage(props: SignupPageProps) {
           />
         </div>
 
-        <div id="use-without-account">
-          <Button
-            onClick={handleUseWithoutAccount}
-            variant="contained"
-            color="primary"
-          >
-            Use Offline Without Account
-          </Button>
-        </div>
-
-        <DividerWithText>Or</DividerWithText>
-
         {enabled ? (
           <div className="signup">
             <div className="errors">
@@ -101,6 +89,17 @@ export default function SignupPage(props: SignupPageProps) {
                 return error;
               })}
             </div>
+
+            <p>
+              The full version of engram is currently in beta - limited space
+              available.
+            </p>
+            <p>
+              As a beta user, you will receive a free account and access to new
+              functionality first. In exchange, we will occasionally send out
+              surveys requesting feedback.
+            </p>
+
             <TextField
               id="username"
               autoComplete="off"
@@ -151,6 +150,18 @@ export default function SignupPage(props: SignupPageProps) {
             to be contacted as soon as more spots open!
           </p>
         )}
+
+        <DividerWithText>Or</DividerWithText>
+
+        <div id="use-without-account">
+          <Button
+            onClick={handleUseWithoutAccount}
+            variant="contained"
+            color="primary"
+          >
+            Try Offline Without Account
+          </Button>
+        </div>
 
         <Divider />
         <Link to="/login">
