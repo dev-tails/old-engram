@@ -223,16 +223,18 @@ export const Header: React.FC<HeaderProps> = ({
 
           <div className="spacer" />
 
-          <Link to="/quick-capture">
-            <IconButton className="logo" edge="end">
-              <img
-                alt="engram logo"
-                width="36"
-                height="36"
-                src="/images/logo.svg"
-              />
-            </IconButton>
-          </Link>
+          {!isPublicRoute ? (
+            <Link to="/quick-capture">
+              <IconButton className="logo" edge="end">
+                <img
+                  alt="engram logo"
+                  width="36"
+                  height="36"
+                  src="/images/logo.svg"
+                />
+              </IconButton>
+            </Link>
+          ) : null}
         </Toolbar>
       </AppBar>
       <React.Fragment>
