@@ -27,16 +27,16 @@ class Note(models.Model):
     _id = ObjectIdField()
     localId = models.CharField(max_length=37)
 
-    user = models.ForeignKey("User", on_delete=models.CASCADE)
+    # user = models.ForeignKey("User", db_column="user", on_delete=models.CASCADE)
 
     type = models.CharField(max_length=15, choices=NOTE_TYPE_CHOICES, default="note")
     body = models.TextField()
 
-    start = models.DateTimeField()
+    start = models.DateTimeField(blank=True)
 
-    createdAt = models.DateTimeField()
-    syncedAt = models.DateTimeField()
-    updatedAt = models.DateTimeField()
+    createdAt = models.DateTimeField(blank=True)
+    syncedAt = models.DateTimeField(blank=True)
+    updatedAt = models.DateTimeField(blank=True)
 
     class Meta:
         db_table = "notes"
