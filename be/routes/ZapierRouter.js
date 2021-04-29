@@ -27,13 +27,13 @@ export function initializeZapierRouter() {
   router.post("/notes", async function (req, res) {
     const { user, db } = req;
 
-    const insertOpResult = await db
-      .collection("notes")
-      .insertOne({
-        user: ObjectId(user),
-        body: req.body.body,
-        date: moment().format("YYYY-MM-DD"),
-      });
+    const insertOpResult = await db.collection("notes").insertOne({
+      user: ObjectId(user),
+      type: req.body.type,
+      body: req.body.body,
+      date: moment().format("YYYY-MM-DD"),
+      syncedAt: new Date(),
+    });
 
     const newNote = await db.collection("notes").findOne({
       _id: insertOpResult.insertedId,
