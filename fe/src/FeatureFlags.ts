@@ -1,7 +1,8 @@
 export enum PluginName {
-  PLUGIN_WORKSPACES = "Workspaces",
   PLUGIN_DASHBOARD = "Dashboard",
   PLUGIN_PAGES = "Pages",
+  PLUGIN_WORKSPACES = "Workspaces",
+  PLUGIN_ZAPIER = "Zapier",
 }
 
 const localStorageKey = "plugins";

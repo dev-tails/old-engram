@@ -1,24 +1,32 @@
-import moment from 'moment';
-import React, { useEffect, useState } from 'react';
-import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
+import moment from "moment";
+import React, { useEffect, useState } from "react";
+import { Redirect, Route, Switch, useLocation } from "react-router-dom";
 
-import { DebugNotesPage } from '../components/DebugNotesPage/DebugNotesPage';
-import { Header } from '../components/header/Header';
-import { HelpPage } from '../components/HelpPage/HelpPage';
-import { ZapierHelpPage } from '../components/HelpPage/ZapierHelpPage/ZapierHelpPage';
-import { HomePage } from '../components/HomePage/HomePage';
-import LoginPage, { LoginPagePath } from '../components/login/LoginPage';
-import { LogoutPage } from '../components/LogoutPage/LogoutPage';
-import { LogPage } from '../components/LogPage/LogPage';
-import { EditNotePage } from '../components/notes/EditNotePage/EditNotePage';
-import { PagesPage } from '../components/PagesPage/PagesPage';
-import { PrivacyPolicyPage, PrivacyPolicyPagePath } from '../components/PrivacyPolicyPage/PrivacyPolicyPage';
-import { SettingsPage } from '../components/SettingsPage/SettingsPage';
-import SignupPage, { SignupPagePath } from '../components/SignupPage/SignupPage';
-import { hasLocalDevice } from '../DeviceApi';
-import { isPluginEnabled, PluginName } from '../FeatureFlags';
-import { TermsOfServicePage, TermsOfServicePagePath } from '../TermsOfServicePage/TermsOfServicePage';
-import { getMe } from '../UsersApi';
+import { DebugNotesPage } from "../components/DebugNotesPage/DebugNotesPage";
+import { Header } from "../components/header/Header";
+import { HelpPage } from "../components/HelpPage/HelpPage";
+import { ZapierHelpPage } from "../components/HelpPage/ZapierHelpPage/ZapierHelpPage";
+import { HomePage } from "../components/HomePage/HomePage";
+import LoginPage, { LoginPagePath } from "../components/login/LoginPage";
+import { LogoutPage } from "../components/LogoutPage/LogoutPage";
+import { LogPage } from "../components/LogPage/LogPage";
+import { EditNotePage } from "../components/notes/EditNotePage/EditNotePage";
+import { PagesPage } from "../components/PagesPage/PagesPage";
+import {
+  PrivacyPolicyPage,
+  PrivacyPolicyPagePath,
+} from "../components/PrivacyPolicyPage/PrivacyPolicyPage";
+import { SettingsPage } from "../components/SettingsPage/SettingsPage";
+import SignupPage, {
+  SignupPagePath,
+} from "../components/SignupPage/SignupPage";
+import { hasLocalDevice } from "../DeviceApi";
+import { isPluginEnabled, PluginName } from "../FeatureFlags";
+import {
+  TermsOfServicePage,
+  TermsOfServicePagePath,
+} from "../TermsOfServicePage/TermsOfServicePage";
+import { getMe } from "../UsersApi";
 
 function getStartDate(date: Date, dateRangeValue: string) {
   switch (dateRangeValue) {
@@ -191,7 +199,7 @@ export default function Routes() {
         <Route exact path="/help">
           <HelpPage />
         </Route>
-        <Route exact path="/help/zapier">
+        <Route exact path="/settings/zapier">
           <ZapierHelpPage />
         </Route>
         <Route exact path={PrivacyPolicyPagePath}>
