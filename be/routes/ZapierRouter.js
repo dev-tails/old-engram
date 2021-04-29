@@ -36,6 +36,29 @@ export function initializeZapierRouter() {
     res.json(newNote);
   });
 
+  router.post("/zap", async function (req, res) {
+    const { user, db } = req;
+
+    const ZapierHooks = db.collection("zapier-hooks");
+    const hooks = await ZapierHooks.find({
+      user: ObjectId(user),
+      type: "zap",
+    }).toArray();
+
+    const noteToZap = {
+      type: req.body.type,
+      body: req.body.body,
+    };
+
+    const promises = hooks.map((hook) => {
+      return axios.post(hook.hookUrl, noteToZap);
+    });
+
+    await Promise.all(promises);
+
+    res.json({});
+  });
+
   router.post("/hooks/subscribe", async function (req, res) {
     const { user, db, body } = req;
     const { hookUrl, type } = body;
