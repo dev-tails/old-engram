@@ -73,7 +73,7 @@ export function initializeZapierRouter() {
     res.json({});
   });
 
-  router.post("/hooks/unsubscribe", async function (req, res) {
+  router.delete("/hooks/unsubscribe", async function (req, res) {
     const { user, db, body } = req;
     const { hookUrl } = body;
 
