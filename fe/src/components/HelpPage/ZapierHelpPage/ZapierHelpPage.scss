@@ -1,4 +1,10 @@
 .zapier-help-page {
+  position: absolute;
+  top: 64px;
+  bottom: 0px;
+  width: 100%;
+  overflow-y: scroll;
+
   .keys {
     display: table;
     width: 100%;
@@ -12,5 +18,9 @@
         width: 100%;
       }
     }
+  }
+
+  img {
+    width: 100%;
   }
 }
