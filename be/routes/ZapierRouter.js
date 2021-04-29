@@ -3,6 +3,7 @@ import { ObjectId } from "../Database.js";
 import { UnauthorizedError } from "../middleware/AuthMiddleware.js";
 import { AuthAPIKeyMiddleware } from "../middleware/AuthAPIKeyMiddleware.js";
 import { AuthRequiredMiddleware } from "../middleware/AuthRequiredMiddleware.js";
+import axios from "axios";
 
 export function initializeZapierRouter() {
   const router = express.Router();
