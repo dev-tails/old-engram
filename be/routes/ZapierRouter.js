@@ -4,6 +4,7 @@ import { UnauthorizedError } from "../middleware/AuthMiddleware.js";
 import { AuthAPIKeyMiddleware } from "../middleware/AuthAPIKeyMiddleware.js";
 import { AuthRequiredMiddleware } from "../middleware/AuthRequiredMiddleware.js";
 import axios from "axios";
+import moment from "moment";
 
 export function initializeZapierRouter() {
   const router = express.Router();
@@ -28,7 +29,11 @@ export function initializeZapierRouter() {
 
     const insertOpResult = await db
       .collection("notes")
-      .insertOne({ user: ObjectId(user), body: req.body.body });
+      .insertOne({
+        user: ObjectId(user),
+        body: req.body.body,
+        date: moment().format("YYYY-MM-DD"),
+      });
 
     const newNote = await db.collection("notes").findOne({
       _id: insertOpResult.insertedId,
