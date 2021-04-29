@@ -10,13 +10,12 @@ const localStorageKey = "plugins";
 let plugins: { [key: string]: boolean } = {};
 
 export async function initializePlugins() {
+  for (const key of Object.values(PluginName)) {
+    plugins[key] = false;
+  }
   const storedPluginsJSON = localStorage.getItem(localStorageKey);
   if (storedPluginsJSON) {
-    plugins = JSON.parse(storedPluginsJSON);
-  } else {
-    for (const key of Object.values(PluginName)) {
-      plugins[key] = false;
-    }
+    Object.assign(plugins, JSON.parse(storedPluginsJSON));
   }
 }
 
