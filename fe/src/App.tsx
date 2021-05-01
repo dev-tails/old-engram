@@ -9,7 +9,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { BrowserRouter as Router } from 'react-router-dom';
 
-import { initializePlugins } from './FeatureFlags';
+import { initializePlugins } from './Plugins';
 import Routes from './routes/Routes';
 
 let theme = createMuiTheme({

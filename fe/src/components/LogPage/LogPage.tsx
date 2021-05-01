@@ -1,4 +1,4 @@
-import "./LogPage.scss";
+import './LogPage.scss';
 
 import {
   Divider,
@@ -11,23 +11,23 @@ import {
   Menu,
   MenuItem,
   SvgIcon,
-} from "@material-ui/core";
-import { MoreVert as MoreVertIcon } from "@material-ui/icons";
-import moment from "moment";
-import querystring from "query-string";
-import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router";
+} from '@material-ui/core';
+import { MoreVert as MoreVertIcon } from '@material-ui/icons';
+import moment from 'moment';
+import querystring from 'query-string';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router';
 
-import { DateHeader } from "../DateHeader/DateHeader";
-import { ReactComponent as EventIcon } from "../icons/EventIcon.svg";
-import { ReactComponent as NoteIcon } from "../icons/NoteIcon.svg";
-import { ReactComponent as TaskCompletedIcon } from "../icons/TaskCompletedIcon.svg";
-import { ReactComponent as TaskIcon } from "../icons/TaskIcon.svg";
-import { Markdown } from "../Markdown/Markdown";
-import * as NotesApi from "../notes/NotesApi";
-import TextBox from "../textbox/TextBox";
-import { isPluginEnabled, PluginName } from "../../FeatureFlags";
-import { zapNote } from "../../ZapierApi";
+import { isPluginEnabled, PluginName } from '../../Plugins';
+import { zapNote } from '../../ZapierApi';
+import { DateHeader } from '../DateHeader/DateHeader';
+import { ReactComponent as EventIcon } from '../icons/EventIcon.svg';
+import { ReactComponent as NoteIcon } from '../icons/NoteIcon.svg';
+import { ReactComponent as TaskCompletedIcon } from '../icons/TaskCompletedIcon.svg';
+import { ReactComponent as TaskIcon } from '../icons/TaskIcon.svg';
+import { Markdown } from '../Markdown/Markdown';
+import * as NotesApi from '../notes/NotesApi';
+import TextBox from '../textbox/TextBox';
 
 type LogPageProps = {
   date?: Date;

@@ -33,8 +33,8 @@ import {
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
-import { isPluginEnabled, PluginName } from '../../FeatureFlags';
 import { ReactComponent as EngramLogo } from '../../logo.svg';
+import { isPluginEnabled, PluginName } from '../../Plugins';
 import { Holdable } from '../Holdable/Holdable';
 import { createOrUpdateNote, getNotes, Note, removeNote } from '../notes/NotesApi';
 
