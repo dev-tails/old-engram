@@ -16,6 +16,7 @@ import { PrivacyPolicyPage, PrivacyPolicyPagePath } from '../components/PrivacyP
 import { SettingsPage } from '../components/SettingsPage/SettingsPage';
 import SignupPage, { SignupPagePath } from '../components/SignupPage/SignupPage';
 import { hasLocalDevice } from '../DeviceApi';
+import { EncryptionPage } from '../pages/settings/EncryptionPage';
 import { isPluginEnabled, PluginName } from '../Plugins';
 import { TermsOfServicePage, TermsOfServicePagePath } from '../TermsOfServicePage/TermsOfServicePage';
 import { getMe } from '../UsersApi';
@@ -190,6 +191,9 @@ export default function Routes() {
         </Route>
         <Route exact path="/help">
           <HelpPage />
+        </Route>
+        <Route exact path="/settings/encryption">
+          <EncryptionPage />
         </Route>
         <Route exact path="/settings/zapier">
           <ZapierHelpPage />
