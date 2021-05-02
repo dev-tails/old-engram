@@ -38,7 +38,7 @@ export async function encrypt(
   };
 }
 
-export async function decrypt(jwk: JsonWebKey, iv: Uint8Array, data: string) {
+export async function decrypt(jwk: JsonWebKey, iv: string, data: string) {
   const key = await window.crypto.subtle.importKey(
     "jwk",
     jwk,
@@ -50,7 +50,7 @@ export async function decrypt(jwk: JsonWebKey, iv: Uint8Array, data: string) {
   let decrypted = await window.crypto.subtle.decrypt(
     {
       name: algorithm,
-      iv: iv,
+      iv: str2ab(iv),
     },
     key,
     dataIntArray

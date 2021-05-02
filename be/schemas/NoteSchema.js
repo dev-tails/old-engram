@@ -5,6 +5,7 @@ export default yup.object().shape({
   date: yup.string(),
   body: yup.string().default(""),
   encryptedBody: yup.string(),
+  iv: yup.string(),
   start: yup.date(),
   type: yup
     .string()

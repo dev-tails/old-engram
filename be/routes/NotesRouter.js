@@ -186,6 +186,7 @@ export function initializeNotesRouter() {
       date: yup.string(),
       body: yup.string(),
       encryptedBody: yup.string(),
+      iv: yup.string(),
       type: yup.string().default("note"),
       parent: yup.string(),
       prev: yup.string(),

@@ -38,7 +38,7 @@ export type Note = {
   start?: Date;
   parent?: string;
   prev?: string;
-  iv?: Uint8Array;
+  iv?: string;
   encryptedBody?: string;
   createdAt?: Date;
   updatedAt?: Date;

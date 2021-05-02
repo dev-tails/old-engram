@@ -31,12 +31,13 @@ export async function createNote(note: Partial<Note>) {
       const { iv, encrypted } = await CryptoUtils.encrypt(key, note.body);
 
       if (iv && encrypted) {
-        noteCopy.iv = iv;
+        noteCopy.iv = CryptoUtils.ab2str(iv);
         noteCopy.encryptedBody = CryptoUtils.ab2str(encrypted);
       }
     }
   }
 
+  console.log(noteCopy);
   let noteToCreate = await db.addNote(noteCopy);
 
   await createRemoteNote(noteToCreate);
@@ -118,7 +119,7 @@ export async function getAllNotes(): Promise<any[]> {
         .then(async (res) => {
           const serverNotes: Note[] = [];
           if (device) {
-            const newServerNotes = res.data;
+            const newServerNotes = res.data as Note[];
             let promises = [];
             const batchSize = 500;
             for (const note of newServerNotes) {
@@ -126,21 +127,26 @@ export async function getAllNotes(): Promise<any[]> {
               if (
                 isPluginEnabled(PluginName.PLUGIN_ENCRYPTION) &&
                 key &&
+                noteCopy.iv &&
                 noteCopy.encryptedBody
               ) {
-                const decoded = await CryptoUtils.decrypt(
-                  key,
-                  noteCopy.iv,
-                  noteCopy.encryptedBody
-                );
-                noteCopy.body = decoded;
+                try {
+                  const decoded = await CryptoUtils.decrypt(
+                    key,
+                    noteCopy.iv,
+                    noteCopy.encryptedBody
+                  );
+                  noteCopy.body = decoded;
+                } catch (err) {
+                  noteCopy.body = `Failed to decrypt: ${err.message}`;
+                }
               }
 
               promises.push(
                 db
                   .insertOrUpdateNote({
                     ...noteCopy,
-                    localId: note.localId || note._id,
+                    localId: note.localId || (note._id as string),
                   })
                   .then((noteWithLocalId) => {
                     serverNotes.push(noteWithLocalId);
