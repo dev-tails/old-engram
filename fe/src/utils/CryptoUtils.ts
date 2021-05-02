@@ -1,5 +1,12 @@
 const algorithm = "AES-GCM";
 
+export async function getKeyFromJwk(jwk: JsonWebKey) {
+  return window.crypto.subtle.importKey("jwk", jwk, algorithm, false, [
+    "encrypt",
+    "decrypt",
+  ]);
+}
+
 export async function encrypt(
   jwk: JsonWebKey,
   data: string | null | undefined
@@ -11,13 +18,7 @@ export async function encrypt(
     };
   }
 
-  const key = await window.crypto.subtle.importKey(
-    "jwk",
-    jwk,
-    algorithm,
-    false,
-    ["encrypt", "decrypt"]
-  );
+  const key = await getKeyFromJwk(jwk);
   const iv = window.crypto.getRandomValues(new Uint8Array(12));
 
   let encoder = new TextEncoder();
@@ -39,13 +40,7 @@ export async function encrypt(
 }
 
 export async function decrypt(jwk: JsonWebKey, iv: string, data: string) {
-  const key = await window.crypto.subtle.importKey(
-    "jwk",
-    jwk,
-    algorithm,
-    false,
-    ["encrypt", "decrypt"]
-  );
+  const key = await getKeyFromJwk(jwk);
   const dataIntArray = str2ab(data);
   let decrypted = await window.crypto.subtle.decrypt(
     {
