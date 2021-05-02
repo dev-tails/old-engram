@@ -8,7 +8,7 @@ type EncryptionPageProps = {};
 
 export const EncryptionPage: React.FC<EncryptionPageProps> = (props) => {
   const [key, setKey] = useState<JsonWebKey | null>(null);
-  const [showPassword, setShowPassword] = useState(false);
+  const [showKey, setShowKey] = useState(false);
 
   useEffect(() => {
     async function fetchKey() {
@@ -32,11 +32,11 @@ export const EncryptionPage: React.FC<EncryptionPageProps> = (props) => {
     const jwk = await subtle.exportKey("jwk", key);
     await addKey(jwk);
     setKey(jwk);
-    setShowPassword(true);
+    setShowKey(true);
   }
 
-  function handleToggleShowPassword() {
-    setShowPassword(!showPassword);
+  function handleToggleShowKey() {
+    setShowKey(!showKey);
   }
 
   return (
@@ -48,11 +48,11 @@ export const EncryptionPage: React.FC<EncryptionPageProps> = (props) => {
           <button onClick={handleGenerateKey}>Generate</button>
         ) : (
           <>
-            <button onClick={handleToggleShowPassword}>
-              {showPassword ? "Hide" : "Show"} Password
+            <button onClick={handleToggleShowKey}>
+              {showKey ? "Hide" : "Show"} Key
             </button>
             <br />
-            {showPassword ? <code>{JSON.stringify(key, null, 2)}</code> : null}
+            {showKey ? <code>{JSON.stringify(key, null, 2)}</code> : null}
           </>
         )}
       </div>
