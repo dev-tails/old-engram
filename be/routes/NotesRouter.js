@@ -1,11 +1,11 @@
-import express from "express";
-import yup from "yup";
+import express from 'express';
+import yup from 'yup';
 
-import { ObjectId } from "../Database.js";
-import { UnauthorizedError } from "../middleware/AuthMiddleware.js";
-import { AuthRequiredMiddleware } from "../middleware/AuthRequiredMiddleware.js";
-import NoteSchema from "../schemas/NoteSchema.js";
-import { handleNewNote } from "../vendor/zapier/Zapier.js";
+import { ObjectId } from '../Database.js';
+import { UnauthorizedError } from '../middleware/AuthMiddleware.js';
+import { AuthRequiredMiddleware } from '../middleware/AuthRequiredMiddleware.js';
+import NoteSchema from '../schemas/NoteSchema.js';
+import { handleNewNote } from '../vendor/zapier/Zapier.js';
 
 export function initializeNotesRouter() {
   const router = express.Router();
@@ -184,7 +184,8 @@ export function initializeNotesRouter() {
     const bodySchema = yup.object().shape({
       start: yup.date(),
       date: yup.string(),
-      body: yup.string().default(""),
+      body: yup.string(),
+      encryptedBody: yup.string(),
       type: yup.string().default("note"),
       parent: yup.string(),
       prev: yup.string(),

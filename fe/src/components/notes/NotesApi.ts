@@ -7,7 +7,9 @@ import { validate as validateUuid } from 'uuid';
 import * as Api from '../../Api';
 import * as db from '../../db/db';
 import { updateDevice } from '../../DeviceApi';
+import { isPluginEnabled, PluginName } from '../../Plugins';
 import * as UsersApi from '../../UsersApi';
+import * as CryptoUtils from '../../utils/CryptoUtils';
 
 export type Note = db.Note;
 export type NoteType = db.NoteType;
@@ -21,7 +23,21 @@ export async function createOrUpdateNote(note: Partial<Note>) {
 
 export async function createNote(note: Partial<Note>) {
   const date = note.date || moment().format("YYYY-MM-DD");
-  let noteToCreate = await db.addNote({ ...note, localId: db.getId(), date });
+  const noteCopy = { ...note, localId: db.getId(), date };
+
+  if (isPluginEnabled(PluginName.PLUGIN_ENCRYPTION)) {
+    const key = await db.getKey();
+    if (key) {
+      const { iv, encrypted } = await CryptoUtils.encrypt(key, note.body);
+
+      if (iv && encrypted) {
+        noteCopy.iv = iv;
+        noteCopy.encryptedBody = CryptoUtils.ab2str(encrypted);
+      }
+    }
+  }
+
+  let noteToCreate = await db.addNote(noteCopy);
 
   await createRemoteNote(noteToCreate);
 
@@ -35,8 +51,13 @@ export async function createNote(note: Partial<Note>) {
 export async function createRemoteNote(note: Partial<Note>) {
   const isAuthenticatedUser = await UsersApi.isAuthenticatedUser();
   if (isAuthenticatedUser) {
+    const noteCopy = { ...note };
+    if (isPluginEnabled(PluginName.PLUGIN_ENCRYPTION)) {
+      delete noteCopy["body"];
+    }
+
     axios
-      .post("/api/notes", note)
+      .post("/api/notes", noteCopy)
       .then((res) => {
         const addedNote = res.data;
         updateCachedNoteByLocalId(addedNote);
