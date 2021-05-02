@@ -132,6 +132,8 @@ export function initializeNotesRouter() {
     const bodySchema = yup.object().shape({
       start: yup.date(),
       body: yup.string(),
+      encryptedBody: yup.string(),
+      iv: yup.string(),
       type: yup.string().default("note"),
       parent: yup.string(),
       prev: yup.string(),

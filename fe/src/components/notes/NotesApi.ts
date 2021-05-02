@@ -344,8 +344,23 @@ export async function updateNote(note: Note): Promise<Note> {
 
   if (await UsersApi.isAuthenticatedUser()) {
     const id = updatedNote._id || updatedNote.localId;
+
+    const noteCopy = { ...updatedNote };
+    if (isPluginEnabled(PluginName.PLUGIN_ENCRYPTION)) {
+      const key = await db.getKey();
+      if (key) {
+        const { iv, encrypted } = await CryptoUtils.encrypt(key, note.body);
+
+        if (iv && encrypted) {
+          noteCopy.iv = CryptoUtils.ab2str(iv);
+          noteCopy.encryptedBody = CryptoUtils.ab2str(encrypted);
+          delete noteCopy["body"];
+        }
+      }
+    }
+
     axios
-      .put(`/api/notes/${id}`, updatedNote)
+      .put(`/api/notes/${id}`, noteCopy)
       .then(async (res) => {
         const serverUpdatedNote = res.data;
         updateCachedNoteByLocalId(serverUpdatedNote);
