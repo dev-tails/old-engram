@@ -113,6 +113,7 @@ export async function getAllNotes(): Promise<any[]> {
         });
       }
       const syncDate = new Date();
+      let key = await db.getKey();
       const serverNotesPromise = Api.get(`/api/notes?${qs}`)
         .then(async (res) => {
           const serverNotes: Note[] = [];
@@ -121,10 +122,24 @@ export async function getAllNotes(): Promise<any[]> {
             let promises = [];
             const batchSize = 500;
             for (const note of newServerNotes) {
+              const noteCopy = { ...note };
+              if (
+                isPluginEnabled(PluginName.PLUGIN_ENCRYPTION) &&
+                key &&
+                noteCopy.encryptedBody
+              ) {
+                const decoded = await CryptoUtils.decrypt(
+                  key,
+                  noteCopy.iv,
+                  noteCopy.encryptedBody
+                );
+                noteCopy.body = decoded;
+              }
+
               promises.push(
                 db
                   .insertOrUpdateNote({
-                    ...note,
+                    ...noteCopy,
                     localId: note.localId || note._id,
                   })
                   .then((noteWithLocalId) => {

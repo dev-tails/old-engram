@@ -38,18 +38,22 @@ export async function encrypt(
   };
 }
 
-export async function decrpyt(
-  key: CryptoKey,
-  iv: Uint8Array,
-  data: Uint8Array
-) {
+export async function decrypt(jwk: JsonWebKey, iv: Uint8Array, data: string) {
+  const key = await window.crypto.subtle.importKey(
+    "jwk",
+    jwk,
+    algorithm,
+    false,
+    ["encrypt", "decrypt"]
+  );
+  const dataIntArray = str2ab(data);
   let decrypted = await window.crypto.subtle.decrypt(
     {
       name: algorithm,
       iv: iv,
     },
     key,
-    data
+    dataIntArray
   );
 
   let dec = new TextDecoder();
