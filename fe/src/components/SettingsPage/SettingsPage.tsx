@@ -1,20 +1,12 @@
-import "./SettingsPage.scss";
+import './SettingsPage.scss';
 
-import {
-  Checkbox,
-  IconButton,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  ListSubheader,
-} from "@material-ui/core";
-import _ from "lodash";
-import React, { useState } from "react";
+import { Checkbox, IconButton, List, ListItem, ListItemIcon, ListItemText, ListSubheader } from '@material-ui/core';
+import { Settings } from '@material-ui/icons';
+import _ from 'lodash';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
-import { getPlugins, togglePlugin } from "../../FeatureFlags";
-import { Settings } from "@material-ui/icons";
-import { Link } from "react-router-dom";
+import { getPlugins, togglePlugin } from '../../Plugins';
 
 type SettingsPageProps = {};
 
@@ -30,6 +22,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = (props) => {
 
   function getSettingsRouteForPluginName(pluginName: string) {
     const pluginToSettingsMap: { [key: string]: string } = {
+      Encryption: "/settings/encryption",
       Zapier: "/settings/zapier",
     };
     return pluginToSettingsMap[pluginName];

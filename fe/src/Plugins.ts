@@ -1,5 +1,6 @@
 export enum PluginName {
   PLUGIN_DASHBOARD = "Dashboard",
+  PLUGIN_ENCRYPTION = "Encryption",
   PLUGIN_PAGES = "Pages",
   PLUGIN_WORKSPACES = "Workspaces",
   PLUGIN_ZAPIER = "Zapier",
