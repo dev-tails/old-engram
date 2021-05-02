@@ -1,12 +1,22 @@
 import './EncryptionPage.scss';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
+import { addKey, getKey } from '../../db/db';
 
 type EncryptionPageProps = {};
 
 export const EncryptionPage: React.FC<EncryptionPageProps> = (props) => {
   const [key, setKey] = useState<JsonWebKey | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    async function fetchKey() {
+      const key = await getKey();
+      setKey(key);
+    }
+    fetchKey();
+  }, []);
 
   const subtle = window.crypto.subtle;
 
@@ -20,6 +30,7 @@ export const EncryptionPage: React.FC<EncryptionPageProps> = (props) => {
       ["encrypt", "decrypt"]
     );
     const jwk = await subtle.exportKey("jwk", key);
+    await addKey(jwk);
     setKey(jwk);
     setShowPassword(true);
   }

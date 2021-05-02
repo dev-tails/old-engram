@@ -1,5 +1,7 @@
-import { DBSchema, IDBPDatabase, openDB } from "idb";
-import { v4 as uuidv4 } from "uuid";
+import { DBSchema, IDBPDatabase, openDB } from 'idb';
+import { v4 as uuidv4 } from 'uuid';
+
+import { Key } from './Key';
 
 export type NoteType =
   | "note"
@@ -53,6 +55,10 @@ interface MyDB extends DBSchema {
     value: Device;
     key: string;
   };
+  keys: {
+    value: Key;
+    key: string;
+  };
   notes: {
     value: Note;
     key: string;
@@ -60,33 +66,44 @@ interface MyDB extends DBSchema {
   };
 }
 
-let _db: IDBPDatabase<MyDB> | null = null;
+let _db: Promise<IDBPDatabase<MyDB>> | null = null;
 
-export async function initializeDb() {
+export function initializeDb() {
   if (_db) {
     return _db;
   }
 
-  _db = await openDB<MyDB>("engram-db", 1, {
-    upgrade(db) {
-      const notesStore = db.createObjectStore("notes", {
-        keyPath: "localId",
-      });
+  _db = openDB<MyDB>("engram-db", 2, {
+    upgrade(db, oldVersion, newVersion) {
+      if (oldVersion < 1) {
+        const notesStore = db.createObjectStore("notes", {
+          keyPath: "localId",
+        });
 
-      notesStore.createIndex("parent", "parent");
+        notesStore.createIndex("parent", "parent");
 
-      db.createObjectStore("devices", {
-        keyPath: "localId",
-      });
+        db.createObjectStore("devices", {
+          keyPath: "localId",
+        });
+      }
+
+      if (oldVersion < 2) {
+        db.createObjectStore("keys", {
+          keyPath: "localId",
+        });
+      }
     },
   });
 
   return _db;
 }
 
-export function destroyDb() {
-  _db?.clear("devices");
-  _db?.clear("notes");
+export async function destroyDb() {
+  const db = await initializeDb();
+
+  db.clear("devices");
+  db.clear("keys");
+  db.clear("notes");
 }
 
 export function getId() {
@@ -165,4 +182,27 @@ export async function putDevice(value: MyDB["devices"]["value"]) {
   const db = await initializeDb();
   await db.put("devices", { ...value, updatedAt: new Date() });
   return value;
+}
+
+export async function addKey(key: JsonWebKey): Promise<Key> {
+  const db = await initializeDb();
+  const date = new Date();
+  const newKey = {
+    ...key,
+    localId: getId(),
+    createdAt: date,
+    updatedAt: date,
+  } as Key;
+  await db.add("keys", newKey);
+  return newKey;
+}
+
+export async function getKey() {
+  const db = await initializeDb();
+  const keys = await db.getAll("keys");
+  if (keys.length) {
+    return keys[0];
+  } else {
+    return null;
+  }
 }
