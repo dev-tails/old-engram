@@ -1,9 +1,11 @@
-import yup from "yup";
+import yup from 'yup';
 
 export default yup.object().shape({
   _id: yup.string().required(),
   date: yup.string(),
   body: yup.string().default(""),
+  encryptedBody: yup.string(),
+  iv: yup.string(),
   start: yup.date(),
   type: yup
     .string()

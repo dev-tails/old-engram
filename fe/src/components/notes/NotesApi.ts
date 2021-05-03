@@ -7,7 +7,9 @@ import { validate as validateUuid } from 'uuid';
 import * as Api from '../../Api';
 import * as db from '../../db/db';
 import { updateDevice } from '../../DeviceApi';
+import { isPluginEnabled, PluginName } from '../../Plugins';
 import * as UsersApi from '../../UsersApi';
+import * as CryptoUtils from '../../utils/CryptoUtils';
 
 export type Note = db.Note;
 export type NoteType = db.NoteType;
@@ -21,7 +23,22 @@ export async function createOrUpdateNote(note: Partial<Note>) {
 
 export async function createNote(note: Partial<Note>) {
   const date = note.date || moment().format("YYYY-MM-DD");
-  let noteToCreate = await db.addNote({ ...note, localId: db.getId(), date });
+  const noteCopy = { ...note, localId: db.getId(), date };
+
+  if (isPluginEnabled(PluginName.PLUGIN_ENCRYPTION)) {
+    const key = await db.getKey();
+    if (key) {
+      const { iv, encrypted } = await CryptoUtils.encrypt(key, note.body);
+
+      if (iv && encrypted) {
+        noteCopy.iv = CryptoUtils.ab2str(iv);
+        noteCopy.encryptedBody = CryptoUtils.ab2str(encrypted);
+      }
+    }
+  }
+
+  console.log(noteCopy);
+  let noteToCreate = await db.addNote(noteCopy);
 
   await createRemoteNote(noteToCreate);
 
@@ -35,8 +52,13 @@ export async function createNote(note: Partial<Note>) {
 export async function createRemoteNote(note: Partial<Note>) {
   const isAuthenticatedUser = await UsersApi.isAuthenticatedUser();
   if (isAuthenticatedUser) {
+    const noteCopy = { ...note };
+    if (isPluginEnabled(PluginName.PLUGIN_ENCRYPTION)) {
+      delete noteCopy["body"];
+    }
+
     axios
-      .post("/api/notes", note)
+      .post("/api/notes", noteCopy)
       .then((res) => {
         const addedNote = res.data;
         updateCachedNoteByLocalId(addedNote);
@@ -92,19 +114,39 @@ export async function getAllNotes(): Promise<any[]> {
         });
       }
       const syncDate = new Date();
+      let key = await db.getKey();
       const serverNotesPromise = Api.get(`/api/notes?${qs}`)
         .then(async (res) => {
           const serverNotes: Note[] = [];
           if (device) {
-            const newServerNotes = res.data;
+            const newServerNotes = res.data as Note[];
             let promises = [];
             const batchSize = 500;
             for (const note of newServerNotes) {
+              const noteCopy = { ...note };
+              if (
+                isPluginEnabled(PluginName.PLUGIN_ENCRYPTION) &&
+                key &&
+                noteCopy.iv &&
+                noteCopy.encryptedBody
+              ) {
+                try {
+                  const decoded = await CryptoUtils.decrypt(
+                    key,
+                    noteCopy.iv,
+                    noteCopy.encryptedBody
+                  );
+                  noteCopy.body = decoded;
+                } catch (err) {
+                  noteCopy.body = `Failed to decrypt: ${err.message}`;
+                }
+              }
+
               promises.push(
                 db
                   .insertOrUpdateNote({
-                    ...note,
-                    localId: note.localId || note._id,
+                    ...noteCopy,
+                    localId: note.localId || (note._id as string),
                   })
                   .then((noteWithLocalId) => {
                     serverNotes.push(noteWithLocalId);
@@ -302,8 +344,23 @@ export async function updateNote(note: Note): Promise<Note> {
 
   if (await UsersApi.isAuthenticatedUser()) {
     const id = updatedNote._id || updatedNote.localId;
+
+    const noteCopy = { ...updatedNote };
+    if (isPluginEnabled(PluginName.PLUGIN_ENCRYPTION)) {
+      const key = await db.getKey();
+      if (key) {
+        const { iv, encrypted } = await CryptoUtils.encrypt(key, note.body);
+
+        if (iv && encrypted) {
+          noteCopy.iv = CryptoUtils.ab2str(iv);
+          noteCopy.encryptedBody = CryptoUtils.ab2str(encrypted);
+          delete noteCopy["body"];
+        }
+      }
+    }
+
     axios
-      .put(`/api/notes/${id}`, updatedNote)
+      .put(`/api/notes/${id}`, noteCopy)
       .then(async (res) => {
         const serverUpdatedNote = res.data;
         updateCachedNoteByLocalId(serverUpdatedNote);
