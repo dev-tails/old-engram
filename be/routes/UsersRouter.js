@@ -1,12 +1,12 @@
-import bcrypt from "bcrypt";
-import express from "express";
-import jwt from "jsonwebtoken";
-import yup from "yup";
+import bcrypt from 'bcrypt';
+import express from 'express';
+import jwt from 'jsonwebtoken';
+import yup from 'yup';
 
-import { ObjectId } from "../Database.js";
-import { getEnv } from "../env.js";
-import { AuthAPIKeyMiddleware } from "../middleware/AuthAPIKeyMiddleware.js";
-import { AuthRequiredMiddleware } from "../middleware/AuthRequiredMiddleware.js";
+import { ObjectId } from '../Database.js';
+import { getEnv } from '../env.js';
+import { AuthAPIKeyMiddleware } from '../middleware/AuthAPIKeyMiddleware.js';
+import { AuthRequiredMiddleware } from '../middleware/AuthRequiredMiddleware.js';
 
 async function setToken(res, user) {
   const { jwtSecret, production } = getEnv();
@@ -55,6 +55,9 @@ export function initializeUserRouter() {
 
   router.post("/signup", async function (req, res) {
     const { db } = req;
+
+    const User = db.collection("users");
+
     if (await isMaxUsersReached(db)) {
       return res.status(400).json({
         errors: ["Maximum user count reached"],

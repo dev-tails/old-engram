@@ -1,6 +1,6 @@
 import './EncryptionPage.scss';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 type EncryptionPageProps = {};
 
