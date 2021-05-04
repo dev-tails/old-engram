@@ -20,6 +20,7 @@ import { useLocation } from 'react-router';
 
 import { isPluginEnabled, PluginName } from '../../Plugins';
 import { zapNote } from '../../ZapierApi';
+import { BottomNavigation } from '../BottomNavigation/BottomNavigation';
 import { DateHeader } from '../DateHeader/DateHeader';
 import { ReactComponent as EventIcon } from '../icons/EventIcon.svg';
 import { ReactComponent as NoteIcon } from '../icons/NoteIcon.svg';
@@ -36,6 +37,7 @@ type LogPageProps = {
 
 export const LogPage: React.FC<LogPageProps> = (props) => {
   const location = useLocation();
+  const [bottomNavValue, setBottomNavValue] = useState("all");
   const [textBoxFocused, setTextBoxFocused] = useState(false);
   const [noteToEdit, setNoteToEdit] = useState<NotesApi.Note | null>(null);
   const [selectedNoteId, setSelectedNoteId] = useState<string>("");
@@ -196,6 +198,10 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
     }
   }
 
+  function handleBottomNavChanged(value: string) {
+    setBottomNavValue(value);
+  }
+
   const isShareEnabled = Boolean(navigator.share);
   const isZapEnabled = isPluginEnabled(PluginName.PLUGIN_ZAPIER);
 
@@ -280,6 +286,10 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
             />
           </div>
         </div>
+        <BottomNavigation
+          value={bottomNavValue}
+          onChange={handleBottomNavChanged}
+        />
       </div>
     </>
   );

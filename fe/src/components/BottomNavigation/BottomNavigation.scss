@@ -1,0 +1,10 @@
+.bottom-navigation {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: block;
+
+  .MuiBottomNavigationAction-root.Mui-selected {
+    color: #90caf9;
+  }
+}
