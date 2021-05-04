@@ -14,7 +14,7 @@
   .log-page__notes-container {
     position: absolute;
     top: 0px;
-    bottom: 65px;
+    bottom: calc(65px + 56px);
     width: 100%;
     display: flex;
   }

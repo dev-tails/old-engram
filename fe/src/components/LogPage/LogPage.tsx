@@ -95,7 +95,15 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
     initialBody = text as string;
   }
 
-  const initialType = noteToEdit ? noteToEdit.type : "note";
+  const bottomNavToNoteTypeMap: { [key: string]: NotesApi.NoteType } = {
+    all: "note",
+    note: "note",
+    task: "task",
+    event: "event",
+  };
+  const initialType = noteToEdit
+    ? noteToEdit.type
+    : bottomNavToNoteTypeMap[bottomNavValue];
 
   async function handleNoteUpdated(noteToUpdate: NotesApi.Note) {
     const updatedNote = await NotesApi.updateNote({
