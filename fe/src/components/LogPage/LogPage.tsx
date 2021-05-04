@@ -49,17 +49,23 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
   useEffect(() => {
     async function fetchNotes() {
       if (props.date) {
-        const fetchedNotes = await NotesApi.getNotes({
+        const getNotesParams: NotesApi.GetNotesParams = {
           since: moment(props.date).startOf("d").toDate(),
           before: moment(props.date).startOf("d").toDate(),
-        });
+        };
+
+        if (bottomNavValue !== "all") {
+          getNotesParams.type = bottomNavValue as NotesApi.NoteType;
+        }
+
+        const fetchedNotes = await NotesApi.getNotes(getNotesParams);
         setNotes(fetchedNotes);
       } else {
         setNotes([]);
       }
     }
     fetchNotes();
-  }, [props.date]);
+  }, [props.date, bottomNavValue]);
 
   const handleSubmit = async (note: NotesApi.Note) => {
     const date = props.date || new Date();
