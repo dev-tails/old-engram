@@ -3,7 +3,7 @@ import yup from 'yup';
 export default yup.object().shape({
   _id: yup.string().required(),
   date: yup.string(),
-  body: yup.string().default(""),
+  body: yup.string(),
   encryptedBody: yup.string(),
   iv: yup.string(),
   start: yup.date(),
