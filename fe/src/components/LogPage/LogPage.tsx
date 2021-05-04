@@ -20,6 +20,7 @@ import { useLocation } from 'react-router';
 
 import { isPluginEnabled, PluginName } from '../../Plugins';
 import { zapNote } from '../../ZapierApi';
+import { BottomNavigation } from '../BottomNavigation/BottomNavigation';
 import { DateHeader } from '../DateHeader/DateHeader';
 import { ReactComponent as EventIcon } from '../icons/EventIcon.svg';
 import { ReactComponent as NoteIcon } from '../icons/NoteIcon.svg';
@@ -36,6 +37,7 @@ type LogPageProps = {
 
 export const LogPage: React.FC<LogPageProps> = (props) => {
   const location = useLocation();
+  const [bottomNavValue, setBottomNavValue] = useState("all");
   const [textBoxFocused, setTextBoxFocused] = useState(false);
   const [noteToEdit, setNoteToEdit] = useState<NotesApi.Note | null>(null);
   const [selectedNoteId, setSelectedNoteId] = useState<string>("");
@@ -47,17 +49,23 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
   useEffect(() => {
     async function fetchNotes() {
       if (props.date) {
-        const fetchedNotes = await NotesApi.getNotes({
+        const getNotesParams: NotesApi.GetNotesParams = {
           since: moment(props.date).startOf("d").toDate(),
           before: moment(props.date).startOf("d").toDate(),
-        });
+        };
+
+        if (bottomNavValue !== "all") {
+          getNotesParams.type = bottomNavValue as NotesApi.NoteType;
+        }
+
+        const fetchedNotes = await NotesApi.getNotes(getNotesParams);
         setNotes(fetchedNotes);
       } else {
         setNotes([]);
       }
     }
     fetchNotes();
-  }, [props.date]);
+  }, [props.date, bottomNavValue]);
 
   const handleSubmit = async (note: NotesApi.Note) => {
     const date = props.date || new Date();
@@ -93,7 +101,15 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
     initialBody = text as string;
   }
 
-  const initialType = noteToEdit ? noteToEdit.type : "note";
+  const bottomNavToNoteTypeMap: { [key: string]: NotesApi.NoteType } = {
+    all: "note",
+    note: "note",
+    task: "task",
+    event: "event",
+  };
+  const initialType = noteToEdit
+    ? noteToEdit.type
+    : bottomNavToNoteTypeMap[bottomNavValue];
 
   async function handleNoteUpdated(noteToUpdate: NotesApi.Note) {
     const updatedNote = await NotesApi.updateNote({
@@ -196,6 +212,10 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
     }
   }
 
+  function handleBottomNavChanged(value: string) {
+    setBottomNavValue(value);
+  }
+
   const isShareEnabled = Boolean(navigator.share);
   const isZapEnabled = isPluginEnabled(PluginName.PLUGIN_ZAPIER);
 
@@ -280,6 +300,10 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
             />
           </div>
         </div>
+        <BottomNavigation
+          value={bottomNavValue}
+          onChange={handleBottomNavChanged}
+        />
       </div>
     </>
   );
