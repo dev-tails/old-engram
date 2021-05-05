@@ -1,4 +1,4 @@
-import './LogPage.scss';
+import "./LogPage.scss";
 
 import {
   Divider,
@@ -11,24 +11,24 @@ import {
   Menu,
   MenuItem,
   SvgIcon,
-} from '@material-ui/core';
-import { MoreVert as MoreVertIcon } from '@material-ui/icons';
-import moment from 'moment';
-import querystring from 'query-string';
-import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router';
+} from "@material-ui/core";
+import { MoreVert as MoreVertIcon } from "@material-ui/icons";
+import moment from "moment";
+import querystring from "query-string";
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router";
 
-import { isPluginEnabled, PluginName } from '../../Plugins';
-import { zapNote } from '../../ZapierApi';
-import { BottomNavigation } from '../BottomNavigation/BottomNavigation';
-import { DateHeader } from '../DateHeader/DateHeader';
-import { ReactComponent as EventIcon } from '../icons/EventIcon.svg';
-import { ReactComponent as NoteIcon } from '../icons/NoteIcon.svg';
-import { ReactComponent as TaskCompletedIcon } from '../icons/TaskCompletedIcon.svg';
-import { ReactComponent as TaskIcon } from '../icons/TaskIcon.svg';
-import { Markdown } from '../Markdown/Markdown';
-import * as NotesApi from '../notes/NotesApi';
-import TextBox from '../textbox/TextBox';
+import { isPluginEnabled, PluginName } from "../../Plugins";
+import { zapNote } from "../../ZapierApi";
+import { BottomNavigation } from "../BottomNavigation/BottomNavigation";
+import { DateHeader } from "../DateHeader/DateHeader";
+import { ReactComponent as EventIcon } from "../icons/EventIcon.svg";
+import { ReactComponent as NoteIcon } from "../icons/NoteIcon.svg";
+import { ReactComponent as TaskCompletedIcon } from "../icons/TaskCompletedIcon.svg";
+import { ReactComponent as TaskIcon } from "../icons/TaskIcon.svg";
+import { Markdown } from "../Markdown/Markdown";
+import * as NotesApi from "../notes/NotesApi";
+import TextBox from "../textbox/TextBox";
 
 type LogPageProps = {
   date?: Date;
@@ -119,7 +119,13 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
     const index = notesCopy.findIndex(
       (note) => note.localId === updatedNote.localId
     );
-    notesCopy.splice(index, 1, updatedNote);
+
+    // If date doesn't match, remove from current list
+    if (updatedNote.date === moment(props.date).format("YYYY-MM-DD")) {
+      notesCopy.splice(index, 1, updatedNote);
+    } else {
+      notesCopy.splice(index, 1);
+    }
     setNotes(notesCopy);
   }
 
@@ -166,6 +172,8 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
   }
 
   function handleEditNote() {
+    hideMenu();
+
     const note = getNoteById(selectedNoteId);
     if (!note) {
       return;
@@ -214,6 +222,20 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
 
   function handleBottomNavChanged(value: string) {
     setBottomNavValue(value);
+  }
+
+  async function handleMoveToTomorrow() {
+    hideMenu();
+
+    const note = getNoteById(selectedNoteId);
+    if (!note) {
+      return;
+    }
+
+    await handleNoteUpdated({
+      ...note,
+      date: moment(note.date).add(1, "day").format("YYYY-MM-DD"),
+    });
   }
 
   const isShareEnabled = Boolean(navigator.share);
@@ -275,10 +297,13 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
                 anchorEl={menuAnchoEl}
                 keepMounted
                 open={Boolean(menuAnchoEl)}
-                onClose={setMenuAnchorEl.bind(this, null)}
+                onClose={hideMenu}
                 TransitionComponent={Fade}
               >
                 <MenuItem onClick={handleEditNote}>Edit</MenuItem>
+                <MenuItem onClick={handleMoveToTomorrow}>
+                  Move to Tomorrow
+                </MenuItem>
                 {isShareEnabled ? (
                   <MenuItem onClick={handleShareClicked}>Share...</MenuItem>
                 ) : null}
