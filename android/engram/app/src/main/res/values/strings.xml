@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">engram</string>
+    <string name="title_all">All</string>
+    <string name="title_notes">Notes</string>
+    <string name="title_tasks">Tasks</string>
+    <string name="title_events">Events</string>
+</resources>

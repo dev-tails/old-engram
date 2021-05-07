@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_all"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="@string/title_all" />
+
+    <item
+        android:id="@+id/navigation_notes"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="@string/title_notes" />
+
+    <item
+        android:id="@+id/navigation_tasks"
+        android:icon="@android:drawable/checkbox_on_background"
+        android:title="@string/title_tasks" />
+
+    <item
+        android:id="@+id/navigation_events"
+        android:icon="@android:drawable/ic_menu_my_calendar"
+        android:title="@string/title_events" />
+
+</menu>
