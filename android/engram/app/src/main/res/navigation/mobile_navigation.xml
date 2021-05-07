@@ -7,19 +7,8 @@
 
     <fragment
         android:id="@+id/navigation_all"
-        android:name="com.example.engram.ui.home.HomeFragment"
+        android:name="com.example.engram.ui.home.BrainDumpFragment"
         android:label="@string/title_all"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_brain_dump" />
 
-    <fragment
-        android:id="@+id/navigation_notes"
-        android:name="com.example.engram.ui.dashboard.DashboardFragment"
-        android:label="@string/title_notes"
-        tools:layout="@layout/fragment_dashboard" />
-
-    <fragment
-        android:id="@+id/navigation_tasks"
-        android:name="com.example.engram.ui.notifications.NotificationsFragment"
-        android:label="@string/title_tasks"
-        tools:layout="@layout/fragment_notifications" />
 </navigation>

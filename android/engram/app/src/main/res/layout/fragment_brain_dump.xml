@@ -4,29 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.dashboard.DashboardFragment">
+    tools:context=".ui.dump.BrainDumpFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_weight=".10"
-            android:layout_height="wrap_content"/>
+        android:orientation="vertical"
+        android:layout_margin="16dp"
+        >
 
     <EditText
-        android:id="@+id/text_edit"
-        android:layout_width="0dp"
+        android:id="@+id/note"
         android:layout_height="wrap_content"
-        android:layout_weight=".80"
-        android:inputType="text"
+        android:layout_width="match_parent"
+        android:inputType="text|textMultiLine"
+        android:maxLines="12"
         />
-        <Space
-            android:layout_width="0dp"
-            android:layout_weight=".10"
-            android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/submitButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/submit"
+        >
+    </Button>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

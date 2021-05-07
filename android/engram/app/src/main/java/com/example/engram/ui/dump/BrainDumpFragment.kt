@@ -1,20 +1,20 @@
-package com.example.engram.ui.dashboard
+package com.example.engram.ui.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.example.engram.R
-import com.example.engram.databinding.FragmentDashboardBinding
+import com.example.engram.databinding.FragmentBrainDumpBinding
 
-class DashboardFragment : Fragment() {
+class BrainDumpFragment : Fragment() {
 
-    private lateinit var dashboardViewModel: DashboardViewModel
-    private var _binding: FragmentDashboardBinding? = null
+    private lateinit var brainDumpViewModel: BrainDumpViewModel
+    private var _binding: FragmentBrainDumpBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -25,11 +25,13 @@ class DashboardFragment : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        dashboardViewModel =
-                ViewModelProvider(this).get(DashboardViewModel::class.java)
+        brainDumpViewModel =
+                ViewModelProvider(this).get(BrainDumpViewModel::class.java)
 
-        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        _binding = FragmentBrainDumpBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+        val editText: EditText = binding.note
 
         return root
     }
