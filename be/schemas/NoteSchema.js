@@ -15,6 +15,12 @@ export default yup.object().shape({
   parent: yup.string().nullable().default(""),
   prev: yup.string().nullable().default(""),
   localId: yup.string(),
+  permissions: yup.array().of(
+    yup.object().shape({
+      email: yup.string(),
+      role: yup.string().oneOf(["r", "w"]),
+    })
+  ),
   createdAt: yup.date(),
   updatedAt: yup.date(),
   syncedAt: yup.date(),

@@ -1,11 +1,11 @@
-import express from "express";
-import yup from "yup";
+import express from 'express';
+import yup from 'yup';
 
-import { ObjectId } from "../Database.js";
-import { UnauthorizedError } from "../middleware/AuthMiddleware.js";
-import { AuthRequiredMiddleware } from "../middleware/AuthRequiredMiddleware.js";
-import NoteSchema from "../schemas/NoteSchema.js";
-import { handleNewNote } from "../vendor/zapier/Zapier.js";
+import { ObjectId } from '../Database.js';
+import { UnauthorizedError } from '../middleware/AuthMiddleware.js';
+import { AuthRequiredMiddleware } from '../middleware/AuthRequiredMiddleware.js';
+import NoteSchema from '../schemas/NoteSchema.js';
+import { handleNewNote } from '../vendor/zapier/Zapier.js';
 
 export function initializeNotesRouter() {
   const router = express.Router();
@@ -141,6 +141,12 @@ export function initializeNotesRouter() {
       archived: yup.boolean(),
       checked: yup.boolean(),
       localId: yup.string(),
+      permissions: yup.array().of(
+        yup.object().shape({
+          email: yup.string(),
+          role: yup.string().oneOf(["r", "w"]),
+        })
+      ),
       createdAt: yup.date(),
       updatedAt: yup.date(),
     });
