@@ -275,6 +275,7 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
       <div className="log-page">
         {showShareLinkDialog ? (
           <ShareLinkDialog
+            id={selectedNote?._id}
             open={showShareLinkDialog}
             initialPermissions={selectedNote?.permissions}
             onClose={setShowShareLinkDialog.bind(this, false)}

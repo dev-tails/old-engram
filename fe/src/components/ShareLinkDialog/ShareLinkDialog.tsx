@@ -17,6 +17,7 @@ import { Delete } from '@material-ui/icons';
 import React, { useState } from 'react';
 
 type ShareLinkDialogProps = {
+  id?: string;
   open: boolean;
   initialPermissions?: Permission[];
   onClose: () => void;
@@ -31,11 +32,13 @@ export type Permission = {
 };
 
 export const ShareLinkDialog: React.FC<ShareLinkDialogProps> = ({
+  id,
   open,
   initialPermissions,
   onClose,
   onSubmit,
 }) => {
+  const [copyText, setCopyText] = useState("Copy");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState<Role>("r");
   const [permissions, setPermissions] = useState<Permission[]>(
@@ -68,6 +71,18 @@ export const ShareLinkDialog: React.FC<ShareLinkDialogProps> = ({
     onSubmit(permissions);
   }
 
+  function getLink() {
+    return `https://engram.xyzdigital.com/notes/${id}`;
+  }
+
+  function handleCopyClicked() {
+    navigator.clipboard.writeText(getLink());
+    setCopyText("Copied");
+    setTimeout(() => {
+      setCopyText("Copy");
+    }, 2000);
+  }
+
   return (
     <div className="share-link-dialog">
       <Dialog
@@ -79,6 +94,18 @@ export const ShareLinkDialog: React.FC<ShareLinkDialogProps> = ({
       >
         <DialogTitle id="form-dialog-title">Link Sharing Settings</DialogTitle>
         <DialogContent>
+          <TextField
+            margin="dense"
+            id="link"
+            fullWidth
+            disabled
+            value={getLink()}
+            InputProps={{
+              endAdornment: (
+                <Button onClick={handleCopyClicked}>{copyText}</Button>
+              ),
+            }}
+          />
           <TextField
             margin="dense"
             id="email"
