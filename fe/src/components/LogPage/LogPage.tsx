@@ -1,4 +1,4 @@
-import "./LogPage.scss";
+import './LogPage.scss';
 
 import {
   Divider,
@@ -11,24 +11,25 @@ import {
   Menu,
   MenuItem,
   SvgIcon,
-} from "@material-ui/core";
-import { MoreVert as MoreVertIcon } from "@material-ui/icons";
-import moment from "moment";
-import querystring from "query-string";
-import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router";
+} from '@material-ui/core';
+import { MoreVert as MoreVertIcon } from '@material-ui/icons';
+import moment from 'moment';
+import querystring from 'query-string';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router';
 
-import { isPluginEnabled, PluginName } from "../../Plugins";
-import { zapNote } from "../../ZapierApi";
-import { BottomNavigation } from "../BottomNavigation/BottomNavigation";
-import { DateHeader } from "../DateHeader/DateHeader";
-import { ReactComponent as EventIcon } from "../icons/EventIcon.svg";
-import { ReactComponent as NoteIcon } from "../icons/NoteIcon.svg";
-import { ReactComponent as TaskCompletedIcon } from "../icons/TaskCompletedIcon.svg";
-import { ReactComponent as TaskIcon } from "../icons/TaskIcon.svg";
-import { Markdown } from "../Markdown/Markdown";
-import * as NotesApi from "../notes/NotesApi";
-import TextBox from "../textbox/TextBox";
+import { isPluginEnabled, PluginName } from '../../Plugins';
+import { zapNote } from '../../ZapierApi';
+import { BottomNavigation } from '../BottomNavigation/BottomNavigation';
+import { DateHeader } from '../DateHeader/DateHeader';
+import { ReactComponent as EventIcon } from '../icons/EventIcon.svg';
+import { ReactComponent as NoteIcon } from '../icons/NoteIcon.svg';
+import { ReactComponent as TaskCompletedIcon } from '../icons/TaskCompletedIcon.svg';
+import { ReactComponent as TaskIcon } from '../icons/TaskIcon.svg';
+import { Markdown } from '../Markdown/Markdown';
+import * as NotesApi from '../notes/NotesApi';
+import { ShareLinkDialog } from '../ShareLinkDialog/ShareLinkDialog';
+import TextBox from '../textbox/TextBox';
 
 type LogPageProps = {
   date?: Date;
@@ -45,6 +46,7 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
   const [menuAnchoEl, setMenuAnchorEl] = React.useState<null | HTMLDivElement>(
     null
   );
+  const [showShareLinkDialog, setShowShareLinkDialog] = useState(false);
 
   useEffect(() => {
     async function fetchNotes() {
@@ -238,6 +240,11 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
     });
   }
 
+  function handleShareLinkClicked() {
+    hideMenu();
+    setShowShareLinkDialog(true);
+  }
+
   const isShareEnabled = Boolean(navigator.share);
   const isZapEnabled = isPluginEnabled(PluginName.PLUGIN_ZAPIER);
 
@@ -251,6 +258,11 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
         />
       ) : null}
       <div className="log-page">
+        <ShareLinkDialog
+          open={showShareLinkDialog}
+          onClose={setShowShareLinkDialog.bind(this, false)}
+          onSubmit={setShowShareLinkDialog.bind(this, false)}
+        />
         <div className="log-page__content">
           <div className="log-page__notes-container">
             <div className="log-page__notes">
@@ -310,6 +322,9 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
                 {isZapEnabled ? (
                   <MenuItem onClick={handleZapClicked}>Zap</MenuItem>
                 ) : null}
+                <MenuItem onClick={handleShareLinkClicked}>
+                  Share Link...
+                </MenuItem>
                 <MenuItem onClick={handleRemoveClicked}>Remove</MenuItem>
               </Menu>
             </div>
