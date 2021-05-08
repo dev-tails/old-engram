@@ -89,15 +89,29 @@ export function initializeNotesRouter() {
       _id: ObjectId(req.params.id),
     });
 
-    function userHasAccessToNote(note, user) {
-      if (note?.shareSettings?.public?.view) {
+    async function userHasAccessToNote(note, user) {
+      if (String(note.user) === String(user)) {
         return true;
       }
 
-      return String(note.user) === String(user);
+      if (note.permissions && note.permissions.length) {
+        const userDocument = await db.collection("users").findOne({
+          _id: ObjectId(user),
+        });
+
+        const permissionForEmail = note.permissions.find((permission) => {
+          return permission.email === userDocument.email;
+        });
+        if (permissionForEmail) {
+          return true;
+        } else {
+          return false;
+        }
+      }
     }
 
-    if (!userHasAccessToNote(topLevelNote, user)) {
+    const hasAccess = await userHasAccessToNote(topLevelNote, user);
+    if (!hasAccess) {
       throw new UnauthorizedError();
     }
 
