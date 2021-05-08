@@ -1,11 +1,11 @@
-import express from "express";
-import yup from "yup";
+import express from 'express';
+import yup from 'yup';
 
-import { ObjectId } from "../Database.js";
-import { UnauthorizedError } from "../middleware/AuthMiddleware.js";
-import { AuthRequiredMiddleware } from "../middleware/AuthRequiredMiddleware.js";
-import NoteSchema from "../schemas/NoteSchema.js";
-import { handleNewNote } from "../vendor/zapier/Zapier.js";
+import { ObjectId } from '../Database.js';
+import { UnauthorizedError } from '../middleware/AuthMiddleware.js';
+import { AuthRequiredMiddleware } from '../middleware/AuthRequiredMiddleware.js';
+import NoteSchema from '../schemas/NoteSchema.js';
+import { handleNewNote } from '../vendor/zapier/Zapier.js';
 
 export function initializeNotesRouter() {
   const router = express.Router();
@@ -89,15 +89,29 @@ export function initializeNotesRouter() {
       _id: ObjectId(req.params.id),
     });
 
-    function userHasAccessToNote(note, user) {
-      if (note?.shareSettings?.public?.view) {
+    async function userHasAccessToNote(note, user) {
+      if (String(note.user) === String(user)) {
         return true;
       }
 
-      return String(note.user) === String(user);
+      if (note.permissions && note.permissions.length) {
+        const userDocument = await db.collection("users").findOne({
+          _id: ObjectId(user),
+        });
+
+        const permissionForEmail = note.permissions.find((permission) => {
+          return permission.email === userDocument.email;
+        });
+        if (permissionForEmail) {
+          return true;
+        } else {
+          return false;
+        }
+      }
     }
 
-    if (!userHasAccessToNote(topLevelNote, user)) {
+    const hasAccess = await userHasAccessToNote(topLevelNote, user);
+    if (!hasAccess) {
       throw new UnauthorizedError();
     }
 
@@ -141,6 +155,12 @@ export function initializeNotesRouter() {
       archived: yup.boolean(),
       checked: yup.boolean(),
       localId: yup.string(),
+      permissions: yup.array().of(
+        yup.object().shape({
+          email: yup.string(),
+          role: yup.string().oneOf(["r", "w"]),
+        })
+      ),
       createdAt: yup.date(),
       updatedAt: yup.date(),
     });

@@ -95,6 +95,11 @@ export async function getNote(params: { id: string }): Promise<Note[]> {
   return sortedNotes;
 }
 
+export async function getRemoteNote(id: string): Promise<Note[]> {
+  const res = await Api.get(`/api/notes/${id}`);
+  return res.data;
+}
+
 let getAllPromise: Promise<any> | null = null;
 let notes: Note[] | null = null;
 export async function getAllNotes(): Promise<any[]> {

@@ -10,13 +10,13 @@ import { HomePage } from '../components/HomePage/HomePage';
 import LoginPage, { LoginPagePath } from '../components/login/LoginPage';
 import { LogoutPage } from '../components/LogoutPage/LogoutPage';
 import { LogPage } from '../components/LogPage/LogPage';
-import { EditNotePage } from '../components/notes/EditNotePage/EditNotePage';
 import { PagesPage } from '../components/PagesPage/PagesPage';
 import { PrivacyPolicyPage, PrivacyPolicyPagePath } from '../components/PrivacyPolicyPage/PrivacyPolicyPage';
 import { SettingsPage } from '../components/SettingsPage/SettingsPage';
 import SignupPage, { SignupPagePath } from '../components/SignupPage/SignupPage';
 import { hasLocalDevice } from '../DeviceApi';
 import { EncryptionPage } from '../pages/settings/EncryptionPage';
+import { ViewNotePage } from '../pages/ViewNotePage/ViewNotePage';
 import { isPluginEnabled, PluginName } from '../Plugins';
 import { TermsOfServicePage, TermsOfServicePagePath } from '../TermsOfServicePage/TermsOfServicePage';
 import { getMe } from '../UsersApi';
@@ -175,7 +175,7 @@ export default function Routes() {
           <PagesPage />
         </AuthenticatedRoute>
         <Route exact path="/notes/:id">
-          <EditNotePage />
+          <ViewNotePage />
         </Route>
         <Route exact path={LoginPagePath}>
           <LoginPage />
