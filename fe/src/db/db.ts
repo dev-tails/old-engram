@@ -27,6 +27,11 @@ export type DBNote = {
   syncedAt?: Date;
 };
 
+export type Permission = {
+  email: string;
+  role: "r" | "w";
+};
+
 export type Note = {
   _id?: string;
   localId?: string;
@@ -40,6 +45,7 @@ export type Note = {
   prev?: string;
   iv?: string;
   encryptedBody?: string;
+  permissions?: Permission[];
   createdAt?: Date;
   updatedAt?: Date;
   syncedAt?: Date;

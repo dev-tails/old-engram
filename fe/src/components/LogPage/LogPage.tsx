@@ -28,7 +28,7 @@ import { ReactComponent as TaskCompletedIcon } from '../icons/TaskCompletedIcon.
 import { ReactComponent as TaskIcon } from '../icons/TaskIcon.svg';
 import { Markdown } from '../Markdown/Markdown';
 import * as NotesApi from '../notes/NotesApi';
-import { ShareLinkDialog } from '../ShareLinkDialog/ShareLinkDialog';
+import { Permission, ShareLinkDialog } from '../ShareLinkDialog/ShareLinkDialog';
 import TextBox from '../textbox/TextBox';
 
 type LogPageProps = {
@@ -245,6 +245,21 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
     setShowShareLinkDialog(true);
   }
 
+  async function handleShareLinkDialogSubmitted(permissions: Permission[]) {
+    setShowShareLinkDialog(false);
+
+    const note = getNoteById(selectedNoteId);
+    if (!note) {
+      return;
+    }
+
+    await handleNoteUpdated({
+      ...note,
+      permissions: permissions,
+    });
+  }
+
+  const selectedNote = getNoteById(selectedNoteId);
   const isShareEnabled = Boolean(navigator.share);
   const isZapEnabled = isPluginEnabled(PluginName.PLUGIN_ZAPIER);
 
@@ -258,11 +273,14 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
         />
       ) : null}
       <div className="log-page">
-        <ShareLinkDialog
-          open={showShareLinkDialog}
-          onClose={setShowShareLinkDialog.bind(this, false)}
-          onSubmit={setShowShareLinkDialog.bind(this, false)}
-        />
+        {showShareLinkDialog ? (
+          <ShareLinkDialog
+            open={showShareLinkDialog}
+            initialPermissions={selectedNote?.permissions}
+            onClose={setShowShareLinkDialog.bind(this, false)}
+            onSubmit={handleShareLinkDialogSubmitted}
+          />
+        ) : null}
         <div className="log-page__content">
           <div className="log-page__notes-container">
             <div className="log-page__notes">

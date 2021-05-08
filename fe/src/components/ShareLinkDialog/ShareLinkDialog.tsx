@@ -18,25 +18,29 @@ import React, { useState } from 'react';
 
 type ShareLinkDialogProps = {
   open: boolean;
+  initialPermissions?: Permission[];
   onClose: () => void;
   onSubmit: (permissions: Permission[]) => void;
 };
 
 type Role = "r" | "w";
 
-type Permission = {
+export type Permission = {
   email: string;
   role: "r" | "w";
 };
 
 export const ShareLinkDialog: React.FC<ShareLinkDialogProps> = ({
   open,
+  initialPermissions,
   onClose,
   onSubmit,
 }) => {
   const [email, setEmail] = useState("");
   const [role, setRole] = useState<Role>("r");
-  const [permissions, setPermissions] = useState<Permission[]>([]);
+  const [permissions, setPermissions] = useState<Permission[]>(
+    initialPermissions || []
+  );
 
   function handleRoleChanged(event: React.ChangeEvent<{ value: unknown }>) {
     setRole(event.target.value as Role);
