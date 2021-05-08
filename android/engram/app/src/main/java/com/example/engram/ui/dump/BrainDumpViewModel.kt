@@ -1,13 +1,15 @@
-package com.example.engram.ui.home
+package com.example.engram.ui.dump
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
+import com.example.engram.db.entities.Note
+import com.example.engram.db.repositories.NoteRepository
+import kotlinx.coroutines.launch
 
-class BrainDumpViewModel : ViewModel() {
+class BrainDumpViewModel(private val repository: NoteRepository) : ViewModel() {
+    val allNotes: LiveData<List<Note>> = repository.allNotes.asLiveData()
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
+    fun insert(note: Note) = viewModelScope.launch {
+        repository.insert(note)
     }
-    val text: LiveData<String> = _text
 }
