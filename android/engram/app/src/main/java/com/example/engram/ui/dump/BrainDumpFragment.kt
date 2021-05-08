@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -32,6 +33,15 @@ class BrainDumpFragment : Fragment() {
         val root: View = binding.root
 
         val editText: EditText = binding.note
+
+        val notes = arrayListOf<String>()
+
+        val submitButton: Button = binding.submitButton
+        submitButton.setOnClickListener {
+            var body = editText.text.toString()
+            notes.add(body)
+            editText.setText("")
+        }
 
         return root
     }
