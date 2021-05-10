@@ -1,0 +1,564 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		660ACBCB262A735E00C62C02 /* engram-watch WatchKit App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 660ACBCA262A735E00C62C02 /* engram-watch WatchKit App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		660ACBD0262A736000C62C02 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 660ACBCF262A736000C62C02 /* Assets.xcassets */; };
+		660ACBD7262A736000C62C02 /* engram-watch WatchKit Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 660ACBD6262A736000C62C02 /* engram-watch WatchKit Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		660ACBDC262A736000C62C02 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660ACBDB262A736000C62C02 /* ContentView.swift */; };
+		660ACBDE262A736000C62C02 /* engram_watchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660ACBDD262A736000C62C02 /* engram_watchApp.swift */; };
+		660ACBE0262A736000C62C02 /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660ACBDF262A736000C62C02 /* ComplicationController.swift */; };
+		660ACBE2262A736100C62C02 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 660ACBE1262A736100C62C02 /* Assets.xcassets */; };
+		660ACBE5262A736100C62C02 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 660ACBE4262A736100C62C02 /* Preview Assets.xcassets */; };
+		66349D2626484F910068D827 /* AppIcon.appiconset in Resources */ = {isa = PBXBuildFile; fileRef = 66349D2526484F910068D827 /* AppIcon.appiconset */; };
+		66349D2726484F910068D827 /* AppIcon.appiconset in Resources */ = {isa = PBXBuildFile; fileRef = 66349D2526484F910068D827 /* AppIcon.appiconset */; };
+		667FA673262A870500A1E2B5 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667FA672262A870500A1E2B5 /* LoginView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		660ACBCC262A735E00C62C02 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 660ACBC0262A735E00C62C02 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 660ACBC9262A735E00C62C02;
+			remoteInfo = "engram-watch WatchKit App";
+		};
+		660ACBD8262A736000C62C02 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 660ACBC0262A735E00C62C02 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 660ACBD5262A736000C62C02;
+			remoteInfo = "engram-watch WatchKit Extension";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		660ACBEC262A736100C62C02 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				660ACBD7262A736000C62C02 /* engram-watch WatchKit Extension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		660ACBF0262A736100C62C02 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				660ACBCB262A735E00C62C02 /* engram-watch WatchKit App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		660ACBC6262A735E00C62C02 /* engram-watch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "engram-watch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		660ACBCA262A735E00C62C02 /* engram-watch WatchKit App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "engram-watch WatchKit App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		660ACBCF262A736000C62C02 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		660ACBD1262A736000C62C02 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		660ACBD6262A736000C62C02 /* engram-watch WatchKit Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "engram-watch WatchKit Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		660ACBDB262A736000C62C02 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		660ACBDD262A736000C62C02 /* engram_watchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = engram_watchApp.swift; sourceTree = "<group>"; };
+		660ACBDF262A736000C62C02 /* ComplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationController.swift; sourceTree = "<group>"; };
+		660ACBE1262A736100C62C02 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		660ACBE4262A736100C62C02 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		660ACBE6262A736100C62C02 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		66349D2526484F910068D827 /* AppIcon.appiconset */ = {isa = PBXFileReference; lastKnownFileType = folder; path = AppIcon.appiconset; sourceTree = "<group>"; };
+		667FA672262A870500A1E2B5 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		660ACBD3262A736000C62C02 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		660ACBBF262A735E00C62C02 = {
+			isa = PBXGroup;
+			children = (
+				660ACBCE262A735E00C62C02 /* engram-watch WatchKit App */,
+				660ACBDA262A736000C62C02 /* engram-watch WatchKit Extension */,
+				660ACBC7262A735E00C62C02 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		660ACBC7262A735E00C62C02 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				660ACBC6262A735E00C62C02 /* engram-watch.app */,
+				660ACBCA262A735E00C62C02 /* engram-watch WatchKit App.app */,
+				660ACBD6262A736000C62C02 /* engram-watch WatchKit Extension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		660ACBCE262A735E00C62C02 /* engram-watch WatchKit App */ = {
+			isa = PBXGroup;
+			children = (
+				66349D2526484F910068D827 /* AppIcon.appiconset */,
+				660ACBCF262A736000C62C02 /* Assets.xcassets */,
+				660ACBD1262A736000C62C02 /* Info.plist */,
+			);
+			path = "engram-watch WatchKit App";
+			sourceTree = "<group>";
+		};
+		660ACBDA262A736000C62C02 /* engram-watch WatchKit Extension */ = {
+			isa = PBXGroup;
+			children = (
+				667FA672262A870500A1E2B5 /* LoginView.swift */,
+				660ACBDB262A736000C62C02 /* ContentView.swift */,
+				660ACBDD262A736000C62C02 /* engram_watchApp.swift */,
+				660ACBDF262A736000C62C02 /* ComplicationController.swift */,
+				660ACBE1262A736100C62C02 /* Assets.xcassets */,
+				660ACBE6262A736100C62C02 /* Info.plist */,
+				660ACBE3262A736100C62C02 /* Preview Content */,
+			);
+			path = "engram-watch WatchKit Extension";
+			sourceTree = "<group>";
+		};
+		660ACBE3262A736100C62C02 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				660ACBE4262A736100C62C02 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		660ACBC5262A735E00C62C02 /* engram-watch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 660ACBF1262A736100C62C02 /* Build configuration list for PBXNativeTarget "engram-watch" */;
+			buildPhases = (
+				660ACBC4262A735E00C62C02 /* Resources */,
+				660ACBF0262A736100C62C02 /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				660ACBCD262A735E00C62C02 /* PBXTargetDependency */,
+			);
+			name = "engram-watch";
+			productName = "engram-watch";
+			productReference = 660ACBC6262A735E00C62C02 /* engram-watch.app */;
+			productType = "com.apple.product-type.application.watchapp2-container";
+		};
+		660ACBC9262A735E00C62C02 /* engram-watch WatchKit App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 660ACBED262A736100C62C02 /* Build configuration list for PBXNativeTarget "engram-watch WatchKit App" */;
+			buildPhases = (
+				660ACBC8262A735E00C62C02 /* Resources */,
+				660ACBEC262A736100C62C02 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				660ACBD9262A736000C62C02 /* PBXTargetDependency */,
+			);
+			name = "engram-watch WatchKit App";
+			productName = "engram-watch WatchKit App";
+			productReference = 660ACBCA262A735E00C62C02 /* engram-watch WatchKit App.app */;
+			productType = "com.apple.product-type.application.watchapp2";
+		};
+		660ACBD5262A736000C62C02 /* engram-watch WatchKit Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 660ACBE9262A736100C62C02 /* Build configuration list for PBXNativeTarget "engram-watch WatchKit Extension" */;
+			buildPhases = (
+				660ACBD2262A736000C62C02 /* Sources */,
+				660ACBD3262A736000C62C02 /* Frameworks */,
+				660ACBD4262A736000C62C02 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "engram-watch WatchKit Extension";
+			productName = "engram-watch WatchKit Extension";
+			productReference = 660ACBD6262A736000C62C02 /* engram-watch WatchKit Extension.appex */;
+			productType = "com.apple.product-type.watchkit2-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		660ACBC0262A735E00C62C02 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1240;
+				LastUpgradeCheck = 1240;
+				TargetAttributes = {
+					660ACBC5262A735E00C62C02 = {
+						CreatedOnToolsVersion = 12.4;
+					};
+					660ACBC9262A735E00C62C02 = {
+						CreatedOnToolsVersion = 12.4;
+					};
+					660ACBD5262A736000C62C02 = {
+						CreatedOnToolsVersion = 12.4;
+					};
+				};
+			};
+			buildConfigurationList = 660ACBC3262A735E00C62C02 /* Build configuration list for PBXProject "engram-watch" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 660ACBBF262A735E00C62C02;
+			productRefGroup = 660ACBC7262A735E00C62C02 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				660ACBC5262A735E00C62C02 /* engram-watch */,
+				660ACBC9262A735E00C62C02 /* engram-watch WatchKit App */,
+				660ACBD5262A736000C62C02 /* engram-watch WatchKit Extension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		660ACBC4262A735E00C62C02 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				66349D2626484F910068D827 /* AppIcon.appiconset in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		660ACBC8262A735E00C62C02 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				66349D2726484F910068D827 /* AppIcon.appiconset in Resources */,
+				660ACBD0262A736000C62C02 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		660ACBD4262A736000C62C02 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				660ACBE5262A736100C62C02 /* Preview Assets.xcassets in Resources */,
+				660ACBE2262A736100C62C02 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		660ACBD2262A736000C62C02 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				660ACBDC262A736000C62C02 /* ContentView.swift in Sources */,
+				660ACBDE262A736000C62C02 /* engram_watchApp.swift in Sources */,
+				667FA673262A870500A1E2B5 /* LoginView.swift in Sources */,
+				660ACBE0262A736000C62C02 /* ComplicationController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		660ACBCD262A735E00C62C02 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 660ACBC9262A735E00C62C02 /* engram-watch WatchKit App */;
+			targetProxy = 660ACBCC262A735E00C62C02 /* PBXContainerItemProxy */;
+		};
+		660ACBD9262A736000C62C02 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 660ACBD5262A736000C62C02 /* engram-watch WatchKit Extension */;
+			targetProxy = 660ACBD8262A736000C62C02 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		660ACBE7262A736100C62C02 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		660ACBE8262A736100C62C02 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		660ACBEA262A736100C62C02 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"engram-watch WatchKit Extension/Preview Content\"";
+				DEVELOPMENT_TEAM = V3T29AUKGC;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = "engram-watch WatchKit Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.xyzdigital.engram-watch.watchkitapp.watchkitextension";
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 7.2;
+			};
+			name = Debug;
+		};
+		660ACBEB262A736100C62C02 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"engram-watch WatchKit Extension/Preview Content\"";
+				DEVELOPMENT_TEAM = V3T29AUKGC;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = "engram-watch WatchKit Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.xyzdigital.engram-watch.watchkitapp.watchkitextension";
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 7.2;
+			};
+			name = Release;
+		};
+		660ACBEE262A736100C62C02 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = V3T29AUKGC;
+				IBSC_MODULE = engram_watch_WatchKit_Extension;
+				INFOPLIST_FILE = "engram-watch WatchKit App/Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.xyzdigital.engram-watch.watchkitapp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 7.2;
+			};
+			name = Debug;
+		};
+		660ACBEF262A736100C62C02 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = V3T29AUKGC;
+				IBSC_MODULE = engram_watch_WatchKit_Extension;
+				INFOPLIST_FILE = "engram-watch WatchKit App/Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.xyzdigital.engram-watch.watchkitapp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 7.2;
+			};
+			name = Release;
+		};
+		660ACBF2262A736100C62C02 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V3T29AUKGC;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.xyzdigital.engram-watch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		660ACBF3262A736100C62C02 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V3T29AUKGC;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.xyzdigital.engram-watch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		660ACBC3262A735E00C62C02 /* Build configuration list for PBXProject "engram-watch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				660ACBE7262A736100C62C02 /* Debug */,
+				660ACBE8262A736100C62C02 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		660ACBE9262A736100C62C02 /* Build configuration list for PBXNativeTarget "engram-watch WatchKit Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				660ACBEA262A736100C62C02 /* Debug */,
+				660ACBEB262A736100C62C02 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		660ACBED262A736100C62C02 /* Build configuration list for PBXNativeTarget "engram-watch WatchKit App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				660ACBEE262A736100C62C02 /* Debug */,
+				660ACBEF262A736100C62C02 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		660ACBF1262A736100C62C02 /* Build configuration list for PBXNativeTarget "engram-watch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				660ACBF2262A736100C62C02 /* Debug */,
+				660ACBF3262A736100C62C02 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 660ACBC0262A735E00C62C02 /* Project object */;
+}
