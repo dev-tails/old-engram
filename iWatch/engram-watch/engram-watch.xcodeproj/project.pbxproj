@@ -18,6 +18,7 @@
 		66349D2626484F910068D827 /* AppIcon.appiconset in Resources */ = {isa = PBXBuildFile; fileRef = 66349D2526484F910068D827 /* AppIcon.appiconset */; };
 		66349D2726484F910068D827 /* AppIcon.appiconset in Resources */ = {isa = PBXBuildFile; fileRef = 66349D2526484F910068D827 /* AppIcon.appiconset */; };
 		667FA673262A870500A1E2B5 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667FA672262A870500A1E2B5 /* LoginView.swift */; };
+		66E96AD62648D46A0008A41E /* HttpAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E96AD52648D46A0008A41E /* HttpAuth.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +77,7 @@
 		660ACBE6262A736100C62C02 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		66349D2526484F910068D827 /* AppIcon.appiconset */ = {isa = PBXFileReference; lastKnownFileType = folder; path = AppIcon.appiconset; sourceTree = "<group>"; };
 		667FA672262A870500A1E2B5 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		66E96AD52648D46A0008A41E /* HttpAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpAuth.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +130,7 @@
 				660ACBE1262A736100C62C02 /* Assets.xcassets */,
 				660ACBE6262A736100C62C02 /* Info.plist */,
 				660ACBE3262A736100C62C02 /* Preview Content */,
+				66E96AD52648D46A0008A41E /* HttpAuth.swift */,
 			);
 			path = "engram-watch WatchKit Extension";
 			sourceTree = "<group>";
@@ -271,6 +274,7 @@
 				660ACBDC262A736000C62C02 /* ContentView.swift in Sources */,
 				660ACBDE262A736000C62C02 /* engram_watchApp.swift in Sources */,
 				667FA673262A870500A1E2B5 /* LoginView.swift in Sources */,
+				66E96AD62648D46A0008A41E /* HttpAuth.swift in Sources */,
 				660ACBE0262A736000C62C02 /* ComplicationController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
