@@ -37,7 +37,6 @@ export async function createNote(note: Partial<Note>) {
     }
   }
 
-  console.log(noteCopy);
   let noteToCreate = await db.addNote(noteCopy);
 
   await createRemoteNote(noteToCreate);
