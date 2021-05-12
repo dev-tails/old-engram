@@ -1,6 +1,8 @@
-import "./GoogleSettingsPage.scss";
+import './GoogleSettingsPage.scss';
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
+
+import * as GoogleUtils from '../../utils/GoogleUtils';
 
 type GoogleSettingsPageProps = {};
 
@@ -12,6 +14,8 @@ const SCOPES = "https://www.googleapis.com/auth/drive.file";
 export const GoogleSettingsPage: React.FC<GoogleSettingsPageProps> = (
   props
 ) => {
+  const [folderId, setFolderId] = useState("128Vr5QCdZ67WoRNA9tdYoyymEW2p8P34");
+  const [files, setFiles] = useState<FileList | null>(null);
   const [isSignedIn, setIsSignedIn] = useState(false);
 
   useEffect(() => {
@@ -44,47 +48,22 @@ export const GoogleSettingsPage: React.FC<GoogleSettingsPageProps> = (
     (gapi as any).auth2.getAuthInstance().signIn();
   }
 
-  function handleCreateClicked() {
-    insertFile();
+  async function handleCreateClicked() {
+    if (!files || !files.length) {
+      return;
+    }
+    await GoogleUtils.uploadFile({
+      file: files[0],
+      folderId,
+    });
   }
 
-  function insertFile() {
-    const boundary = "-------314159265358979323846";
-    const delimiter = "\r\n--" + boundary + "\r\n";
-    const close_delim = "\r\n--" + boundary + "--";
+  async function handleCreateFolderClicked() {
+    await GoogleUtils.createFolder("engram");
+  }
 
-    var contentType = "image/png" || "application/octet-stream";
-    var metadata = {
-      title: "test.png",
-      mimeType: contentType,
-    };
-
-    var base64Data =
-      "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==";
-    var multipartRequestBody =
-      delimiter +
-      "Content-Type: application/json\r\n\r\n" +
-      JSON.stringify(metadata) +
-      delimiter +
-      "Content-Type: " +
-      contentType +
-      "\r\n" +
-      "Content-Transfer-Encoding: base64\r\n" +
-      "\r\n" +
-      base64Data +
-      close_delim;
-
-    var request = gapi.client.request({
-      path: "/upload/drive/v2/files",
-      method: "POST",
-      params: { uploadType: "multipart" },
-      headers: {
-        "Content-Type": 'multipart/mixed; boundary="' + boundary + '"',
-      },
-      body: multipartRequestBody,
-    });
-
-    request.execute(() => {});
+  function handleFileChanged(e: React.ChangeEvent<HTMLInputElement>) {
+    setFiles(e.target.files);
   }
 
   return (
@@ -93,7 +72,11 @@ export const GoogleSettingsPage: React.FC<GoogleSettingsPageProps> = (
         <h1>Google Settings</h1>
         {isSignedIn ? (
           <>
-            <button onClick={handleCreateClicked}>Create test.txt</button>
+            <button onClick={handleCreateFolderClicked}>
+              Create engram Folder
+            </button>
+            <input type="file" onChange={handleFileChanged}></input>
+            <button onClick={handleCreateClicked}>Upload</button>
             <button onClick={handleSignOutClicked}>Sign Out</button>
           </>
         ) : (
