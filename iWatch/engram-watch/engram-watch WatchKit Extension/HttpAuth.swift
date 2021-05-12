@@ -13,12 +13,47 @@ struct ServerMessage: Decodable {
     let success: Bool
 }
 
+extension Date {
+    func string(format: String) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = format
+        return formatter.string(from: self)
+    }
+}
 
 class HttpAuth: ObservableObject {
 
+    let sessionManager: URLSession = {
+            let configuration = URLSessionConfiguration.default
+            configuration.timeoutIntervalForRequest = 30 // seconds
+            configuration.timeoutIntervalForResource = 30 // seconds
+            return URLSession(configuration: configuration)
+        }()
+    
     @Published var authenticated = false
     @Published var errorMessage = ""
 
+    func createNote(body: String, type: String = "note") {
+        guard let url = URL(string: "https://engram.xyzdigital.com/api/notes") else { return }
+
+        let body: [String: String] = ["body": body, "type": type, "date": Date().string(format: "yyyy-MM-dd")]
+
+        let finalBody = try! JSONSerialization.data(withJSONObject: body)
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.httpBody = finalBody
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        sessionManager.dataTask(with: request) { (data, response, error) in
+            guard let data = data
+            else { return }
+            
+            let resData = try? JSONDecoder().decode(ServerMessage.self, from: data)
+            print(resData)
+        }.resume()
+    }
+    
     func postAuth(username: String, password: String) {
         authenticated = false
         errorMessage = ""
@@ -53,13 +88,11 @@ class HttpAuth: ObservableObject {
             else {
                 return
             }
-            print(account)
-            print(password)
         }
 
 
 
-        URLSession.shared.dataTask(with: request) { (data, response, error) in
+        sessionManager.dataTask(with: request) { (data, response, error) in
             guard
                 let data = data,
                 let res: HTTPURLResponse = response as? HTTPURLResponse,
@@ -85,7 +118,6 @@ class HttpAuth: ObservableObject {
                                             kSecAttrServer as String: server,
                                             kSecValueData as String: password]
                 let status = SecItemAdd(query as CFDictionary, nil)
-                print(status)
                 
                 DispatchQueue.main.async {
                     self.authenticated = true

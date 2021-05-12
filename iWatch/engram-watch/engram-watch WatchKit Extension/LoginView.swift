@@ -11,12 +11,13 @@ struct LoginView: View {
     @State private var username: String = ""
     @State private var password: String = ""
     
-    @ObservedObject var manager = HttpAuth()
+    let manager: HttpAuth
 
     let onSubmit: () -> Void
     
     func handleSubmit() {
         manager.postAuth(username: username, password: password)
+        onSubmit();
     }
     
     var body: some View {

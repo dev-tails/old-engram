@@ -10,6 +10,7 @@ import SwiftUI
 @main
 struct engram_watchApp: App {
     @State private var selection: String? = nil
+    @ObservedObject var manager = HttpAuth()
     
     func handleLoggedIn() {
         selection = "main"
@@ -20,13 +21,13 @@ struct engram_watchApp: App {
             NavigationView {
                 VStack {
                     NavigationLink(
-                        destination: LoginView(onSubmit: handleLoggedIn),
+                        destination: LoginView(manager: manager, onSubmit: handleLoggedIn),
                         tag: "login",
                         selection: $selection
                     ) {
                         Text("Login")
                     }
-                    NavigationLink(destination: ContentView().navigationBarTitle("engram"), tag: "main", selection: $selection) {
+                    NavigationLink(destination: ContentView(manager: manager).navigationBarTitle("engram"), tag: "main", selection: $selection) {
                         Text("Notes")
                     }
                 }

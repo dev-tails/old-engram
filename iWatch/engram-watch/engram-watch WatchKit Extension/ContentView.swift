@@ -15,14 +15,22 @@ struct Note: Identifiable {
 struct ContentView: View {
     @State var capturedText = ""
     @State var notes: [Note] = []
+    let manager: HttpAuth
     
-    func handleDictateButtonPressed() -> Void {
+    func handleDictateButtonPressed(type: String) -> Void {
         WKExtension.shared()
             .visibleInterfaceController?
             .presentTextInputController(withSuggestions: nil,
                                         allowedInputMode: .plain) { result in
                 guard let result = result as? [String] else { return }
-                self.notes.append(Note(body: result[0]))
+                
+                let body = result[0]
+                
+                if (manager.authenticated) {
+                    manager.createNote(body: body, type: type)
+                }
+                
+                self.notes.append(Note(body: body))
             }
     }
     
@@ -36,21 +44,15 @@ struct ContentView: View {
             }
             HStack {
                 Button("-") {
-                    handleDictateButtonPressed();
+                    handleDictateButtonPressed(type: "note");
                 }
                 Button("•") {
-                    handleDictateButtonPressed();
+                    handleDictateButtonPressed(type: "task");
                 }
                 Button("◦") {
-                    handleDictateButtonPressed();
+                    handleDictateButtonPressed(type: "event");
                 }
             }
         }
-    }
-}
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
     }
 }
