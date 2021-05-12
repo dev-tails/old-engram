@@ -6,9 +6,7 @@ const SCOPES = "https://www.googleapis.com/auth/drive.file";
 export const isSignedIn = false;
 
 export async function initGoogleUtils() {
-  setImmediate(() => {
-    gapi.load("client:auth2", initClient);
-  });
+  gapi.load("client:auth2", initClient);
 }
 
 async function initClient() {
