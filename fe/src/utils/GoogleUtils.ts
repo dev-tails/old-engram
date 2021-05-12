@@ -9,7 +9,7 @@ export async function createFolder(name: string) {
     body: JSON.stringify(data),
   });
 
-  console.log(response);
+  return response;
 }
 
 export type UploadFileParams = {
@@ -56,8 +56,6 @@ export async function uploadFile({ file, folderId }: UploadFileParams) {
     },
     body: multipartRequestBody,
   });
-
-  console.log(response);
 
   return response;
 }

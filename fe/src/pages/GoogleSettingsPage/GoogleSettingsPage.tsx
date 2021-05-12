@@ -14,27 +14,28 @@ const SCOPES = "https://www.googleapis.com/auth/drive.file";
 export const GoogleSettingsPage: React.FC<GoogleSettingsPageProps> = (
   props
 ) => {
-  const [folderId, setFolderId] = useState("128Vr5QCdZ67WoRNA9tdYoyymEW2p8P34");
-  const [files, setFiles] = useState<FileList | null>(null);
+  const [folderId, setFolderId] = useState(
+    localStorage.getItem("google-folder-id") || ""
+  );
   const [isSignedIn, setIsSignedIn] = useState(false);
 
   useEffect(() => {
+    async function initClient() {
+      await gapi.client.init({
+        apiKey: API_KEY,
+        clientId: CLIENT_ID,
+        scope: SCOPES,
+      });
+
+      (gapi as any).auth2
+        .getAuthInstance()
+        .isSignedIn.listen(handleSignInStatusChanged);
+
+      setIsSignedIn((gapi as any).auth2.getAuthInstance().isSignedIn.get());
+    }
+
     gapi.load("client:auth2", initClient);
   }, []);
-
-  async function initClient() {
-    await gapi.client.init({
-      apiKey: API_KEY,
-      clientId: CLIENT_ID,
-      scope: SCOPES,
-    });
-
-    (gapi as any).auth2
-      .getAuthInstance()
-      .isSignedIn.listen(handleSignInStatusChanged);
-
-    setIsSignedIn((gapi as any).auth2.getAuthInstance().isSignedIn.get());
-  }
 
   function handleSignOutClicked() {
     (gapi as any).auth2.getAuthInstance().signOut();
@@ -48,22 +49,17 @@ export const GoogleSettingsPage: React.FC<GoogleSettingsPageProps> = (
     (gapi as any).auth2.getAuthInstance().signIn();
   }
 
-  async function handleCreateClicked() {
-    if (!files || !files.length) {
-      return;
-    }
-    await GoogleUtils.uploadFile({
-      file: files[0],
-      folderId,
-    });
-  }
-
   async function handleCreateFolderClicked() {
-    await GoogleUtils.createFolder("engram");
+    const res = await GoogleUtils.createFolder("engram");
+    setFolderId(res.result.id);
   }
 
-  function handleFileChanged(e: React.ChangeEvent<HTMLInputElement>) {
-    setFiles(e.target.files);
+  function handleFolderIdChanged(e: React.ChangeEvent<HTMLInputElement>) {
+    setFolderId(e.target.value);
+  }
+
+  function handleSaveFolderId() {
+    localStorage.setItem("google-folder-id", folderId);
   }
 
   return (
@@ -72,12 +68,24 @@ export const GoogleSettingsPage: React.FC<GoogleSettingsPageProps> = (
         <h1>Google Settings</h1>
         {isSignedIn ? (
           <>
-            <button onClick={handleCreateFolderClicked}>
-              Create engram Folder
-            </button>
-            <input type="file" onChange={handleFileChanged}></input>
-            <button onClick={handleCreateClicked}>Upload</button>
             <button onClick={handleSignOutClicked}>Sign Out</button>
+            {folderId ? (
+              <div>
+                <label>Folder ID</label>
+                <input
+                  onChange={handleFolderIdChanged}
+                  value={folderId}
+                  style={{ width: "100%" }}
+                />
+                <button onClick={handleSaveFolderId}>Save</button>
+              </div>
+            ) : (
+              <div>
+                <button onClick={handleCreateFolderClicked}>
+                  Create engram Folder
+                </button>
+              </div>
+            )}
           </>
         ) : (
           <button onClick={handleAuthorizeClicked}>Authorize</button>
