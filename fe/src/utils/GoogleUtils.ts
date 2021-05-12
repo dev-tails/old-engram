@@ -1,3 +1,24 @@
+const CLIENT_ID =
+  "538993823748-pv564gq2au8696d9qqnrslqm31upa5tc.apps.googleusercontent.com";
+const API_KEY = "AIzaSyAqbWayBxE3cfwFeWM-4aUlUxcKVtYKwZ0";
+const SCOPES = "https://www.googleapis.com/auth/drive.file";
+
+export const isSignedIn = false;
+
+export async function initGoogleUtils() {
+  setImmediate(() => {
+    gapi.load("client:auth2", initClient);
+  });
+}
+
+async function initClient() {
+  await gapi.client.init({
+    apiKey: API_KEY,
+    clientId: CLIENT_ID,
+    scope: SCOPES,
+  });
+}
+
 export async function createFolder(name: string) {
   const data = {
     title: name,

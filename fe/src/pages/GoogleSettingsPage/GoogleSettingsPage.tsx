@@ -6,11 +6,6 @@ import * as GoogleUtils from '../../utils/GoogleUtils';
 
 type GoogleSettingsPageProps = {};
 
-const CLIENT_ID =
-  "538993823748-pv564gq2au8696d9qqnrslqm31upa5tc.apps.googleusercontent.com";
-const API_KEY = "AIzaSyAqbWayBxE3cfwFeWM-4aUlUxcKVtYKwZ0";
-const SCOPES = "https://www.googleapis.com/auth/drive.file";
-
 export const GoogleSettingsPage: React.FC<GoogleSettingsPageProps> = (
   props
 ) => {
@@ -20,21 +15,10 @@ export const GoogleSettingsPage: React.FC<GoogleSettingsPageProps> = (
   const [isSignedIn, setIsSignedIn] = useState(false);
 
   useEffect(() => {
-    async function initClient() {
-      await gapi.client.init({
-        apiKey: API_KEY,
-        clientId: CLIENT_ID,
-        scope: SCOPES,
-      });
-
-      (gapi as any).auth2
-        .getAuthInstance()
-        .isSignedIn.listen(handleSignInStatusChanged);
-
-      setIsSignedIn((gapi as any).auth2.getAuthInstance().isSignedIn.get());
-    }
-
-    gapi.load("client:auth2", initClient);
+    setIsSignedIn((gapi as any).auth2.getAuthInstance().isSignedIn.get());
+    (gapi as any).auth2
+      .getAuthInstance()
+      .isSignedIn.listen(handleSignInStatusChanged);
   }, []);
 
   function handleSignOutClicked() {

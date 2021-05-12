@@ -1,9 +1,11 @@
 import './TextBox.scss';
 
 import { IconButton, List, ListItem, ListItemText, SvgIcon, TextField } from '@material-ui/core';
-import { ArrowUpward } from '@material-ui/icons';
+import { ArrowUpward, AttachFile } from '@material-ui/icons';
 import React, { useEffect, useRef, useState } from 'react';
 
+import { isPluginEnabled, PluginName } from '../../Plugins';
+import * as GoogleUtils from '../../utils/GoogleUtils';
 import { isMobileUserAgent } from '../../utils/UserAgentUtils';
 import { ReactComponent as EventIcon } from '../icons/EventIcon.svg';
 import { ReactComponent as NoteIcon } from '../icons/NoteIcon.svg';
@@ -20,6 +22,7 @@ type TextBoxProps = {
 
 export default function TextBox(props: TextBoxProps) {
   const textFieldRef = useRef<HTMLInputElement | null>(null);
+  const hiddenFileInput = useRef<HTMLInputElement | null>(null);
   const [type, setType] = useState<NotesApi.NoteType>(props.initialType);
   const [note, setNote] = useState(props.initialBody);
 
@@ -101,6 +104,29 @@ export default function TextBox(props: TextBoxProps) {
     setType(types[nextTypeIndex]);
   }
 
+  function handleAttachFileClicked() {
+    hiddenFileInput.current?.click();
+  }
+
+  async function handleFileChanged(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = e.target.files;
+    const folderId = localStorage.getItem("google-folder-id");
+
+    if (!files || !folderId) {
+      return;
+    }
+
+    const file = files[0];
+    const res = await GoogleUtils.uploadFile({
+      file: file,
+      folderId: folderId,
+    });
+
+    props.onSubmit({
+      body: `[${file.name}](${res.result.embedLink})`,
+    });
+  }
+
   return (
     <div className="textbox">
       <List disablePadding={true}>
@@ -108,6 +134,20 @@ export default function TextBox(props: TextBoxProps) {
           <IconButton edge="start" onClick={handleToggleType}>
             {getNoteIcon({ type })}
           </IconButton>
+
+          {isPluginEnabled(PluginName.PLUGIN_GOOGLE) ? (
+            <>
+              <IconButton onClick={handleAttachFileClicked}>
+                <AttachFile />
+              </IconButton>
+              <input
+                ref={hiddenFileInput}
+                type="file"
+                style={{ display: "none" }}
+                onChange={handleFileChanged}
+              />
+            </>
+          ) : null}
 
           <ListItemText>
             <TextField

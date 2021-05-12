@@ -11,6 +11,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import { initializePlugins } from './Plugins';
 import Routes from './routes/Routes';
+import { initGoogleUtils } from './utils/GoogleUtils';
 
 let theme = createMuiTheme({
   palette: {
@@ -21,6 +22,7 @@ let theme = createMuiTheme({
 
 function App() {
   initializePlugins();
+  initGoogleUtils();
 
   return (
     <ThemeProvider theme={theme}>
