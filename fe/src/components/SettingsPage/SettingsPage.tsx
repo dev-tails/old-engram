@@ -23,6 +23,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = (props) => {
   function getSettingsRouteForPluginName(pluginName: string) {
     const pluginToSettingsMap: { [key: string]: string } = {
       Encryption: "/settings/encryption",
+      Excalidraw: "/settings/excalidraw",
       Google: "/settings/google",
       Zapier: "/settings/zapier",
     };
