@@ -47,23 +47,20 @@ export default function SignupPage(props: SignupPageProps) {
     }
   };
 
-  const handleUsernameChanged: React.InputHTMLAttributes<HTMLInputElement>["onChange"] = (
-    event
-  ) => {
-    setUsername(event.target.value);
-  };
+  const handleUsernameChanged: React.InputHTMLAttributes<HTMLInputElement>["onChange"] =
+    (event) => {
+      setUsername(event.target.value);
+    };
 
-  const handlePasswordChanged: React.InputHTMLAttributes<HTMLInputElement>["onChange"] = (
-    event
-  ) => {
-    setPassword(event.target.value);
-  };
+  const handlePasswordChanged: React.InputHTMLAttributes<HTMLInputElement>["onChange"] =
+    (event) => {
+      setPassword(event.target.value);
+    };
 
-  const handleEmailChanged: React.InputHTMLAttributes<HTMLInputElement>["onChange"] = (
-    event
-  ) => {
-    setEmail(event.target.value);
-  };
+  const handleEmailChanged: React.InputHTMLAttributes<HTMLInputElement>["onChange"] =
+    (event) => {
+      setEmail(event.target.value);
+    };
 
   const handleUseWithoutAccount = async () => {
     await createLocalDevice();
@@ -131,6 +128,7 @@ export default function SignupPage(props: SignupPageProps) {
               fullWidth
               onClick={handleSignUp}
               variant="contained"
+              color="primary"
             >
               Sign Up
             </Button>
@@ -154,11 +152,7 @@ export default function SignupPage(props: SignupPageProps) {
         <DividerWithText>Or</DividerWithText>
 
         <div id="use-without-account">
-          <Button
-            onClick={handleUseWithoutAccount}
-            variant="contained"
-            color="primary"
-          >
+          <Button onClick={handleUseWithoutAccount} variant="contained">
             Try Offline Without Account
           </Button>
         </div>
