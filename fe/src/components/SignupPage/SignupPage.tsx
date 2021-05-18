@@ -8,6 +8,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { createLocalDevice } from '../../DeviceApi';
 import { TermsOfServicePagePath } from '../../TermsOfServicePage/TermsOfServicePage';
 import { signUp } from '../../UsersApi';
+import { trackEvent } from '../../utils/AnalyticsUtils';
 import { DividerWithText } from '../login/DividerWithText/DividerWithText';
 import { Note } from '../notes/NotesApi';
 import { PrivacyPolicyPagePath } from '../PrivacyPolicyPage/PrivacyPolicyPage';
@@ -47,25 +48,23 @@ export default function SignupPage(props: SignupPageProps) {
     }
   };
 
-  const handleUsernameChanged: React.InputHTMLAttributes<HTMLInputElement>["onChange"] = (
-    event
-  ) => {
-    setUsername(event.target.value);
-  };
+  const handleUsernameChanged: React.InputHTMLAttributes<HTMLInputElement>["onChange"] =
+    (event) => {
+      setUsername(event.target.value);
+    };
 
-  const handlePasswordChanged: React.InputHTMLAttributes<HTMLInputElement>["onChange"] = (
-    event
-  ) => {
-    setPassword(event.target.value);
-  };
+  const handlePasswordChanged: React.InputHTMLAttributes<HTMLInputElement>["onChange"] =
+    (event) => {
+      setPassword(event.target.value);
+    };
 
-  const handleEmailChanged: React.InputHTMLAttributes<HTMLInputElement>["onChange"] = (
-    event
-  ) => {
-    setEmail(event.target.value);
-  };
+  const handleEmailChanged: React.InputHTMLAttributes<HTMLInputElement>["onChange"] =
+    (event) => {
+      setEmail(event.target.value);
+    };
 
   const handleUseWithoutAccount = async () => {
+    trackEvent("signup");
     await createLocalDevice();
     history.push("/");
   };
@@ -84,12 +83,6 @@ export default function SignupPage(props: SignupPageProps) {
 
         {enabled ? (
           <div className="signup">
-            <div className="errors">
-              {errors.map((error) => {
-                return error;
-              })}
-            </div>
-
             <p>
               The full version of engram is currently in beta - limited space
               available.
@@ -99,6 +92,12 @@ export default function SignupPage(props: SignupPageProps) {
               functionality first. In exchange, we will occasionally send out
               surveys requesting feedback.
             </p>
+
+            <div className="errors">
+              {errors.map((error) => {
+                return error;
+              })}
+            </div>
 
             <TextField
               id="username"
@@ -131,6 +130,7 @@ export default function SignupPage(props: SignupPageProps) {
               fullWidth
               onClick={handleSignUp}
               variant="contained"
+              color="primary"
             >
               Sign Up
             </Button>
@@ -154,11 +154,7 @@ export default function SignupPage(props: SignupPageProps) {
         <DividerWithText>Or</DividerWithText>
 
         <div id="use-without-account">
-          <Button
-            onClick={handleUseWithoutAccount}
-            variant="contained"
-            color="primary"
-          >
+          <Button onClick={handleUseWithoutAccount} variant="contained">
             Try Offline Without Account
           </Button>
         </div>

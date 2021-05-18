@@ -21,6 +21,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import {
+  AccountCircle,
   Dashboard,
   ExitToApp as ExitIcon,
   Help,
@@ -35,6 +36,7 @@ import { Link, useHistory } from 'react-router-dom';
 
 import { ReactComponent as EngramLogo } from '../../logo.svg';
 import { isPluginEnabled, PluginName } from '../../Plugins';
+import * as UsersApi from '../../UsersApi';
 import { Holdable } from '../Holdable/Holdable';
 import { createOrUpdateNote, getNotes, Note, removeNote } from '../notes/NotesApi';
 
@@ -115,22 +117,27 @@ export const Header: React.FC<HeaderProps> = ({
   const path = history.location.pathname;
 
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false);
-  const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<
-    string | undefined | null
-  >(null);
-  const [
-    workspaceAnchorEl,
-    setWorkspaceAnchorEl,
-  ] = React.useState<null | HTMLDivElement>(null);
+  const [selectedWorkspaceId, setSelectedWorkspaceId] =
+    useState<string | undefined | null>(null);
+  const [workspaceAnchorEl, setWorkspaceAnchorEl] =
+    React.useState<null | HTMLDivElement>(null);
   const [workspaces, setWorkspaces] = useState<Note[]>([]);
   const [workspaceBody, setWorkspaceBody] = useState<string | null>(null);
+  const [user, setUser] = useState<UsersApi.User | null>(null);
 
   useEffect(() => {
     async function getWorkspaces() {
       const fetchedWorkspaces = await getNotes({ type: "workspace" });
       setWorkspaces(fetchedWorkspaces);
     }
+
+    async function fetchMe() {
+      const me = await UsersApi.getMe();
+      setUser(me);
+    }
+
     if (!isPublicRoute) {
+      fetchMe();
       getWorkspaces();
     }
   }, [isPublicRoute]);
@@ -394,14 +401,24 @@ export const Header: React.FC<HeaderProps> = ({
                   <ListItemText primary={"Updates"} />
                 </ListItem>
               </a>
-              <Link to={`/logout`}>
-                <ListItem button>
-                  <ListItemIcon>
-                    <ExitIcon />
-                  </ListItemIcon>
-                  <ListItemText primary={"Logout"} />
-                </ListItem>
-              </Link>
+              {user ? (
+                <div className="drawer-footer">
+                  <ListItem>
+                    <ListItemIcon>
+                      <AccountCircle />
+                    </ListItemIcon>
+                    <ListItemText>{user.username}</ListItemText>
+                  </ListItem>
+                  <Link to={`/logout`}>
+                    <ListItem button>
+                      <ListItemIcon>
+                        <ExitIcon />
+                      </ListItemIcon>
+                      <ListItemText primary={"Logout"} />
+                    </ListItem>
+                  </Link>
+                </div>
+              ) : null}
             </List>
             <Menu
               id="fade-menu"
