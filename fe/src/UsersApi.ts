@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 
 export type LoginParams = {
   username: string;
@@ -29,9 +29,15 @@ export async function logout() {
   clearCache();
 }
 
+export type User = {
+  _id: string;
+  username: string;
+  email: string;
+};
+
 let getMePromise: Promise<any> | null = null;
 
-export async function getMe() {
+export async function getMe(): Promise<User> {
   if (!getMePromise) {
     getMePromise = axios.get("/api/users/me");
   }
