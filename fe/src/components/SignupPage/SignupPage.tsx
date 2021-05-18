@@ -83,16 +83,6 @@ export default function SignupPage(props: SignupPageProps) {
 
         {enabled ? (
           <div className="signup">
-            <p>
-              The full version of engram is currently in beta - limited space
-              available.
-            </p>
-            <p>
-              As a beta user, you will receive a free account and access to new
-              functionality first. In exchange, we will occasionally send out
-              surveys requesting feedback.
-            </p>
-
             <div className="errors">
               {errors.map((error) => {
                 return error;
