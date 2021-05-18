@@ -81,12 +81,6 @@ export default function SignupPage(props: SignupPageProps) {
 
         {enabled ? (
           <div className="signup">
-            <div className="errors">
-              {errors.map((error) => {
-                return error;
-              })}
-            </div>
-
             <p>
               The full version of engram is currently in beta - limited space
               available.
@@ -96,6 +90,12 @@ export default function SignupPage(props: SignupPageProps) {
               functionality first. In exchange, we will occasionally send out
               surveys requesting feedback.
             </p>
+
+            <div className="errors">
+              {errors.map((error) => {
+                return error;
+              })}
+            </div>
 
             <TextField
               id="username"
