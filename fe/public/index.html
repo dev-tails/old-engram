@@ -28,6 +28,25 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <script src="https://apis.google.com/js/api.js"></script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-YYE0FJEN5Y"
+    ></script>
+    <script>
+      const environment = "%NODE_ENV%";
+      if (environment === "production") {
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          dataLayer.push(arguments);
+        }
+        gtag("js", new Date());
+
+        gtag("config", "G-YYE0FJEN5Y");
+      }
+    </script>
+
     <title>engram</title>
   </head>
   <body>
