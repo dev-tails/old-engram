@@ -1,34 +1,27 @@
-import moment from "moment";
-import React, { useEffect, useState } from "react";
-import { Redirect, Route, Switch, useLocation } from "react-router-dom";
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
 
-import { DebugNotesPage } from "../components/DebugNotesPage/DebugNotesPage";
-import { Header } from "../components/header/Header";
-import { HelpPage } from "../components/HelpPage/HelpPage";
-import { ZapierHelpPage } from "../components/HelpPage/ZapierHelpPage/ZapierHelpPage";
-import { HomePage } from "../components/HomePage/HomePage";
-import LoginPage, { LoginPagePath } from "../components/login/LoginPage";
-import { LogoutPage } from "../components/LogoutPage/LogoutPage";
-import { LogPage } from "../components/LogPage/LogPage";
-import { PagesPage } from "../components/PagesPage/PagesPage";
-import {
-  PrivacyPolicyPage,
-  PrivacyPolicyPagePath,
-} from "../components/PrivacyPolicyPage/PrivacyPolicyPage";
-import { SettingsPage } from "../components/SettingsPage/SettingsPage";
-import SignupPage, {
-  SignupPagePath,
-} from "../components/SignupPage/SignupPage";
-import { hasLocalDevice } from "../DeviceApi";
-import { EncryptionPage } from "../pages/settings/EncryptionPage";
-import { ViewNotePage } from "../pages/ViewNotePage/ViewNotePage";
-import { GoogleSettingsPage } from "../pages/GoogleSettingsPage/GoogleSettingsPage";
-import { isPluginEnabled, PluginName } from "../Plugins";
-import {
-  TermsOfServicePage,
-  TermsOfServicePagePath,
-} from "../TermsOfServicePage/TermsOfServicePage";
-import { getMe } from "../UsersApi";
+import { DebugNotesPage } from '../components/DebugNotesPage/DebugNotesPage';
+import { Header } from '../components/header/Header';
+import { HelpPage } from '../components/HelpPage/HelpPage';
+import { ZapierHelpPage } from '../components/HelpPage/ZapierHelpPage/ZapierHelpPage';
+import { HomePage } from '../components/HomePage/HomePage';
+import LoginPage, { LoginPagePath } from '../components/login/LoginPage';
+import { LogoutPage } from '../components/LogoutPage/LogoutPage';
+import { LogPage } from '../components/LogPage/LogPage';
+import { PagesPage } from '../components/PagesPage/PagesPage';
+import { PrivacyPolicyPage, PrivacyPolicyPagePath } from '../components/PrivacyPolicyPage/PrivacyPolicyPage';
+import { SettingsPage } from '../components/SettingsPage/SettingsPage';
+import SignupPage, { SignupPagePath } from '../components/SignupPage/SignupPage';
+import { hasLocalDevice } from '../DeviceApi';
+import { DrawPage } from '../pages/DrawPage/DrawPage';
+import { GoogleSettingsPage } from '../pages/GoogleSettingsPage/GoogleSettingsPage';
+import { EncryptionPage } from '../pages/settings/EncryptionPage';
+import { ViewNotePage } from '../pages/ViewNotePage/ViewNotePage';
+import { isPluginEnabled, PluginName } from '../Plugins';
+import { TermsOfServicePage, TermsOfServicePagePath } from '../TermsOfServicePage/TermsOfServicePage';
+import { getMe } from '../UsersApi';
 
 function getStartDate(date: Date, dateRangeValue: string) {
   switch (dateRangeValue) {
@@ -189,6 +182,9 @@ export default function Routes() {
         </Route>
         <Route exact path={SignupPagePath}>
           <SignupPage />
+        </Route>
+        <Route exact path="/draw">
+          <DrawPage />
         </Route>
         <Route exact path="/logout">
           <LogoutPage />
