@@ -8,6 +8,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { createLocalDevice } from '../../DeviceApi';
 import { TermsOfServicePagePath } from '../../TermsOfServicePage/TermsOfServicePage';
 import { signUp } from '../../UsersApi';
+import { trackEvent } from '../../utils/AnalyticsUtils';
 import { DividerWithText } from '../login/DividerWithText/DividerWithText';
 import { Note } from '../notes/NotesApi';
 import { PrivacyPolicyPagePath } from '../PrivacyPolicyPage/PrivacyPolicyPage';
@@ -63,6 +64,7 @@ export default function SignupPage(props: SignupPageProps) {
     };
 
   const handleUseWithoutAccount = async () => {
+    trackEvent("signup");
     await createLocalDevice();
     history.push("/");
   };
