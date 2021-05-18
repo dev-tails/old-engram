@@ -64,7 +64,7 @@ export default function SignupPage(props: SignupPageProps) {
     };
 
   const handleUseWithoutAccount = async () => {
-    trackEvent("signup");
+    trackEvent("use_without_account");
     await createLocalDevice();
     history.push("/");
   };
