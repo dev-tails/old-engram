@@ -28,6 +28,8 @@ import {
   Menu as MenuIcon,
   MenuBook,
   NewReleases,
+  Person,
+  PersonAdd,
   Settings,
   ViewDay,
 } from '@material-ui/icons';
@@ -401,24 +403,55 @@ export const Header: React.FC<HeaderProps> = ({
                   <ListItemText primary={"Updates"} />
                 </ListItem>
               </a>
-              {user ? (
-                <div className="drawer-footer">
-                  <ListItem>
-                    <ListItemIcon>
-                      <AccountCircle />
-                    </ListItemIcon>
-                    <ListItemText>{user.username}</ListItemText>
-                  </ListItem>
-                  <Link to={`/logout`}>
-                    <ListItem button>
+
+              <div className="drawer-footer">
+                {user ? (
+                  <>
+                    <ListItem>
                       <ListItemIcon>
-                        <ExitIcon />
+                        <AccountCircle />
                       </ListItemIcon>
-                      <ListItemText primary={"Logout"} />
+                      <ListItemText>{user.username}</ListItemText>
                     </ListItem>
-                  </Link>
-                </div>
-              ) : null}
+                    <Link
+                      to={`/logout`}
+                      onClick={setLeftDrawerOpen.bind(this, false)}
+                    >
+                      <ListItem button>
+                        <ListItemIcon>
+                          <ExitIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={"Logout"} />
+                      </ListItem>
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      to={`/signup`}
+                      onClick={setLeftDrawerOpen.bind(this, false)}
+                    >
+                      <ListItem button>
+                        <ListItemIcon>
+                          <PersonAdd />
+                        </ListItemIcon>
+                        <ListItemText primary={"Sign up"} />
+                      </ListItem>
+                    </Link>
+                    <Link
+                      to={`/login`}
+                      onClick={setLeftDrawerOpen.bind(this, false)}
+                    >
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Person />
+                        </ListItemIcon>
+                        <ListItemText primary={"Log in"} />
+                      </ListItem>
+                    </Link>
+                  </>
+                )}
+              </div>
             </List>
             <Menu
               id="fade-menu"
