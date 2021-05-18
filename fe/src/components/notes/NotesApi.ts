@@ -102,94 +102,89 @@ export async function getRemoteNote(id: string): Promise<Note[]> {
 let getAllPromise: Promise<any> | null = null;
 let notes: Note[] | null = null;
 export async function getAllNotes(): Promise<any[]> {
-  const device = await db.getDevice();
-
   if (!getAllPromise) {
-    const offlineNotesPromise = db.getAllNotes();
-    const promises = [offlineNotesPromise];
+    getAllPromise = new Promise(async (resolve, reject) => {
+      const device = await db.getDevice();
+      const offlineNotesPromise = db.getAllNotes();
+      const promises = [offlineNotesPromise];
 
-    const isAuthenticatedUser = await UsersApi.isAuthenticatedUser();
-    if (isAuthenticatedUser) {
-      const lastSyncDate = device?.syncedAt;
-      let qs = "";
-      if (lastSyncDate) {
-        qs = querystring.stringify({
-          lastSyncDate: lastSyncDate.toISOString(),
-        });
-      }
-      const syncDate = new Date();
-      let key = await db.getKey();
-      const serverNotesPromise = Api.get(`/api/notes?${qs}`)
-        .then(async (res) => {
-          const serverNotes: Note[] = [];
-          if (device) {
-            const newServerNotes = res.data as Note[];
-            let promises = [];
-            const batchSize = 500;
-            for (const note of newServerNotes) {
-              const noteCopy = { ...note };
-              if (
-                isPluginEnabled(PluginName.PLUGIN_ENCRYPTION) &&
-                key &&
-                noteCopy.iv &&
-                noteCopy.encryptedBody
-              ) {
-                try {
-                  const decoded = await CryptoUtils.decrypt(
-                    key,
-                    noteCopy.iv,
-                    noteCopy.encryptedBody
-                  );
-                  noteCopy.body = decoded;
-                } catch (err) {
-                  noteCopy.body = `Failed to decrypt: ${err.message}`;
+      const isAuthenticatedUser = await UsersApi.isAuthenticatedUser();
+      if (isAuthenticatedUser) {
+        const lastSyncDate = device?.syncedAt;
+        let qs = "";
+        if (lastSyncDate) {
+          qs = querystring.stringify({
+            lastSyncDate: lastSyncDate.toISOString(),
+          });
+        }
+        const syncDate = new Date();
+        let key = await db.getKey();
+        const serverNotesPromise = Api.get(`/api/notes?${qs}`)
+          .then(async (res) => {
+            const serverNotes: Note[] = [];
+            if (device) {
+              const newServerNotes = res.data as Note[];
+              let promises = [];
+              const batchSize = 500;
+              for (const note of newServerNotes) {
+                const noteCopy = { ...note };
+                if (
+                  isPluginEnabled(PluginName.PLUGIN_ENCRYPTION) &&
+                  key &&
+                  noteCopy.iv &&
+                  noteCopy.encryptedBody
+                ) {
+                  try {
+                    const decoded = await CryptoUtils.decrypt(
+                      key,
+                      noteCopy.iv,
+                      noteCopy.encryptedBody
+                    );
+                    noteCopy.body = decoded;
+                  } catch (err) {
+                    noteCopy.body = `Failed to decrypt: ${err.message}`;
+                  }
+                }
+
+                promises.push(
+                  db
+                    .insertOrUpdateNote({
+                      ...noteCopy,
+                      localId: note.localId || (note._id as string),
+                    })
+                    .then((noteWithLocalId) => {
+                      serverNotes.push(noteWithLocalId);
+                    })
+                );
+                if (promises.length === batchSize) {
+                  await Promise.all(promises);
+                  promises = [];
                 }
               }
-
-              promises.push(
-                db
-                  .insertOrUpdateNote({
-                    ...noteCopy,
-                    localId: note.localId || (note._id as string),
-                  })
-                  .then((noteWithLocalId) => {
-                    serverNotes.push(noteWithLocalId);
-                  })
-              );
-              if (promises.length === batchSize) {
+              if (promises.length > 0) {
                 await Promise.all(promises);
-                promises = [];
               }
-            }
-            if (promises.length > 0) {
-              await Promise.all(promises);
-            }
 
-            await updateDevice({ ...device, syncedAt: syncDate });
-          }
-          return serverNotes;
-        })
-        .catch((err) => {
-          // Intentionally ignore errors
-          console.error(err);
-          return [];
-        });
-      promises.push(serverNotesPromise);
-    }
-
-    getAllPromise = Promise.all(promises);
+              await updateDevice({ ...device, syncedAt: syncDate });
+            }
+            return serverNotes;
+          })
+          .catch((err) => {
+            // Intentionally ignore errors
+            console.error(err);
+            return [];
+          });
+        promises.push(serverNotesPromise);
+        const [offlineNotes, serverNotes] = await Promise.all(promises);
+        return uniqBy(
+          [...(serverNotes ? serverNotes : []), ...offlineNotes],
+          "localId"
+        );
+      }
+    });
   }
 
-  const [offlineNotes, serverNotes] = await getAllPromise;
-
-  if (!notes) {
-    notes = uniqBy(
-      [...(serverNotes ? serverNotes : []), ...offlineNotes],
-      "localId"
-    );
-  }
-
-  return notes;
+  return getAllPromise;
 }
 
 export function clearGetAllCache() {

@@ -38,14 +38,14 @@ type LogPageProps = {
 
 export const LogPage: React.FC<LogPageProps> = (props) => {
   const location = useLocation();
+  const [syncingLocalNotes, setSyncingLocalNotes] = useState(false);
   const [bottomNavValue, setBottomNavValue] = useState("all");
   const [textBoxFocused, setTextBoxFocused] = useState(false);
   const [noteToEdit, setNoteToEdit] = useState<NotesApi.Note | null>(null);
   const [selectedNoteId, setSelectedNoteId] = useState<string>("");
   const [notes, setNotes] = useState<NotesApi.Note[]>([]);
-  const [menuAnchoEl, setMenuAnchorEl] = React.useState<null | HTMLDivElement>(
-    null
-  );
+  const [menuAnchoEl, setMenuAnchorEl] =
+    React.useState<null | HTMLDivElement>(null);
   const [showShareLinkDialog, setShowShareLinkDialog] = useState(false);
 
   useEffect(() => {
@@ -259,6 +259,19 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
     });
   }
 
+  const handleSyncClicked = async () => {
+    NotesApi.clearGetAllCache();
+    syncLocalNotes();
+  };
+
+  const syncLocalNotes = async () => {
+    setSyncingLocalNotes(true);
+
+    await NotesApi.syncLocalNotes();
+
+    setSyncingLocalNotes(false);
+  };
+
   const selectedNote = getNoteById(selectedNoteId);
   const isShareEnabled = Boolean(navigator.share);
   const isZapEnabled = isPluginEnabled(PluginName.PLUGIN_ZAPIER);
@@ -270,6 +283,8 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
           date={props.date}
           dateRangeValue="Day"
           onDateChange={handleDateChanged}
+          onSyncClicked={handleSyncClicked}
+          syncing={syncingLocalNotes}
         />
       ) : null}
       <div className="log-page">
