@@ -1,15 +1,15 @@
-import "./LoginPage.scss";
+import './LoginPage.scss';
 
-import { Button, Divider, TextField } from "@material-ui/core";
-import axios from "axios";
-import React, { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Button, Divider, TextField } from '@material-ui/core';
+import axios from 'axios';
+import React, { useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 
-import { objectIdFromDate } from "../../utils/ObjectId";
-import { Note } from "../notes/NotesApi";
-import { SignupPagePath } from "../SignupPage/SignupPage";
-import { DividerWithText } from "./DividerWithText/DividerWithText";
-import { createLocalDevice } from "../../DeviceApi";
+import { createLocalDevice } from '../../DeviceApi';
+import { objectIdFromDate } from '../../utils/ObjectId';
+import { Note } from '../notes/NotesApi';
+import { SignupPagePath } from '../SignupPage/SignupPage';
+import { DividerWithText } from './DividerWithText/DividerWithText';
 
 export type LoginPageProps = {};
 
@@ -40,17 +40,15 @@ export default function LoginPage(props: LoginPageProps) {
       });
   };
 
-  const handleUsernameChanged: React.InputHTMLAttributes<HTMLInputElement>["onChange"] = (
-    event
-  ) => {
-    setUsername(event.target.value);
-  };
+  const handleUsernameChanged: React.InputHTMLAttributes<HTMLInputElement>["onChange"] =
+    (event) => {
+      setUsername(event.target.value);
+    };
 
-  const handlePasswordChanged: React.InputHTMLAttributes<HTMLInputElement>["onChange"] = (
-    event
-  ) => {
-    setPassword(event.target.value);
-  };
+  const handlePasswordChanged: React.InputHTMLAttributes<HTMLInputElement>["onChange"] =
+    (event) => {
+      setPassword(event.target.value);
+    };
 
   const handleUseWithoutAccount = async () => {
     await createLocalDevice();
@@ -72,18 +70,6 @@ export default function LoginPage(props: LoginPageProps) {
             src="/images/logo.svg"
           />
         </div>
-
-        <div id="use-without-account">
-          <Button
-            onClick={handleUseWithoutAccount}
-            variant="contained"
-            color="primary"
-          >
-            Use Offline Without Account
-          </Button>
-        </div>
-
-        <DividerWithText>Or</DividerWithText>
 
         <div className="errors">
           {errors.map((error) => {
@@ -113,9 +99,19 @@ export default function LoginPage(props: LoginPageProps) {
           fullWidth
           onClick={handleSignIn}
           variant="contained"
+          color="primary"
         >
           Log In
         </Button>
+
+        <DividerWithText>Or</DividerWithText>
+
+        <div id="use-without-account">
+          <Button onClick={handleUseWithoutAccount} variant="contained">
+            Use Offline Without Account
+          </Button>
+        </div>
+
         <Divider />
         <a
           href={`mailto:engram@xyzdigital.com?subject=Engram: Reset Password Request&body=Username: ${username}`}
