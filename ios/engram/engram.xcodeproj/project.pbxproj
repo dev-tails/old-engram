@@ -1,0 +1,729 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 52;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		66ABEA6126589C6F006C9FD5 /* engramApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66ABEA6026589C6F006C9FD5 /* engramApp.swift */; };
+		66ABEA6326589C6F006C9FD5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66ABEA6226589C6F006C9FD5 /* ContentView.swift */; };
+		66ABEA6826589C72006C9FD5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66ABEA6726589C72006C9FD5 /* Preview Assets.xcassets */; };
+		66ABEA6D26589C72006C9FD5 /* engram WatchKit App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 66ABEA6C26589C72006C9FD5 /* engram WatchKit App.app */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		66ABEA7226589C73006C9FD5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66ABEA7126589C73006C9FD5 /* Assets.xcassets */; };
+		66ABEA7926589C73006C9FD5 /* engram WatchKit Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 66ABEA7826589C73006C9FD5 /* engram WatchKit Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		66ABEA7E26589C73006C9FD5 /* engramApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66ABEA7D26589C73006C9FD5 /* engramApp.swift */; };
+		66ABEA8026589C73006C9FD5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66ABEA7F26589C73006C9FD5 /* ContentView.swift */; };
+		66ABEA8226589C73006C9FD5 /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66ABEA8126589C73006C9FD5 /* NotificationController.swift */; };
+		66ABEA8426589C73006C9FD5 /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66ABEA8326589C73006C9FD5 /* NotificationView.swift */; };
+		66ABEA8626589C73006C9FD5 /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66ABEA8526589C73006C9FD5 /* ComplicationController.swift */; };
+		66ABEA8826589C74006C9FD5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66ABEA8726589C74006C9FD5 /* Assets.xcassets */; };
+		66ABEA8B26589C74006C9FD5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66ABEA8A26589C74006C9FD5 /* Preview Assets.xcassets */; };
+		66E5911F2658A58600E38067 /* NoteListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E5911E2658A58600E38067 /* NoteListItem.swift */; };
+		66E591212658C30F00E38067 /* NoteListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E591202658C30F00E38067 /* NoteListView.swift */; };
+		66E591252659787C00E38067 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66E591242659787C00E38067 /* CloudKit.framework */; };
+		66E591282659788A00E38067 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66E591272659788A00E38067 /* CloudKit.framework */; };
+		66E5914E2659856B00E38067 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E5914D2659856B00E38067 /* Persistence.swift */; };
+		66E5914F2659856B00E38067 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E5914D2659856B00E38067 /* Persistence.swift */; };
+		66E59152265985C400E38067 /* engram.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 66E59150265985C400E38067 /* engram.xcdatamodeld */; };
+		66E59153265985C400E38067 /* engram.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 66E59150265985C400E38067 /* engram.xcdatamodeld */; };
+		66E59156265999BD00E38067 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E59155265999BD00E38067 /* Assets.xcassets */; };
+		66E59157265999BD00E38067 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E59155265999BD00E38067 /* Assets.xcassets */; };
+		66E59158265999BD00E38067 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E59155265999BD00E38067 /* Assets.xcassets */; };
+		66E5915A2659A23D00E38067 /* CheckboxToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E591592659A23C00E38067 /* CheckboxToggleStyle.swift */; };
+		66E5915B2659A23D00E38067 /* CheckboxToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E591592659A23C00E38067 /* CheckboxToggleStyle.swift */; };
+		66E5915D2659A3C600E38067 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E5915C2659A3C600E38067 /* MainView.swift */; };
+		66E591602659B6E000E38067 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E5915F2659B6E000E38067 /* CustomTextField.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		66ABEA6E26589C72006C9FD5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 66ABEA5526589C6E006C9FD5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 66ABEA6B26589C72006C9FD5;
+			remoteInfo = "engram WatchKit App";
+		};
+		66ABEA7A26589C73006C9FD5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 66ABEA5526589C6E006C9FD5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 66ABEA7726589C73006C9FD5;
+			remoteInfo = "engram WatchKit Extension";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		66ABEA9326589C74006C9FD5 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				66ABEA7926589C73006C9FD5 /* engram WatchKit Extension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		66ABEA9726589C74006C9FD5 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				66ABEA6D26589C72006C9FD5 /* engram WatchKit App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		66ABEA5D26589C6F006C9FD5 /* engram.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = engram.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		66ABEA6026589C6F006C9FD5 /* engramApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = engramApp.swift; sourceTree = "<group>"; };
+		66ABEA6226589C6F006C9FD5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		66ABEA6726589C72006C9FD5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		66ABEA6926589C72006C9FD5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		66ABEA6C26589C72006C9FD5 /* engram WatchKit App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "engram WatchKit App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		66ABEA7126589C73006C9FD5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		66ABEA7326589C73006C9FD5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		66ABEA7826589C73006C9FD5 /* engram WatchKit Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "engram WatchKit Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		66ABEA7D26589C73006C9FD5 /* engramApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = engramApp.swift; sourceTree = "<group>"; };
+		66ABEA7F26589C73006C9FD5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		66ABEA8126589C73006C9FD5 /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
+		66ABEA8326589C73006C9FD5 /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
+		66ABEA8526589C73006C9FD5 /* ComplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationController.swift; sourceTree = "<group>"; };
+		66ABEA8726589C74006C9FD5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		66ABEA8A26589C74006C9FD5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		66ABEA8C26589C74006C9FD5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		66ABEA8D26589C74006C9FD5 /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
+		66E5911E2658A58600E38067 /* NoteListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteListItem.swift; sourceTree = "<group>"; };
+		66E591202658C30F00E38067 /* NoteListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteListView.swift; sourceTree = "<group>"; };
+		66E591222659787900E38067 /* engram WatchKit ExtensionDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "engram WatchKit ExtensionDebug.entitlements"; sourceTree = "<group>"; };
+		66E591242659787C00E38067 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS7.4.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
+		66E591262659788900E38067 /* engramDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = engramDebug.entitlements; sourceTree = "<group>"; };
+		66E591272659788A00E38067 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.5.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
+		66E5914D2659856B00E38067 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
+		66E59151265985C400E38067 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		66E5915426598B0C00E38067 /* engram.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = engram.entitlements; sourceTree = "<group>"; };
+		66E59155265999BD00E38067 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		66E591592659A23C00E38067 /* CheckboxToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxToggleStyle.swift; sourceTree = "<group>"; };
+		66E5915C2659A3C600E38067 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		66E5915F2659B6E000E38067 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		66ABEA5A26589C6F006C9FD5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				66E591282659788A00E38067 /* CloudKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		66ABEA7526589C73006C9FD5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				66E591252659787C00E38067 /* CloudKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		66ABEA5426589C6E006C9FD5 = {
+			isa = PBXGroup;
+			children = (
+				66ABEA5F26589C6F006C9FD5 /* engram */,
+				66ABEA7026589C72006C9FD5 /* engram WatchKit App */,
+				66ABEA7C26589C73006C9FD5 /* engram WatchKit Extension */,
+				66ABEA5E26589C6F006C9FD5 /* Products */,
+				66E591232659787C00E38067 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		66ABEA5E26589C6F006C9FD5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				66ABEA5D26589C6F006C9FD5 /* engram.app */,
+				66ABEA6C26589C72006C9FD5 /* engram WatchKit App.app */,
+				66ABEA7826589C73006C9FD5 /* engram WatchKit Extension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		66ABEA5F26589C6F006C9FD5 /* engram */ = {
+			isa = PBXGroup;
+			children = (
+				66E5915C2659A3C600E38067 /* MainView.swift */,
+				66E59155265999BD00E38067 /* Assets.xcassets */,
+				66E5915426598B0C00E38067 /* engram.entitlements */,
+				66E591262659788900E38067 /* engramDebug.entitlements */,
+				66ABEA6026589C6F006C9FD5 /* engramApp.swift */,
+				66E59150265985C400E38067 /* engram.xcdatamodeld */,
+				66ABEA6226589C6F006C9FD5 /* ContentView.swift */,
+				66ABEA6926589C72006C9FD5 /* Info.plist */,
+				66ABEA6626589C72006C9FD5 /* Preview Content */,
+				66E5911E2658A58600E38067 /* NoteListItem.swift */,
+				66E591202658C30F00E38067 /* NoteListView.swift */,
+				66E5914D2659856B00E38067 /* Persistence.swift */,
+				66E591592659A23C00E38067 /* CheckboxToggleStyle.swift */,
+				66E5915F2659B6E000E38067 /* CustomTextField.swift */,
+			);
+			path = engram;
+			sourceTree = "<group>";
+		};
+		66ABEA6626589C72006C9FD5 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				66ABEA6726589C72006C9FD5 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		66ABEA7026589C72006C9FD5 /* engram WatchKit App */ = {
+			isa = PBXGroup;
+			children = (
+				66ABEA7126589C73006C9FD5 /* Assets.xcassets */,
+				66ABEA7326589C73006C9FD5 /* Info.plist */,
+			);
+			path = "engram WatchKit App";
+			sourceTree = "<group>";
+		};
+		66ABEA7C26589C73006C9FD5 /* engram WatchKit Extension */ = {
+			isa = PBXGroup;
+			children = (
+				66E591222659787900E38067 /* engram WatchKit ExtensionDebug.entitlements */,
+				66ABEA7D26589C73006C9FD5 /* engramApp.swift */,
+				66ABEA7F26589C73006C9FD5 /* ContentView.swift */,
+				66ABEA8126589C73006C9FD5 /* NotificationController.swift */,
+				66ABEA8326589C73006C9FD5 /* NotificationView.swift */,
+				66ABEA8526589C73006C9FD5 /* ComplicationController.swift */,
+				66ABEA8726589C74006C9FD5 /* Assets.xcassets */,
+				66ABEA8C26589C74006C9FD5 /* Info.plist */,
+				66ABEA8D26589C74006C9FD5 /* PushNotificationPayload.apns */,
+				66ABEA8926589C74006C9FD5 /* Preview Content */,
+			);
+			path = "engram WatchKit Extension";
+			sourceTree = "<group>";
+		};
+		66ABEA8926589C74006C9FD5 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				66ABEA8A26589C74006C9FD5 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		66E591232659787C00E38067 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				66E591272659788A00E38067 /* CloudKit.framework */,
+				66E591242659787C00E38067 /* CloudKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		66ABEA5C26589C6F006C9FD5 /* engram */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 66ABEA9826589C74006C9FD5 /* Build configuration list for PBXNativeTarget "engram" */;
+			buildPhases = (
+				66ABEA5926589C6F006C9FD5 /* Sources */,
+				66ABEA5A26589C6F006C9FD5 /* Frameworks */,
+				66ABEA5B26589C6F006C9FD5 /* Resources */,
+				66ABEA9726589C74006C9FD5 /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				66ABEA6F26589C72006C9FD5 /* PBXTargetDependency */,
+			);
+			name = engram;
+			productName = engram;
+			productReference = 66ABEA5D26589C6F006C9FD5 /* engram.app */;
+			productType = "com.apple.product-type.application";
+		};
+		66ABEA6B26589C72006C9FD5 /* engram WatchKit App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 66ABEA9426589C74006C9FD5 /* Build configuration list for PBXNativeTarget "engram WatchKit App" */;
+			buildPhases = (
+				66ABEA6A26589C72006C9FD5 /* Resources */,
+				66ABEA9326589C74006C9FD5 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				66ABEA7B26589C73006C9FD5 /* PBXTargetDependency */,
+			);
+			name = "engram WatchKit App";
+			productName = "engram WatchKit App";
+			productReference = 66ABEA6C26589C72006C9FD5 /* engram WatchKit App.app */;
+			productType = "com.apple.product-type.application.watchapp2";
+		};
+		66ABEA7726589C73006C9FD5 /* engram WatchKit Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 66ABEA9026589C74006C9FD5 /* Build configuration list for PBXNativeTarget "engram WatchKit Extension" */;
+			buildPhases = (
+				66ABEA7426589C73006C9FD5 /* Sources */,
+				66ABEA7526589C73006C9FD5 /* Frameworks */,
+				66ABEA7626589C73006C9FD5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "engram WatchKit Extension";
+			productName = "engram WatchKit Extension";
+			productReference = 66ABEA7826589C73006C9FD5 /* engram WatchKit Extension.appex */;
+			productType = "com.apple.product-type.watchkit2-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		66ABEA5526589C6E006C9FD5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1250;
+				LastUpgradeCheck = 1250;
+				TargetAttributes = {
+					66ABEA5C26589C6F006C9FD5 = {
+						CreatedOnToolsVersion = 12.5;
+					};
+					66ABEA6B26589C72006C9FD5 = {
+						CreatedOnToolsVersion = 12.5;
+						LastSwiftMigration = 1250;
+					};
+					66ABEA7726589C73006C9FD5 = {
+						CreatedOnToolsVersion = 12.5;
+					};
+				};
+			};
+			buildConfigurationList = 66ABEA5826589C6E006C9FD5 /* Build configuration list for PBXProject "engram" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 66ABEA5426589C6E006C9FD5;
+			productRefGroup = 66ABEA5E26589C6F006C9FD5 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				66ABEA5C26589C6F006C9FD5 /* engram */,
+				66ABEA6B26589C72006C9FD5 /* engram WatchKit App */,
+				66ABEA7726589C73006C9FD5 /* engram WatchKit Extension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		66ABEA5B26589C6F006C9FD5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				66E59156265999BD00E38067 /* Assets.xcassets in Resources */,
+				66ABEA6826589C72006C9FD5 /* Preview Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		66ABEA6A26589C72006C9FD5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				66E59157265999BD00E38067 /* Assets.xcassets in Resources */,
+				66ABEA7226589C73006C9FD5 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		66ABEA7626589C73006C9FD5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				66ABEA8B26589C74006C9FD5 /* Preview Assets.xcassets in Resources */,
+				66E59158265999BD00E38067 /* Assets.xcassets in Resources */,
+				66ABEA8826589C74006C9FD5 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		66ABEA5926589C6F006C9FD5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				66ABEA6326589C6F006C9FD5 /* ContentView.swift in Sources */,
+				66E5915D2659A3C600E38067 /* MainView.swift in Sources */,
+				66ABEA6126589C6F006C9FD5 /* engramApp.swift in Sources */,
+				66E5911F2658A58600E38067 /* NoteListItem.swift in Sources */,
+				66E59152265985C400E38067 /* engram.xcdatamodeld in Sources */,
+				66E5914E2659856B00E38067 /* Persistence.swift in Sources */,
+				66E591212658C30F00E38067 /* NoteListView.swift in Sources */,
+				66E5915A2659A23D00E38067 /* CheckboxToggleStyle.swift in Sources */,
+				66E591602659B6E000E38067 /* CustomTextField.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		66ABEA7426589C73006C9FD5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				66ABEA8226589C73006C9FD5 /* NotificationController.swift in Sources */,
+				66ABEA8026589C73006C9FD5 /* ContentView.swift in Sources */,
+				66ABEA8626589C73006C9FD5 /* ComplicationController.swift in Sources */,
+				66E59153265985C400E38067 /* engram.xcdatamodeld in Sources */,
+				66E5914F2659856B00E38067 /* Persistence.swift in Sources */,
+				66ABEA7E26589C73006C9FD5 /* engramApp.swift in Sources */,
+				66E5915B2659A23D00E38067 /* CheckboxToggleStyle.swift in Sources */,
+				66ABEA8426589C73006C9FD5 /* NotificationView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		66ABEA6F26589C72006C9FD5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			platformFilter = ios;
+			target = 66ABEA6B26589C72006C9FD5 /* engram WatchKit App */;
+			targetProxy = 66ABEA6E26589C72006C9FD5 /* PBXContainerItemProxy */;
+		};
+		66ABEA7B26589C73006C9FD5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 66ABEA7726589C73006C9FD5 /* engram WatchKit Extension */;
+			targetProxy = 66ABEA7A26589C73006C9FD5 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		66ABEA8E26589C74006C9FD5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		66ABEA8F26589C74006C9FD5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		66ABEA9126589C74006C9FD5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CODE_SIGN_ENTITLEMENTS = "engram WatchKit Extension/engram WatchKit ExtensionDebug.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"engram WatchKit Extension/Preview Content\"";
+				DEVELOPMENT_TEAM = V3T29AUKGC;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = "engram WatchKit Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.xyzdigital.engram.watchkitapp.extension;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 7.3;
+			};
+			name = Debug;
+		};
+		66ABEA9226589C74006C9FD5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"engram WatchKit Extension/Preview Content\"";
+				DEVELOPMENT_TEAM = V3T29AUKGC;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = "engram WatchKit Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.xyzdigital.engram.watchkitapp.extension;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 7.3;
+			};
+			name = Release;
+		};
+		66ABEA9526589C74006C9FD5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = V3T29AUKGC;
+				IBSC_MODULE = engram_WatchKit_Extension;
+				INFOPLIST_FILE = "engram WatchKit App/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.xyzdigital.engram.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 7.3;
+			};
+			name = Debug;
+		};
+		66ABEA9626589C74006C9FD5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = V3T29AUKGC;
+				IBSC_MODULE = engram_WatchKit_Extension;
+				INFOPLIST_FILE = "engram WatchKit App/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.xyzdigital.engram.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 7.3;
+			};
+			name = Release;
+		};
+		66ABEA9926589C74006C9FD5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = engram/engramDebug.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"engram/Preview Content\"";
+				DEVELOPMENT_TEAM = V3T29AUKGC;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = engram/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.xyzdigital.engram;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,6";
+			};
+			name = Debug;
+		};
+		66ABEA9A26589C74006C9FD5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = engram/engram.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"engram/Preview Content\"";
+				DEVELOPMENT_TEAM = V3T29AUKGC;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = engram/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.xyzdigital.engram;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,6";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		66ABEA5826589C6E006C9FD5 /* Build configuration list for PBXProject "engram" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				66ABEA8E26589C74006C9FD5 /* Debug */,
+				66ABEA8F26589C74006C9FD5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		66ABEA9026589C74006C9FD5 /* Build configuration list for PBXNativeTarget "engram WatchKit Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				66ABEA9126589C74006C9FD5 /* Debug */,
+				66ABEA9226589C74006C9FD5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		66ABEA9426589C74006C9FD5 /* Build configuration list for PBXNativeTarget "engram WatchKit App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				66ABEA9526589C74006C9FD5 /* Debug */,
+				66ABEA9626589C74006C9FD5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		66ABEA9826589C74006C9FD5 /* Build configuration list for PBXNativeTarget "engram" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				66ABEA9926589C74006C9FD5 /* Debug */,
+				66ABEA9A26589C74006C9FD5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		66E59150265985C400E38067 /* engram.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				66E59151265985C400E38067 /* Model.xcdatamodel */,
+			);
+			currentVersion = 66E59151265985C400E38067 /* Model.xcdatamodel */;
+			path = engram.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 66ABEA5526589C6E006C9FD5 /* Project object */;
+}
