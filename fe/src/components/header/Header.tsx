@@ -1,4 +1,4 @@
-import './Header.scss';
+import "./Header.scss";
 
 import {
   AppBar,
@@ -19,7 +19,7 @@ import {
   TextField,
   Toolbar,
   Typography,
-} from '@material-ui/core';
+} from "@material-ui/core";
 import {
   AccountCircle,
   Dashboard,
@@ -32,15 +32,20 @@ import {
   PersonAdd,
   Settings,
   ViewDay,
-} from '@material-ui/icons';
-import React, { useEffect, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+} from "@material-ui/icons";
+import React, { useEffect, useState } from "react";
+import { Link, useHistory } from "react-router-dom";
 
-import { ReactComponent as EngramLogo } from '../../logo.svg';
-import { isPluginEnabled, PluginName } from '../../Plugins';
-import * as UsersApi from '../../UsersApi';
-import { Holdable } from '../Holdable/Holdable';
-import { createOrUpdateNote, getNotes, Note, removeNote } from '../notes/NotesApi';
+import { ReactComponent as EngramLogo } from "../../logo.svg";
+import { isPluginEnabled, PluginName } from "../../Plugins";
+import * as UsersApi from "../../UsersApi";
+import { Holdable } from "../Holdable/Holdable";
+import {
+  createOrUpdateNote,
+  getNotes,
+  Note,
+  removeNote,
+} from "../notes/NotesApi";
 
 type HeaderProps = {
   title?: string;
@@ -128,18 +133,26 @@ export const Header: React.FC<HeaderProps> = ({
   const [user, setUser] = useState<UsersApi.User | null>(null);
 
   useEffect(() => {
+    async function fetchMe() {
+      try {
+        const me = await UsersApi.getMe();
+        setUser(me);
+      } catch (err) {
+        setUser(null);
+      }
+    }
+    if (!isPublicRoute) {
+      fetchMe();
+    }
+  });
+
+  useEffect(() => {
     async function getWorkspaces() {
       const fetchedWorkspaces = await getNotes({ type: "workspace" });
       setWorkspaces(fetchedWorkspaces);
     }
 
-    async function fetchMe() {
-      const me = await UsersApi.getMe();
-      setUser(me);
-    }
-
     if (!isPublicRoute) {
-      fetchMe();
       getWorkspaces();
     }
   }, [isPublicRoute]);
@@ -404,54 +417,52 @@ export const Header: React.FC<HeaderProps> = ({
                 </ListItem>
               </a>
 
-              <div className="drawer-footer">
-                {user ? (
-                  <>
-                    <ListItem>
+              {user ? (
+                <>
+                  <ListItem>
+                    <ListItemIcon>
+                      <AccountCircle />
+                    </ListItemIcon>
+                    <ListItemText>{user.username}</ListItemText>
+                  </ListItem>
+                  <Link
+                    to={`/logout`}
+                    onClick={setLeftDrawerOpen.bind(this, false)}
+                  >
+                    <ListItem button>
                       <ListItemIcon>
-                        <AccountCircle />
+                        <ExitIcon />
                       </ListItemIcon>
-                      <ListItemText>{user.username}</ListItemText>
+                      <ListItemText primary={"Logout"} />
                     </ListItem>
-                    <Link
-                      to={`/logout`}
-                      onClick={setLeftDrawerOpen.bind(this, false)}
-                    >
-                      <ListItem button>
-                        <ListItemIcon>
-                          <ExitIcon />
-                        </ListItemIcon>
-                        <ListItemText primary={"Logout"} />
-                      </ListItem>
-                    </Link>
-                  </>
-                ) : (
-                  <>
-                    <Link
-                      to={`/signup`}
-                      onClick={setLeftDrawerOpen.bind(this, false)}
-                    >
-                      <ListItem button>
-                        <ListItemIcon>
-                          <PersonAdd />
-                        </ListItemIcon>
-                        <ListItemText primary={"Sign up"} />
-                      </ListItem>
-                    </Link>
-                    <Link
-                      to={`/login`}
-                      onClick={setLeftDrawerOpen.bind(this, false)}
-                    >
-                      <ListItem button>
-                        <ListItemIcon>
-                          <Person />
-                        </ListItemIcon>
-                        <ListItemText primary={"Log in"} />
-                      </ListItem>
-                    </Link>
-                  </>
-                )}
-              </div>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to={`/signup`}
+                    onClick={setLeftDrawerOpen.bind(this, false)}
+                  >
+                    <ListItem button>
+                      <ListItemIcon>
+                        <PersonAdd />
+                      </ListItemIcon>
+                      <ListItemText primary={"Sign up"} />
+                    </ListItem>
+                  </Link>
+                  <Link
+                    to={`/login`}
+                    onClick={setLeftDrawerOpen.bind(this, false)}
+                  >
+                    <ListItem button>
+                      <ListItemIcon>
+                        <Person />
+                      </ListItemIcon>
+                      <ListItemText primary={"Log in"} />
+                    </ListItem>
+                  </Link>
+                </>
+              )}
             </List>
             <Menu
               id="fade-menu"

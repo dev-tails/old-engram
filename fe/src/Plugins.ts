@@ -1,3 +1,5 @@
+import _ from "lodash";
+
 export enum PluginName {
   PLUGIN_DASHBOARD = "Dashboard",
   PLUGIN_ENCRYPTION = "Encryption",
@@ -6,6 +8,8 @@ export enum PluginName {
   PLUGIN_WORKSPACES = "Workspaces",
   PLUGIN_ZAPIER = "Zapier",
 }
+
+const publicPlugins = [PluginName.PLUGIN_ZAPIER];
 
 const localStorageKey = "plugins";
 
@@ -22,11 +26,11 @@ export async function initializePlugins() {
 }
 
 export function getPlugins() {
-  return plugins;
+  return _.pick(plugins, publicPlugins);
 }
 
-export function isPluginEnabled(pluginName: string) {
-  return plugins[pluginName];
+export function isPluginEnabled(pluginName: PluginName) {
+  return publicPlugins.includes(pluginName) && plugins[pluginName];
 }
 
 export async function togglePlugin(pluginName: string) {
