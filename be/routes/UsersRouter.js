@@ -1,12 +1,12 @@
-import bcrypt from 'bcrypt';
-import express from 'express';
-import jwt from 'jsonwebtoken';
-import yup from 'yup';
+import bcrypt from "bcrypt";
+import express from "express";
+import jwt from "jsonwebtoken";
+import yup from "yup";
 
-import { ObjectId } from '../Database.js';
-import { getEnv } from '../env.js';
-import { AuthAPIKeyMiddleware } from '../middleware/AuthAPIKeyMiddleware.js';
-import { AuthRequiredMiddleware } from '../middleware/AuthRequiredMiddleware.js';
+import { ObjectId } from "../Database.js";
+import { getEnv } from "../env.js";
+import { AuthAPIKeyMiddleware } from "../middleware/AuthAPIKeyMiddleware.js";
+import { AuthRequiredMiddleware } from "../middleware/AuthRequiredMiddleware.js";
 
 async function setToken(res, user) {
   const { jwtSecret, production } = getEnv();
@@ -138,8 +138,13 @@ export function initializeUserRouter() {
       username,
     });
 
+    const invalidLoginMessage =
+      "You have entered an invalid username or password";
+
     if (!user) {
-      return res.sendStatus(400);
+      return res.status(400).json({
+        errors: [invalidLoginMessage],
+      });
     }
 
     let passwordsMatch = false;
@@ -155,7 +160,9 @@ export function initializeUserRouter() {
         success: true,
       });
     } else {
-      return res.sendStatus(400);
+      return res.status(400).json({
+        errors: [invalidLoginMessage],
+      });
     }
   });
 
