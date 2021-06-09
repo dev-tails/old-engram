@@ -3,25 +3,27 @@
  * https://reactnavigation.org/docs/bottom-tab-navigator
  */
 
-import { Ionicons } from '@expo/vector-icons';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
-import * as React from 'react';
-import { useDispatch } from 'react-redux';
+import { Ionicons } from "@expo/vector-icons";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
+import * as React from "react";
+import { useDispatch } from "react-redux";
 
-import Colors from '../constants/Colors';
-import useColorScheme from '../hooks/useColorScheme';
-import { fetchUser } from '../redux/actions/UserActions';
-import LogScreen from '../screens/LogScreen';
-import { BottomTabParamList, LogParamList } from '../types';
+import Colors from "../constants/Colors";
+import useColorScheme from "../hooks/useColorScheme";
+import { fetchUser } from "../redux/actions/UserActions";
+import LogScreen from "../screens/LogScreen";
+import { BottomTabParamList, LogParamList } from "../types";
 
 type BottomTabNavigatorProps = {
   navigation: any;
-}
+};
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
-export default function BottomTabNavigator({navigation}: BottomTabNavigatorProps) {
+export default function BottomTabNavigator({
+  navigation,
+}: BottomTabNavigatorProps) {
   const colorScheme = useColorScheme();
 
   const dispatch = useDispatch();
@@ -37,19 +39,22 @@ export default function BottomTabNavigator({navigation}: BottomTabNavigatorProps
   return (
     <BottomTab.Navigator
       initialRouteName="All"
-      tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}>
+      tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}
+    >
       <BottomTab.Screen
         name="All"
         component={LogScreen}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="list-outline" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="list-outline" color={color} />
+          ),
         }}
       />
       <BottomTab.Screen
         name="Notes"
         component={LogScreen}
         initialParams={{
-          type: "note"
+          type: "note",
         }}
         options={{
           tabBarIcon: ({ color }) => <TabBarIcon name="remove" color={color} />,
@@ -59,20 +64,24 @@ export default function BottomTabNavigator({navigation}: BottomTabNavigatorProps
         name="Tasks"
         component={LogScreen}
         initialParams={{
-          type: "task"
+          type: "task",
         }}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="ellipse" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="ellipse" color={color} />
+          ),
         }}
       />
       <BottomTab.Screen
         name="Events"
         component={LogScreen}
         initialParams={{
-          type: "event"
+          type: "event",
         }}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="ellipse-outline" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="ellipse-outline" color={color} />
+          ),
         }}
       />
     </BottomTab.Navigator>
@@ -81,7 +90,10 @@ export default function BottomTabNavigator({navigation}: BottomTabNavigatorProps
 
 // You can explore the built-in icon families and icons on the web at:
 // https://icons.expo.fyi/
-function TabBarIcon(props: { name: React.ComponentProps<typeof Ionicons>['name']; color: string }) {
+function TabBarIcon(props: {
+  name: React.ComponentProps<typeof Ionicons>["name"];
+  color: string;
+}) {
   return <Ionicons size={30} style={{ marginBottom: -3 }} {...props} />;
 }
 
@@ -95,12 +107,12 @@ function LogNavigator() {
       <LogStack.Screen
         name="LogScreen"
         component={LogScreen}
-        options={{ headerTitle: 'Log' }}
+        options={{ headerTitle: "Log" }}
       />
       <LogStack.Screen
         name="NotesScreen"
         component={LogScreen}
-        options={{ headerTitle: 'Notes' }}
+        options={{ headerTitle: "Notes" }}
       />
     </LogStack.Navigator>
   );

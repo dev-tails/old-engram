@@ -4,11 +4,7 @@ import { StyleSheet } from "react-native";
 import { Alert, FlatList, KeyboardAvoidingView, Platform } from "react-native";
 import { ListItem } from "react-native-elements";
 import { Note } from "../api/NoteApi";
-import {
-  View,
-  TextInput,
-  ListItemTitle,
-} from "../components/Themed";
+import { View, TextInput, ListItemTitle } from "../components/Themed";
 import moment from "moment";
 import DateHeader from "../components/DateHeader";
 import useColorScheme from "../hooks/useColorScheme";
@@ -24,9 +20,12 @@ export type LogScreenProps = {
   };
 };
 
-const selectNotes = (state: any) => { return state.notes };
-const selectDate = (state: any) => { return state.date };
-
+const selectNotes = (state: any) => {
+  return state.notes;
+};
+const selectDate = (state: any) => {
+  return state.date;
+};
 
 export default function LogScreen({ route }: LogScreenProps) {
   const notes = useSelector(selectNotes);
@@ -37,9 +36,9 @@ export default function LogScreen({ route }: LogScreenProps) {
   const theme = useColorScheme();
   const type = route.params?.type;
 
-  let placeholder = "What's on your mind?"
+  let placeholder = "What's on your mind?";
   if (type === "task") {
-    placeholder = "What do you need to do today?"
+    placeholder = "What do you need to do today?";
   } else if (type === "event") {
     placeholder = "What's happening today?";
   }
@@ -47,25 +46,24 @@ export default function LogScreen({ route }: LogScreenProps) {
   let allowedTypes = ["note", "task", "task_completed", "event"];
   if (type) {
     if (type === "task") {
-      allowedTypes = ["task", "task_completed"]
+      allowedTypes = ["task", "task_completed"];
     } else {
-      allowedTypes = [type]
+      allowedTypes = [type];
     }
   }
 
   const filteredNotes = notes.filter((note: Note) => {
     if (note.date !== moment(date).format("YYYY-MM-DD")) {
-      return false
+      return false;
     }
     if (allowedTypes.includes(note.type) === false) {
       return false;
     }
     return true;
-    
   });
 
   async function refetchNotes() {
-    fetchNotes(dispatch).catch(handleGenericError)
+    fetchNotes(dispatch).catch(handleGenericError);
   }
 
   async function handleSubmit() {
@@ -78,8 +76,8 @@ export default function LogScreen({ route }: LogScreenProps) {
 
       setTimeout(() => {
         listRef.current?.scrollToEnd();
-      }, 100)
-    } catch(err) {
+      }, 100);
+    } catch (err) {
       handleGenericError(err);
     }
   }
@@ -87,9 +85,9 @@ export default function LogScreen({ route }: LogScreenProps) {
   function handleDateChanged(date: Date) {
     _setDate(date);
   }
-  
+
   function handleGenericError(err: Error) {
-    Alert.alert("Error", err.message)
+    Alert.alert("Error", err.message);
   }
 
   const Separator = () => {
