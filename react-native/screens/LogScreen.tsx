@@ -83,6 +83,8 @@ export default function LogScreen({ route }: LogScreenProps) {
     },
   ];
 
+  const isBrainDump = route.params?.brainDump;
+
   const type = route.params?.type;
 
   let placeholder = "What's on your mind?";
@@ -271,7 +273,7 @@ export default function LogScreen({ route }: LogScreenProps) {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : undefined}
-      keyboardVerticalOffset={85}
+      keyboardVerticalOffset={isBrainDump ? 0 : 85}
       style={styles.container}
     >
       <View style={styles.content}>
