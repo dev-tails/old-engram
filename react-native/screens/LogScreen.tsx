@@ -49,6 +49,7 @@ export default function LogScreen({ route }: LogScreenProps) {
 
   const [selectedNoteId, setSelectedNoteId] = React.useState("");
   const [isBottomSheetVisible, setBottomSheetVisible] = React.useState(false);
+
   const bottomSheetOptions = [
     {
       title: "Edit",
@@ -121,9 +122,7 @@ export default function LogScreen({ route }: LogScreenProps) {
 
       setBody("");
 
-      setTimeout(() => {
-        listRef.current?.scrollToEnd();
-      }, 100);
+      scrollToBottomOfNotes();
     } catch (err) {
       handleGenericError(err);
     }
@@ -244,6 +243,12 @@ export default function LogScreen({ route }: LogScreenProps) {
     updateNote(dispatch, { _id: note._id, type: newType });
   }
 
+  function scrollToBottomOfNotes() {
+    setTimeout(() => {
+      listRef.current?.scrollToEnd();
+    }, 50);
+  }
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -316,6 +321,7 @@ export default function LogScreen({ route }: LogScreenProps) {
       <View style={styles.textBoxWrapper}>
         <View style={styles.textBox}>
           <TextInput
+            onFocus={scrollToBottomOfNotes}
             blurOnSubmit={false}
             style={styles.input}
             onSubmitEditing={handleSubmit}
