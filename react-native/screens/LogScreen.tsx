@@ -99,6 +99,12 @@ export default function LogScreen({ route }: LogScreenProps) {
     return true;
   });
 
+  if (type === "task") {
+    filteredNotes.sort((note1: Note, note2: Note) => {
+      return note1.type > note2.type;
+    });
+  }
+
   async function refetchNotes() {
     fetchNotes(dispatch).catch(handleGenericError);
   }
@@ -223,7 +229,13 @@ export default function LogScreen({ route }: LogScreenProps) {
   }
 
   function handleToggleIcon(note: Note) {
-    const types = ["note", "task", "task_completed", "event"];
+    let types = [type];
+    if (type === "task") {
+      types = ["task", "task_completed"];
+    } else if (!type) {
+      types = ["note", "task", "task_completed", "event"];
+    }
+
     const currentTypeIndex = types.findIndex((type) => {
       return type === (note.type || "note");
     });
@@ -257,29 +269,48 @@ export default function LogScreen({ route }: LogScreenProps) {
           style={styles.list}
           data={filteredNotes}
           ItemSeparatorComponent={Separator}
-          renderItem={({ item }) => (
-            <ListItem
-              containerStyle={styles.listItem}
-              onPress={() => {
-                setSelectedNoteId(item._id);
-                setBottomSheetVisible(true);
-              }}
-            >
-              <ListItem.Content style={styles.listItemContent}>
-                <Icon
-                  name={getIconNameForType(item.type)}
-                  color={getTextColor(theme)}
-                  onPress={() => {
-                    handleToggleIcon(item);
-                  }}
-                />
-                <ListItemTitle style={styles.listItemTitle}>
-                  {item.body}
-                </ListItemTitle>
-              </ListItem.Content>
-              {/* <ListItem.Chevron /> */}
-            </ListItem>
-          )}
+          renderItem={({ item }) => {
+            const additionalTitleStyles: any = {};
+
+            const disabledColor = "#424242";
+
+            if (item.type === "task_completed") {
+              additionalTitleStyles.color = disabledColor;
+            }
+
+            return (
+              <ListItem
+                containerStyle={styles.listItem}
+                onPress={() => {
+                  setSelectedNoteId(item._id);
+                  setBottomSheetVisible(true);
+                }}
+              >
+                <ListItem.Content style={styles.listItemContent}>
+                  <Icon
+                    name={getIconNameForType(item.type)}
+                    color={
+                      item.type === "task_completed"
+                        ? disabledColor
+                        : getTextColor(theme)
+                    }
+                    onPress={() => {
+                      handleToggleIcon(item);
+                    }}
+                  />
+                  <ListItemTitle
+                    style={{
+                      ...styles.listItemTitle,
+                      ...additionalTitleStyles,
+                    }}
+                  >
+                    {item.body}
+                  </ListItemTitle>
+                </ListItem.Content>
+                {/* <ListItem.Chevron /> */}
+              </ListItem>
+            );
+          }}
         />
       </View>
       <View style={styles.textBoxWrapper}>
