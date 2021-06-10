@@ -7,6 +7,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import * as React from "react";
+import { Icon } from "react-native-elements/dist/icons/Icon";
 import { useDispatch } from "react-redux";
 
 import Colors from "../constants/Colors";
@@ -57,7 +58,7 @@ export default function BottomTabNavigator({
           type: "note",
         }}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="remove" color={color} />,
+          tabBarIcon: ({ color }) => <Icon name="remove" color={color} />,
         }}
       />
       <BottomTab.Screen
@@ -67,9 +68,7 @@ export default function BottomTabNavigator({
           type: "task",
         }}
         options={{
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="ellipse" color={color} />
-          ),
+          tabBarIcon: ({ color }) => <Icon name="check-box" color={color} />,
         }}
       />
       <BottomTab.Screen
@@ -80,7 +79,7 @@ export default function BottomTabNavigator({
         }}
         options={{
           tabBarIcon: ({ color }) => (
-            <TabBarIcon name="ellipse-outline" color={color} />
+            <Icon name="radio-button-unchecked" color={color} />
           ),
         }}
       />

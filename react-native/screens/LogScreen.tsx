@@ -1,15 +1,28 @@
-import moment from 'moment';
-import * as React from 'react';
-import { Alert, FlatList, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
-import { BottomSheet, ListItem } from 'react-native-elements';
-import { useDispatch, useSelector } from 'react-redux';
+import moment from "moment";
+import * as React from "react";
+import {
+  Alert,
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+} from "react-native";
+import { BottomSheet, ListItem } from "react-native-elements";
+import { Icon } from "react-native-elements/dist/icons/Icon";
+import { useDispatch, useSelector } from "react-redux";
 
-import { Note } from '../api/NoteApi';
-import DateHeader from '../components/DateHeader';
-import { ListItemTitle, TextInput, View } from '../components/Themed';
-import useColorScheme from '../hooks/useColorScheme';
-import { setDate } from '../redux/actions/DateActions';
-import { addNote, fetchNotes, removeNote, updateNote } from '../redux/actions/NotesActions';
+import { Note } from "../api/NoteApi";
+import DateHeader from "../components/DateHeader";
+import { ListItemTitle, TextInput, View } from "../components/Themed";
+import { getTextColor } from "../constants/Colors";
+import useColorScheme from "../hooks/useColorScheme";
+import { setDate } from "../redux/actions/DateActions";
+import {
+  addNote,
+  fetchNotes,
+  removeNote,
+  updateNote,
+} from "../redux/actions/NotesActions";
 
 export type LogScreenProps = {
   route: {
@@ -156,8 +169,13 @@ export default function LogScreen({ route }: LogScreenProps) {
     listItem: {
       backgroundColor: "rgba(0,0,0, 0)",
     },
+    listItemContent: {
+      flex: 1,
+      flexDirection: "row",
+      justifyContent: "flex-start",
+    },
     listItemTitle: {
-      color: "white",
+      marginHorizontal: 8,
     },
     listItemSeparator: {
       height: 1,
@@ -194,6 +212,16 @@ export default function LogScreen({ route }: LogScreenProps) {
     refetchNotes();
   }
 
+  function getIconNameForType(type: string): string {
+    const typeToIconMap: { [key: string]: string } = {
+      note: "remove",
+      task: "check-box-outline-blank",
+      task_completed: "check-box",
+      event: "radio-button-unchecked",
+    };
+    return typeToIconMap[type];
+  }
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -227,8 +255,14 @@ export default function LogScreen({ route }: LogScreenProps) {
                 setBottomSheetVisible(true);
               }}
             >
-              <ListItem.Content>
-                <ListItemTitle>{item.body}</ListItemTitle>
+              <ListItem.Content style={styles.listItemContent}>
+                <Icon
+                  name={getIconNameForType(item.type)}
+                  color={getTextColor(theme)}
+                />
+                <ListItemTitle style={styles.listItemTitle}>
+                  {item.body}
+                </ListItemTitle>
               </ListItem.Content>
               {/* <ListItem.Chevron /> */}
             </ListItem>
