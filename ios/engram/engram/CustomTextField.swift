@@ -48,6 +48,7 @@ struct CustomTextField: UIViewRepresentable {
         textField.placeholder = placeholder
         textField.addTarget(self, action: #selector(context.coordinator.handleEditingDidEnd), for: .editingDidEndOnExit)
         textField.returnKeyType = .send
+        textField.adjustsFontSizeToFitWidth = true
         return textField
     }
 

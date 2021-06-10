@@ -14,7 +14,10 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
 
     func getComplicationDescriptors(handler: @escaping ([CLKComplicationDescriptor]) -> Void) {
         let descriptors = [
-            CLKComplicationDescriptor(identifier: "complication", displayName: "engram", supportedFamilies: CLKComplicationFamily.allCases)
+            CLKComplicationDescriptor(identifier: "engramComplication", displayName: "Open engram", supportedFamilies: CLKComplicationFamily.allCases),
+//            CLKComplicationDescriptor(identifier: "engramNoteComplication", displayName: "Create Note", supportedFamilies: CLKComplicationFamily.circularSmall),
+//            CLKComplicationDescriptor(identifier: "engramTaskComplication", displayName: "Create Task", supportedFamilies: CLKComplicationFamily.circularSmall),
+//            CLKComplicationDescriptor(identifier: "engramEventComplication", displayName: "Create Event", supportedFamilies: CLKComplicationFamily.circularSmall)
             // Multiple complication support can be added here with more descriptors
         ]
         

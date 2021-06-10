@@ -51,7 +51,11 @@ struct NoteListView: View {
                 }.onDelete(perform: deleteItems)
             }
             HStack {
-                CustomTextField(placeholder: placeHolderByType[type]!, text: $noteBody, onCommit: addNote).frame(height: 16)
+                TextField(placeHolderByType[type]!, text: $noteBody, onCommit: addNote)
+//                ScrollView(.horizontal, showsIndicators: false) {
+                    
+//                    CustomTextField(placeholder: placeHolderByType[type]!, text: $noteBody, onCommit: addNote).frame(height: 16)
+//                }
                     
                 Button(action: addNote) {
                     Image(systemName: "arrow.up.circle.fill")
@@ -71,7 +75,7 @@ struct NoteListView: View {
             return
         }
         
-        withAnimation {
+//        withAnimation {
             let newNote = Note(context: viewContext)
             newNote.createdAt = Date()
             newNote.body = noteBody
@@ -86,7 +90,7 @@ struct NoteListView: View {
                 let nsError = error as NSError
                 fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
             }
-        }
+//        }
     }
     
     private func deleteItems(offsets: IndexSet) {

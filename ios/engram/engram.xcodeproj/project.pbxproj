@@ -33,8 +33,8 @@
 		66E59158265999BD00E38067 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E59155265999BD00E38067 /* Assets.xcassets */; };
 		66E5915A2659A23D00E38067 /* CheckboxToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E591592659A23C00E38067 /* CheckboxToggleStyle.swift */; };
 		66E5915B2659A23D00E38067 /* CheckboxToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E591592659A23C00E38067 /* CheckboxToggleStyle.swift */; };
-		66E5915D2659A3C600E38067 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E5915C2659A3C600E38067 /* MainView.swift */; };
 		66E591602659B6E000E38067 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E5915F2659B6E000E38067 /* CustomTextField.swift */; };
+		66E59163265B2B7700E38067 /* ComplicationViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E59162265B2B7700E38067 /* ComplicationViews.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -102,15 +102,15 @@
 		66E591202658C30F00E38067 /* NoteListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteListView.swift; sourceTree = "<group>"; };
 		66E591222659787900E38067 /* engram WatchKit ExtensionDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "engram WatchKit ExtensionDebug.entitlements"; sourceTree = "<group>"; };
 		66E591242659787C00E38067 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS7.4.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
-		66E591262659788900E38067 /* engramDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = engramDebug.entitlements; sourceTree = "<group>"; };
 		66E591272659788A00E38067 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.5.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
 		66E5914D2659856B00E38067 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		66E59151265985C400E38067 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		66E5915426598B0C00E38067 /* engram.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = engram.entitlements; sourceTree = "<group>"; };
 		66E59155265999BD00E38067 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		66E591592659A23C00E38067 /* CheckboxToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxToggleStyle.swift; sourceTree = "<group>"; };
-		66E5915C2659A3C600E38067 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		66E5915F2659B6E000E38067 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
+		66E59162265B2B7700E38067 /* ComplicationViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationViews.swift; sourceTree = "<group>"; };
+		66F0709E266019CB006E767B /* engramDebug.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = engramDebug.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,10 +157,9 @@
 		66ABEA5F26589C6F006C9FD5 /* engram */ = {
 			isa = PBXGroup;
 			children = (
-				66E5915C2659A3C600E38067 /* MainView.swift */,
+				66F0709E266019CB006E767B /* engramDebug.entitlements */,
 				66E59155265999BD00E38067 /* Assets.xcassets */,
 				66E5915426598B0C00E38067 /* engram.entitlements */,
-				66E591262659788900E38067 /* engramDebug.entitlements */,
 				66ABEA6026589C6F006C9FD5 /* engramApp.swift */,
 				66E59150265985C400E38067 /* engram.xcdatamodeld */,
 				66ABEA6226589C6F006C9FD5 /* ContentView.swift */,
@@ -205,6 +204,7 @@
 				66ABEA8C26589C74006C9FD5 /* Info.plist */,
 				66ABEA8D26589C74006C9FD5 /* PushNotificationPayload.apns */,
 				66ABEA8926589C74006C9FD5 /* Preview Content */,
+				66E59162265B2B7700E38067 /* ComplicationViews.swift */,
 			);
 			path = "engram WatchKit Extension";
 			sourceTree = "<group>";
@@ -360,7 +360,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				66ABEA6326589C6F006C9FD5 /* ContentView.swift in Sources */,
-				66E5915D2659A3C600E38067 /* MainView.swift in Sources */,
 				66ABEA6126589C6F006C9FD5 /* engramApp.swift in Sources */,
 				66E5911F2658A58600E38067 /* NoteListItem.swift in Sources */,
 				66E59152265985C400E38067 /* engram.xcdatamodeld in Sources */,
@@ -380,6 +379,7 @@
 				66ABEA8626589C73006C9FD5 /* ComplicationController.swift in Sources */,
 				66E59153265985C400E38067 /* engram.xcdatamodeld in Sources */,
 				66E5914F2659856B00E38067 /* Persistence.swift in Sources */,
+				66E59163265B2B7700E38067 /* ComplicationViews.swift in Sources */,
 				66ABEA7E26589C73006C9FD5 /* engramApp.swift in Sources */,
 				66E5915B2659A23D00E38067 /* CheckboxToggleStyle.swift in Sources */,
 				66ABEA8426589C73006C9FD5 /* NotificationView.swift in Sources */,
@@ -572,6 +572,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = V3T29AUKGC;
 				IBSC_MODULE = engram_WatchKit_Extension;
 				INFOPLIST_FILE = "engram WatchKit App/Info.plist";
@@ -580,6 +581,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.xyzdigital.engram.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -599,6 +601,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = V3T29AUKGC;
 				IBSC_MODULE = engram_WatchKit_Extension;
 				INFOPLIST_FILE = "engram WatchKit App/Info.plist";
@@ -607,6 +610,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.xyzdigital.engram.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -625,15 +629,18 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = engram/engramDebug.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"engram/Preview Content\"";
 				DEVELOPMENT_TEAM = V3T29AUKGC;
+				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = NO;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = engram/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.xyzdigital.engram;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -651,15 +658,18 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = engram/engram.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"engram/Preview Content\"";
 				DEVELOPMENT_TEAM = V3T29AUKGC;
+				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = NO;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = engram/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.xyzdigital.engram;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;

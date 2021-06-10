@@ -7,12 +7,12 @@
 		<key>engram WatchKit App (Complication).xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>3</integer>
+			<integer>2</integer>
 		</dict>
 		<key>engram WatchKit App (Notification).xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>2</integer>
+			<integer>3</integer>
 		</dict>
 		<key>engram WatchKit App.xcscheme_^#shared#^_</key>
 		<dict>
@@ -23,6 +23,19 @@
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>66ABEA5C26589C6F006C9FD5</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>66ABEA6B26589C72006C9FD5</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>
