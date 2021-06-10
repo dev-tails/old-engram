@@ -1,16 +1,15 @@
-import * as React from "react";
-import { StyleSheet } from "react-native";
+import moment from 'moment';
+import * as React from 'react';
+import { Alert, FlatList, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
+import { BottomSheet, ListItem } from 'react-native-elements';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { Alert, FlatList, KeyboardAvoidingView, Platform } from "react-native";
-import { ListItem } from "react-native-elements";
-import { Note } from "../api/NoteApi";
-import { View, TextInput, ListItemTitle } from "../components/Themed";
-import moment from "moment";
-import DateHeader from "../components/DateHeader";
-import useColorScheme from "../hooks/useColorScheme";
-import { useDispatch, useSelector } from "react-redux";
-import { addNote, fetchNotes } from "../redux/actions/NotesActions";
-import { setDate } from "../redux/actions/DateActions";
+import { Note } from '../api/NoteApi';
+import DateHeader from '../components/DateHeader';
+import { ListItemTitle, TextInput, View } from '../components/Themed';
+import useColorScheme from '../hooks/useColorScheme';
+import { setDate } from '../redux/actions/DateActions';
+import { addNote, fetchNotes, removeNote, updateNote } from '../redux/actions/NotesActions';
 
 export type LogScreenProps = {
   route: {
@@ -34,6 +33,31 @@ export default function LogScreen({ route }: LogScreenProps) {
   const listRef = React.useRef<FlatList | null>(null);
   const [body, setBody] = React.useState("");
   const theme = useColorScheme();
+
+  const [selectedNoteId, setSelectedNoteId] = React.useState("");
+  const [isBottomSheetVisible, setBottomSheetVisible] = React.useState(false);
+  const bottomSheetOptions = [
+    {
+      title: "Edit",
+      onPress: () => {
+        handleEdit();
+      },
+    },
+    {
+      title: "Delete",
+      onPress: () => {
+        handleRemove();
+      },
+    },
+    {
+      title: "Cancel",
+      onPress: () => {
+        setSelectedNoteId("");
+        setBottomSheetVisible(false);
+      },
+    },
+  ];
+
   const type = route.params?.type;
 
   let placeholder = "What's on your mind?";
@@ -68,9 +92,13 @@ export default function LogScreen({ route }: LogScreenProps) {
 
   async function handleSubmit() {
     let dateString = moment(date).format("YYYY-MM-DD");
-    let noteToCreate: Note = { body, type: type || "note", date: dateString };
+    let noteToSave: Note = { body, type: type || "note", date: dateString };
     try {
-      await addNote(dispatch, noteToCreate);
+      if (selectedNoteId) {
+        await updateNote(dispatch, { _id: selectedNoteId, ...noteToSave });
+      } else {
+        await addNote(dispatch, noteToSave);
+      }
 
       setBody("");
 
@@ -88,6 +116,24 @@ export default function LogScreen({ route }: LogScreenProps) {
 
   function handleGenericError(err: Error) {
     Alert.alert("Error", err.message);
+  }
+
+  async function handleRemove() {
+    setBottomSheetVisible(false);
+
+    removeNote(dispatch, selectedNoteId);
+
+    setSelectedNoteId("");
+  }
+
+  function handleEdit() {
+    setBottomSheetVisible(false);
+    const note = filteredNotes.find((n: Note) => {
+      return n._id === selectedNoteId;
+    });
+    if (note) {
+      setBody(note.body);
+    }
   }
 
   const Separator = () => {
@@ -174,7 +220,13 @@ export default function LogScreen({ route }: LogScreenProps) {
           data={filteredNotes}
           ItemSeparatorComponent={Separator}
           renderItem={({ item }) => (
-            <ListItem containerStyle={styles.listItem}>
+            <ListItem
+              containerStyle={styles.listItem}
+              onPress={() => {
+                setSelectedNoteId(item._id);
+                setBottomSheetVisible(true);
+              }}
+            >
               <ListItem.Content>
                 <ListItemTitle>{item.body}</ListItemTitle>
               </ListItem.Content>
@@ -197,6 +249,23 @@ export default function LogScreen({ route }: LogScreenProps) {
           />
         </View>
       </View>
+      <BottomSheet
+        isVisible={isBottomSheetVisible}
+        containerStyle={{}}
+        modalProps={{}}
+      >
+        {bottomSheetOptions.map((l, i) => (
+          <ListItem
+            key={i}
+            // containerStyle={l.containerStyle}
+            onPress={l.onPress}
+          >
+            <ListItem.Content>
+              <ListItem.Title>{l.title}</ListItem.Title>
+            </ListItem.Content>
+          </ListItem>
+        ))}
+      </BottomSheet>
     </KeyboardAvoidingView>
   );
 }

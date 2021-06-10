@@ -1,26 +1,23 @@
-import { Dispatch } from "redux";
-import { getNotes, createNote, Note } from "../../api/NoteApi";
+import { Dispatch } from 'redux';
+
+import * as NoteApi from '../../api/NoteApi';
 
 export async function fetchNotes(dispatch: Dispatch) {
-  const notes = await getNotes();
-  dispatch({ type: 'FETCH_NOTES', payload: notes })
+  const notes = await NoteApi.getNotes();
+  dispatch({ type: "FETCH_NOTES", payload: notes });
 }
 
-export async function addNote(dispatch: Dispatch, note: Note) {
-  const createdNote = await createNote(note);
-  dispatch({ type: 'ADD_NOTE', payload: createdNote });
+export async function addNote(dispatch: Dispatch, note: NoteApi.Note) {
+  const createdNote = await NoteApi.createNote(note);
+  dispatch({ type: "ADD_NOTE", payload: createdNote });
 }
 
-// export const addNote = (note: Note) => {
-//   return {
-//     type: "ADD_NOTE",
-//     payload: note
-//   }
-// }
+export async function updateNote(dispatch: Dispatch, note: NoteApi.Note) {
+  const savedNote = await NoteApi.updateNote(note);
+  dispatch({ type: "UPDATE_NOTE", payload: savedNote });
+}
 
-// export const remoteNote = (id: string) => {
-//   return {
-//     type: "ADD_NOTE",
-//     payload: id
-//   }
-// }
+export async function removeNote(dispatch: Dispatch, id: string) {
+  await NoteApi.removeNote(id);
+  dispatch({ type: "REMOVE_NOTE", payload: id });
+}

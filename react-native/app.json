@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "engram-expo",
-    "slug": "engram-expo",
+    "name": "engram",
+    "slug": "engram",
     "version": "1.0.5",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
