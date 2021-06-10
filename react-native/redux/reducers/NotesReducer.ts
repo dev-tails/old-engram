@@ -1,5 +1,5 @@
-import { Note } from "../../api/NoteApi";
-import { LogoutAction } from "../actions/UserActions";
+import { Note } from '../../api/NoteApi';
+import { LogoutAction } from '../actions/UserActions';
 
 const INITIAL_STATE: Note[] = [];
 
@@ -13,6 +13,11 @@ type AddNoteAction = {
   payload: Note;
 };
 
+type UpdateNoteAction = {
+  type: "UPDATE_NOTE";
+  payload: Note;
+};
+
 type FetchNotesAction = {
   type: "FETCH_NOTES";
   payload: Note[];
@@ -20,16 +25,28 @@ type FetchNotesAction = {
 
 const NotesReducer = (
   state = INITIAL_STATE,
-  action: AddNoteAction | FetchNotesAction | RemoveNoteAction | LogoutAction
+  action:
+    | AddNoteAction
+    | FetchNotesAction
+    | UpdateNoteAction
+    | RemoveNoteAction
+    | LogoutAction
 ) => {
+  const stateCopy = [...state];
+  let index = -1;
   switch (action.type) {
     case "ADD_NOTE":
       return [...state, action.payload];
+    case "UPDATE_NOTE":
+      index = stateCopy.findIndex((note) => {
+        return note._id === action.payload._id;
+      });
+      stateCopy[index] = action.payload;
+      return stateCopy;
     case "FETCH_NOTES":
       return [...action.payload];
     case "REMOVE_NOTE":
-      const stateCopy = [...state];
-      const index = stateCopy.findIndex((note) => {
+      index = stateCopy.findIndex((note) => {
         return note._id === action.payload;
       });
       stateCopy.splice(index, 1);
