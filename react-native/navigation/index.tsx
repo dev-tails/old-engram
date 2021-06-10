@@ -18,6 +18,7 @@ import LoginScreen from "../screens/LoginScreen";
 import useColorScheme from "../hooks/useColorScheme";
 import { useDispatch } from "react-redux";
 import { logout } from "../redux/actions/UserActions";
+import LogScreen from "../screens/LogScreen";
 
 export default function Navigation({
   colorScheme,
@@ -38,9 +39,18 @@ export default function Navigation({
 
 const Drawer = createDrawerNavigator();
 
-function RootNavigator({ navigation }: any) {
+function RootNavigator() {
   return (
-    <Drawer.Navigator initialRouteName={"Daily"} screenOptions={{ headerShown: true }}>
+    <Drawer.Navigator
+      initialRouteName={"Daily"}
+      screenOptions={{ headerShown: true }}
+    >
+      <Drawer.Screen
+        name="Brain Dump"
+        component={LogScreen}
+        initialParams={{ brainDump: true }}
+        options={{ unmountOnBlur: true }}
+      />
       <Drawer.Screen name="Daily" component={BottomTabNavigator} />
       <Drawer.Screen
         name="Login"

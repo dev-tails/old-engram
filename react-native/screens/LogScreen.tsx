@@ -28,6 +28,7 @@ export type LogScreenProps = {
   route: {
     params?: {
       type?: string;
+      brainDump?: boolean;
     };
   };
 };
@@ -39,6 +40,13 @@ const selectDate = (state: any) => {
   return state.date;
 };
 
+function dateFromObjectId(objectId?: string) {
+  if (!objectId) {
+    return null;
+  }
+  return new Date(parseInt(objectId.substring(0, 8), 16) * 1000);
+}
+
 export default function LogScreen({ route }: LogScreenProps) {
   const notes = useSelector(selectNotes);
   const date = useSelector(selectDate);
@@ -46,6 +54,9 @@ export default function LogScreen({ route }: LogScreenProps) {
   const listRef = React.useRef<FlatList | null>(null);
   const [body, setBody] = React.useState("");
   const theme = useColorScheme();
+  const [dumpStartDate, setDumpStartDate] = React.useState(
+    route.params?.brainDump ? new Date() : null
+  );
 
   const [selectedNoteId, setSelectedNoteId] = React.useState("");
   const [isBottomSheetVisible, setBottomSheetVisible] = React.useState(false);
@@ -95,6 +106,14 @@ export default function LogScreen({ route }: LogScreenProps) {
       return false;
     }
     if (allowedTypes.includes(note.type) === false) {
+      return false;
+    }
+    const createdAtDate = dateFromObjectId(note._id);
+    console.log(createdAtDate);
+    if (
+      dumpStartDate &&
+      moment(dumpStartDate).isAfter(dateFromObjectId(note._id))
+    ) {
       return false;
     }
     return true;
@@ -256,12 +275,14 @@ export default function LogScreen({ route }: LogScreenProps) {
       style={styles.container}
     >
       <View style={styles.content}>
-        <DateHeader
-          date={date}
-          onChange={handleDateChanged}
-          onToday={handleTodayPressed}
-          onRefresh={handleRefreshPressed}
-        />
+        {route.params?.brainDump ? null : (
+          <DateHeader
+            date={date}
+            onChange={handleDateChanged}
+            onToday={handleTodayPressed}
+            onRefresh={handleRefreshPressed}
+          />
+        )}
         <FlatList
           ref={listRef}
           keyExtractor={(item, index) => {
