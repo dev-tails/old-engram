@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "engram-expo",
-    "slug": "engram-expo",
-    "version": "1.0.4",
+    "name": "engram",
+    "slug": "engram",
+    "version": "1.0.5",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -15,9 +15,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.xyzdigital.engram"
