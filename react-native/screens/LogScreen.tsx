@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Note } from "../api/NoteApi";
 import DateHeader from "../components/DateHeader";
 import { ListItemTitle, TextInput, View } from "../components/Themed";
-import { getTextColor } from "../constants/Colors";
+import { getBackgroundColor, getTextColor } from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
 import { setDate } from "../redux/actions/DateActions";
 import {
@@ -194,7 +194,7 @@ export default function LogScreen({ route }: LogScreenProps) {
       margin: "auto",
     },
     listItem: {
-      backgroundColor: "rgba(0,0,0, 0)",
+      backgroundColor: getBackgroundColor(theme),
     },
     listItemContent: {
       flex: 1,
@@ -311,6 +311,7 @@ export default function LogScreen({ route }: LogScreenProps) {
             return (
               <ListItem
                 containerStyle={styles.listItem}
+                underlayColor={"#424242"}
                 onPress={() => {
                   setSelectedNoteId(item._id);
                   setBottomSheetVisible(true);
@@ -365,11 +366,7 @@ export default function LogScreen({ route }: LogScreenProps) {
         modalProps={{}}
       >
         {bottomSheetOptions.map((l, i) => (
-          <ListItem
-            key={i}
-            // containerStyle={l.containerStyle}
-            onPress={l.onPress}
-          >
+          <ListItem key={i} onPress={l.onPress}>
             <ListItem.Content>
               <ListItem.Title>{l.title}</ListItem.Title>
             </ListItem.Content>
