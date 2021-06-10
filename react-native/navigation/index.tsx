@@ -44,7 +44,7 @@ export default function Navigation({
 
 const Drawer = createDrawerNavigator();
 
-function RootNavigator({ navigation }: any) {
+function RootNavigator() {
   return (
     <Drawer.Navigator
       initialRouteName={"Daily"}
@@ -54,26 +54,46 @@ function RootNavigator({ navigation }: any) {
         name="Brain Dump"
         component={LogScreen}
         initialParams={{ brainDump: true }}
-        options={{ unmountOnBlur: true }}
+        options={({ navigation }) => {
+          return {
+            unmountOnBlur: true,
+            headerRight: () => {
+              return (
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.goBack();
+                  }}
+                  style={{
+                    marginRight: 8,
+                  }}
+                >
+                  <Image style={{ width: 36, height: 36 }} source={Logo} />
+                </TouchableOpacity>
+              );
+            },
+          };
+        }}
       />
       <Drawer.Screen
         name="Daily"
         component={BottomTabNavigator}
-        options={{
-          headerRight: () => {
-            return (
-              <TouchableOpacity
-                onPress={() => {
-                  // navigation.navigate("Brain Dump");
-                }}
-                style={{
-                  marginRight: 8,
-                }}
-              >
-                <Image style={{ width: 36, height: 36 }} source={Logo} />
-              </TouchableOpacity>
-            );
-          },
+        options={({ navigation }) => {
+          return {
+            headerRight: () => {
+              return (
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("Brain Dump");
+                  }}
+                  style={{
+                    marginRight: 8,
+                  }}
+                >
+                  <Image style={{ width: 36, height: 36 }} source={Logo} />
+                </TouchableOpacity>
+              );
+            },
+          };
         }}
       />
       <Drawer.Screen

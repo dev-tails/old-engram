@@ -113,7 +113,6 @@ export default function LogScreen({ route }: LogScreenProps) {
     if (allowedTypes.includes(note.type) === false) {
       return false;
     }
-    const createdAtDate = dateFromObjectId(note._id);
     if (
       dumpStartDate &&
       moment(dumpStartDate).isAfter(dateFromObjectId(note._id))
@@ -348,6 +347,7 @@ export default function LogScreen({ route }: LogScreenProps) {
         <View style={styles.textBox}>
           <TextInput
             onFocus={scrollToBottomOfNotes}
+            autoFocus={isBrainDump}
             blurOnSubmit={false}
             style={styles.input}
             onSubmitEditing={handleSubmit}
