@@ -44,3 +44,13 @@ export async function getNotes(params?: GetNotesParams): Promise<Note[]> {
   const res = await fetch(`${baseUrl}/api/notes?${query}`);
   return res.json();
 }
+
+export async function removeNote(id: string) {
+  await fetch(`${baseUrl}/api/notes/${id}`, {
+    method: "DELETE",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  });
+}

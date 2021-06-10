@@ -9,7 +9,7 @@ import DateHeader from '../components/DateHeader';
 import { ListItemTitle, TextInput, View } from '../components/Themed';
 import useColorScheme from '../hooks/useColorScheme';
 import { setDate } from '../redux/actions/DateActions';
-import { addNote, fetchNotes, updateNote } from '../redux/actions/NotesActions';
+import { addNote, fetchNotes, removeNote, updateNote } from '../redux/actions/NotesActions';
 
 export type LogScreenProps = {
   route: {
@@ -118,8 +118,10 @@ export default function LogScreen({ route }: LogScreenProps) {
     Alert.alert("Error", err.message);
   }
 
-  function handleRemove() {
+  async function handleRemove() {
     setBottomSheetVisible(false);
+
+    removeNote(dispatch, selectedNoteId);
 
     setSelectedNoteId("");
   }

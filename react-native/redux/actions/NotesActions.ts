@@ -17,16 +17,7 @@ export async function updateNote(dispatch: Dispatch, note: NoteApi.Note) {
   dispatch({ type: "UPDATE_NOTE", payload: savedNote });
 }
 
-// export const addNote = (note: Note) => {
-//   return {
-//     type: "ADD_NOTE",
-//     payload: note
-//   }
-// }
-
-// export const remoteNote = (id: string) => {
-//   return {
-//     type: "ADD_NOTE",
-//     payload: id
-//   }
-// }
+export async function removeNote(dispatch: Dispatch, id: string) {
+  await NoteApi.removeNote(id);
+  dispatch({ type: "REMOVE_NOTE", payload: id });
+}
