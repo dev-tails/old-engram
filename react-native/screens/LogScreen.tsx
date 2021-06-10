@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { BottomSheet, ListItem } from "react-native-elements";
 import { Icon } from "react-native-elements/dist/icons/Icon";
+import { Image } from "react-native-elements/dist/image/Image";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Note } from "../api/NoteApi";
@@ -23,6 +24,8 @@ import {
   removeNote,
   updateNote,
 } from "../redux/actions/NotesActions";
+
+const Logo = require("../assets/images/adaptive-icon.png");
 
 export type LogScreenProps = {
   route: {
@@ -111,7 +114,6 @@ export default function LogScreen({ route }: LogScreenProps) {
       return false;
     }
     const createdAtDate = dateFromObjectId(note._id);
-    console.log(createdAtDate);
     if (
       dumpStartDate &&
       moment(dumpStartDate).isAfter(dateFromObjectId(note._id))
@@ -285,6 +287,7 @@ export default function LogScreen({ route }: LogScreenProps) {
             onRefresh={handleRefreshPressed}
           />
         )}
+        <Image width={24} height={24} source={Logo} />
         <FlatList
           ref={listRef}
           keyExtractor={(item, index) => {

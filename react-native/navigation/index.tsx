@@ -19,6 +19,11 @@ import useColorScheme from "../hooks/useColorScheme";
 import { useDispatch } from "react-redux";
 import { logout } from "../redux/actions/UserActions";
 import LogScreen from "../screens/LogScreen";
+import { Image } from "react-native-elements/dist/image/Image";
+import { Icon } from "react-native-elements";
+import { TouchableOpacity } from "react-native-gesture-handler";
+
+const Logo = require("../assets/images/adaptive-icon.png");
 
 export default function Navigation({
   colorScheme,
@@ -39,7 +44,7 @@ export default function Navigation({
 
 const Drawer = createDrawerNavigator();
 
-function RootNavigator() {
+function RootNavigator({ navigation }: any) {
   return (
     <Drawer.Navigator
       initialRouteName={"Daily"}
@@ -51,7 +56,26 @@ function RootNavigator() {
         initialParams={{ brainDump: true }}
         options={{ unmountOnBlur: true }}
       />
-      <Drawer.Screen name="Daily" component={BottomTabNavigator} />
+      <Drawer.Screen
+        name="Daily"
+        component={BottomTabNavigator}
+        options={{
+          headerRight: () => {
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  // navigation.navigate("Brain Dump");
+                }}
+                style={{
+                  marginRight: 8,
+                }}
+              >
+                <Image style={{ width: 36, height: 36 }} source={Logo} />
+              </TouchableOpacity>
+            );
+          },
+        }}
+      />
       <Drawer.Screen
         name="Login"
         component={LoginScreen}
