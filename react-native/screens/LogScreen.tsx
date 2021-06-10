@@ -222,6 +222,16 @@ export default function LogScreen({ route }: LogScreenProps) {
     return typeToIconMap[type];
   }
 
+  function handleToggleIcon(note: Note) {
+    const types = ["note", "task", "task_completed", "event"];
+    const currentTypeIndex = types.findIndex((type) => {
+      return type === (note.type || "note");
+    });
+    const newTypeIndex = (currentTypeIndex + 1) % types.length;
+    const newType = types[newTypeIndex];
+    updateNote(dispatch, { _id: note._id, type: newType });
+  }
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -259,6 +269,9 @@ export default function LogScreen({ route }: LogScreenProps) {
                 <Icon
                   name={getIconNameForType(item.type)}
                   color={getTextColor(theme)}
+                  onPress={() => {
+                    handleToggleIcon(item);
+                  }}
                 />
                 <ListItemTitle style={styles.listItemTitle}>
                   {item.body}

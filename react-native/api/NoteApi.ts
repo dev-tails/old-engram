@@ -1,6 +1,6 @@
-import qs from 'querystring';
+import qs from "querystring";
 
-import { baseUrl } from './Api';
+import { baseUrl } from "./Api";
 
 export type Note = {
   _id?: string;
@@ -21,7 +21,7 @@ export async function createNote(note: Note): Promise<Note> {
   return res.json();
 }
 
-export async function updateNote(note: Note): Promise<Note> {
+export async function updateNote(note: Partial<Note>): Promise<Note> {
   const res = await fetch(`${baseUrl}/api/notes/${note._id}`, {
     method: "PUT",
     headers: {
