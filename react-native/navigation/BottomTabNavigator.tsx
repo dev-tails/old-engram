@@ -3,22 +3,23 @@
  * https://reactnavigation.org/docs/bottom-tab-navigator
  */
 import { Ionicons } from '@expo/vector-icons';
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import * as React from 'react';
 import { Icon } from 'react-native-elements';
 import { useDispatch } from 'react-redux';
 
-import Colors from '../constants/Colors';
+import Colors, { primaryColor } from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import { fetchUser } from '../redux/actions/UserActions';
 import LogScreen from '../screens/LogScreen';
 import { BottomTabParamList } from '../types';
 
+// import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 type BottomTabNavigatorProps = {
   navigation: any;
 };
 
-const BottomTab = createMaterialBottomTabNavigator<BottomTabParamList>();
+const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
 export default function BottomTabNavigator({
   navigation,
@@ -38,8 +39,12 @@ export default function BottomTabNavigator({
   return (
     <BottomTab.Navigator
       initialRouteName="All"
-      tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}
-      barStyle={{ backgroundColor: "#3f50af" }}
+      tabBarOptions={{
+        activeTintColor: primaryColor,
+        // inactiveBackgroundColor: primaryColor,
+        // activeBackgroundColor: primaryColor,
+      }}
+      // barStyle={{ backgroundColor: "#3f50af" }}
     >
       <BottomTab.Screen
         name="All"

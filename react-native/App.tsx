@@ -11,6 +11,7 @@ import { persistReducer, persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
 import thunkMiddleware from 'redux-thunk';
 
+import { primaryColor } from './constants/Colors';
 import GlobalStyle from './GlobalStyle';
 import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
@@ -41,10 +42,10 @@ export default function App() {
     return (
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <SafeAreaProvider>
+          <SafeAreaProvider style={{ backgroundColor: primaryColor }}>
             <GlobalStyle css="input {outline: none;}" />
             <Navigation colorScheme={colorScheme} />
-            <StatusBar style={"light"} backgroundColor={"#3f50af"} />
+            <StatusBar style={"light"} backgroundColor={primaryColor} />
           </SafeAreaProvider>
         </PersistGate>
       </Provider>

@@ -1,29 +1,18 @@
-import moment from "moment";
-import * as React from "react";
-import {
-  Alert,
-  FlatList,
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-} from "react-native";
-import { BottomSheet, ListItem } from "react-native-elements";
-import { Icon } from "react-native-elements/dist/icons/Icon";
-import { Image } from "react-native-elements/dist/image/Image";
-import { useDispatch, useSelector } from "react-redux";
+import moment from 'moment';
+import * as React from 'react';
+import { Alert, FlatList, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
+import { BottomSheet, ListItem } from 'react-native-elements';
+import { Icon } from 'react-native-elements/dist/icons/Icon';
+import { Image } from 'react-native-elements/dist/image/Image';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { Note } from "../api/NoteApi";
-import DateHeader from "../components/DateHeader";
-import { ListItemTitle, TextInput, View } from "../components/Themed";
-import { getBackgroundColor, getTextColor } from "../constants/Colors";
-import useColorScheme from "../hooks/useColorScheme";
-import { setDate } from "../redux/actions/DateActions";
-import {
-  addNote,
-  fetchNotes,
-  removeNote,
-  updateNote,
-} from "../redux/actions/NotesActions";
+import { Note } from '../api/NoteApi';
+import DateHeader from '../components/DateHeader';
+import { ListItemTitle, TextInput, View } from '../components/Themed';
+import { getBackgroundColor, getTextColor } from '../constants/Colors';
+import useColorScheme from '../hooks/useColorScheme';
+import { setDate } from '../redux/actions/DateActions';
+import { addNote, fetchNotes, removeNote, updateNote } from '../redux/actions/NotesActions';
 
 const Logo = require("../assets/images/adaptive-icon.png");
 

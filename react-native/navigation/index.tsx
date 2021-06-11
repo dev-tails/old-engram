@@ -1,8 +1,3 @@
-/**
- * If you are not familiar with React Navigation, check out the "Fundamentals" guide:
- * https://reactnavigation.org/docs/getting-started
- *
- */
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { DarkTheme, DefaultTheme, Link, NavigationContainer } from '@react-navigation/native';
 import * as React from 'react';
@@ -42,10 +37,6 @@ export default function Navigation({
 const Drawer = createDrawerNavigator();
 
 function RootNavigator() {
-  const menuIcon = (
-    <Icon name="menu" style={{ marginHorizontal: 12 }} color={"white"} />
-  );
-
   const headerProps = {
     headerStyle: {
       backgroundColor: primaryColor,
