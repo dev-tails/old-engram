@@ -44,7 +44,7 @@ export default function App() {
           <SafeAreaProvider>
             <GlobalStyle css="input {outline: none;}" />
             <Navigation colorScheme={colorScheme} />
-            <StatusBar backgroundColor={"#3f50af"} />
+            <StatusBar style={"light"} backgroundColor={"#3f50af"} />
           </SafeAreaProvider>
         </PersistGate>
       </Provider>
