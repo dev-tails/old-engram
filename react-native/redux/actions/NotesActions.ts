@@ -1,6 +1,7 @@
-import { Dispatch } from "redux";
+import uuid from 'react-native-uuid';
+import { Dispatch } from 'redux';
 
-import * as NoteApi from "../../api/NoteApi";
+import * as NoteApi from '../../api/NoteApi';
 
 export async function fetchNotes(dispatch: Dispatch) {
   const notes = await NoteApi.getNotes();
@@ -8,8 +9,13 @@ export async function fetchNotes(dispatch: Dispatch) {
 }
 
 export async function addNote(dispatch: Dispatch, note: NoteApi.Note) {
-  const createdNote = await NoteApi.createNote(note);
-  dispatch({ type: "ADD_NOTE", payload: createdNote });
+  const noteToCreate = {
+    ...note,
+    localId: uuid.v4(),
+  };
+  dispatch({ type: "ADD_NOTE", payload: noteToCreate });
+  const savedNote = await NoteApi.createNote(noteToCreate);
+  dispatch({ type: "UPDATE_NOTE", payload: savedNote });
 }
 
 export async function updateNote(

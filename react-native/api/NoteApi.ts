@@ -1,9 +1,10 @@
-import qs from "querystring";
+import qs from 'querystring';
 
-import { baseUrl } from "./Api";
+import { baseUrl } from './Api';
 
 export type Note = {
   _id?: string;
+  localId: string;
   body: string;
   date: string;
   type: string;

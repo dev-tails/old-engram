@@ -50,8 +50,6 @@ export const LogPage: React.FC<LogPageProps> = (props) => {
 
   useEffect(() => {
     async function fetchNotes() {
-      console.log("fetch Notes");
-
       if (props.date) {
         const getNotesParams: NotesApi.GetNotesParams = {
           since: moment(props.date).startOf("d").toDate(),

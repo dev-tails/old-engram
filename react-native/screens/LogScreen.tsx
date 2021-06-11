@@ -128,7 +128,7 @@ export default function LogScreen({ route }: LogScreenProps) {
       if (selectedNoteId) {
         await updateNote(dispatch, { _id: selectedNoteId, ...noteToSave });
       } else {
-        await addNote(dispatch, noteToSave);
+        addNote(dispatch, noteToSave);
       }
 
       setBody("");
@@ -282,7 +282,7 @@ export default function LogScreen({ route }: LogScreenProps) {
             if (item._id) {
               return item._id;
             } else {
-              return String(index);
+              return item.localId;
             }
           }}
           style={styles.list}
