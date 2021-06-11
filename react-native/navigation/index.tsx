@@ -2,7 +2,6 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { DarkTheme, DefaultTheme, Link, NavigationContainer } from '@react-navigation/native';
 import * as React from 'react';
 import { ColorSchemeName } from 'react-native';
-import { Icon } from 'react-native-elements';
 import { Image } from 'react-native-elements/dist/image/Image';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useDispatch } from 'react-redux';
@@ -43,6 +42,7 @@ function RootNavigator() {
     },
     headerTitleAlign: "center",
     headerTitleStyle: { color: "white" },
+    headerTintColor: "white",
   };
 
   return (
@@ -58,18 +58,6 @@ function RootNavigator() {
           return {
             ...headerProps,
             unmountOnBlur: true,
-            headerLeft: () => {
-              return (
-                <Icon
-                  name="menu"
-                  style={{ marginHorizontal: 12 }}
-                  color={"white"}
-                  onPress={() => {
-                    navigation.toggleDrawer();
-                  }}
-                />
-              );
-            },
             headerRight: () => {
               return (
                 <TouchableOpacity
@@ -93,18 +81,6 @@ function RootNavigator() {
         options={({ navigation }) => {
           return {
             ...headerProps,
-            headerLeft: () => {
-              return (
-                <Icon
-                  name="menu"
-                  style={{ marginHorizontal: 12 }}
-                  color={"white"}
-                  onPress={() => {
-                    navigation.toggleDrawer();
-                  }}
-                />
-              );
-            },
             headerRight: () => {
               return (
                 <TouchableOpacity
