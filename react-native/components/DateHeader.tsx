@@ -22,20 +22,22 @@ export default function DateHeader({
   onToday,
 }: DateHeaderProps) {
   const theme = useColorScheme();
+  const backgroundColor = theme === "light" ? "#EEE" : "#424242";
 
   const styles = StyleSheet.create({
     dateHeader: {
       paddingVertical: 4,
-      borderBottomWidth: 1,
-      borderBottomColor: theme === "light" ? "#EEE" : "#424242",
+      backgroundColor,
     },
     content: {
       width: "100%",
       maxWidth: 800,
       flexDirection: "row",
+      backgroundColor,
     },
     spacer: {
       flexGrow: 1,
+      backgroundColor,
     },
     date: {
       fontSize: 24,
