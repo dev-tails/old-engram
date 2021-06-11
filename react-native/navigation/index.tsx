@@ -45,7 +45,11 @@ function RootNavigator() {
   const theme = useColorScheme();
 
   const menuIcon = (
-    <Icon name="menu" style={{ marginLeft: 8 }} color={getTextColor(theme)} />
+    <Icon
+      name="menu"
+      style={{ marginHorizontal: 12 }}
+      color={getTextColor(theme)}
+    />
   );
 
   return (
