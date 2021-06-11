@@ -3,25 +3,21 @@
  * https://reactnavigation.org/docs/getting-started
  *
  */
-import {
-  NavigationContainer,
-  DefaultTheme,
-  DarkTheme,
-  Link,
-} from "@react-navigation/native";
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import * as React from "react";
-import { ColorSchemeName } from "react-native";
-import BottomTabNavigator from "./BottomTabNavigator";
-import LinkingConfiguration from "./LinkingConfiguration";
-import LoginScreen from "../screens/LoginScreen";
-import useColorScheme from "../hooks/useColorScheme";
-import { useDispatch } from "react-redux";
-import { logout } from "../redux/actions/UserActions";
-import LogScreen from "../screens/LogScreen";
-import { Image } from "react-native-elements/dist/image/Image";
-import { Icon } from "react-native-elements";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { DarkTheme, DefaultTheme, Link, NavigationContainer } from '@react-navigation/native';
+import * as React from 'react';
+import { ColorSchemeName } from 'react-native';
+import { Icon } from 'react-native-elements';
+import { Image } from 'react-native-elements/dist/image/Image';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useDispatch } from 'react-redux';
+
+import useColorScheme from '../hooks/useColorScheme';
+import { logout } from '../redux/actions/UserActions';
+import LoginScreen from '../screens/LoginScreen';
+import LogScreen from '../screens/LogScreen';
+import BottomTabNavigator from './BottomTabNavigator';
+import LinkingConfiguration from './LinkingConfiguration';
 
 const Logo = require("../assets/images/adaptive-icon.png");
 
@@ -45,6 +41,8 @@ export default function Navigation({
 const Drawer = createDrawerNavigator();
 
 function RootNavigator() {
+  const menuIcon = <Icon name="menu" style={{ marginLeft: 8 }} color="white" />;
+
   return (
     <Drawer.Navigator
       initialRouteName={"Daily"}
@@ -57,14 +55,15 @@ function RootNavigator() {
         options={({ navigation }) => {
           return {
             unmountOnBlur: true,
+            headerTitleStyle: { alignSelf: "center" },
+            headerLeft: () => {
+              return menuIcon;
+            },
             headerRight: () => {
               return (
                 <TouchableOpacity
                   onPress={() => {
                     navigation.goBack();
-                  }}
-                  style={{
-                    marginRight: 8,
                   }}
                 >
                   <Image style={{ width: 36, height: 36 }} source={Logo} />
@@ -79,6 +78,10 @@ function RootNavigator() {
         component={BottomTabNavigator}
         options={({ navigation }) => {
           return {
+            headerTitleStyle: { alignSelf: "center" },
+            headerLeft: () => {
+              return menuIcon;
+            },
             headerRight: () => {
               return (
                 <TouchableOpacity
