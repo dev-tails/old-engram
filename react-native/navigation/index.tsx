@@ -12,7 +12,6 @@ import { Image } from 'react-native-elements/dist/image/Image';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useDispatch } from 'react-redux';
 
-import { getTextColor } from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import { logout } from '../redux/actions/UserActions';
 import LoginScreen from '../screens/LoginScreen';
@@ -42,15 +41,20 @@ export default function Navigation({
 const Drawer = createDrawerNavigator();
 
 function RootNavigator() {
-  const theme = useColorScheme();
-
   const menuIcon = (
-    <Icon
-      name="menu"
-      style={{ marginHorizontal: 12 }}
-      color={getTextColor(theme)}
-    />
+    <Icon name="menu" style={{ marginHorizontal: 12 }} color={"white"} />
   );
+
+  const headerProps = {
+    headerStyle: {
+      backgroundColor: "#3f50af",
+    },
+    headerTitleAlign: "center",
+    headerTitleStyle: { color: "white" },
+    headerLeft: () => {
+      return menuIcon;
+    },
+  };
 
   return (
     <Drawer.Navigator
@@ -63,11 +67,8 @@ function RootNavigator() {
         initialParams={{ brainDump: true }}
         options={({ navigation }) => {
           return {
+            ...headerProps,
             unmountOnBlur: true,
-            headerTitleStyle: { alignSelf: "center" },
-            headerLeft: () => {
-              return menuIcon;
-            },
             headerRight: () => {
               return (
                 <TouchableOpacity
@@ -87,10 +88,7 @@ function RootNavigator() {
         component={BottomTabNavigator}
         options={({ navigation }) => {
           return {
-            headerTitleStyle: { alignSelf: "center" },
-            headerLeft: () => {
-              return menuIcon;
-            },
+            ...headerProps,
             headerRight: () => {
               return (
                 <TouchableOpacity

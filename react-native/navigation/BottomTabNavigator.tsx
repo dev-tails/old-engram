@@ -2,25 +2,23 @@
  * Learn more about createBottomTabNavigator:
  * https://reactnavigation.org/docs/bottom-tab-navigator
  */
+import { Ionicons } from '@expo/vector-icons';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import * as React from 'react';
+import { Icon } from 'react-native-elements';
+import { useDispatch } from 'react-redux';
 
-import { Ionicons } from "@expo/vector-icons";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createStackNavigator } from "@react-navigation/stack";
-import * as React from "react";
-import { Icon } from "react-native-elements/dist/icons/Icon";
-import { useDispatch } from "react-redux";
-
-import Colors from "../constants/Colors";
-import useColorScheme from "../hooks/useColorScheme";
-import { fetchUser } from "../redux/actions/UserActions";
-import LogScreen from "../screens/LogScreen";
-import { BottomTabParamList, LogParamList } from "../types";
+import Colors from '../constants/Colors';
+import useColorScheme from '../hooks/useColorScheme';
+import { fetchUser } from '../redux/actions/UserActions';
+import LogScreen from '../screens/LogScreen';
+import { BottomTabParamList } from '../types';
 
 type BottomTabNavigatorProps = {
   navigation: any;
 };
 
-const BottomTab = createBottomTabNavigator<BottomTabParamList>();
+const BottomTab = createMaterialBottomTabNavigator<BottomTabParamList>();
 
 export default function BottomTabNavigator({
   navigation,
@@ -41,6 +39,7 @@ export default function BottomTabNavigator({
     <BottomTab.Navigator
       initialRouteName="All"
       tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}
+      barStyle={{ backgroundColor: "#3f50af" }}
     >
       <BottomTab.Screen
         name="All"
@@ -94,25 +93,4 @@ function TabBarIcon(props: {
   color: string;
 }) {
   return <Ionicons size={30} style={{ marginBottom: -3 }} {...props} />;
-}
-
-// Each tab has its own navigation stack, you can read more about this pattern here:
-// https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
-const LogStack = createStackNavigator<LogParamList>();
-
-function LogNavigator() {
-  return (
-    <LogStack.Navigator headerMode="none">
-      <LogStack.Screen
-        name="LogScreen"
-        component={LogScreen}
-        options={{ headerTitle: "Log" }}
-      />
-      <LogStack.Screen
-        name="NotesScreen"
-        component={LogScreen}
-        options={{ headerTitle: "Notes" }}
-      />
-    </LogStack.Navigator>
-  );
 }

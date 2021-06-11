@@ -1,22 +1,21 @@
-import "react-native-gesture-handler";
-import { StatusBar } from "expo-status-bar";
-import React from "react";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import 'react-native-gesture-handler';
 
-import useCachedResources from "./hooks/useCachedResources";
-import useColorScheme from "./hooks/useColorScheme";
-import Navigation from "./navigation";
-import GlobalStyle from "./GlobalStyle";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StatusBar } from 'expo-status-bar';
+import React from 'react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Provider } from 'react-redux';
+import { applyMiddleware, createStore } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import { persistReducer, persistStore } from 'redux-persist';
+import { PersistGate } from 'redux-persist/integration/react';
+import thunkMiddleware from 'redux-thunk';
 
-import { Provider } from "react-redux";
-import { applyMiddleware, createStore } from "redux";
-import { composeWithDevTools } from "redux-devtools-extension";
-import thunkMiddleware from "redux-thunk";
-import { persistStore, persistReducer } from "redux-persist";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { PersistGate } from "redux-persist/integration/react";
-
-import rootReducer from "./redux/reducers";
+import GlobalStyle from './GlobalStyle';
+import useCachedResources from './hooks/useCachedResources';
+import useColorScheme from './hooks/useColorScheme';
+import Navigation from './navigation';
+import rootReducer from './redux/reducers';
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -45,7 +44,7 @@ export default function App() {
           <SafeAreaProvider>
             <GlobalStyle css="input {outline: none;}" />
             <Navigation colorScheme={colorScheme} />
-            <StatusBar />
+            <StatusBar backgroundColor={"#3f50af"} />
           </SafeAreaProvider>
         </PersistGate>
       </Provider>
