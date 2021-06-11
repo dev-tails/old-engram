@@ -12,6 +12,7 @@ import { Image } from 'react-native-elements/dist/image/Image';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useDispatch } from 'react-redux';
 
+import { getTextColor } from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import { logout } from '../redux/actions/UserActions';
 import LoginScreen from '../screens/LoginScreen';
@@ -41,7 +42,11 @@ export default function Navigation({
 const Drawer = createDrawerNavigator();
 
 function RootNavigator() {
-  const menuIcon = <Icon name="menu" style={{ marginLeft: 8 }} color="white" />;
+  const theme = useColorScheme();
+
+  const menuIcon = (
+    <Icon name="menu" style={{ marginLeft: 8 }} color={getTextColor(theme)} />
+  );
 
   return (
     <Drawer.Navigator
