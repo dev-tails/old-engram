@@ -12,6 +12,7 @@ import { Image } from 'react-native-elements/dist/image/Image';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useDispatch } from 'react-redux';
 
+import { primaryColor } from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import { logout } from '../redux/actions/UserActions';
 import LoginScreen from '../screens/LoginScreen';
@@ -47,13 +48,10 @@ function RootNavigator() {
 
   const headerProps = {
     headerStyle: {
-      backgroundColor: "#3f50af",
+      backgroundColor: primaryColor,
     },
     headerTitleAlign: "center",
     headerTitleStyle: { color: "white" },
-    headerLeft: () => {
-      return menuIcon;
-    },
   };
 
   return (
@@ -69,11 +67,26 @@ function RootNavigator() {
           return {
             ...headerProps,
             unmountOnBlur: true,
+            headerLeft: () => {
+              return (
+                <Icon
+                  name="menu"
+                  style={{ marginHorizontal: 12 }}
+                  color={"white"}
+                  onPress={() => {
+                    navigation.toggleDrawer();
+                  }}
+                />
+              );
+            },
             headerRight: () => {
               return (
                 <TouchableOpacity
                   onPress={() => {
                     navigation.goBack();
+                  }}
+                  style={{
+                    marginRight: 8,
                   }}
                 >
                   <Image style={{ width: 36, height: 36 }} source={Logo} />
@@ -89,6 +102,18 @@ function RootNavigator() {
         options={({ navigation }) => {
           return {
             ...headerProps,
+            headerLeft: () => {
+              return (
+                <Icon
+                  name="menu"
+                  style={{ marginHorizontal: 12 }}
+                  color={"white"}
+                  onPress={() => {
+                    navigation.toggleDrawer();
+                  }}
+                />
+              );
+            },
             headerRight: () => {
               return (
                 <TouchableOpacity
@@ -110,6 +135,7 @@ function RootNavigator() {
         name="Login"
         component={LoginScreen}
         options={{
+          ...headerProps,
           title: "Log In",
           headerTitle: "engram",
           headerLeft: () => {
@@ -121,6 +147,7 @@ function RootNavigator() {
         name="SignUp"
         component={LoginScreen}
         options={{
+          ...headerProps,
           title: "Sign Up",
           headerTitle: "engram",
           headerLeft: () => {

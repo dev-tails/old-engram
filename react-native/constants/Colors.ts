@@ -1,3 +1,5 @@
+export const primaryColor = "#3f50af";
+
 const tintColorLight = "#2f95dc";
 const tintColorDark = "#fff";
 

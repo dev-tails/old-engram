@@ -1,20 +1,15 @@
-import * as React from "react";
+import { Link } from '@react-navigation/native';
+import * as React from 'react';
+import { Alert, Image, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
+import { Button } from 'react-native-elements';
+import { useDispatch } from 'react-redux';
 
-import {
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-  Image,
-} from "react-native";
-import { Link } from "@react-navigation/native";
-import { TextInput } from "../components/Themed";
-import { Button } from "react-native-elements";
-import { getTextColor } from "../constants/Colors";
-import useColorScheme from "../hooks/useColorScheme";
-import { fetchNotes } from "../redux/actions/NotesActions";
-import { useDispatch } from "react-redux";
-import { login, signup } from "../redux/actions/UserActions";
+import { TextInput } from '../components/Themed';
+import { getTextColor, primaryColor } from '../constants/Colors';
+import useColorScheme from '../hooks/useColorScheme';
+import { fetchNotes } from '../redux/actions/NotesActions';
+import { login, signup } from '../redux/actions/UserActions';
+
 const Logo = require("../assets/images/adaptive-icon.png");
 
 type LoginScreenProps = {
@@ -71,6 +66,7 @@ export default function LoginScreen({ navigation, route }: LoginScreenProps) {
       color: getTextColor(theme),
     },
     primaryButton: {
+      backgroundColor: primaryColor,
       width: 256,
     },
     link: {
@@ -117,7 +113,7 @@ export default function LoginScreen({ navigation, route }: LoginScreenProps) {
         secureTextEntry={true}
       />
       <Button
-        style={styles.primaryButton}
+        buttonStyle={styles.primaryButton}
         title={isSignUp ? "Sign Up" : "Login"}
         onPress={handleSubmit}
       />
