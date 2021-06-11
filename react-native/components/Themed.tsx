@@ -2,17 +2,12 @@
  * Learn more about Light and Dark modes:
  * https://docs.expo.io/guides/color-schemes/
  */
+import * as React from 'react';
+import { Text as DefaultText, TextInput as DefaultTextInput, View as DefaultView } from 'react-native';
+import { ListItem } from 'react-native-elements';
 
-import * as React from "react";
-import {
-  Text as DefaultText,
-  View as DefaultView,
-  TextInput as DefaultTextInput,
-} from "react-native";
-import { ListItem } from "react-native-elements";
-
-import Colors from "../constants/Colors";
-import useColorScheme from "../hooks/useColorScheme";
+import Colors from '../constants/Colors';
+import useColorScheme from '../hooks/useColorScheme';
 
 export function useThemeColor(
   props: { light?: string; dark?: string },
@@ -46,12 +41,13 @@ export function Text(props: TextProps) {
 
 export function TextInput(props: TextInputProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
+  const theme = useColorScheme();
   const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
 
   return (
     <DefaultTextInput
       style={[{ color }, style]}
-      placeholderTextColor={"#424242"}
+      placeholderTextColor={"#888"}
       {...otherProps}
     />
   );
