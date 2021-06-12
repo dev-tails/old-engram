@@ -125,22 +125,25 @@ export default function LogScreen({ route }: LogScreenProps) {
 
   async function handleSubmit() {
     let dateString = moment(date).format("YYYY-MM-DD");
+    const oldBody = body;
     let noteToSave: Partial<Note> = {
       body,
       type: type || "note",
       date: dateString,
     };
     try {
+      setBody("");
+
       if (selectedNoteId) {
         await updateNote(dispatch, { _id: selectedNoteId, ...noteToSave });
       } else {
-        addNote(dispatch, noteToSave);
+        await addNote(dispatch, noteToSave);
       }
-
-      setBody("");
 
       scrollToBottomOfNotes();
     } catch (err) {
+      setBody(oldBody);
+
       handleGenericError(err);
     }
   }

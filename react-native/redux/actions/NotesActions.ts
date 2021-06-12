@@ -5,7 +5,7 @@ import * as NoteApi from '../../api/NoteApi';
 
 export type RemoveNoteAction = {
   type: "REMOVE_NOTE";
-  payload: string;
+  payload: NoteApi.Note;
 };
 
 export type AddNoteAction = {
@@ -36,9 +36,14 @@ export async function addNote(dispatch: Dispatch, note: Partial<NoteApi.Note>) {
     ...note,
     localId: uuid.v4() as string,
   };
-  dispatch({ type: "ADD_NOTE", payload: noteToCreate });
-  const savedNote = await NoteApi.createNote(noteToCreate);
-  dispatch({ type: "UPDATE_NOTE", payload: savedNote });
+  try {
+    dispatch({ type: "ADD_NOTE", payload: noteToCreate });
+    const savedNote = await NoteApi.createNote(noteToCreate);
+    dispatch({ type: "UPDATE_NOTE", payload: savedNote });
+  } catch (err) {
+    removeNote(dispatch, noteToCreate);
+    throw err;
+  }
 }
 
 export async function updateNote(
@@ -49,7 +54,12 @@ export async function updateNote(
   await NoteApi.updateNote(note);
 }
 
-export async function removeNote(dispatch: Dispatch, id: string) {
-  await NoteApi.removeNote(id);
-  dispatch({ type: "REMOVE_NOTE", payload: id });
+export async function removeNote(
+  dispatch: Dispatch,
+  note: Partial<NoteApi.Note>
+) {
+  if (note._id) {
+    await NoteApi.removeNote(note._id);
+  }
+  dispatch({ type: "REMOVE_NOTE", payload: note });
 }

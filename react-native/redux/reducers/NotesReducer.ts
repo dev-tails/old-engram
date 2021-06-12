@@ -34,7 +34,11 @@ const NotesReducer = (
       return [...action.payload];
     case "REMOVE_NOTE":
       index = stateCopy.findIndex((note) => {
-        return note._id === action.payload;
+        if (action.payload._id) {
+          return note._id === action.payload._id;
+        } else {
+          return note.localId === action.payload.localId;
+        }
       });
       stateCopy.splice(index, 1);
       return stateCopy;
