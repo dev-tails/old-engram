@@ -118,12 +118,18 @@ export default function LogScreen({ route }: LogScreenProps) {
   }
 
   async function refetchNotes() {
-    fetchNotes(dispatch).catch(handleGenericError);
+    fetchNotes(dispatch, { date: moment(date).format("YYYY-MM-DD") }).catch(
+      handleGenericError
+    );
   }
 
   async function handleSubmit() {
     let dateString = moment(date).format("YYYY-MM-DD");
-    let noteToSave: Note = { body, type: type || "note", date: dateString };
+    let noteToSave: Partial<Note> = {
+      body,
+      type: type || "note",
+      date: dateString,
+    };
     try {
       if (selectedNoteId) {
         await updateNote(dispatch, { _id: selectedNoteId, ...noteToSave });

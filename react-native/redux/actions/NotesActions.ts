@@ -3,15 +3,38 @@ import { Dispatch } from 'redux';
 
 import * as NoteApi from '../../api/NoteApi';
 
-export async function fetchNotes(dispatch: Dispatch) {
-  const notes = await NoteApi.getNotes();
+export type RemoveNoteAction = {
+  type: "REMOVE_NOTE";
+  payload: string;
+};
+
+export type AddNoteAction = {
+  type: "ADD_NOTE";
+  payload: NoteApi.Note;
+};
+
+export type UpdateNoteAction = {
+  type: "UPDATE_NOTE";
+  payload: NoteApi.Note;
+};
+
+export type FetchNotesAction = {
+  type: "FETCH_NOTES";
+  payload: NoteApi.Note[];
+};
+
+export async function fetchNotes(
+  dispatch: Dispatch,
+  params: NoteApi.GetNotesParams
+) {
+  const notes = await NoteApi.getNotes(params);
   dispatch({ type: "FETCH_NOTES", payload: notes });
 }
 
-export async function addNote(dispatch: Dispatch, note: NoteApi.Note) {
+export async function addNote(dispatch: Dispatch, note: Partial<NoteApi.Note>) {
   const noteToCreate = {
     ...note,
-    localId: uuid.v4(),
+    localId: uuid.v4() as string,
   };
   dispatch({ type: "ADD_NOTE", payload: noteToCreate });
   const savedNote = await NoteApi.createNote(noteToCreate);

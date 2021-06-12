@@ -17,6 +17,7 @@ export function initializeNotesRouter() {
     const querySchema = yup.object().shape({
       count: yup.number(),
       type: yup.string().nullable(),
+      date: yup.string(),
       before: yup.date(),
       since: yup.date(),
       sort: yup.string().oneOf(["start"]),
@@ -24,7 +25,8 @@ export function initializeNotesRouter() {
     });
     const parsedQuery = querySchema.cast(req.query);
 
-    const { count, since, before, type, sort, lastSyncDate } = parsedQuery;
+    const { count, since, date, before, type, sort, lastSyncDate } =
+      parsedQuery;
 
     let findOptions = {
       user: ObjectId(user),
@@ -53,6 +55,10 @@ export function initializeNotesRouter() {
           $in: ["task", "task_completed"],
         };
       }
+    }
+
+    if (date) {
+      findOptions.date = date;
     }
 
     if (lastSyncDate) {

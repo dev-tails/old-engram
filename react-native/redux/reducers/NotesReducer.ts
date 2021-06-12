@@ -1,27 +1,8 @@
 import { Note } from '../../api/NoteApi';
+import { AddNoteAction, FetchNotesAction, RemoveNoteAction, UpdateNoteAction } from '../actions/NotesActions';
 import { LogoutAction } from '../actions/UserActions';
 
 const INITIAL_STATE: Note[] = [];
-
-type RemoveNoteAction = {
-  type: "REMOVE_NOTE";
-  payload: string;
-};
-
-type AddNoteAction = {
-  type: "ADD_NOTE";
-  payload: Note;
-};
-
-type UpdateNoteAction = {
-  type: "UPDATE_NOTE";
-  payload: Note;
-};
-
-type FetchNotesAction = {
-  type: "FETCH_NOTES";
-  payload: Note[];
-};
 
 const NotesReducer = (
   state = INITIAL_STATE,

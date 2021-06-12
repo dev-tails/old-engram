@@ -4,12 +4,13 @@
  */
 import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import moment from 'moment';
 import * as React from 'react';
 import { Icon } from 'react-native-elements';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Colors, { primaryColor } from '../constants/Colors';
-import useColorScheme from '../hooks/useColorScheme';
+import { fetchNotes } from '../redux/actions/NotesActions';
 import { fetchUser } from '../redux/actions/UserActions';
 import LogScreen from '../screens/LogScreen';
 import { BottomTabParamList } from '../types';
@@ -21,17 +22,22 @@ type BottomTabNavigatorProps = {
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
+const selectDate = (state: any) => {
+  return state.date;
+};
+
 export default function BottomTabNavigator({
   navigation,
 }: BottomTabNavigatorProps) {
-  const colorScheme = useColorScheme();
-
   const dispatch = useDispatch();
+  const date = useSelector(selectDate);
 
   React.useEffect(() => {
     fetchUser(dispatch).then((user) => {
       if (!user) {
         navigation.navigate("Login");
+      } else {
+        fetchNotes(dispatch, { date: moment(date).format("YYYY-MM-DD") });
       }
     });
   }, []);

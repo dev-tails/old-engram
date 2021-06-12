@@ -7,7 +7,6 @@ import { useDispatch } from 'react-redux';
 import { TextInput } from '../components/Themed';
 import { getTextColor, primaryColor } from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
-import { fetchNotes } from '../redux/actions/NotesActions';
 import { login, signup } from '../redux/actions/UserActions';
 
 const Logo = require("../assets/images/adaptive-icon.png");
@@ -41,7 +40,6 @@ export default function LoginScreen({ navigation, route }: LoginScreenProps) {
         if (data.errors) {
           throw new Error(data.errors);
         }
-        await fetchNotes(dispatch);
       }
       navigation.navigate("Daily");
     } catch (err) {

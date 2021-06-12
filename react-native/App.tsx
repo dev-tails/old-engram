@@ -1,14 +1,11 @@
 import 'react-native-gesture-handler';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux';
 import { applyMiddleware, createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import { persistReducer, persistStore } from 'redux-persist';
-import { PersistGate } from 'redux-persist/integration/react';
 import thunkMiddleware from 'redux-thunk';
 
 import { primaryColor } from './constants/Colors';
@@ -26,28 +23,18 @@ export default function App() {
     applyMiddleware(thunkMiddleware)
   );
 
-  const persistConfig = {
-    key: "root",
-    storage: AsyncStorage,
-  };
-
-  const persistedReducer = persistReducer(persistConfig, rootReducer);
-
-  const store = createStore(persistedReducer, composedEnhancer);
-  let persistor = persistStore(store);
+  const store = createStore(rootReducer, composedEnhancer);
 
   if (!isLoadingComplete) {
     return null;
   } else {
     return (
       <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <SafeAreaProvider style={{ backgroundColor: primaryColor }}>
-            <GlobalStyle css="input {outline: none;}" />
-            <Navigation colorScheme={colorScheme} />
-            <StatusBar style={"light"} backgroundColor={primaryColor} />
-          </SafeAreaProvider>
-        </PersistGate>
+        <SafeAreaProvider style={{ backgroundColor: primaryColor }}>
+          <GlobalStyle css="input {outline: none;}" />
+          <Navigation colorScheme={colorScheme} />
+          <StatusBar style={"light"} backgroundColor={primaryColor} />
+        </SafeAreaProvider>
       </Provider>
     );
   }

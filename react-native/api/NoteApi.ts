@@ -10,7 +10,7 @@ export type Note = {
   type: string;
 };
 
-export async function createNote(note: Note): Promise<Note> {
+export async function createNote(note: Partial<Note>): Promise<Note> {
   const res = await fetch(`${baseUrl}/api/notes`, {
     method: "POST",
     headers: {
@@ -35,6 +35,7 @@ export async function updateNote(note: Partial<Note>): Promise<Note> {
 }
 
 export type GetNotesParams = {
+  date?: string;
   type?: string;
   since?: string;
   before?: string;
