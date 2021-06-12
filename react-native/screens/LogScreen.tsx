@@ -1,7 +1,7 @@
 import moment from 'moment';
 import * as React from 'react';
 import { Alert, FlatList, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
-import { BottomSheet, ListItem } from 'react-native-elements';
+import { BottomSheet, Button, ListItem } from 'react-native-elements';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
 import { Image } from 'react-native-elements/dist/image/Image';
 import { useDispatch, useSelector } from 'react-redux';
@@ -197,6 +197,7 @@ export default function LogScreen({ route }: LogScreenProps) {
       justifyContent: "flex-start",
     },
     listItemTitle: {
+      marginTop: 8,
       marginHorizontal: 8,
     },
     listItemSeparator: {
@@ -313,17 +314,22 @@ export default function LogScreen({ route }: LogScreenProps) {
                 }}
               >
                 <ListItem.Content style={styles.listItemContent}>
-                  <Icon
-                    name={getIconNameForType(item.type)}
-                    color={
-                      item.type === "task_completed"
-                        ? disabledColor
-                        : getTextColor(theme)
+                  <Button
+                    type="clear"
+                    icon={
+                      <Icon
+                        name={getIconNameForType(item.type)}
+                        color={
+                          item.type === "task_completed"
+                            ? disabledColor
+                            : getTextColor(theme)
+                        }
+                      />
                     }
                     onPress={() => {
                       handleToggleIcon(item);
                     }}
-                  />
+                  ></Button>
                   <ListItemTitle
                     style={{
                       ...styles.listItemTitle,
