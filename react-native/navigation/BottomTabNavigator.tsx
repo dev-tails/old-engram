@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import moment from 'moment';
 import * as React from 'react';
+import { Alert } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -33,14 +34,20 @@ export default function BottomTabNavigator({
   const date = useSelector(selectDate);
 
   React.useEffect(() => {
-    fetchUser(dispatch).then((user) => {
+    fetchUser(dispatch).then(async (user) => {
       if (!user) {
         navigation.navigate("Login");
-      } else {
-        fetchNotes(dispatch, { date: moment(date).format("YYYY-MM-DD") });
       }
     });
   }, []);
+
+  React.useEffect(() => {
+    fetchNotes(dispatch, {
+      date: moment(date).format("YYYY-MM-DD"),
+    }).catch((err) => {
+      Alert.alert("Error", err.message);
+    });
+  }, [date]);
 
   return (
     <BottomTab.Navigator
