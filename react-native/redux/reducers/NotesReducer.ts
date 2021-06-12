@@ -25,7 +25,10 @@ const NotesReducer = (
         }
         return note.localId === action.payload.localId;
       });
-      stateCopy[index] = action.payload;
+      stateCopy[index] = {
+        ...stateCopy[index],
+        ...action.payload,
+      };
       return stateCopy;
     case "FETCH_NOTES":
       return [...action.payload];

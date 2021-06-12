@@ -45,8 +45,8 @@ export async function updateNote(
   dispatch: Dispatch,
   note: Partial<NoteApi.Note>
 ) {
-  const savedNote = await NoteApi.updateNote(note);
-  dispatch({ type: "UPDATE_NOTE", payload: savedNote });
+  dispatch({ type: "UPDATE_NOTE", payload: note });
+  await NoteApi.updateNote(note);
 }
 
 export async function removeNote(dispatch: Dispatch, id: string) {
