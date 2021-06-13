@@ -29,18 +29,6 @@ const NoteListItem: React.FC<NoteListItemProps> = ({
   }
 
   const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-    },
-    content: {
-      flex: 1,
-    },
-    list: {
-      flexGrow: 1,
-      width: "100%",
-      maxWidth: 800,
-      margin: "auto",
-    },
     listItem: {
       backgroundColor: getBackgroundColor(theme),
     },
@@ -48,10 +36,6 @@ const NoteListItem: React.FC<NoteListItemProps> = ({
       flex: 1,
       flexDirection: "row",
       justifyContent: "flex-start",
-    },
-    listItemTitle: {
-      marginTop: 8,
-      marginHorizontal: 8,
     },
     listItemSeparator: {
       height: 1,
@@ -94,27 +78,26 @@ const NoteListItem: React.FC<NoteListItemProps> = ({
         onSelected(item);
       }}
     >
+      <Button
+        type="clear"
+        icon={
+          <Icon
+            name={getIconNameForType(item.type)}
+            color={
+              item.type === "task_completed"
+                ? disabledColor
+                : getTextColor(theme)
+            }
+          />
+        }
+        onPress={() => {
+          onToggleIcon(item);
+        }}
+      ></Button>
       <ListItem.Content style={styles.listItemContent}>
-        <Button
-          type="clear"
-          icon={
-            <Icon
-              name={getIconNameForType(item.type)}
-              color={
-                item.type === "task_completed"
-                  ? disabledColor
-                  : getTextColor(theme)
-              }
-            />
-          }
-          onPress={() => {
-            onToggleIcon(item);
-          }}
-        ></Button>
         <ListItemTitle
           style={{
-            ...styles.listItemTitle,
-            ...additionalTitleStyles,
+            ...(item.type === "task_completed" ? { color: disabledColor } : {}),
           }}
         >
           {item.body}
