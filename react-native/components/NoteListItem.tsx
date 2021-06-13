@@ -32,32 +32,6 @@ const NoteListItem: React.FC<NoteListItemProps> = ({
     listItem: {
       backgroundColor: getBackgroundColor(theme),
     },
-    listItemContent: {
-      flex: 1,
-      flexDirection: "row",
-      justifyContent: "flex-start",
-    },
-    listItemSeparator: {
-      height: 1,
-      width: "100%",
-      backgroundColor: theme === "light" ? "#EEE" : "#424242",
-    },
-    input: {
-      flexGrow: 1,
-      borderBottomWidth: 1,
-      borderBottomColor: "#3f51b5",
-      padding: 8,
-    },
-    textBoxWrapper: {
-      alignItems: "center",
-      width: "100%",
-      padding: 16,
-    },
-    textBox: {
-      width: "100%",
-      maxWidth: 800,
-      flexDirection: "row",
-    },
   });
 
   function getIconNameForType(type: string): string {
@@ -94,7 +68,7 @@ const NoteListItem: React.FC<NoteListItemProps> = ({
           onToggleIcon(item);
         }}
       ></Button>
-      <ListItem.Content style={styles.listItemContent}>
+      <ListItem.Content>
         <ListItemTitle
           style={{
             ...(item.type === "task_completed" ? { color: disabledColor } : {}),
