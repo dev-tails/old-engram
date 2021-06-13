@@ -299,8 +299,9 @@ export default function LogScreen({ route }: LogScreenProps) {
       </View>
       <BottomSheet
         isVisible={isBottomSheetVisible}
-        containerStyle={{}}
-        modalProps={{}}
+        modalProps={{
+          animationType: "none",
+        }}
       >
         {bottomSheetOptions.map((l, i) => (
           <ListItem key={i} onPress={l.onPress}>
