@@ -1,6 +1,6 @@
 import { Link } from '@react-navigation/native';
 import * as React from 'react';
-import { Alert, Image, KeyboardAvoidingView, Platform, StyleSheet, TextInput as DefaultTextInput } from 'react-native';
+import { Alert, Image, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
 import { Button } from 'react-native-elements';
 import { useDispatch } from 'react-redux';
 
@@ -23,23 +23,22 @@ type LoginScreenProps = {
 export default function LoginScreen({ navigation, route }: LoginScreenProps) {
   const dispatch = useDispatch();
   const theme = useColorScheme();
-  const [username, setUsername] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const emailRef = React.useRef<typeof DefaultTextInput | null>(null);
-  const passwordRef = React.useRef<typeof DefaultTextInput | null>(null);
+  const emailRef = React.useRef<any>(null);
+  const passwordRef = React.useRef<any>(null);
 
   const isSignUp = route.params?.isSignUp;
 
   async function handleSubmit() {
     try {
       if (isSignUp) {
-        const data = await signup(dispatch, { username, email, password });
+        const data = await signup(dispatch, { email, password });
         if (data.errors) {
           throw new Error(data.errors.join(","));
         }
       } else {
-        const data = await login(dispatch, { username, password });
+        const data = await login(dispatch, { username: email, password });
         if (data.errors) {
           throw new Error(data.errors.join(","));
         }
@@ -75,14 +74,6 @@ export default function LoginScreen({ navigation, route }: LoginScreenProps) {
     },
   });
 
-  function handleSubmitUsername() {
-    if (isSignUp) {
-      emailRef.current?.focus();
-    } else {
-      passwordRef.current?.focus();
-    }
-  }
-
   function handleSubmitEmail() {
     passwordRef.current?.focus();
   }
@@ -94,32 +85,18 @@ export default function LoginScreen({ navigation, route }: LoginScreenProps) {
     >
       <Image style={styles.logo} source={Logo} />
       <TextInput
+        textInputRef={emailRef}
+        onSubmitEditing={handleSubmitEmail}
         style={styles.input}
-        onChangeText={setUsername}
-        onSubmitEditing={handleSubmitUsername}
-        value={username}
+        onChangeText={setEmail}
+        value={email}
         autoCompleteType="off"
+        keyboardType="email-address"
         autoCorrect={false}
         autoCapitalize={"none"}
-        placeholder={"Username"}
+        placeholder={"Email"}
         returnKeyType="next"
-        autoFocus={true}
       />
-      {isSignUp ? (
-        <TextInput
-          textInputRef={emailRef}
-          onSubmitEditing={handleSubmitEmail}
-          style={styles.input}
-          onChangeText={setEmail}
-          value={email}
-          autoCompleteType="off"
-          keyboardType="email-address"
-          autoCorrect={false}
-          autoCapitalize={"none"}
-          placeholder={"Email"}
-          returnKeyType="next"
-        />
-      ) : null}
       <TextInput
         textInputRef={passwordRef}
         style={styles.input}

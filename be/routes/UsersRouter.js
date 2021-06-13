@@ -1,12 +1,12 @@
-import bcrypt from "bcrypt";
-import express from "express";
-import jwt from "jsonwebtoken";
-import yup from "yup";
+import bcrypt from 'bcrypt';
+import express from 'express';
+import jwt from 'jsonwebtoken';
+import yup from 'yup';
 
-import { ObjectId } from "../Database.js";
-import { getEnv } from "../env.js";
-import { AuthAPIKeyMiddleware } from "../middleware/AuthAPIKeyMiddleware.js";
-import { AuthRequiredMiddleware } from "../middleware/AuthRequiredMiddleware.js";
+import { ObjectId } from '../Database.js';
+import { getEnv } from '../env.js';
+import { AuthAPIKeyMiddleware } from '../middleware/AuthAPIKeyMiddleware.js';
+import { AuthRequiredMiddleware } from '../middleware/AuthRequiredMiddleware.js';
 
 async function setToken(res, user) {
   const { jwtSecret, production } = getEnv();
@@ -65,14 +65,6 @@ export function initializeUserRouter() {
     }
 
     const schema = yup.object().shape({
-      username: yup
-        .string()
-        .required()
-        .max(32, "Username must be less than 32 characters")
-        .matches(
-          /[a-z0-9]/,
-          "Username must contain only lowercase letters or numbers"
-        ),
       email: yup.string().email().required(),
       password: yup
         .string()
@@ -85,11 +77,15 @@ export function initializeUserRouter() {
     const { username, password, email } = req.body;
 
     const existingUser = await User.findOne({
-      username,
+      $or: [{ username }, { email }],
     });
     if (existingUser) {
       return res.status(409).json({
-        errors: ["username already exists"],
+        errors: [
+          `A user with that ${
+            existingUser.email === email ? "email" : "username"
+          } already exists`,
+        ],
       });
     }
 
@@ -135,7 +131,7 @@ export function initializeUserRouter() {
     const { db } = req;
     const { username, password } = req.body;
     const user = await db.collection("users").findOne({
-      username,
+      $or: [{ username }, { email: username }],
     });
 
     const invalidLoginMessage =

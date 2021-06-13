@@ -104,18 +104,6 @@ function RootNavigator() {
       ) : (
         <>
           <Drawer.Screen
-            name="Login"
-            component={LoginScreen}
-            options={{
-              ...headerProps,
-              title: "Log In",
-              headerTitle: "engram",
-              headerLeft: () => {
-                return null;
-              },
-            }}
-          />
-          <Drawer.Screen
             name="SignUp"
             component={LoginScreen}
             options={{
@@ -127,6 +115,18 @@ function RootNavigator() {
               },
             }}
             initialParams={{ isSignUp: true }}
+          />
+          <Drawer.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{
+              ...headerProps,
+              title: "Log In",
+              headerTitle: "engram",
+              headerLeft: () => {
+                return null;
+              },
+            }}
           />
         </>
       )}

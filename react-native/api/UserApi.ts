@@ -1,15 +1,15 @@
-import { baseUrl } from "./Api";
+import { baseUrl } from './Api';
 
 export type User = {
   _id: string;
   username: string;
   email: string;
-}
+};
 
 export type LoginParams = {
   username: string;
   password: string;
-}
+};
 
 export async function login(options: LoginParams) {
   const res = await fetch(`${baseUrl}/api/users/login`, {
@@ -35,10 +35,9 @@ export async function logout() {
 }
 
 export type SignUpParams = {
-  username: string;
   email: string;
   password: string;
-}
+};
 
 export async function signup(params: SignUpParams) {
   const res = await fetch(`${baseUrl}/api/users/signup`, {

@@ -78,7 +78,7 @@ export default function LoginPage(props: LoginPageProps) {
         </div>
         <TextField
           id="username"
-          label="Username"
+          label="Email (or username)"
           fullWidth
           autoComplete="off"
           autoCapitalize="none"
