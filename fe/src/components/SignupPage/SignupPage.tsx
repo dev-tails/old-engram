@@ -20,7 +20,6 @@ export const SignupPagePath = "/signup";
 export default function SignupPage(props: SignupPageProps) {
   const history = useHistory();
   const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [errors, setErrors] = useState<Note[]>([]);
   const [enabled, setEnabled] = useState(true);
@@ -35,7 +34,7 @@ export default function SignupPage(props: SignupPageProps) {
 
   const handleSignUp = async () => {
     try {
-      await signUp({ username, password, email });
+      await signUp({ password, email });
       history.push("/");
     } catch (err) {
       let errors = [err.message];
@@ -47,11 +46,6 @@ export default function SignupPage(props: SignupPageProps) {
       setErrors(errors);
     }
   };
-
-  const handleUsernameChanged: React.InputHTMLAttributes<HTMLInputElement>["onChange"] =
-    (event) => {
-      setUsername(event.target.value);
-    };
 
   const handlePasswordChanged: React.InputHTMLAttributes<HTMLInputElement>["onChange"] =
     (event) => {
@@ -89,15 +83,6 @@ export default function SignupPage(props: SignupPageProps) {
               })}
             </div>
 
-            <TextField
-              id="username"
-              autoComplete="off"
-              autoCapitalize="none"
-              autoFocus={true}
-              label="Username"
-              fullWidth
-              onChange={handleUsernameChanged}
-            />
             <TextField
               id="email"
               type="email"

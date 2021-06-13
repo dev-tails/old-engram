@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 
 export type LoginParams = {
   username: string;
@@ -11,7 +11,6 @@ export async function login(params: LoginParams) {
 }
 
 export type SignUpParams = {
-  username: string;
   password: string;
   email: string;
 };
