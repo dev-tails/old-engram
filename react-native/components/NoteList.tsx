@@ -16,7 +16,6 @@ const NoteList = ({
   onNoteSelected,
   onToggleNoteIcon,
 }: NoteListProps) => {
-  console.log("NoteList");
   const theme = useColorScheme();
 
   const styles = StyleSheet.create({
@@ -40,6 +39,7 @@ const NoteList = ({
   return (
     <FlatList
       // ref={listRef}
+      inverted={true}
       keyExtractor={(item, index) => {
         if (item._id) {
           return item._id;

@@ -139,7 +139,7 @@ export default function LogScreen({ route }: LogScreenProps) {
         return note1.type > note2.type;
       });
     }
-    return filteredNotes;
+    return filteredNotes.reverse();
   }, [notes]);
 
   async function refetchNotes() {
