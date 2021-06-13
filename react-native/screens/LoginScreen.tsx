@@ -1,6 +1,6 @@
 import { Link } from '@react-navigation/native';
 import * as React from 'react';
-import { Alert, Image, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
+import { Alert, Image, KeyboardAvoidingView, Platform, StyleSheet, TextInput as DefaultTextInput } from 'react-native';
 import { Button } from 'react-native-elements';
 import { useDispatch } from 'react-redux';
 
@@ -26,6 +26,9 @@ export default function LoginScreen({ navigation, route }: LoginScreenProps) {
   const [username, setUsername] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const emailRef = React.useRef<typeof DefaultTextInput | null>(null);
+  const passwordRef = React.useRef<typeof DefaultTextInput | null>(null);
+
   const isSignUp = route.params?.isSignUp;
 
   async function handleSubmit() {
@@ -72,7 +75,17 @@ export default function LoginScreen({ navigation, route }: LoginScreenProps) {
     },
   });
 
-  function handleSubmitUsername() {}
+  function handleSubmitUsername() {
+    if (isSignUp) {
+      emailRef.current?.focus();
+    } else {
+      passwordRef.current?.focus();
+    }
+  }
+
+  function handleSubmitEmail() {
+    passwordRef.current?.focus();
+  }
 
   return (
     <KeyboardAvoidingView
@@ -94,6 +107,8 @@ export default function LoginScreen({ navigation, route }: LoginScreenProps) {
       />
       {isSignUp ? (
         <TextInput
+          textInputRef={emailRef}
+          onSubmitEditing={handleSubmitEmail}
           style={styles.input}
           onChangeText={setEmail}
           value={email}
@@ -102,17 +117,21 @@ export default function LoginScreen({ navigation, route }: LoginScreenProps) {
           autoCorrect={false}
           autoCapitalize={"none"}
           placeholder={"Email"}
+          returnKeyType="next"
         />
       ) : null}
       <TextInput
+        textInputRef={passwordRef}
         style={styles.input}
         onChangeText={setPassword}
+        onSubmitEditing={handleSubmit}
         value={password}
         autoCompleteType="off"
         autoCorrect={false}
         autoCapitalize={"none"}
         placeholder={"Password"}
         secureTextEntry={true}
+        returnKeyType="done"
       />
       <Button
         buttonStyle={styles.primaryButton}

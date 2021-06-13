@@ -29,7 +29,8 @@ type ThemeProps = {
 };
 
 export type TextProps = ThemeProps & DefaultText["props"];
-export type TextInputProps = ThemeProps & DefaultTextInput["props"];
+export type TextInputProps = ThemeProps &
+  DefaultTextInput["props"] & { textInputRef?: any };
 export type ViewProps = ThemeProps & DefaultView["props"];
 
 export function Text(props: TextProps) {
@@ -40,12 +41,13 @@ export function Text(props: TextProps) {
 }
 
 export function TextInput(props: TextInputProps) {
-  const { style, lightColor, darkColor, ...otherProps } = props;
+  const { style, lightColor, darkColor, textInputRef, ...otherProps } = props;
   const theme = useColorScheme();
   const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
 
   return (
     <DefaultTextInput
+      ref={textInputRef}
       style={[{ color }, style]}
       placeholderTextColor={"#888"}
       {...otherProps}
