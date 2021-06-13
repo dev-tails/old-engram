@@ -33,15 +33,14 @@ export default function LoginScreen({ navigation, route }: LoginScreenProps) {
       if (isSignUp) {
         const data = await signup(dispatch, { username, email, password });
         if (data.errors) {
-          throw new Error(data.errors);
+          throw new Error(data.errors.join(","));
         }
       } else {
         const data = await login(dispatch, { username, password });
         if (data.errors) {
-          throw new Error(data.errors);
+          throw new Error(data.errors.join(","));
         }
       }
-      navigation.navigate("Daily");
     } catch (err) {
       Alert.alert("Error", err.message);
     }
@@ -73,6 +72,8 @@ export default function LoginScreen({ navigation, route }: LoginScreenProps) {
     },
   });
 
+  function handleSubmitUsername() {}
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -82,11 +83,14 @@ export default function LoginScreen({ navigation, route }: LoginScreenProps) {
       <TextInput
         style={styles.input}
         onChangeText={setUsername}
+        onSubmitEditing={handleSubmitUsername}
         value={username}
         autoCompleteType="off"
         autoCorrect={false}
         autoCapitalize={"none"}
         placeholder={"Username"}
+        returnKeyType="next"
+        autoFocus={true}
       />
       {isSignUp ? (
         <TextInput

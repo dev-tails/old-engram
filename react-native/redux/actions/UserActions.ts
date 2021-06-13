@@ -24,19 +24,33 @@ export async function fetchUser(dispatch: Dispatch) {
   return user;
 }
 
-export async function login(dispatch: Dispatch, params: UserApi.LoginParams) {
-  const user = await UserApi.login(params);
-  dispatch({ type: "LOGIN", payload: user });
+type ApiErrorRespomnse = {
+  errors: string[];
+};
+
+type LoginResponse = UserApi.User & ApiErrorRespomnse;
+
+export async function login(
+  dispatch: Dispatch,
+  params: UserApi.LoginParams
+): Promise<LoginResponse> {
+  const user: LoginResponse = await UserApi.login(params);
+
+  if (!user.errors) {
+    dispatch({ type: "LOGIN", payload: user });
+  }
   return user;
 }
 
 export async function logout(dispatch: Dispatch) {
-  const user = await UserApi.logout();
+  await UserApi.logout();
   dispatch({ type: "LOGOUT" });
 }
 
 export async function signup(dispatch: Dispatch, params: UserApi.SignUpParams) {
   const user = await UserApi.signup(params);
-  dispatch({ type: "SIGNUP", payload: user });
+  if (!user.errors) {
+    dispatch({ type: "SIGNUP", payload: user });
+  }
   return user;
 }

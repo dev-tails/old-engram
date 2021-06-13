@@ -1,7 +1,3 @@
-/**
- * Learn more about createBottomTabNavigator:
- * https://reactnavigation.org/docs/bottom-tab-navigator
- */
 import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import moment from 'moment';
@@ -10,16 +6,12 @@ import { Alert } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { useDispatch, useSelector } from 'react-redux';
 
-import Colors, { primaryColor } from '../constants/Colors';
+import { primaryColor } from '../constants/Colors';
 import { fetchNotes } from '../redux/actions/NotesActions';
-import { fetchUser } from '../redux/actions/UserActions';
 import LogScreen from '../screens/LogScreen';
 import { BottomTabParamList } from '../types';
 
-// import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-type BottomTabNavigatorProps = {
-  navigation: any;
-};
+type BottomTabNavigatorProps = {};
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -27,19 +19,9 @@ const selectDate = (state: any) => {
   return state.date;
 };
 
-export default function BottomTabNavigator({
-  navigation,
-}: BottomTabNavigatorProps) {
+export default function BottomTabNavigator({}: BottomTabNavigatorProps) {
   const dispatch = useDispatch();
   const date = useSelector(selectDate);
-
-  React.useEffect(() => {
-    fetchUser(dispatch).then(async (user) => {
-      if (!user) {
-        navigation.navigate("Login");
-      }
-    });
-  }, []);
 
   React.useEffect(() => {
     fetchNotes(dispatch, {
@@ -54,18 +36,13 @@ export default function BottomTabNavigator({
       initialRouteName="All"
       tabBarOptions={{
         activeTintColor: primaryColor,
-        // inactiveBackgroundColor: primaryColor,
-        // activeBackgroundColor: primaryColor,
       }}
-      // barStyle={{ backgroundColor: "#3f50af" }}
     >
       <BottomTab.Screen
         name="All"
         component={LogScreen}
         options={{
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="list-outline" color={color} />
-          ),
+          tabBarIcon: ({ color }) => <Icon name="list" color={color} />,
         }}
       />
       <BottomTab.Screen

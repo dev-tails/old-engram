@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { primaryColor } from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
-import { fetchUser, logout } from '../redux/actions/UserActions';
+import { logout } from '../redux/actions/UserActions';
 import LoginScreen from '../screens/LoginScreen';
 import LogScreen from '../screens/LogScreen';
 import BottomTabNavigator from './BottomTabNavigator';
@@ -37,11 +37,6 @@ const Drawer = createDrawerNavigator();
 
 function RootNavigator() {
   const user = useSelector((state: any) => state.user);
-  const dispatch = useDispatch();
-
-  React.useEffect(() => {
-    fetchUser(dispatch);
-  }, []);
 
   const headerProps = {
     headerStyle: {
