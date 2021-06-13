@@ -5,10 +5,11 @@ import { Icon } from 'react-native-elements/dist/icons/Icon';
 
 import { Note } from '../api/NoteApi';
 import { ListItemTitle } from '../components/Themed';
-import { getBackgroundColor, getTextColor } from '../constants/Colors';
+import { getBackgroundColor, getTextColor, getTintColor } from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 
 type NoteListItemProps = {
+  selected: boolean;
   item: Note;
   onPress: () => void;
   onLongPress: () => void;
@@ -16,6 +17,7 @@ type NoteListItemProps = {
 };
 
 const NoteListItem: React.FC<NoteListItemProps> = ({
+  selected,
   item,
   onPress,
   onLongPress,
@@ -32,7 +34,9 @@ const NoteListItem: React.FC<NoteListItemProps> = ({
 
   const styles = StyleSheet.create({
     listItem: {
-      backgroundColor: getBackgroundColor(theme),
+      backgroundColor: selected
+        ? getTintColor(theme)
+        : getBackgroundColor(theme),
     },
   });
 
@@ -49,7 +53,6 @@ const NoteListItem: React.FC<NoteListItemProps> = ({
   return (
     <ListItem
       containerStyle={styles.listItem}
-      underlayColor={"#424242"}
       onLongPress={onLongPress}
       onPress={onPress}
     >

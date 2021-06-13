@@ -284,6 +284,7 @@ export default function LogScreen({ route }: LogScreenProps) {
           />
         )}
         <NoteList
+          selectedNoteId={selectedNoteId}
           notes={filteredNotes}
           onNotePress={handleQuickEdit}
           onNoteLongPress={handleNoteSelected}

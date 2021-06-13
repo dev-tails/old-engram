@@ -6,6 +6,7 @@ import NoteListItem from '../components/NoteListItem';
 import useColorScheme from '../hooks/useColorScheme';
 
 type NoteListProps = {
+  selectedNoteId: string;
   notes: Note[];
   onNotePress: (note: Note) => void;
   onNoteLongPress: (note: Note) => void;
@@ -13,6 +14,7 @@ type NoteListProps = {
 };
 
 const NoteList = ({
+  selectedNoteId,
   notes,
   onNotePress,
   onNoteLongPress,
@@ -40,7 +42,6 @@ const NoteList = ({
 
   return (
     <FlatList
-      // ref={listRef}
       inverted={true}
       keyExtractor={(item, index) => {
         if (item._id) {
@@ -55,6 +56,7 @@ const NoteList = ({
       renderItem={({ item }) => {
         return (
           <NoteListItem
+            selected={selectedNoteId === item._id}
             item={item}
             onPress={() => {
               onNotePress(item);

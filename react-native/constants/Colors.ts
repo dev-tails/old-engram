@@ -1,7 +1,7 @@
 export const primaryColor = "#3f50af";
 
 const tintColorLight = "#2f95dc";
-const tintColorDark = "#fff";
+const tintColorDark = primaryColor;
 
 const Colors = {
   light: {
@@ -28,4 +28,8 @@ export function getTextColor(theme: "light" | "dark") {
 
 export function getBackgroundColor(theme: "light" | "dark") {
   return Colors[theme].background;
+}
+
+export function getTintColor(theme: "light" | "dark") {
+  return Colors[theme].tint;
 }
