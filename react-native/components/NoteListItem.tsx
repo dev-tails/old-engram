@@ -1,6 +1,6 @@
 import moment from 'moment';
 import React, { memo, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { Button, ListItem } from 'react-native-elements';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
 
@@ -62,17 +62,23 @@ const NoteListItem: React.FC<NoteListItemProps> = ({
 
     const start = m.isValid() ? m.toISOString() : "";
 
-    clearTimeout(startSaveTimeout);
-
-    const timeoutId = setTimeout(() => {
+    const notifyNoteUpdated = () => {
       onUpdateNote({
         _id: item._id,
         type: item.type, // TODO: API currently defaults back to note
         start,
       });
-    }, 1000);
+    };
 
-    setStartSaveTimeout(timeoutId);
+    if (Platform.OS === "ios") {
+      clearTimeout(startSaveTimeout);
+
+      const timeoutId = setTimeout(notifyNoteUpdated, 1000);
+
+      setStartSaveTimeout(timeoutId);
+    } else {
+      notifyNoteUpdated();
+    }
   }
 
   return (

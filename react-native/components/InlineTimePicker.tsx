@@ -1,6 +1,7 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import React, { useState } from 'react';
+import { Platform } from 'react-native';
 import { Button } from 'react-native-elements';
 
 import { getTextColor } from '../constants/Colors';
@@ -20,13 +21,18 @@ export default function InlineTimePicker({
 
   return (
     <>
-      <Button
-        type="clear"
-        title={moment(date).format("LT")}
-        buttonStyle={{ paddingHorizontal: 0 }}
-        titleStyle={{ color: getTextColor(theme) }}
-      />
-      {showTimePicker ? (
+      {Platform.OS !== "ios" ? (
+        <Button
+          type="clear"
+          title={moment(date).format("LT")}
+          buttonStyle={{ paddingHorizontal: 0 }}
+          titleStyle={{ color: getTextColor(theme) }}
+          onPress={() => {
+            setShowTimePicker(true);
+          }}
+        />
+      ) : null}
+      {Platform.OS === "ios" || showTimePicker ? (
         <DateTimePicker
           testID="dateTimePicker"
           value={date}
@@ -34,10 +40,14 @@ export default function InlineTimePicker({
           is24Hour={true}
           display="default"
           onChange={(e: any, date?: Date) => {
-            onChange(date);
+            if (Platform.OS === "ios") {
+              onChange(date);
+            } else {
+              setShowTimePicker(false);
+              onChange(date);
+            }
           }}
-          textColor="red"
-          style={{ width: 80 }}
+          style={{ width: 85 }}
         />
       ) : null}
     </>
