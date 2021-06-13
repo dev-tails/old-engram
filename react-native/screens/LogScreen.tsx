@@ -271,6 +271,13 @@ export default function LogScreen({ route }: LogScreenProps) {
     handleEdit(note);
   }
 
+  function handleTextInputBlur() {
+    if (selectedNoteId) {
+      setSelectedNoteId("");
+      setBody("");
+    }
+  }
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -302,10 +309,10 @@ export default function LogScreen({ route }: LogScreenProps) {
             blurOnSubmit={!body}
             style={styles.input}
             onSubmitEditing={handleSubmit}
+            onBlur={handleTextInputBlur}
             onChangeText={setBody}
             value={body}
             returnKeyType={"done"}
-            autoCapitalize={"none"}
             placeholder={placeholder}
           />
         </View>
