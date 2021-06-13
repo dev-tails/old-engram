@@ -28,6 +28,7 @@ const NoteListItem: React.FC<NoteListItemProps> = ({
   onUpdateNote,
 }) => {
   const theme = useColorScheme();
+  const [startSaveTimeout, setStartSaveTimeout] = useState<number>();
 
   const additionalTitleStyles: any = {};
 
@@ -56,13 +57,21 @@ const NoteListItem: React.FC<NoteListItemProps> = ({
   }
 
   function handleTimeChanged(event: any, date: Date | undefined) {
-    const start = date ? date.toISOString() : "";
+    const m = moment(date);
 
-    onUpdateNote({
-      _id: item._id,
-      type: item.type, // TODO: API currently defaults back to note
-      start,
-    });
+    const start = m.isValid() ? m.toISOString() : "";
+
+    clearTimeout(startSaveTimeout);
+
+    const timeoutId = setTimeout(() => {
+      onUpdateNote({
+        _id: item._id,
+        type: item.type, // TODO: API currently defaults back to note
+        start,
+      });
+    }, 1000);
+
+    setStartSaveTimeout(timeoutId);
   }
 
   return (
@@ -98,6 +107,9 @@ const NoteListItem: React.FC<NoteListItemProps> = ({
           onChange={handleTimeChanged}
           textColor="red"
           style={{ width: 80 }}
+          onBlur={() => {
+            console.log("blur");
+          }}
         />
       ) : null}
       <ListItem.Content>
