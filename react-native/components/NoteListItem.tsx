@@ -1,4 +1,3 @@
-import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import React, { memo, useState } from 'react';
 import { StyleSheet } from 'react-native';
@@ -9,6 +8,7 @@ import { Note } from '../api/NoteApi';
 import { ListItemTitle } from '../components/Themed';
 import { getBackgroundColor, getTextColor, getTintColor } from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
+import InlineTimePicker from './InlineTimePicker';
 
 type NoteListItemProps = {
   selected: boolean;
@@ -56,7 +56,7 @@ const NoteListItem: React.FC<NoteListItemProps> = ({
     return typeToIconMap[type];
   }
 
-  function handleTimeChanged(event: any, date: Date | undefined) {
+  function handleTimeChanged(date?: Date) {
     const m = moment(date);
 
     const start = m.isValid() ? m.toISOString() : "";
@@ -98,18 +98,9 @@ const NoteListItem: React.FC<NoteListItemProps> = ({
         }}
       ></Button>
       {item.type === "event" ? (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={moment(item.start).toDate()}
-          mode="time"
-          is24Hour={true}
-          display="default"
+        <InlineTimePicker
+          date={moment(item.start).toDate()}
           onChange={handleTimeChanged}
-          textColor="red"
-          style={{ width: 80 }}
-          onBlur={() => {
-            console.log("blur");
-          }}
         />
       ) : null}
       <ListItem.Content>
