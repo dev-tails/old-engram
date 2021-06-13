@@ -1,15 +1,15 @@
 import moment from 'moment';
 import * as React from 'react';
 import { Alert, FlatList, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
-import { BottomSheet, Button, ListItem } from 'react-native-elements';
-import { Icon } from 'react-native-elements/dist/icons/Icon';
+import { BottomSheet, ListItem } from 'react-native-elements';
 import { Image } from 'react-native-elements/dist/image/Image';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Note } from '../api/NoteApi';
 import DateHeader from '../components/DateHeader';
-import { ListItemTitle, TextInput, View } from '../components/Themed';
-import { getBackgroundColor, getTextColor } from '../constants/Colors';
+import NoteListItem from '../components/NoteListItem';
+import { TextInput, View } from '../components/Themed';
+import { getBackgroundColor } from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import { setDate } from '../redux/actions/DateActions';
 import { addNote, fetchNotes, removeNote, updateNote } from '../redux/actions/NotesActions';
@@ -52,6 +52,27 @@ export default function LogScreen({ route }: LogScreenProps) {
 
   const [selectedNoteId, setSelectedNoteId] = React.useState("");
   const [isBottomSheetVisible, setBottomSheetVisible] = React.useState(false);
+
+  const handleNoteSelected = React.useCallback((note: Note) => {
+    setSelectedNoteId(note._id as string);
+    setBottomSheetVisible(true);
+  }, []);
+
+  const handleToggleIcon = React.useCallback((note: Note) => {
+    let types = [type];
+    if (type === "task") {
+      types = ["task", "task_completed"];
+    } else if (!type) {
+      types = ["note", "task", "task_completed", "event"];
+    }
+
+    const currentTypeIndex = types.findIndex((type) => {
+      return type === (note.type || "note");
+    });
+    const newTypeIndex = (currentTypeIndex + 1) % types.length;
+    const newType = types[newTypeIndex];
+    updateNote(dispatch, { _id: note._id, type: newType });
+  }, []);
 
   const bottomSheetOptions = [
     {
@@ -243,32 +264,6 @@ export default function LogScreen({ route }: LogScreenProps) {
     refetchNotes();
   }
 
-  function getIconNameForType(type: string): string {
-    const typeToIconMap: { [key: string]: string } = {
-      note: "remove",
-      task: "check-box-outline-blank",
-      task_completed: "check-box",
-      event: "radio-button-unchecked",
-    };
-    return typeToIconMap[type];
-  }
-
-  function handleToggleIcon(note: Note) {
-    let types = [type];
-    if (type === "task") {
-      types = ["task", "task_completed"];
-    } else if (!type) {
-      types = ["note", "task", "task_completed", "event"];
-    }
-
-    const currentTypeIndex = types.findIndex((type) => {
-      return type === (note.type || "note");
-    });
-    const newTypeIndex = (currentTypeIndex + 1) % types.length;
-    const newType = types[newTypeIndex];
-    updateNote(dispatch, { _id: note._id, type: newType });
-  }
-
   function scrollToBottomOfNotes() {
     setTimeout(() => {
       listRef.current?.scrollToEnd();
@@ -304,51 +299,12 @@ export default function LogScreen({ route }: LogScreenProps) {
           data={filteredNotes}
           ItemSeparatorComponent={Separator}
           renderItem={({ item }) => {
-            const additionalTitleStyles: any = {};
-
-            const disabledColor = "#424242";
-
-            if (item.type === "task_completed") {
-              additionalTitleStyles.color = disabledColor;
-            }
-
             return (
-              <ListItem
-                containerStyle={styles.listItem}
-                underlayColor={"#424242"}
-                onPress={() => {
-                  setSelectedNoteId(item._id);
-                  setBottomSheetVisible(true);
-                }}
-              >
-                <ListItem.Content style={styles.listItemContent}>
-                  <Button
-                    type="clear"
-                    icon={
-                      <Icon
-                        name={getIconNameForType(item.type)}
-                        color={
-                          item.type === "task_completed"
-                            ? disabledColor
-                            : getTextColor(theme)
-                        }
-                      />
-                    }
-                    onPress={() => {
-                      handleToggleIcon(item);
-                    }}
-                  ></Button>
-                  <ListItemTitle
-                    style={{
-                      ...styles.listItemTitle,
-                      ...additionalTitleStyles,
-                    }}
-                  >
-                    {item.body}
-                  </ListItemTitle>
-                </ListItem.Content>
-                {/* <ListItem.Chevron /> */}
-              </ListItem>
+              <NoteListItem
+                item={item}
+                onSelected={handleNoteSelected}
+                onToggleIcon={handleToggleIcon}
+              />
             );
           }}
         />
