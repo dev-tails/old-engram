@@ -139,6 +139,10 @@ export default function LogScreen({ route }: LogScreenProps) {
       notesToReturn.sort((note1: Note, note2: Note) => {
         return note1.type > note2.type;
       });
+    } else if (type === "event") {
+      notesToReturn.sort((note1: Note, note2: Note) => {
+        return moment(note1.start).isAfter(note2.start);
+      });
     } else {
       notesToReturn = notesToReturn.reverse();
     }
