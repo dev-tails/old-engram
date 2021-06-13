@@ -117,27 +117,30 @@ export default function LogScreen({ route }: LogScreenProps) {
     }
   }
 
-  const filteredNotes = notes.filter((note: Note) => {
-    if (note.date !== moment(date).format("YYYY-MM-DD")) {
-      return false;
-    }
-    if (allowedTypes.includes(note.type) === false) {
-      return false;
-    }
-    if (
-      dumpStartDate &&
-      moment(dumpStartDate).isAfter(dateFromObjectId(note._id))
-    ) {
-      return false;
-    }
-    return true;
-  });
-
-  if (type === "task") {
-    filteredNotes.sort((note1: Note, note2: Note) => {
-      return note1.type > note2.type;
+  const filteredNotes = React.useMemo(() => {
+    const filteredNotes = notes.filter((note: Note) => {
+      if (note.date !== moment(date).format("YYYY-MM-DD")) {
+        return false;
+      }
+      if (allowedTypes.includes(note.type) === false) {
+        return false;
+      }
+      if (
+        dumpStartDate &&
+        moment(dumpStartDate).isAfter(dateFromObjectId(note._id))
+      ) {
+        return false;
+      }
+      return true;
     });
-  }
+
+    if (type === "task") {
+      filteredNotes.sort((note1: Note, note2: Note) => {
+        return note1.type > note2.type;
+      });
+    }
+    return filteredNotes;
+  }, [notes]);
 
   async function refetchNotes() {
     fetchNotes(dispatch, { date: moment(date).format("YYYY-MM-DD") }).catch(
@@ -279,6 +282,7 @@ export default function LogScreen({ route }: LogScreenProps) {
           />
         )}
         <NoteList
+          notes={filteredNotes}
           onNoteSelected={handleNoteSelected}
           onToggleNoteIcon={handleToggleIcon}
         />

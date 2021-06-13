@@ -1,23 +1,22 @@
 import React, { memo } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
-import { useSelector } from 'react-redux';
 
 import { Note } from '../api/NoteApi';
 import NoteListItem from '../components/NoteListItem';
 import useColorScheme from '../hooks/useColorScheme';
 
 type NoteListProps = {
+  notes: Note[];
   onNoteSelected: (note: Note) => void;
   onToggleNoteIcon: (note: Note) => void;
 };
 
-const selectNotes = (state: any) => {
-  return state.notes;
-};
-
-const NoteList = ({ onNoteSelected, onToggleNoteIcon }: NoteListProps) => {
-  console.log("NoteLists");
-  const notes = useSelector(selectNotes);
+const NoteList = ({
+  notes,
+  onNoteSelected,
+  onToggleNoteIcon,
+}: NoteListProps) => {
+  console.log("NoteList");
   const theme = useColorScheme();
 
   const styles = StyleSheet.create({
