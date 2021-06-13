@@ -10,13 +10,15 @@ import useColorScheme from '../hooks/useColorScheme';
 
 type NoteListItemProps = {
   item: Note;
-  onSelected: (item: Note) => void;
+  onPress: () => void;
+  onLongPress: () => void;
   onToggleIcon: (item: Note) => void;
 };
 
 const NoteListItem: React.FC<NoteListItemProps> = ({
   item,
-  onSelected,
+  onPress,
+  onLongPress,
   onToggleIcon,
 }) => {
   const theme = useColorScheme();
@@ -48,9 +50,8 @@ const NoteListItem: React.FC<NoteListItemProps> = ({
     <ListItem
       containerStyle={styles.listItem}
       underlayColor={"#424242"}
-      onPress={() => {
-        onSelected(item);
-      }}
+      onLongPress={onLongPress}
+      onPress={onPress}
     >
       <Button
         type="clear"

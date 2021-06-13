@@ -7,13 +7,15 @@ import useColorScheme from '../hooks/useColorScheme';
 
 type NoteListProps = {
   notes: Note[];
-  onNoteSelected: (note: Note) => void;
+  onNotePress: (note: Note) => void;
+  onNoteLongPress: (note: Note) => void;
   onToggleNoteIcon: (note: Note) => void;
 };
 
 const NoteList = ({
   notes,
-  onNoteSelected,
+  onNotePress,
+  onNoteLongPress,
   onToggleNoteIcon,
 }: NoteListProps) => {
   const theme = useColorScheme();
@@ -54,8 +56,13 @@ const NoteList = ({
         return (
           <NoteListItem
             item={item}
-            onSelected={onNoteSelected}
-            onToggleIcon={onToggleNoteIcon}
+            onPress={() => {
+              onNotePress(item);
+            }}
+            onLongPress={() => onNoteLongPress(item)}
+            onToggleIcon={() => {
+              onToggleNoteIcon(item);
+            }}
           />
         );
       }}

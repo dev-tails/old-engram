@@ -154,11 +154,6 @@ export default function LogScreen({ route }: LogScreenProps) {
 
     let dateString = moment(date).format("YYYY-MM-DD");
     const oldBody = body;
-    let noteToSave: Partial<Note> = {
-      body,
-      type: type || "note",
-      date: dateString,
-    };
     try {
       setBody("");
 
@@ -167,10 +162,14 @@ export default function LogScreen({ route }: LogScreenProps) {
         setSelectedNoteId("");
         await updateNote(dispatch, {
           _id: currentSelectedNoteId,
-          ...noteToSave,
+          body,
         });
       } else {
-        await addNote(dispatch, noteToSave);
+        await addNote(dispatch, {
+          body,
+          type: type || "note",
+          date: dateString,
+        });
       }
     } catch (err) {
       setBody(oldBody);
@@ -191,11 +190,14 @@ export default function LogScreen({ route }: LogScreenProps) {
     setSelectedNoteId("");
   }
 
-  function handleEdit() {
+  function handleEdit(noteToEdit?: Note) {
     setBottomSheetVisible(false);
-    const note = filteredNotes.find((n: Note) => {
-      return n._id === selectedNoteId;
-    });
+
+    const note =
+      noteToEdit ||
+      filteredNotes.find((n: Note) => {
+        return n._id === selectedNoteId;
+      });
     if (note) {
       setBody(note.body);
     }
@@ -261,6 +263,11 @@ export default function LogScreen({ route }: LogScreenProps) {
     refetchNotes();
   }, []);
 
+  function handleQuickEdit(note: Note) {
+    setSelectedNoteId(note._id as string);
+    handleEdit(note);
+  }
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -278,7 +285,8 @@ export default function LogScreen({ route }: LogScreenProps) {
         )}
         <NoteList
           notes={filteredNotes}
-          onNoteSelected={handleNoteSelected}
+          onNotePress={handleQuickEdit}
+          onNoteLongPress={handleNoteSelected}
           onToggleNoteIcon={handleToggleIcon}
         />
       </View>
