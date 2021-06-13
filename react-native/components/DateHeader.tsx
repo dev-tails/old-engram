@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React from 'react';
+import React, { memo } from 'react';
 import { StyleSheet } from 'react-native';
 import { Button } from 'react-native-elements';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
@@ -15,7 +15,7 @@ export type DateHeaderProps = {
   onToday: () => void;
 };
 
-export default function DateHeader({
+export function DateHeader({
   date,
   onChange,
   onRefresh,
@@ -103,3 +103,5 @@ export default function DateHeader({
     </View>
   );
 }
+
+export default memo(DateHeader);

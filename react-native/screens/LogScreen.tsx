@@ -74,6 +74,10 @@ export default function LogScreen({ route }: LogScreenProps) {
     updateNote(dispatch, { _id: note._id, type: newType });
   }, []);
 
+  const handleDateChanged = React.useCallback((date: Date) => {
+    _setDate(date);
+  }, []);
+
   const bottomSheetOptions = [
     {
       title: "Edit",
@@ -174,10 +178,6 @@ export default function LogScreen({ route }: LogScreenProps) {
     }
   }
 
-  function handleDateChanged(date: Date) {
-    _setDate(date);
-  }
-
   function handleGenericError(err: Error) {
     Alert.alert("Error", err.message);
   }
@@ -252,17 +252,17 @@ export default function LogScreen({ route }: LogScreenProps) {
     },
   });
 
-  function handleTodayPressed() {
+  const handleTodayPressed = React.useCallback(() => {
     _setDate(new Date());
-  }
+  }, []);
 
   function _setDate(date: Date) {
     setDate(dispatch, date);
   }
 
-  function handleRefreshPressed() {
+  const handleRefreshPressed = React.useCallback(() => {
     refetchNotes();
-  }
+  }, []);
 
   function scrollToBottomOfNotes() {
     setTimeout(() => {
