@@ -136,7 +136,7 @@ export default function LogScreen({ route }: LogScreenProps) {
 
     if (type === "task") {
       filteredNotes.sort((note1: Note, note2: Note) => {
-        return note1.type > note2.type;
+        return note1.type < note2.type;
       });
     }
     return filteredNotes.reverse();
