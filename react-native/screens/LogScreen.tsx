@@ -2,19 +2,16 @@ import moment from 'moment';
 import * as React from 'react';
 import { Alert, FlatList, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
 import { BottomSheet, ListItem } from 'react-native-elements';
-import { Image } from 'react-native-elements/dist/image/Image';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Note } from '../api/NoteApi';
 import DateHeader from '../components/DateHeader';
-import NoteListItem from '../components/NoteListItem';
+import NoteList from '../components/NoteList';
 import { TextInput, View } from '../components/Themed';
 import { getBackgroundColor } from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import { setDate } from '../redux/actions/DateActions';
 import { addNote, fetchNotes, removeNote, updateNote } from '../redux/actions/NotesActions';
-
-const Logo = require("../assets/images/adaptive-icon.png");
 
 export type LogScreenProps = {
   route: {
@@ -185,7 +182,7 @@ export default function LogScreen({ route }: LogScreenProps) {
   async function handleRemove() {
     setBottomSheetVisible(false);
 
-    removeNote(dispatch, selectedNoteId);
+    removeNote(dispatch, { _id: selectedNoteId });
 
     setSelectedNoteId("");
   }
@@ -199,10 +196,6 @@ export default function LogScreen({ route }: LogScreenProps) {
       setBody(note.body);
     }
   }
-
-  const Separator = () => {
-    return <View style={styles.listItemSeparator}></View>;
-  };
 
   const styles = StyleSheet.create({
     container: {
@@ -285,28 +278,9 @@ export default function LogScreen({ route }: LogScreenProps) {
             onRefresh={handleRefreshPressed}
           />
         )}
-        <Image width={24} height={24} source={Logo} />
-        <FlatList
-          ref={listRef}
-          keyExtractor={(item, index) => {
-            if (item._id) {
-              return item._id;
-            } else {
-              return item.localId;
-            }
-          }}
-          style={styles.list}
-          data={filteredNotes}
-          ItemSeparatorComponent={Separator}
-          renderItem={({ item }) => {
-            return (
-              <NoteListItem
-                item={item}
-                onSelected={handleNoteSelected}
-                onToggleIcon={handleToggleIcon}
-              />
-            );
-          }}
+        <NoteList
+          onNoteSelected={handleNoteSelected}
+          onToggleNoteIcon={handleToggleIcon}
         />
       </View>
       <View style={styles.textBoxWrapper}>
