@@ -13,7 +13,7 @@ const Colors = {
   },
   dark: {
     text: "#fff",
-    background: "#000",
+    background: "#303030",
     tint: tintColorDark,
     tabIconDefault: "#ccc",
     tabIconSelected: tintColorDark,

@@ -44,7 +44,7 @@ export default function App() {
     return (
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <SafeAreaProvider style={{ backgroundColor: primaryColor }}>
+          <SafeAreaProvider>
             <GlobalStyle css="input {outline: none;}" />
             <Navigation colorScheme={colorScheme} />
             <StatusBar style={"light"} backgroundColor={primaryColor} />
