@@ -8,6 +8,7 @@ export type Note = {
   body: string;
   date: string;
   type: string;
+  start?: string;
 };
 
 export async function createNote(note: Partial<Note>): Promise<Note> {

@@ -280,6 +280,10 @@ export default function LogScreen({ route }: LogScreenProps) {
     }
   }
 
+  function handleUpdateNote(update: Partial<Note>) {
+    updateNote(dispatch, update);
+  }
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -302,6 +306,7 @@ export default function LogScreen({ route }: LogScreenProps) {
           onNotePress={handleQuickEdit}
           onNoteLongPress={handleNoteSelected}
           onToggleNoteIcon={handleToggleIcon}
+          onUpdateNote={handleUpdateNote}
         />
       </View>
       <View style={styles.textBoxWrapper}>

@@ -1,4 +1,6 @@
-import React, { memo } from 'react';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import moment from 'moment';
+import React, { memo, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { Button, ListItem } from 'react-native-elements';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
@@ -14,6 +16,7 @@ type NoteListItemProps = {
   onPress: () => void;
   onLongPress: () => void;
   onToggleIcon: (item: Note) => void;
+  onUpdateNote: (update: Partial<Note>) => void;
 };
 
 const NoteListItem: React.FC<NoteListItemProps> = ({
@@ -22,8 +25,10 @@ const NoteListItem: React.FC<NoteListItemProps> = ({
   onPress,
   onLongPress,
   onToggleIcon,
+  onUpdateNote,
 }) => {
   const theme = useColorScheme();
+
   const additionalTitleStyles: any = {};
 
   const disabledColor = "#424242";
@@ -50,6 +55,16 @@ const NoteListItem: React.FC<NoteListItemProps> = ({
     return typeToIconMap[type];
   }
 
+  function handleTimeChanged(event: any, date: Date | undefined) {
+    const start = date ? date.toISOString() : "";
+
+    onUpdateNote({
+      _id: item._id,
+      type: item.type, // TODO: API currently defaults back to note
+      start,
+    });
+  }
+
   return (
     <ListItem
       containerStyle={styles.listItem}
@@ -58,6 +73,7 @@ const NoteListItem: React.FC<NoteListItemProps> = ({
     >
       <Button
         type="clear"
+        buttonStyle={{ padding: 0 }}
         icon={
           <Icon
             name={getIconNameForType(item.type)}
@@ -72,6 +88,18 @@ const NoteListItem: React.FC<NoteListItemProps> = ({
           onToggleIcon(item);
         }}
       ></Button>
+      {item.type === "event" ? (
+        <DateTimePicker
+          testID="dateTimePicker"
+          value={moment(item.start).toDate()}
+          mode="time"
+          is24Hour={true}
+          display="default"
+          onChange={handleTimeChanged}
+          textColor="red"
+          style={{ width: 80 }}
+        />
+      ) : null}
       <ListItem.Content>
         <ListItemTitle
           style={{

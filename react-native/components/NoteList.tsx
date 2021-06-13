@@ -12,6 +12,7 @@ type NoteListProps = {
   onNotePress: (note: Note) => void;
   onNoteLongPress: (note: Note) => void;
   onToggleNoteIcon: (note: Note) => void;
+  onUpdateNote: (update: Partial<Note>) => void;
 };
 
 const NoteList = ({
@@ -21,6 +22,7 @@ const NoteList = ({
   onNotePress,
   onNoteLongPress,
   onToggleNoteIcon,
+  onUpdateNote,
 }: NoteListProps) => {
   const theme = useColorScheme();
 
@@ -64,6 +66,9 @@ const NoteList = ({
               onNotePress(item);
             }}
             onLongPress={() => onNoteLongPress(item)}
+            onUpdateNote={(update) => {
+              onUpdateNote(update);
+            }}
             onToggleIcon={() => {
               onToggleNoteIcon(item);
             }}
