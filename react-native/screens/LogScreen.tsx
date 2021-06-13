@@ -135,7 +135,12 @@ export default function LogScreen({ route }: LogScreenProps) {
       setBody("");
 
       if (selectedNoteId) {
-        await updateNote(dispatch, { _id: selectedNoteId, ...noteToSave });
+        const currentSelectedNoteId = selectedNoteId;
+        setSelectedNoteId("");
+        await updateNote(dispatch, {
+          _id: currentSelectedNoteId,
+          ...noteToSave,
+        });
       } else {
         await addNote(dispatch, noteToSave);
       }

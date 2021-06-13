@@ -1,4 +1,5 @@
-import { User } from "../../api/UserApi";
+import { User } from '../../api/UserApi';
+import { FetchUserAction } from '../actions/UserActions';
 
 const INITIAL_STATE = null;
 
@@ -19,14 +20,16 @@ type LogoutAction = {
 
 const UserReducer = (
   state = INITIAL_STATE,
-  action: LoginAction | LogoutAction | SignupAction
+  action: LoginAction | LogoutAction | SignupAction | FetchUserAction
 ) => {
   switch (action.type) {
     case "LOGIN":
     case "SIGNUP":
       return action.payload;
+    case "FETCH_USER":
+      return action.payload;
     case "LOGOUT":
-        return null;
+      return null;
     default:
       return state;
   }

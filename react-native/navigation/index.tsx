@@ -4,11 +4,11 @@ import * as React from 'react';
 import { ColorSchemeName } from 'react-native';
 import { Image } from 'react-native-elements/dist/image/Image';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { primaryColor } from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
-import { logout } from '../redux/actions/UserActions';
+import { fetchUser, logout } from '../redux/actions/UserActions';
 import LoginScreen from '../screens/LoginScreen';
 import LogScreen from '../screens/LogScreen';
 import BottomTabNavigator from './BottomTabNavigator';
@@ -36,6 +36,13 @@ export default function Navigation({
 const Drawer = createDrawerNavigator();
 
 function RootNavigator() {
+  const user = useSelector((state: any) => state.user);
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    fetchUser(dispatch);
+  }, []);
+
   const headerProps = {
     headerStyle: {
       backgroundColor: primaryColor,
@@ -46,84 +53,88 @@ function RootNavigator() {
   };
 
   return (
-    <Drawer.Navigator
-      initialRouteName={"Daily"}
-      screenOptions={{ headerShown: true }}
-    >
-      <Drawer.Screen
-        name="Brain Dump"
-        component={LogScreen}
-        initialParams={{ brainDump: true }}
-        options={({ navigation }) => {
-          return {
-            ...headerProps,
-            unmountOnBlur: true,
-            headerRight: () => {
-              return (
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.goBack();
-                  }}
-                  style={{
-                    marginRight: 8,
-                  }}
-                >
-                  <Image style={{ width: 36, height: 36 }} source={Logo} />
-                </TouchableOpacity>
-              );
-            },
-          };
-        }}
-      />
-      <Drawer.Screen
-        name="Daily"
-        component={BottomTabNavigator}
-        options={({ navigation }) => {
-          return {
-            ...headerProps,
-            headerRight: () => {
-              return (
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate("Brain Dump");
-                  }}
-                  style={{
-                    marginRight: 8,
-                  }}
-                >
-                  <Image style={{ width: 36, height: 36 }} source={Logo} />
-                </TouchableOpacity>
-              );
-            },
-          };
-        }}
-      />
-      <Drawer.Screen
-        name="Login"
-        component={LoginScreen}
-        options={{
-          ...headerProps,
-          title: "Log In",
-          headerTitle: "engram",
-          headerLeft: () => {
-            return null;
-          },
-        }}
-      />
-      <Drawer.Screen
-        name="SignUp"
-        component={LoginScreen}
-        options={{
-          ...headerProps,
-          title: "Sign Up",
-          headerTitle: "engram",
-          headerLeft: () => {
-            return null;
-          },
-        }}
-        initialParams={{ isSignUp: true }}
-      />
-      <Drawer.Screen name="Logout" component={LogoutScreen} />
+    <Drawer.Navigator screenOptions={{ headerShown: true }}>
+      {user ? (
+        <>
+          <Drawer.Screen
+            name="Daily"
+            component={BottomTabNavigator}
+            options={({ navigation }) => {
+              return {
+                ...headerProps,
+                headerRight: () => {
+                  return (
+                    <TouchableOpacity
+                      onPress={() => {
+                        navigation.navigate("Brain Dump");
+                      }}
+                      style={{
+                        marginRight: 8,
+                      }}
+                    >
+                      <Image style={{ width: 36, height: 36 }} source={Logo} />
+                    </TouchableOpacity>
+                  );
+                },
+              };
+            }}
+          />
+          <Drawer.Screen
+            name="Brain Dump"
+            component={LogScreen}
+            initialParams={{ brainDump: true }}
+            options={({ navigation }) => {
+              return {
+                ...headerProps,
+                unmountOnBlur: true,
+                headerRight: () => {
+                  return (
+                    <TouchableOpacity
+                      onPress={() => {
+                        navigation.goBack();
+                      }}
+                      style={{
+                        marginRight: 8,
+                      }}
+                    >
+                      <Image style={{ width: 36, height: 36 }} source={Logo} />
+                    </TouchableOpacity>
+                  );
+                },
+              };
+            }}
+          />
+          <Drawer.Screen name="Logout" component={LogoutScreen} />
+        </>
+      ) : (
+        <>
+          <Drawer.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{
+              ...headerProps,
+              title: "Log In",
+              headerTitle: "engram",
+              headerLeft: () => {
+                return null;
+              },
+            }}
+          />
+          <Drawer.Screen
+            name="SignUp"
+            component={LoginScreen}
+            options={{
+              ...headerProps,
+              title: "Sign Up",
+              headerTitle: "engram",
+              headerLeft: () => {
+                return null;
+              },
+            }}
+            initialParams={{ isSignUp: true }}
+          />
+        </>
+      )}
     </Drawer.Navigator>
   );
 }

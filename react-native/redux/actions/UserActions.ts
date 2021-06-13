@@ -1,8 +1,15 @@
-import { Dispatch } from "redux";
-import * as UserApi from "../../api/UserApi";
+import { Dispatch } from 'redux';
+
+import { Note } from '../../api/NoteApi';
+import * as UserApi from '../../api/UserApi';
 
 export type LogoutAction = {
   type: "LOGOUT";
+};
+
+export type FetchUserAction = {
+  type: "FETCH_USER";
+  payload: Note | null;
 };
 
 export async function fetchUser(dispatch: Dispatch) {
