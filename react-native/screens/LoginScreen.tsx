@@ -96,6 +96,7 @@ export default function LoginScreen({ navigation, route }: LoginScreenProps) {
         autoCapitalize={"none"}
         placeholder={"Email"}
         returnKeyType="next"
+        autoFocus={true}
       />
       <TextInput
         textInputRef={passwordRef}
