@@ -6,16 +6,18 @@ import NoteListItem from '../components/NoteListItem';
 import useColorScheme from '../hooks/useColorScheme';
 
 type NoteListProps = {
-  selectedNoteId: string;
   notes: Note[];
+  selectedNoteId: string;
+  inverted: boolean;
   onNotePress: (note: Note) => void;
   onNoteLongPress: (note: Note) => void;
   onToggleNoteIcon: (note: Note) => void;
 };
 
 const NoteList = ({
-  selectedNoteId,
   notes,
+  selectedNoteId,
+  inverted,
   onNotePress,
   onNoteLongPress,
   onToggleNoteIcon,
@@ -42,7 +44,7 @@ const NoteList = ({
 
   return (
     <FlatList
-      inverted={true}
+      inverted={inverted}
       keyExtractor={(item, index) => {
         if (item._id) {
           return item._id;

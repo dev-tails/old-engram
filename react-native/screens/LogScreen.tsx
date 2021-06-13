@@ -119,7 +119,7 @@ export default function LogScreen({ route }: LogScreenProps) {
   }
 
   const filteredNotes = React.useMemo(() => {
-    const filteredNotes = notes.filter((note: Note) => {
+    let notesToReturn = notes.filter((note: Note) => {
       if (note.date !== moment(date).format("YYYY-MM-DD")) {
         return false;
       }
@@ -136,11 +136,13 @@ export default function LogScreen({ route }: LogScreenProps) {
     });
 
     if (type === "task") {
-      filteredNotes.sort((note1: Note, note2: Note) => {
-        return note1.type < note2.type;
+      notesToReturn.sort((note1: Note, note2: Note) => {
+        return note1.type > note2.type;
       });
+    } else {
+      notesToReturn = notesToReturn.reverse();
     }
-    return filteredNotes.reverse();
+    return notesToReturn;
   }, [notes]);
 
   async function refetchNotes() {
@@ -294,8 +296,9 @@ export default function LogScreen({ route }: LogScreenProps) {
           />
         )}
         <NoteList
-          selectedNoteId={selectedNoteId}
           notes={filteredNotes}
+          selectedNoteId={selectedNoteId}
+          inverted={type !== "task" && type !== "event"}
           onNotePress={handleQuickEdit}
           onNoteLongPress={handleNoteSelected}
           onToggleNoteIcon={handleToggleIcon}
