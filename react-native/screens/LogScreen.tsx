@@ -37,6 +37,8 @@ function dateFromObjectId(objectId?: string) {
 }
 
 export default function LogScreen({ route }: LogScreenProps) {
+  const textInputRef = React.useRef<any>();
+
   const notes = useSelector(selectNotes);
   const date = useSelector(selectDate);
   const dispatch = useDispatch();
@@ -264,6 +266,7 @@ export default function LogScreen({ route }: LogScreenProps) {
   }, []);
 
   function handleQuickEdit(note: Note) {
+    textInputRef.current?.focus();
     setSelectedNoteId(note._id as string);
     handleEdit(note);
   }
@@ -294,6 +297,7 @@ export default function LogScreen({ route }: LogScreenProps) {
       <View style={styles.textBoxWrapper}>
         <View style={styles.textBox}>
           <TextInput
+            textInputRef={textInputRef}
             autoFocus={isBrainDump}
             blurOnSubmit={!body}
             style={styles.input}
