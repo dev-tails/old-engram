@@ -22,6 +22,10 @@ export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
 
+  if (!isLoadingComplete) {
+    return null;
+  }
+
   const composedEnhancer = composeWithDevTools(
     applyMiddleware(thunkMiddleware)
   );
@@ -38,19 +42,15 @@ export default function App() {
   const store = createStore(persistedReducer, composedEnhancer);
   let persistor = persistStore(store);
 
-  if (!isLoadingComplete) {
-    return null;
-  } else {
-    return (
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <SafeAreaProvider>
-            <GlobalStyle css="input {outline: none;}" />
-            <Navigation colorScheme={colorScheme} />
-            <StatusBar style={"light"} backgroundColor={primaryColor} />
-          </SafeAreaProvider>
-        </PersistGate>
-      </Provider>
-    );
-  }
+  return (
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <SafeAreaProvider>
+          <GlobalStyle css="input {outline: none;}" />
+          <Navigation colorScheme={colorScheme} />
+          <StatusBar style={"light"} backgroundColor={primaryColor} />
+        </SafeAreaProvider>
+      </PersistGate>
+    </Provider>
+  );
 }
