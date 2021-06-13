@@ -40,6 +40,7 @@ const NoteListItem: React.FC<NoteListItemProps> = ({
 
   const styles = StyleSheet.create({
     listItem: {
+      padding: 8,
       backgroundColor: selected
         ? getTintColor(theme)
         : getBackgroundColor(theme),
@@ -82,7 +83,7 @@ const NoteListItem: React.FC<NoteListItemProps> = ({
     >
       <Button
         type="clear"
-        buttonStyle={{ padding: 0 }}
+        buttonStyle={{ paddingHorizontal: 0 }}
         icon={
           <Icon
             name={getIconNameForType(item.type)}
