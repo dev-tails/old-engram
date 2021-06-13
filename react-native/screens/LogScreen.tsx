@@ -1,6 +1,6 @@
 import moment from 'moment';
 import * as React from 'react';
-import { Alert, FlatList, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
+import { Alert, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
 import { BottomSheet, ListItem } from 'react-native-elements';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -40,7 +40,6 @@ export default function LogScreen({ route }: LogScreenProps) {
   const notes = useSelector(selectNotes);
   const date = useSelector(selectDate);
   const dispatch = useDispatch();
-  const listRef = React.useRef<FlatList | null>(null);
   const [body, setBody] = React.useState("");
   const theme = useColorScheme();
   const [dumpStartDate, setDumpStartDate] = React.useState(
@@ -149,6 +148,10 @@ export default function LogScreen({ route }: LogScreenProps) {
   }
 
   async function handleSubmit() {
+    if (!body) {
+      return;
+    }
+
     let dateString = moment(date).format("YYYY-MM-DD");
     const oldBody = body;
     let noteToSave: Partial<Note> = {
@@ -169,8 +172,6 @@ export default function LogScreen({ route }: LogScreenProps) {
       } else {
         await addNote(dispatch, noteToSave);
       }
-
-      scrollToBottomOfNotes();
     } catch (err) {
       setBody(oldBody);
 
@@ -260,12 +261,6 @@ export default function LogScreen({ route }: LogScreenProps) {
     refetchNotes();
   }, []);
 
-  function scrollToBottomOfNotes() {
-    setTimeout(() => {
-      listRef.current?.scrollToEnd();
-    }, 50);
-  }
-
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -290,14 +285,13 @@ export default function LogScreen({ route }: LogScreenProps) {
       <View style={styles.textBoxWrapper}>
         <View style={styles.textBox}>
           <TextInput
-            onFocus={scrollToBottomOfNotes}
             autoFocus={isBrainDump}
-            blurOnSubmit={false}
+            blurOnSubmit={!body}
             style={styles.input}
             onSubmitEditing={handleSubmit}
             onChangeText={setBody}
             value={body}
-            returnKeyType="done"
+            returnKeyType={"done"}
             autoCapitalize={"none"}
             placeholder={placeholder}
           />
