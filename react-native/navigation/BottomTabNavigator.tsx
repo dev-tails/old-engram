@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import moment from 'moment';
 import * as React from 'react';
-import { Alert } from 'react-native';
+import { Alert, AppState } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -24,11 +24,13 @@ export default function BottomTabNavigator({}: BottomTabNavigatorProps) {
   const date = useSelector(selectDate);
 
   React.useEffect(() => {
-    fetchNotes(dispatch, {
-      date: moment(date).format("YYYY-MM-DD"),
-    }).catch((err) => {
-      Alert.alert("Error", err.message);
-    });
+    if (AppState.currentState === "active") {
+      fetchNotes(dispatch, {
+        date: moment(date).format("YYYY-MM-DD"),
+      }).catch((err) => {
+        Alert.alert("Error", err.message);
+      });
+    }
   }, [date]);
 
   return (
