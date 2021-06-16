@@ -40,13 +40,13 @@ export default function LogScreen({ route }: LogScreenProps) {
   const textInputRef = React.useRef<any>();
 
   const notes = useSelector(selectNotes);
-  const date = useSelector(selectDate);
   const dispatch = useDispatch();
   const [body, setBody] = React.useState("");
   const theme = useColorScheme();
   const [dumpStartDate, setDumpStartDate] = React.useState(
     route.params?.brainDump ? new Date() : null
   );
+  const date = dumpStartDate || useSelector(selectDate);
 
   const [selectedNoteId, setSelectedNoteId] = React.useState("");
   const [isBottomSheetVisible, setBottomSheetVisible] = React.useState(false);
