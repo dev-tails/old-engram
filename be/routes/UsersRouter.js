@@ -1,12 +1,12 @@
-import bcrypt from 'bcrypt';
-import express from 'express';
-import jwt from 'jsonwebtoken';
-import yup from 'yup';
+import bcrypt from "bcrypt";
+import express from "express";
+import jwt from "jsonwebtoken";
+import yup from "yup";
 
-import { ObjectId } from '../Database.js';
-import { getEnv } from '../env.js';
-import { AuthAPIKeyMiddleware } from '../middleware/AuthAPIKeyMiddleware.js';
-import { AuthRequiredMiddleware } from '../middleware/AuthRequiredMiddleware.js';
+import { ObjectId } from "../Database.js";
+import { getEnv } from "../env.js";
+import { AuthAPIKeyMiddleware } from "../middleware/AuthAPIKeyMiddleware.js";
+import { AuthRequiredMiddleware } from "../middleware/AuthRequiredMiddleware.js";
 
 async function setToken(res, user) {
   const { jwtSecret, production } = getEnv();
@@ -74,18 +74,14 @@ export function initializeUserRouter() {
 
     schema.validateSync(req.body);
 
-    const { username, password, email } = req.body;
+    const { password, email } = req.body;
 
     const existingUser = await User.findOne({
-      $or: [{ username }, { email }],
+      email,
     });
     if (existingUser) {
       return res.status(409).json({
-        errors: [
-          `A user with that ${
-            existingUser.email === email ? "email" : "username"
-          } already exists`,
-        ],
+        errors: [`A user with that email already exists`],
       });
     }
 
@@ -93,7 +89,6 @@ export function initializeUserRouter() {
     const hashedPassword = await bcrypt.hash(password, numberOfRounds);
 
     const insertOpResult = await User.insertOne({
-      username,
       hashedPassword,
       email,
     });
