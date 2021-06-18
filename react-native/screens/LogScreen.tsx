@@ -1,6 +1,6 @@
 import moment from 'moment';
 import * as React from 'react';
-import { Alert, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
+import { Alert, KeyboardAvoidingView, Platform, Share, StyleSheet } from 'react-native';
 import { BottomSheet, ListItem } from 'react-native-elements';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -76,7 +76,24 @@ export default function LogScreen({ route }: LogScreenProps) {
     _setDate(date);
   }, []);
 
+  function handleCloseBottomSheet() {
+    setSelectedNoteId("");
+    setBottomSheetVisible(false);
+  }
+
   const bottomSheetOptions = [
+    {
+      title: "Share",
+      onPress: async () => {
+        const note = filteredNotes.find((n: Note) => {
+          return n._id === selectedNoteId;
+        });
+        await Share.share({
+          message: note.body,
+        });
+        handleCloseBottomSheet();
+      },
+    },
     {
       title: "Edit",
       onPress: () => {
@@ -92,8 +109,7 @@ export default function LogScreen({ route }: LogScreenProps) {
     {
       title: "Cancel",
       onPress: () => {
-        setSelectedNoteId("");
-        setBottomSheetVisible(false);
+        handleCloseBottomSheet();
       },
     },
   ];
