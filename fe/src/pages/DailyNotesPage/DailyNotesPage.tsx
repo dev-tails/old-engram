@@ -5,6 +5,7 @@ import React from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { BottomTypeNavigator } from '../../components/BottomTypeNavigator/BottomTypeNavigator';
 import { NoteList } from '../../components/NoteList/NoteList';
 import { NoteTextInput } from '../../components/NoteTextInput/NoteTextInput';
 import { fetchNotes } from '../../redux/actions/NotesActions';
@@ -31,6 +32,7 @@ export const DailyNotesPage: React.FC<DailyNotesPageProps> = () => {
     <div className="daily-notes-page">
       <NoteList />
       <NoteTextInput />
+      <BottomTypeNavigator />
     </div>
   );
 };
