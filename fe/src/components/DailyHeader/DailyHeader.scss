@@ -1,0 +1,14 @@
+.daily-header {
+  display: flex;
+  align-items: center;
+
+  .spacer {
+    flex-grow: 1;
+  }
+
+  .date-picker {
+    input {
+      text-align: center;
+    }
+  }
+}

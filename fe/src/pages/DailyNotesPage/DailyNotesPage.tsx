@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { BottomTypeNavigator } from '../../components/BottomTypeNavigator/BottomTypeNavigator';
+import { DailyHeader } from '../../components/DailyHeader/DailyHeader';
 import { NoteList } from '../../components/NoteList/NoteList';
 import { NoteTextInput } from '../../components/NoteTextInput/NoteTextInput';
 import { fetchNotes } from '../../redux/actions/NotesActions';
@@ -30,6 +31,7 @@ export const DailyNotesPage: React.FC<DailyNotesPageProps> = () => {
 
   return (
     <div className="daily-notes-page">
+      <DailyHeader />
       <NoteList />
       <NoteTextInput />
       <BottomTypeNavigator />
