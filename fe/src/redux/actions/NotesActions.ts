@@ -1,6 +1,6 @@
-import { Dispatch } from "redux";
+import { Dispatch } from 'redux';
 
-import * as NoteApi from "../../components/notes/NotesApi";
+import * as NoteApi from '../../components/notes/NotesApi';
 
 export type RemoveNoteAction = {
   type: "REMOVE_NOTE";

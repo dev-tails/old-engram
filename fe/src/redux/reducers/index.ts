@@ -1,10 +1,13 @@
-import { combineReducers } from "redux";
-import NotesReducer from "./NotesReducer";
-import DateReducer from "./DateReducer";
-import UserReducer from "./UserReducer";
+import { combineReducers } from 'redux';
+
+import DateReducer from './DateReducer';
+import NoteReducer from './NoteReducer';
+import NotesReducer from './NotesReducer';
+import UserReducer from './UserReducer';
 
 export default combineReducers({
-    user: UserReducer,
-    notes: NotesReducer,
-    date: DateReducer
-})
+  user: UserReducer,
+  note: NoteReducer,
+  notes: NotesReducer,
+  date: DateReducer,
+});

@@ -1,4 +1,4 @@
-import { User } from '../../api/UserApi';
+import { User } from '../../UsersApi';
 import { FetchUserAction } from '../actions/UserActions';
 
 const INITIAL_STATE = null;

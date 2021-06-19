@@ -1,4 +1,4 @@
-import { Note } from '../../api/NoteApi';
+import { Note } from '../../components/notes/NotesApi';
 import { AddNoteAction, FetchNotesAction, RemoveNoteAction, UpdateNoteAction } from '../actions/NotesActions';
 import { LogoutAction } from '../actions/UserActions';
 

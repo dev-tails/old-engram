@@ -1,7 +1,7 @@
-import { Dispatch } from "redux";
+import { Dispatch } from 'redux';
 
-import { Note } from "../../components/notes/NotesApi";
-import * as UserApi from "../../UsersApi";
+import { Note } from '../../components/notes/NotesApi';
+import * as UserApi from '../../UsersApi';
 
 export type LogoutAction = {
   type: "LOGOUT";
@@ -47,9 +47,7 @@ export async function logout(dispatch: Dispatch) {
 }
 
 export async function signup(dispatch: Dispatch, params: UserApi.SignUpParams) {
-  const user = await UserApi.signup(params);
-  if (!user.errors) {
-    dispatch({ type: "SIGNUP", payload: user });
-  }
+  const user = await UserApi.signUp(params);
+  dispatch({ type: "SIGNUP", payload: user });
   return user;
 }
