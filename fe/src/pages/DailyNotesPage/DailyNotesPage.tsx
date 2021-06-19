@@ -33,8 +33,10 @@ export const DailyNotesPage: React.FC<DailyNotesPageProps> = () => {
     <div className="daily-notes-page">
       <DailyHeader />
       <NoteList />
-      <NoteTextInput />
-      <BottomTypeNavigator />
+      <div className="daily-footer">
+        <NoteTextInput />
+        <BottomTypeNavigator />
+      </div>
     </div>
   );
 };

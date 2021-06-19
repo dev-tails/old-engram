@@ -36,6 +36,7 @@ export const NoteTextInput: React.FC<NoteTextInputProps> = (props) => {
       </IconButton>
 
       <TextField
+        className="body"
         autoFocus
         multiline
         rowsMax={8}
