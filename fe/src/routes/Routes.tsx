@@ -20,15 +20,17 @@ import SignupPage, {
   SignupPagePath,
 } from "../components/SignupPage/SignupPage";
 import { hasLocalDevice } from "../DeviceApi";
+import { DailyNotesPage } from "../pages/DailyNotesPage/DailyNotesPage";
+import { GoogleSettingsPage } from "../pages/GoogleSettingsPage/GoogleSettingsPage";
 import { EncryptionPage } from "../pages/settings/EncryptionPage";
 import { ViewNotePage } from "../pages/ViewNotePage/ViewNotePage";
-import { GoogleSettingsPage } from "../pages/GoogleSettingsPage/GoogleSettingsPage";
 import { isPluginEnabled, PluginName } from "../Plugins";
 import {
   TermsOfServicePage,
   TermsOfServicePagePath,
 } from "../TermsOfServicePage/TermsOfServicePage";
 import { getMe } from "../UsersApi";
+import { isFeatureEnabled } from "../utils/FeatureFlagUtils";
 
 function getStartDate(date: Date, dateRangeValue: string) {
   switch (dateRangeValue) {
@@ -163,7 +165,11 @@ export default function Routes() {
           <LogPage />
         </AuthenticatedRoute>
         <Route exact path="/daily">
-          <LogPage date={date} onDateChanged={handleDateChanged} />
+          {isFeatureEnabled("engram.newDailyPage") ? (
+            <DailyNotesPage />
+          ) : (
+            <LogPage date={date} onDateChanged={handleDateChanged} />
+          )}
         </Route>
         {isPluginEnabled(PluginName.PLUGIN_DASHBOARD) ? (
           <AuthenticatedRoute exact={true} path="/dashboard">
