@@ -1,16 +1,13 @@
 import './NoteTextInput.scss';
 
-import { IconButton, SvgIcon, TextField } from '@material-ui/core';
+import { IconButton, TextField } from '@material-ui/core';
 import { ArrowUpward } from '@material-ui/icons';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { setNoteBody, setNoteType } from '../../redux/actions/NoteActions';
 import { addNote } from '../../redux/actions/NotesActions';
-import { ReactComponent as EventIcon } from '../icons/EventIcon.svg';
 import { ReactComponent as NoteIcon } from '../icons/NoteIcon.svg';
-import { ReactComponent as TaskCompletedIcon } from '../icons/TaskCompletedIcon.svg';
-import { ReactComponent as TaskIcon } from '../icons/TaskIcon.svg';
 import { NoteType } from '../notes/NotesApi';
 
 type NoteTextInputProps = {};
@@ -20,17 +17,6 @@ export const NoteTextInput: React.FC<NoteTextInputProps> = (props) => {
     return { note: state.note };
   });
   const dispatch = useDispatch();
-
-  function getNoteIcon(type: NoteType) {
-    const iconByType = {
-      note: NoteIcon,
-      task: TaskIcon,
-      task_completed: TaskCompletedIcon,
-      event: EventIcon,
-    };
-
-    return <SvgIcon component={(iconByType as any)[type]}></SvgIcon>;
-  }
 
   const types: NoteType[] = ["note", "task", "task_completed", "event"];
   async function handleToggleType() {
@@ -46,7 +32,7 @@ export const NoteTextInput: React.FC<NoteTextInputProps> = (props) => {
   return (
     <div className="note-text-input">
       <IconButton onClick={handleToggleType}>
-        {getNoteIcon(note.type || "note")}
+        <NoteIcon type={note.type} />
       </IconButton>
 
       <TextField

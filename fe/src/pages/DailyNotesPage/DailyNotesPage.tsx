@@ -5,17 +5,16 @@ import React from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { NoteList } from '../../components/NoteList/NoteList';
 import { NoteTextInput } from '../../components/NoteTextInput/NoteTextInput';
-import { addNote, fetchNotes } from '../../redux/actions/NotesActions';
+import { fetchNotes } from '../../redux/actions/NotesActions';
 
 type DailyNotesPageProps = {};
 
-export const DailyNotesPage: React.FC<DailyNotesPageProps> = ({}) => {
-  const { date, note, notes } = useSelector((state: any) => {
+export const DailyNotesPage: React.FC<DailyNotesPageProps> = () => {
+  const { date } = useSelector((state: any) => {
     return {
       date: state.date,
-      notes: state.notes,
-      note: state.note,
     };
   });
 
@@ -26,20 +25,12 @@ export const DailyNotesPage: React.FC<DailyNotesPageProps> = ({}) => {
       since: moment(date).startOf("d").toDate(),
       before: moment(date).endOf("d").toDate(),
     });
-  }, [date]);
-
-  function handleSubmitNote() {
-    addNote(dispatch, note);
-  }
+  }, [date, dispatch]);
 
   return (
     <div className="daily-notes-page">
-      <div className="notes-list">
-        {notes.map((note: any) => {
-          return <div className="note">{note.body}</div>;
-        })}
-        <NoteTextInput />
-      </div>
+      <NoteList />
+      <NoteTextInput />
     </div>
   );
 };
