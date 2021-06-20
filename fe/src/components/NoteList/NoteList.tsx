@@ -3,16 +3,25 @@ import './NoteList.scss';
 import { Divider, IconButton, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { MoreVert } from '@material-ui/icons';
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
+import { updateNote } from '../../redux/actions/NotesActions';
 import { Markdown } from '../Markdown/Markdown';
 import { NoteIcon } from '../notes/NoteIcon/NoteIcon';
-import { Note } from '../notes/NotesApi';
+import { Note, NoteType } from '../notes/NotesApi';
 
 type NoteListProps = {};
 
 export const NoteList: React.FC<NoteListProps> = (props) => {
+  const dispatch = useDispatch();
   const notes = useSelector((state: any) => state.notes);
+
+  const types: NoteType[] = ["note", "task", "task_completed", "event"];
+  function handleToggleType(note: Note) {
+    const currentTypeIndex = types.indexOf(note.type || "note");
+    let nextTypeIndex = (currentTypeIndex + 1) % types.length;
+    updateNote(dispatch, { ...note, type: types[nextTypeIndex] });
+  }
 
   return (
     <div className="note-list">
@@ -26,7 +35,7 @@ export const NoteList: React.FC<NoteListProps> = (props) => {
                   <IconButton
                     edge="start"
                     onClick={(e) => {
-                      // handleToggleType(note);
+                      handleToggleType(note);
                     }}
                   >
                     <NoteIcon type={note.type} />
