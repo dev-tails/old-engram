@@ -10,11 +10,17 @@ import SwiftUI
 struct LoginScreen: View {
     @ObservedObject var vm = sharedLoginViewModel
     
+    @State var showingAlert = false
+    
     @State var email: String = ""
     @State var password: String = ""
     
-    func handleSubmit() {
+    func handleLogin() {
         vm.login(email: email, password: password)
+    }
+    
+    func handleSignup() {
+        vm.signup(email: email, password: password)
     }
     
     var body: some View {
@@ -23,7 +29,24 @@ struct LoginScreen: View {
                 .textContentType(.emailAddress)
             SecureField("Password", text: $password)
                 .textContentType(.password)
-            Button("Login", action: handleSubmit)
+            HStack {
+                Button("Sign Up", action: handleSignup)
+                    .alert(isPresented: $vm.hasSignupError) {
+                        Alert(
+                            title: Text("Error"),
+                            message: Text(vm.signupError)
+                        )
+                    }
+                Spacer()
+                Button("Login", action: handleLogin)
+                    .alert(isPresented: $vm.hasLoginError) {
+                        Alert(
+                            title: Text("Error"),
+                            message: Text(vm.loginError)
+                        )
+                    }
+            }
+            
         }.frame(width: 256)
     }
 }
