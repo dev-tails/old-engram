@@ -37,10 +37,13 @@ export const NoteTextInput: React.FC<NoteTextInputProps> = (props) => {
       setType(note.type);
       setBody(note.body);
     } else {
-      setType(types.includes(typeFilter) ? typeFilter : "note");
       setBody("");
     }
   }, [note]);
+
+  useEffect(() => {
+    setType(types.includes(typeFilter) ? typeFilter : "note");
+  }, [types, typeFilter]);
 
   function handleToggleType() {
     const currentTypeIndex = types.indexOf(type || "note");

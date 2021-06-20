@@ -1,8 +1,7 @@
 import './NoteList.scss';
 
 import { Divider, IconButton, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem } from '@material-ui/core';
-import { MoreVert } from '@material-ui/icons';
-import moment from 'moment';
+import { Cancel, MoreVert } from '@material-ui/icons';
 import React from 'react';
 import { useMemo } from 'react';
 import { useState } from 'react';
@@ -61,9 +60,13 @@ export const NoteList: React.FC<NoteListProps> = (props) => {
   }
 
   function handleMoreClicked(note: Note, event: any) {
+    clearSelectedNote();
+    setMenuAnchorEl(event.target as any);
+  }
+
+  function clearSelectedNote() {
     setSelectedNoteId(note.localId || "");
     setNote(dispatch, null);
-    setMenuAnchorEl(event.target as any);
   }
 
   function hideMenu() {
@@ -84,20 +87,6 @@ export const NoteList: React.FC<NoteListProps> = (props) => {
         text: note.body,
       });
     }
-  }
-
-  async function handleMoveToTomorrow() {
-    hideMenu();
-
-    const note = getNoteById(selectedNoteId);
-    if (!note) {
-      return;
-    }
-
-    updateNote(dispatch, {
-      ...note,
-      date: moment(note.date).add(1, "day").format("YYYY-MM-DD"),
-    });
   }
 
   async function handleZapClicked() {
@@ -129,13 +118,15 @@ export const NoteList: React.FC<NoteListProps> = (props) => {
     <div className="note-list">
       <List disablePadding={true} dense={true}>
         {notesForType.map((listItemNote: Note) => {
+          const isSelectedNote = note
+            ? note.localId === listItemNote.localId
+            : false;
+
           return (
             <div key={listItemNote.localId}>
               <Divider />
               <ListItem
-                className={`note-list-item ${
-                  note?.localId === listItemNote.localId ? "selected" : ""
-                }`}
+                className={`note-list-item ${isSelectedNote ? "selected" : ""}`}
                 onClick={() => {
                   handleQuickEdit(listItemNote);
                 }}
@@ -158,10 +149,14 @@ export const NoteList: React.FC<NoteListProps> = (props) => {
                     edge="end"
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleMoreClicked(listItemNote, e);
+                      if (isSelectedNote) {
+                        clearSelectedNote();
+                      } else {
+                        handleMoreClicked(listItemNote, e);
+                      }
                     }}
                   >
-                    <MoreVert />
+                    {isSelectedNote ? <Cancel /> : <MoreVert />}
                   </IconButton>
                 </ListItemIcon>
               </ListItem>
@@ -177,7 +172,6 @@ export const NoteList: React.FC<NoteListProps> = (props) => {
         onClose={hideMenu}
       >
         <MenuItem onClick={handleEditNote}>Edit</MenuItem>
-        {/* <MenuItem onClick={handleMoveToTomorrow}>Move to Tomorrow</MenuItem> */}
         {isShareEnabled ? (
           <MenuItem onClick={handleShareClicked}>Share...</MenuItem>
         ) : null}
