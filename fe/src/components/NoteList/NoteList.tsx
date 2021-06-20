@@ -33,10 +33,18 @@ export const NoteList: React.FC<NoteListProps> = (props) => {
       return allowedTypes.includes(note.type || "note");
     });
   }, [notes, type]);
-  console.log(notesForType);
 
-  const types: NoteType[] = ["note", "task", "task_completed", "event"];
   function handleToggleType(note: Note) {
+    if (type === "note" || type === "event") {
+      return;
+    }
+
+    let types: NoteType[] = ["note", "task", "task_completed", "event"];
+
+    if (type === "task") {
+      types = ["task", "task_completed"];
+    }
+
     const currentTypeIndex = types.indexOf(note.type || "note");
     let nextTypeIndex = (currentTypeIndex + 1) % types.length;
     updateNote(dispatch, { ...note, type: types[nextTypeIndex] });
