@@ -7,6 +7,8 @@
 
 import Foundation
 
+let sharedDailyViewModel = DailyViewModel()
+
 struct DecodableNote: Decodable {
     var _id: String?
     var body: String?
@@ -18,6 +20,10 @@ class DailyViewModel: ObservableObject {
     @Published var notes: [Note] = []
     @Published var typeFilter: String = "all"
     @Published var date: Date = Date()
+    
+    init() {
+        fetchNotesForDate(date: date)
+    }
     
     func setDate(date: Date) {
         self.date = date
@@ -37,7 +43,6 @@ class DailyViewModel: ObservableObject {
         let task = session.dataTask(with: request) { (data, response, error) in
 
             if let error = error {
-                print("error")
                 print(error)
             } else if let data = data {
                 let decoder = JSONDecoder()
@@ -48,7 +53,9 @@ class DailyViewModel: ObservableObject {
                     newNotes.append(Note(_id: note._id, body: note.body, type: note.type))
                 }
                 
-                self.notes = newNotes
+                DispatchQueue.main.async {
+                    self.notes = newNotes
+                }
                 
             } else {
                 // Handle unexpected error

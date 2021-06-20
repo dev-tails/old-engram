@@ -8,11 +8,10 @@
 import SwiftUI
 
 struct DailyScreen: View {
-    @ObservedObject var vm = DailyViewModel()
+    @ObservedObject var vm = sharedDailyViewModel
     
     init(type: String) {
         self.vm.typeFilter = type
-        self.vm.fetchNotesForDate(date: vm.date)
     }
     
     func navigateDateLeft() {
