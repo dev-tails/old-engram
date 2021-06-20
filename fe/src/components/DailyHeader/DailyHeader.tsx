@@ -30,6 +30,7 @@ export const DailyHeader: React.FC<DailyHeaderProps> = (props) => {
   return (
     <div className="daily-header">
       <IconButton
+        className="today"
         onClick={() => {
           handleDateChanged(new Date());
         }}
@@ -62,7 +63,7 @@ export const DailyHeader: React.FC<DailyHeaderProps> = (props) => {
 
       <div className="spacer" />
 
-      <IconButton onClick={() => {}}>
+      <IconButton className="refresh" onClick={() => {}}>
         <Refresh />
       </IconButton>
     </div>

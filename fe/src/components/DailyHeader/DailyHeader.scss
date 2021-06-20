@@ -1,6 +1,15 @@
 .daily-header {
   display: flex;
   align-items: center;
+  background-color: #424242;
+
+  .today {
+    margin: 0 12px; 
+  }
+
+  .refresh {
+    margin: 0 20px;
+  }
 
   .spacer {
     flex-grow: 1;
