@@ -3,6 +3,7 @@ import SwiftUI
 struct NoteListItem: View {
     @ObservedObject var vm = sharedDailyViewModel
     private var _note: Note
+    @State var start: Date = Date()
     
     init(note: Note) {
         self._note = note
@@ -28,6 +29,10 @@ struct NoteListItem: View {
                 Button(action: toggleType) {
                     Image(systemName: _note.type == "task_completed" ? "checkmark.square" : "square")
                 }
+            }
+            if (_note.type == "event") {
+                DatePicker("", selection: $start, displayedComponents: .hourAndMinute)
+                    .labelsHidden()
             }
             Text(_note.body!)
         }.opacity(_note.type == "task_completed" ? 0.25 : 1.0)

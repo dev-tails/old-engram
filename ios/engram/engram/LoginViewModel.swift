@@ -34,7 +34,7 @@ class LoginViewModel: ObservableObject {
 
             if let error = error {
                 print(error)
-            } else if let data = data {
+            } else if data != nil {
                 DispatchQueue.main.async {
                     if let httpResponse = response as? HTTPURLResponse {
                         if httpResponse.statusCode == 200 {

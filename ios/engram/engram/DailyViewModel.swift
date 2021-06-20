@@ -84,7 +84,7 @@ class DailyViewModel: ObservableObject {
 
             if let error = error {
                 print(error)
-            } else if let data = data {
+            } else if data != nil {
                 
             } else {
                 // Handle unexpected error
@@ -112,7 +112,7 @@ class DailyViewModel: ObservableObject {
 
             if let error = error {
                 print(error)
-            } else if let data = data {
+            } else if data != nil {
                 
             } else {
                 // Handle unexpected error
@@ -135,7 +135,7 @@ class DailyViewModel: ObservableObject {
 
             if let error = error {
                 print(error)
-            } else if let data = data {
+            } else if data != nil {
                 
             } else {
                 // Handle unexpected error
