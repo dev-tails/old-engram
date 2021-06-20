@@ -54,7 +54,7 @@ class DailyViewModel: ObservableObject {
                 }
                 
                 DispatchQueue.main.async {
-                    self.notes = newNotes
+                    self.notes = newNotes.reversed()
                 }
                 
             } else {
@@ -65,7 +65,7 @@ class DailyViewModel: ObservableObject {
     }
     
     func addNote(note: Note) {
-        notes.append(note)
+        notes.insert(note, at: 0)
         let url = URL(string: "https://engram.xyzdigital.com/api/notes")!
         var request = URLRequest(url: url)
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
@@ -94,6 +94,9 @@ class DailyViewModel: ObservableObject {
     }
     
     func updateNote(note: Note) {
+        let noteIndex = notes.firstIndex(where: { $0._id == note._id})
+        notes[noteIndex!].type = note.type
+        
         let url = URL(string: String(format: "https://engram.xyzdigital.com/api/notes/%@", note._id!))!
         var request = URLRequest(url: url)
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")

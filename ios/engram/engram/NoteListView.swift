@@ -35,7 +35,7 @@ struct NoteListView: View {
         VStack {
             List {
                 ForEach(Array(vm.notes.enumerated()), id: \.offset) { index, note in
-                    if type == "all" || note.type == type{
+                    if type == "all" || note.type == type || (type == "task" && note.type == "task_completed") {
                         NoteListItem(note: note)
                             .contextMenu {
                                 Button(action: {
