@@ -20,8 +20,8 @@ type NoteTextInputProps = {};
 export const NoteTextInput: React.FC<NoteTextInputProps> = (props) => {
   const textfieldRef = useRef<any>(null);
 
-  const { date, note } = useSelector((state: any) => {
-    return { date: state.date, note: state.note };
+  const { typeFilter, date, note } = useSelector((state: any) => {
+    return { date: state.date, note: state.note, typeFilter: state.type };
   });
   const dateString = moment(date).format("YYYY-MM-DD");
 
@@ -30,14 +30,18 @@ export const NoteTextInput: React.FC<NoteTextInputProps> = (props) => {
 
   const dispatch = useDispatch();
 
+  const types: NoteType[] = ["note", "task", "task_completed", "event"];
+
   useEffect(() => {
     if (note) {
       setType(note.type);
       setBody(note.body);
+    } else {
+      setType(types.includes(typeFilter) ? typeFilter : "note");
+      setBody("");
     }
   }, [note]);
 
-  const types: NoteType[] = ["note", "task", "task_completed", "event"];
   function handleToggleType() {
     const currentTypeIndex = types.indexOf(type || "note");
     let nextTypeIndex = (currentTypeIndex + 1) % types.length;

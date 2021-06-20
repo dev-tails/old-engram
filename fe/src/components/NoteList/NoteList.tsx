@@ -61,6 +61,7 @@ export const NoteList: React.FC<NoteListProps> = (props) => {
 
   function handleMoreClicked(note: Note, event: any) {
     setSelectedNoteId(note.localId || "");
+    setNote(dispatch, null);
     setMenuAnchorEl(event.target as any);
   }
 
