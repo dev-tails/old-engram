@@ -27,7 +27,7 @@ struct DailyScreen: View {
     }
     
     func handleSync() {
-        
+        vm.setDate(date: vm.date)
     }
     
     var body: some View {
