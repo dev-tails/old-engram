@@ -125,7 +125,6 @@ export const DateHeader: React.FC<DateHeaderProps> = ({
 
       <div className="date">
         <IconButton
-          color="inherit"
           onClick={handleNavigateDate.bind(this, "left")}
           title="Alt+LeftArrow"
           edge="end"
@@ -144,7 +143,6 @@ export const DateHeader: React.FC<DateHeaderProps> = ({
         />
 
         <IconButton
-          color="inherit"
           onClick={handleNavigateDate.bind(this, "right")}
           title="Alt+RightArrow"
           edge="start"
