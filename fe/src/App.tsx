@@ -25,7 +25,7 @@ let theme = createMuiTheme({
   },
   typography: {
     allVariants: {
-      color: "white ",
+      color: "white",
     },
   },
 });

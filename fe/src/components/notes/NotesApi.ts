@@ -210,6 +210,14 @@ export type GetNotesParams = {
   parent?: string | null | undefined;
 };
 
+export async function getNotesForDate(date: Date | string) {
+  const dateString =
+    date instanceof Date ? moment(date).format("YYYY-MM-DD") : date;
+  const qs = querystring.stringify({ date: dateString });
+  const res = await Api.get(`/api/notes?${qs}`);
+  return res.data;
+}
+
 export async function getNotes(params: GetNotesParams = {}): Promise<Note[]> {
   const notes = await getAllNotes();
 

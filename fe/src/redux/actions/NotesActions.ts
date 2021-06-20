@@ -22,11 +22,8 @@ export type FetchNotesAction = {
   payload: NoteApi.Note[];
 };
 
-export async function fetchNotes(
-  dispatch: Dispatch,
-  params: NoteApi.GetNotesParams
-) {
-  const notes = await NoteApi.getNotes(params);
+export async function fetchNotesForDate(dispatch: Dispatch, date: Date) {
+  const notes = await NoteApi.getNotesForDate(date);
   dispatch({ type: "FETCH_NOTES", payload: notes });
 }
 
