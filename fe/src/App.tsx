@@ -5,6 +5,8 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import React from 'react';
+import { useEffect } from 'react';
+import { useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { Provider } from 'react-redux';
@@ -15,6 +17,7 @@ import thunkMiddleware from 'redux-thunk';
 import { initializePlugins } from './Plugins';
 import rootReducer from './redux/reducers';
 import Routes from './routes/Routes';
+import { initializeFeatureFlags } from './utils/FeatureFlagUtils';
 import { initGoogleUtils } from './utils/GoogleUtils';
 
 let theme = createMuiTheme({
@@ -25,8 +28,22 @@ let theme = createMuiTheme({
 });
 
 function App() {
-  initializePlugins();
-  initGoogleUtils();
+  const [initialized, setInitialized] = useState(false);
+
+  useEffect(() => {
+    async function init() {
+      await initializeFeatureFlags();
+      initializePlugins();
+      initGoogleUtils();
+      setInitialized(true);
+    }
+
+    init();
+  }, []);
+
+  if (!initialized) {
+    return null;
+  }
 
   const store = createStore(rootReducer, applyMiddleware(thunkMiddleware));
 
