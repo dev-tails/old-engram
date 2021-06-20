@@ -1,3 +1,5 @@
+import './NoteList.scss';
+
 import { Divider, IconButton, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { MoreVert } from '@material-ui/icons';
 import React from 'react';
@@ -19,7 +21,7 @@ export const NoteList: React.FC<NoteListProps> = (props) => {
           return (
             <div key={note.localId}>
               <Divider />
-              <ListItem>
+              <ListItem className="note-list-item">
                 <ListItemIcon>
                   <IconButton
                     edge="start"
@@ -33,7 +35,7 @@ export const NoteList: React.FC<NoteListProps> = (props) => {
                 <ListItemText>
                   <Markdown body={note.body || ""} />
                 </ListItemText>
-                <ListItemIcon>
+                <ListItemIcon className="right-icon">
                   <IconButton
                     edge="end"
                     onClick={(e) => {
