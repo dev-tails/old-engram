@@ -1,0 +1,21 @@
+.note-list {
+
+  position: fixed;
+  top: 112px;
+  bottom: 104px;
+  width: 100%;
+  overflow-y: scroll;
+
+  display: flex;
+  flex-direction: column-reverse;
+  
+  .note-list-item {
+    &.selected {
+      background-color: #3f51b5;
+    }
+
+    .right-icon {
+      margin-right: -16px;
+    }
+  }
+}

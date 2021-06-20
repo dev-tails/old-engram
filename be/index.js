@@ -1,17 +1,19 @@
-import bodyParser from "body-parser";
-import cookieParser from "cookie-parser";
-import express from "express";
-import morgan from "morgan";
-import { AuthMiddleware } from "./middleware/AuthMiddleware.js";
-import { getEnv } from "./env.js";
-import { initializeUserRouter } from "./routes/UsersRouter.js";
-import { initializeNotesRouter } from "./routes/NotesRouter.js";
-import { initializeWidgetsRouter } from "./routes/WidgetsRouter.js";
-import { initializeApiKeysRouter } from "./routes/APIKeysRouter.js";
-import { initializeZapierRouter } from "./routes/ZapierRouter.js";
-import { initializeDb } from "./Database.js";
-import { DatabaseMiddleware } from "./middleware/DatabaseMiddleware.js";
-import { ErrorsMiddleware } from "./middleware/ErrorsMiddleware.js";
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import express from 'express';
+import morgan from 'morgan';
+
+import { initializeDb } from './Database.js';
+import { getEnv } from './env.js';
+import { AuthMiddleware } from './middleware/AuthMiddleware.js';
+import { DatabaseMiddleware } from './middleware/DatabaseMiddleware.js';
+import { ErrorsMiddleware } from './middleware/ErrorsMiddleware.js';
+import { initializeApiKeysRouter } from './routes/APIKeysRouter.js';
+import { initializeFlagRouter } from './routes/FlagsRouter.js';
+import { initializeNotesRouter } from './routes/NotesRouter.js';
+import { initializeUserRouter } from './routes/UsersRouter.js';
+import { initializeWidgetsRouter } from './routes/WidgetsRouter.js';
+import { initializeZapierRouter } from './routes/ZapierRouter.js';
 
 const { origin, port } = getEnv();
 
@@ -50,6 +52,7 @@ async function run() {
   apiRouter.use("/widgets", initializeWidgetsRouter());
   apiRouter.use("/keys", initializeApiKeysRouter());
   apiRouter.use("/zapier", initializeZapierRouter());
+  apiRouter.use("/flags", initializeFlagRouter({ db }));
 
   app.use(ErrorsMiddleware);
 

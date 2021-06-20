@@ -1,0 +1,23 @@
+.daily-header {
+  position: fixed;
+  top: 60px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background-color: #424242;
+
+  .today, .refresh {
+    margin: 0 4px; 
+  }
+
+  .spacer {
+    flex-grow: 1;
+  }
+
+  .date-picker {
+    input {
+      width: 110px;
+      text-align: center;
+    }
+  }
+}
