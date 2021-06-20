@@ -20,9 +20,10 @@ type NoteListProps = {};
 
 export const NoteList: React.FC<NoteListProps> = (props) => {
   const dispatch = useDispatch();
-  const { notes, type } = useSelector((state: any) => {
+  const { note, notes, type } = useSelector((state: any) => {
     return {
       type: state.type,
+      note: state.note,
       notes: state.notes,
     };
   });
@@ -116,39 +117,48 @@ export const NoteList: React.FC<NoteListProps> = (props) => {
     return notesForType.find((note: Note) => note.localId === localId);
   }
 
+  function handleQuickEdit(note: Note) {
+    setSelectedNoteId(note.localId || "");
+    setNote(dispatch, note);
+  }
+
   const isShareEnabled = Boolean(navigator.share);
   const isZapEnabled = isPluginEnabled(PluginName.PLUGIN_ZAPIER);
 
   return (
     <div className="note-list">
       <List disablePadding={true} dense={true}>
-        {notesForType.map((note: Note) => {
+        {notesForType.map((listItemNote: Note) => {
           return (
-            <div key={note.localId}>
+            <div key={listItemNote.localId}>
               <Divider />
               <ListItem
                 className={`note-list-item ${
-                  selectedNoteId === note.localId ? "selected" : ""
+                  note?.localId === listItemNote.localId ? "selected" : ""
                 }`}
+                onClick={() => {
+                  handleQuickEdit(listItemNote);
+                }}
               >
                 <ListItemIcon>
                   <IconButton
                     edge="start"
                     onClick={(e) => {
-                      handleToggleType(note);
+                      handleToggleType(listItemNote);
                     }}
                   >
-                    <NoteIcon type={note.type} />
+                    <NoteIcon type={listItemNote.type} />
                   </IconButton>
                 </ListItemIcon>
                 <ListItemText>
-                  <Markdown body={note.body || ""} />
+                  <Markdown body={listItemNote.body || ""} />
                 </ListItemText>
                 <ListItemIcon className="right-icon">
                   <IconButton
                     edge="end"
                     onClick={(e) => {
-                      handleMoreClicked(note, e);
+                      e.stopPropagation();
+                      handleMoreClicked(listItemNote, e);
                     }}
                   >
                     <MoreVert />
