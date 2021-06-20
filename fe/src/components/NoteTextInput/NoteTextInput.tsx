@@ -31,7 +31,7 @@ export const NoteTextInput: React.FC<NoteTextInputProps> = (props) => {
 
   return (
     <div className="note-text-input">
-      <IconButton onClick={handleToggleType}>
+      <IconButton className="icon" onClick={handleToggleType}>
         <NoteIcon type={note.type} />
       </IconButton>
 
@@ -48,7 +48,7 @@ export const NoteTextInput: React.FC<NoteTextInputProps> = (props) => {
         focused={true}
       />
 
-      <IconButton onClick={handleSubmit}>
+      <IconButton className="submit icon" onClick={handleSubmit}>
         <ArrowUpward />
       </IconButton>
     </div>
