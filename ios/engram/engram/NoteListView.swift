@@ -73,7 +73,9 @@ struct NoteListView: View {
         withAnimation {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
-            let newNote = Note(body: noteBody, date: dateFormatter.string(from: Date()), type: type)
+            
+            let typeToSave = type == "all" ? "note" : type
+            let newNote = Note(body: noteBody, date: dateFormatter.string(from: Date()), type: typeToSave)
             
             noteBody = ""
             

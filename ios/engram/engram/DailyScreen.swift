@@ -10,9 +10,7 @@ import SwiftUI
 struct DailyScreen: View {
     @ObservedObject var vm = sharedDailyViewModel
     
-    init(type: String) {
-        self.vm.typeFilter = type
-    }
+    var type: String
     
     func navigateDateLeft() {
         let timeInterval = TimeInterval(-24 * 60 * 60)
@@ -67,7 +65,7 @@ struct DailyScreen: View {
                         .imageScale(.large)
                 }
             }.padding()
-            NoteListView(vm: vm, type: vm.typeFilter)
+            NoteListView(vm: vm, type: type)
         }
     }
 }
