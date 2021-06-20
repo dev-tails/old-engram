@@ -60,8 +60,6 @@ export const NoteList: React.FC<NoteListProps> = (props) => {
   }
 
   function handleMoreClicked(note: Note, event: any) {
-    clearSelectedNote();
-    setSelectedNoteId(note.localId || "");
     setMenuAnchorEl(event.target as any);
   }
 
@@ -148,21 +146,32 @@ export const NoteList: React.FC<NoteListProps> = (props) => {
                 <ListItemText>
                   <Markdown body={listItemNote.body || ""} />
                 </ListItemText>
-                <ListItemIcon className="right-icon">
-                  <IconButton
-                    edge="end"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (isSelectedNote) {
-                        clearSelectedNote();
-                      } else {
-                        handleMoreClicked(listItemNote, e);
-                      }
-                    }}
-                  >
-                    {isSelectedNote ? <Cancel /> : <MoreVert />}
-                  </IconButton>
-                </ListItemIcon>
+                {isSelectedNote ? (
+                  <>
+                    <ListItemIcon className="right-icon">
+                      <IconButton
+                        edge="end"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleMoreClicked(listItemNote, e);
+                        }}
+                      >
+                        <MoreVert />
+                      </IconButton>
+                    </ListItemIcon>
+                    <ListItemIcon className="right-icon">
+                      <IconButton
+                        edge="end"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          clearSelectedNote();
+                        }}
+                      >
+                        <Cancel />
+                      </IconButton>
+                    </ListItemIcon>
+                  </>
+                ) : null}
               </ListItem>
             </div>
           );
