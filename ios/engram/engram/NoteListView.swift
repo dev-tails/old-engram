@@ -73,11 +73,11 @@ struct NoteListView: View {
         withAnimation {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
-            let newNote = Note(_id: String(vm.notes.count), body: noteBody, date: dateFormatter.string(from: Date()), type: type)
+            let newNote = Note(body: noteBody, date: dateFormatter.string(from: Date()), type: type)
             
             noteBody = ""
             
-            vm.notes.append(newNote)
+            vm.addNote(note: newNote)
         }
     }
     
