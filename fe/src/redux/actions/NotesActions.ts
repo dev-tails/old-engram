@@ -32,9 +32,8 @@ export async function addNote(dispatch: Dispatch, note: Partial<NoteApi.Note>) {
     ...note,
   };
   try {
-    dispatch({ type: "ADD_NOTE", payload: noteToCreate });
     const savedNote = await NoteApi.createNote(noteToCreate);
-    dispatch({ type: "UPDATE_NOTE", payload: savedNote });
+    dispatch({ type: "ADD_NOTE", payload: savedNote });
   } catch (err) {
     removeNote(dispatch, noteToCreate);
     throw err;
