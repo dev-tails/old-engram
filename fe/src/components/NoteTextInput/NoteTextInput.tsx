@@ -2,50 +2,61 @@ import './NoteTextInput.scss';
 
 import { IconButton, TextField } from '@material-ui/core';
 import { ArrowUpward } from '@material-ui/icons';
+import moment from 'moment';
 import React from 'react';
+import { useRef } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { setNoteBody, setNoteType } from '../../redux/actions/NoteActions';
 import { addNote } from '../../redux/actions/NotesActions';
-import { ReactComponent as NoteIcon } from '../icons/NoteIcon.svg';
+import { NoteIcon } from '../notes/NoteIcon/NoteIcon';
 import { NoteType } from '../notes/NotesApi';
 
 type NoteTextInputProps = {};
 
 export const NoteTextInput: React.FC<NoteTextInputProps> = (props) => {
-  const { note } = useSelector((state: any) => {
-    return { note: state.note };
-  });
+  const textfieldRef = useRef<any>(null);
+
+  const date = useSelector((state: any) => state.date);
+  const dateString = moment(date).format("YYYY-MM-DD");
+
+  const [type, setType] = useState<NoteType>("note");
+  const [body, setBody] = useState("");
+
   const dispatch = useDispatch();
 
   const types: NoteType[] = ["note", "task", "task_completed", "event"];
-  async function handleToggleType() {
-    const currentTypeIndex = types.indexOf(note.type || "note");
+  function handleToggleType() {
+    const currentTypeIndex = types.indexOf(type || "note");
     let nextTypeIndex = (currentTypeIndex + 1) % types.length;
-    setNoteType(dispatch, types[nextTypeIndex]);
+    setType(types[nextTypeIndex]);
   }
 
   function handleSubmit() {
-    addNote(dispatch, note);
+    addNote(dispatch, {
+      type,
+      body,
+      date: dateString,
+    });
+    setBody("");
   }
 
   return (
     <div className="note-text-input">
       <IconButton className="icon" onClick={handleToggleType}>
-        <NoteIcon type={note.type} />
+        <NoteIcon type={type} />
       </IconButton>
 
       <TextField
+        ref={textfieldRef}
         className="body"
-        autoFocus
         multiline
         rowsMax={8}
-        value={note.body}
+        value={body}
         onChange={(event) => {
-          setNoteBody(dispatch, event.currentTarget.value);
+          setBody(event.currentTarget.value);
         }}
         fullWidth
-        focused={true}
       />
 
       <IconButton className="submit icon" onClick={handleSubmit}>
