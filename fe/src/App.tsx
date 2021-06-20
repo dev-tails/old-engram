@@ -23,7 +23,11 @@ let theme = createMuiTheme({
   palette: {
     type: "dark",
   },
-  typography: {},
+  typography: {
+    allVariants: {
+      color: "white ",
+    },
+  },
 });
 
 function App() {
