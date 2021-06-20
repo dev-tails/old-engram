@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { addNote } from '../../redux/actions/NotesActions';
+import { isMobileUserAgent } from '../../utils/UserAgentUtils';
 import { NoteIcon } from '../notes/NoteIcon/NoteIcon';
 import { NoteType } from '../notes/NotesApi';
 
@@ -32,6 +33,15 @@ export const NoteTextInput: React.FC<NoteTextInputProps> = (props) => {
     setType(types[nextTypeIndex]);
   }
 
+  const handleKeyDown: React.DOMAttributes<HTMLDivElement>["onKeyDown"] = (
+    event
+  ) => {
+    if (event.key === "Enter" && !event.shiftKey && !isMobileUserAgent()) {
+      event.preventDefault();
+      handleSubmit();
+    }
+  };
+
   function handleSubmit() {
     addNote(dispatch, {
       type,
@@ -39,6 +49,7 @@ export const NoteTextInput: React.FC<NoteTextInputProps> = (props) => {
       date: dateString,
     });
     setBody("");
+    textfieldRef.current?.focus();
   }
 
   return (
@@ -49,6 +60,8 @@ export const NoteTextInput: React.FC<NoteTextInputProps> = (props) => {
 
       <TextField
         ref={textfieldRef}
+        autoFocus
+        onKeyDown={handleKeyDown}
         className="body"
         multiline
         rowsMax={8}
