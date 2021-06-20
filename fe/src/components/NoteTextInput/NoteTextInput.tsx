@@ -4,7 +4,6 @@ import { IconButton, TextField } from '@material-ui/core';
 import { ArrowUpward } from '@material-ui/icons';
 import moment from 'moment';
 import React from 'react';
-import { useRef } from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
