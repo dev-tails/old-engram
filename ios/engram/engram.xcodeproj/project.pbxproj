@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		665D9711267FA08600B4B549 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D970E267F9CFA00B4B549 /* Note.swift */; };
+		665D9712267FA08A00B4B549 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D970E267F9CFA00B4B549 /* Note.swift */; };
+		665D9714267FA24D00B4B549 /* DailyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D9713267FA24D00B4B549 /* DailyViewModel.swift */; };
+		665D9715267FA24D00B4B549 /* DailyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D9713267FA24D00B4B549 /* DailyViewModel.swift */; };
 		66ABEA6126589C6F006C9FD5 /* engramApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66ABEA6026589C6F006C9FD5 /* engramApp.swift */; };
 		66ABEA6326589C6F006C9FD5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66ABEA6226589C6F006C9FD5 /* ContentView.swift */; };
 		66ABEA6826589C72006C9FD5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66ABEA6726589C72006C9FD5 /* Preview Assets.xcassets */; };
@@ -24,10 +28,6 @@
 		66E591212658C30F00E38067 /* NoteListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E591202658C30F00E38067 /* NoteListView.swift */; };
 		66E591252659787C00E38067 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66E591242659787C00E38067 /* CloudKit.framework */; };
 		66E591282659788A00E38067 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66E591272659788A00E38067 /* CloudKit.framework */; };
-		66E5914E2659856B00E38067 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E5914D2659856B00E38067 /* Persistence.swift */; };
-		66E5914F2659856B00E38067 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E5914D2659856B00E38067 /* Persistence.swift */; };
-		66E59152265985C400E38067 /* engram.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 66E59150265985C400E38067 /* engram.xcdatamodeld */; };
-		66E59153265985C400E38067 /* engram.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 66E59150265985C400E38067 /* engram.xcdatamodeld */; };
 		66E59156265999BD00E38067 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E59155265999BD00E38067 /* Assets.xcassets */; };
 		66E59157265999BD00E38067 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E59155265999BD00E38067 /* Assets.xcassets */; };
 		66E59158265999BD00E38067 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E59155265999BD00E38067 /* Assets.xcassets */; };
@@ -80,6 +80,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		665D970E267F9CFA00B4B549 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
+		665D9713267FA24D00B4B549 /* DailyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyViewModel.swift; sourceTree = "<group>"; };
 		66ABEA5D26589C6F006C9FD5 /* engram.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = engram.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		66ABEA6026589C6F006C9FD5 /* engramApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = engramApp.swift; sourceTree = "<group>"; };
 		66ABEA6226589C6F006C9FD5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -103,8 +105,6 @@
 		66E591222659787900E38067 /* engram WatchKit ExtensionDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "engram WatchKit ExtensionDebug.entitlements"; sourceTree = "<group>"; };
 		66E591242659787C00E38067 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS7.4.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
 		66E591272659788A00E38067 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.5.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
-		66E5914D2659856B00E38067 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
-		66E59151265985C400E38067 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		66E5915426598B0C00E38067 /* engram.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = engram.entitlements; sourceTree = "<group>"; };
 		66E59155265999BD00E38067 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		66E591592659A23C00E38067 /* CheckboxToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxToggleStyle.swift; sourceTree = "<group>"; };
@@ -157,19 +157,19 @@
 		66ABEA5F26589C6F006C9FD5 /* engram */ = {
 			isa = PBXGroup;
 			children = (
+				665D970E267F9CFA00B4B549 /* Note.swift */,
 				66F0709E266019CB006E767B /* engramDebug.entitlements */,
 				66E59155265999BD00E38067 /* Assets.xcassets */,
 				66E5915426598B0C00E38067 /* engram.entitlements */,
 				66ABEA6026589C6F006C9FD5 /* engramApp.swift */,
-				66E59150265985C400E38067 /* engram.xcdatamodeld */,
 				66ABEA6226589C6F006C9FD5 /* ContentView.swift */,
 				66ABEA6926589C72006C9FD5 /* Info.plist */,
 				66ABEA6626589C72006C9FD5 /* Preview Content */,
 				66E5911E2658A58600E38067 /* NoteListItem.swift */,
 				66E591202658C30F00E38067 /* NoteListView.swift */,
-				66E5914D2659856B00E38067 /* Persistence.swift */,
 				66E591592659A23C00E38067 /* CheckboxToggleStyle.swift */,
 				66E5915F2659B6E000E38067 /* CustomTextField.swift */,
+				665D9713267FA24D00B4B549 /* DailyViewModel.swift */,
 			);
 			path = engram;
 			sourceTree = "<group>";
@@ -361,11 +361,11 @@
 			files = (
 				66ABEA6326589C6F006C9FD5 /* ContentView.swift in Sources */,
 				66ABEA6126589C6F006C9FD5 /* engramApp.swift in Sources */,
+				665D9711267FA08600B4B549 /* Note.swift in Sources */,
 				66E5911F2658A58600E38067 /* NoteListItem.swift in Sources */,
-				66E59152265985C400E38067 /* engram.xcdatamodeld in Sources */,
-				66E5914E2659856B00E38067 /* Persistence.swift in Sources */,
 				66E591212658C30F00E38067 /* NoteListView.swift in Sources */,
 				66E5915A2659A23D00E38067 /* CheckboxToggleStyle.swift in Sources */,
+				665D9714267FA24D00B4B549 /* DailyViewModel.swift in Sources */,
 				66E591602659B6E000E38067 /* CustomTextField.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -377,12 +377,12 @@
 				66ABEA8226589C73006C9FD5 /* NotificationController.swift in Sources */,
 				66ABEA8026589C73006C9FD5 /* ContentView.swift in Sources */,
 				66ABEA8626589C73006C9FD5 /* ComplicationController.swift in Sources */,
-				66E59153265985C400E38067 /* engram.xcdatamodeld in Sources */,
-				66E5914F2659856B00E38067 /* Persistence.swift in Sources */,
+				665D9712267FA08A00B4B549 /* Note.swift in Sources */,
 				66E59163265B2B7700E38067 /* ComplicationViews.swift in Sources */,
 				66ABEA7E26589C73006C9FD5 /* engramApp.swift in Sources */,
 				66E5915B2659A23D00E38067 /* CheckboxToggleStyle.swift in Sources */,
 				66ABEA8426589C73006C9FD5 /* NotificationView.swift in Sources */,
+				665D9715267FA24D00B4B549 /* DailyViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -635,7 +635,7 @@
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = NO;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = engram/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -664,7 +664,7 @@
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = NO;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = engram/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -721,19 +721,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		66E59150265985C400E38067 /* engram.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				66E59151265985C400E38067 /* Model.xcdatamodel */,
-			);
-			currentVersion = 66E59151265985C400E38067 /* Model.xcdatamodel */;
-			path = engram.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = 66ABEA5526589C6E006C9FD5 /* Project object */;
 }

@@ -1,14 +1,10 @@
 import SwiftUI
 
 struct NoteListItem: View {
-    @Environment(\.managedObjectContext) private var viewContext
-    @State private var completed: Bool
-    
-    var note: Note
+    private var _note: Note
     
     init(note: Note) {
-        self.note = note
-        completed = note.type == "task_completed"
+        self._note = note
     }
     
     let typeToIconMap = [
@@ -18,30 +14,21 @@ struct NoteListItem: View {
     ]
     
     func toggleType() {
-        let type = note.type == "task" ? "task_completed" : "task"
+        let type = _note.type == "task" ? "task_completed" : "task"
         
         withAnimation {
-            note.type = type
-            
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
+//            _note.type = type
         }
     }
     
     var body: some View {
         return HStack {
-            if (note.type == "task" || note.type == "task_completed") {
+            if (_note.type == "task" || _note.type == "task_completed") {
                 Button(action: toggleType) {
-                    Image(systemName: note.type == "task_completed" ? "checkmark.square" : "square")
+                    Image(systemName: _note.type == "task_completed" ? "checkmark.square" : "square")
                 }
             }
-            Text(note.body!)
-        }.opacity(note.type == "task_completed" ? 0.25 : 1.0)
+            Text(_note.body!)
+        }.opacity(_note.type == "task_completed" ? 0.25 : 1.0)
     }
 }
