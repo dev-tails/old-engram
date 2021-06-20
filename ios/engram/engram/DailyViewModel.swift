@@ -10,4 +10,5 @@ import Foundation
 class DailyViewModel: ObservableObject {
     @Published var notes: [Note] = []
     @Published var typeFilter: String = "all"
+    @Published var date: Date = Date()
 }

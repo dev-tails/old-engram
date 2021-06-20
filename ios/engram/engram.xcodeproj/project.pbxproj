@@ -10,7 +10,7 @@
 		665D9711267FA08600B4B549 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D970E267F9CFA00B4B549 /* Note.swift */; };
 		665D9712267FA08A00B4B549 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D970E267F9CFA00B4B549 /* Note.swift */; };
 		665D9714267FA24D00B4B549 /* DailyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D9713267FA24D00B4B549 /* DailyViewModel.swift */; };
-		665D9715267FA24D00B4B549 /* DailyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D9713267FA24D00B4B549 /* DailyViewModel.swift */; };
+		665D9717267FA98300B4B549 /* DailyScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D9716267FA98300B4B549 /* DailyScreen.swift */; };
 		66ABEA6126589C6F006C9FD5 /* engramApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66ABEA6026589C6F006C9FD5 /* engramApp.swift */; };
 		66ABEA6326589C6F006C9FD5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66ABEA6226589C6F006C9FD5 /* ContentView.swift */; };
 		66ABEA6826589C72006C9FD5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66ABEA6726589C72006C9FD5 /* Preview Assets.xcassets */; };
@@ -82,6 +82,7 @@
 /* Begin PBXFileReference section */
 		665D970E267F9CFA00B4B549 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		665D9713267FA24D00B4B549 /* DailyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyViewModel.swift; sourceTree = "<group>"; };
+		665D9716267FA98300B4B549 /* DailyScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyScreen.swift; sourceTree = "<group>"; };
 		66ABEA5D26589C6F006C9FD5 /* engram.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = engram.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		66ABEA6026589C6F006C9FD5 /* engramApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = engramApp.swift; sourceTree = "<group>"; };
 		66ABEA6226589C6F006C9FD5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -170,6 +171,7 @@
 				66E591592659A23C00E38067 /* CheckboxToggleStyle.swift */,
 				66E5915F2659B6E000E38067 /* CustomTextField.swift */,
 				665D9713267FA24D00B4B549 /* DailyViewModel.swift */,
+				665D9716267FA98300B4B549 /* DailyScreen.swift */,
 			);
 			path = engram;
 			sourceTree = "<group>";
@@ -367,6 +369,7 @@
 				66E5915A2659A23D00E38067 /* CheckboxToggleStyle.swift in Sources */,
 				665D9714267FA24D00B4B549 /* DailyViewModel.swift in Sources */,
 				66E591602659B6E000E38067 /* CustomTextField.swift in Sources */,
+				665D9717267FA98300B4B549 /* DailyScreen.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -382,7 +385,6 @@
 				66ABEA7E26589C73006C9FD5 /* engramApp.swift in Sources */,
 				66E5915B2659A23D00E38067 /* CheckboxToggleStyle.swift in Sources */,
 				66ABEA8426589C73006C9FD5 /* NotificationView.swift in Sources */,
-				665D9715267FA24D00B4B549 /* DailyViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

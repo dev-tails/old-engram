@@ -8,18 +8,19 @@
 import SwiftUI
 
 struct NoteListView: View {
-    @ObservedObject var vm = DailyViewModel()
+    @ObservedObject var vm: DailyViewModel
     @State private var inputActive = true
     @State private var noteBody = ""
     var type: String
     
     let placeHolderByType = [
+        "all": "What's on your mind?",
         "note": "What's on your mind?",
         "task": "What needs to get done today?",
         "event": "What's happening today?"
     ]
     
-    init(type: String) {
+    init(vm: DailyViewModel, type: String) {
         self.type = type
         
         var types = [type]
@@ -27,7 +28,7 @@ struct NoteListView: View {
             types.append("task_completed")
         }
         
-        
+        self.vm = vm
     }
     
     var body: some View {
@@ -91,6 +92,6 @@ struct NoteListView: View {
 
 struct NoteListView_Previews: PreviewProvider {
     static var previews: some View {
-        NoteListView(type: "note")
+        NoteListView(vm: DailyViewModel(), type: "note")
     }
 }

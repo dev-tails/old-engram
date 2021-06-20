@@ -14,28 +14,35 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             TabView(selection: $tab) {
-                NoteListView(type: "note")
+                DailyScreen(type: "all")
                     .tabItem {
                         Button(action: {tab = 0}) {
-                            Image(systemName: "line.horizontal.3")
-                            Text("Notes")
-                        }.keyboardShortcut("n", modifiers: .control)
+                            Image(systemName: "list.dash")
+                            Text("All")
+                        }
                     }.tag(0)
-                NoteListView(type: "task")
+                DailyScreen(type: "note")
                     .tabItem {
                         Button(action: {tab = 1}) {
+                            Image(systemName: "minus")
+                            Text("Notes")
+                        }.keyboardShortcut("n", modifiers: .control)
+                    }.tag(1)
+                DailyScreen(type: "task")
+                    .tabItem {
+                        Button(action: {tab = 2}) {
                             Image(systemName: "square")
                             Text("Tasks")
                         }.keyboardShortcut("t", modifiers: .control)
                         
-                    }.tag(1)
-                NoteListView(type: "event")
+                    }.tag(2)
+                DailyScreen(type: "event")
                     .tabItem {
-                        Button(action: {tab = 2}) {
+                        Button(action: {tab = 3}) {
                             Image(systemName: "circle")
                             Text("Events")
                         }.keyboardShortcut("e", modifiers: .control)
-                    }.tag(2)
+                    }.tag(3)
             }
             .navigationTitle("engram")
             .navigationBarTitleDisplayMode(.inline)
