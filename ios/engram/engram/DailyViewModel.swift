@@ -100,7 +100,7 @@ class DailyViewModel: ObservableObject {
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")
         
         let bodyData = try? JSONSerialization.data(
-            withJSONObject: ["body": note.body, "date": note.date, "type": note.type],
+            withJSONObject: ["type": note.type],
             options: []
         )
 
