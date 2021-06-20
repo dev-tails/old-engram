@@ -7,7 +7,10 @@ export type SetNoteAction = {
   payload: NoteApi.Note;
 };
 
-export async function setNote(dispatch: Dispatch, note: Partial<NoteApi.Note>) {
+export async function setNote(
+  dispatch: Dispatch,
+  note: Partial<NoteApi.Note> | null
+) {
   dispatch({ type: "SET_NOTE", payload: note });
 }
 

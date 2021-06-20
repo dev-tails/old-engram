@@ -6,9 +6,11 @@ import moment from 'moment';
 import React from 'react';
 import { useRef } from 'react';
 import { useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { addNote } from '../../redux/actions/NotesActions';
+import { setNote } from '../../redux/actions/NoteActions';
+import { addNote, updateNote } from '../../redux/actions/NotesActions';
 import { isMobileUserAgent } from '../../utils/UserAgentUtils';
 import { NoteIcon } from '../notes/NoteIcon/NoteIcon';
 import { NoteType } from '../notes/NotesApi';
@@ -18,13 +20,22 @@ type NoteTextInputProps = {};
 export const NoteTextInput: React.FC<NoteTextInputProps> = (props) => {
   const textfieldRef = useRef<any>(null);
 
-  const date = useSelector((state: any) => state.date);
+  const { date, note } = useSelector((state: any) => {
+    return { date: state.date, note: state.note };
+  });
   const dateString = moment(date).format("YYYY-MM-DD");
 
   const [type, setType] = useState<NoteType>("note");
   const [body, setBody] = useState("");
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (note) {
+      setType(note.type);
+      setBody(note.body);
+    }
+  }, [note]);
 
   const types: NoteType[] = ["note", "task", "task_completed", "event"];
   function handleToggleType() {
@@ -43,11 +54,21 @@ export const NoteTextInput: React.FC<NoteTextInputProps> = (props) => {
   };
 
   function handleSubmit() {
-    addNote(dispatch, {
+    const noteUpdate = {
       type,
       body,
       date: dateString,
-    });
+    };
+
+    if (note) {
+      updateNote(dispatch, {
+        ...note,
+        ...noteUpdate,
+      });
+      setNote(dispatch, null);
+    } else {
+      addNote(dispatch, noteUpdate);
+    }
     setBody("");
     textfieldRef.current?.focus();
   }

@@ -1,31 +1,12 @@
 import { Note } from '../../components/notes/NotesApi';
-import { SetNoteAction, SetNoteBodyAction, SetNoteTypeAction } from '../actions/NoteActions';
-import { AddNoteAction } from '../actions/NotesActions';
+import { SetNoteAction } from '../actions/NoteActions';
 
-const INITIAL_STATE: Partial<Note> = { body: "" };
+const INITIAL_STATE: Partial<Note> | null = null;
 
-const NoteReducer = (
-  state = INITIAL_STATE,
-  action: AddNoteAction | SetNoteAction | SetNoteBodyAction | SetNoteTypeAction
-) => {
+const NoteReducer = (state = INITIAL_STATE, action: SetNoteAction) => {
   switch (action.type) {
-    case "ADD_NOTE":
-      return {
-        ...state,
-        body: "",
-      };
     case "SET_NOTE":
       return action.payload;
-    case "SET_NOTE_BODY":
-      return {
-        ...state,
-        body: action.payload,
-      };
-    case "SET_NOTE_TYPE":
-      return {
-        ...state,
-        type: action.payload,
-      };
     default:
       return state;
   }
