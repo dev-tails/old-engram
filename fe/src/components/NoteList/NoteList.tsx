@@ -61,11 +61,12 @@ export const NoteList: React.FC<NoteListProps> = (props) => {
 
   function handleMoreClicked(note: Note, event: any) {
     clearSelectedNote();
+    setSelectedNoteId(note.localId || "");
     setMenuAnchorEl(event.target as any);
   }
 
   function clearSelectedNote() {
-    setSelectedNoteId(note.localId || "");
+    setSelectedNoteId("");
     setNote(dispatch, null);
   }
 
@@ -126,7 +127,9 @@ export const NoteList: React.FC<NoteListProps> = (props) => {
             <div key={listItemNote.localId}>
               <Divider />
               <ListItem
-                className={`note-list-item ${isSelectedNote ? "selected" : ""}`}
+                button
+                className={`note-list-item`}
+                selected={isSelectedNote}
                 onClick={() => {
                   handleQuickEdit(listItemNote);
                 }}
@@ -135,6 +138,7 @@ export const NoteList: React.FC<NoteListProps> = (props) => {
                   <IconButton
                     edge="start"
                     onClick={(e) => {
+                      e.stopPropagation();
                       handleToggleType(listItemNote);
                     }}
                   >

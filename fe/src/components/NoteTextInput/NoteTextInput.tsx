@@ -11,15 +11,12 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { setNote } from '../../redux/actions/NoteActions';
 import { addNote, updateNote } from '../../redux/actions/NotesActions';
-import { isMobileUserAgent } from '../../utils/UserAgentUtils';
 import { NoteIcon } from '../notes/NoteIcon/NoteIcon';
 import { NoteType } from '../notes/NotesApi';
 
 type NoteTextInputProps = {};
 
 export const NoteTextInput: React.FC<NoteTextInputProps> = (props) => {
-  const textfieldRef = useRef<any>(null);
-
   const { typeFilter, date, note } = useSelector((state: any) => {
     return { date: state.date, note: state.note, typeFilter: state.type };
   });
@@ -54,7 +51,7 @@ export const NoteTextInput: React.FC<NoteTextInputProps> = (props) => {
   const handleKeyDown: React.DOMAttributes<HTMLDivElement>["onKeyDown"] = (
     event
   ) => {
-    if (event.key === "Enter" && !event.shiftKey && !isMobileUserAgent()) {
+    if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
       handleSubmit();
     }
@@ -77,7 +74,6 @@ export const NoteTextInput: React.FC<NoteTextInputProps> = (props) => {
       addNote(dispatch, noteUpdate);
     }
     setBody("");
-    textfieldRef.current?.focus();
   }
 
   return (
@@ -87,8 +83,10 @@ export const NoteTextInput: React.FC<NoteTextInputProps> = (props) => {
       </IconButton>
 
       <TextField
-        ref={textfieldRef}
         autoFocus
+        inputProps={{
+          enterkeyhint: "send",
+        }}
         onKeyDown={handleKeyDown}
         className="body"
         multiline
