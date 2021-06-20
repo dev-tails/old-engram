@@ -3,6 +3,7 @@ import './NoteList.scss';
 import { Divider, IconButton, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { MoreVert } from '@material-ui/icons';
 import React from 'react';
+import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { updateNote } from '../../redux/actions/NotesActions';
@@ -14,7 +15,25 @@ type NoteListProps = {};
 
 export const NoteList: React.FC<NoteListProps> = (props) => {
   const dispatch = useDispatch();
-  const notes = useSelector((state: any) => state.notes);
+  const { notes, type } = useSelector((state: any) => {
+    return {
+      type: state.type,
+      notes: state.notes,
+    };
+  });
+  const notesForType = useMemo(() => {
+    if (type === "all") {
+      return notes;
+    }
+    const allowedTypes = [type];
+    if (type === "task") {
+      allowedTypes.push("task_completed");
+    }
+    return notes.filter((note: Note) => {
+      return allowedTypes.includes(note.type || "note");
+    });
+  }, [notes, type]);
+  console.log(notesForType);
 
   const types: NoteType[] = ["note", "task", "task_completed", "event"];
   function handleToggleType(note: Note) {
@@ -26,7 +45,7 @@ export const NoteList: React.FC<NoteListProps> = (props) => {
   return (
     <div className="note-list">
       <List disablePadding={true} dense={true}>
-        {notes.map((note: Note) => {
+        {notesForType.map((note: Note) => {
           return (
             <div key={note.localId}>
               <Divider />

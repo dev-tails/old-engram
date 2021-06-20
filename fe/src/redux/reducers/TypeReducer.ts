@@ -1,7 +1,6 @@
-import { NoteType } from '../../components/notes/NotesApi';
 import { SetNoteTypeFilterAction } from '../actions/TypeActions';
 
-const INITIAL_STATE: NoteType | null = "note";
+const INITIAL_STATE: string = "all";
 
 const TypeReducer = (
   state = INITIAL_STATE,
