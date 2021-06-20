@@ -3,12 +3,8 @@
   align-items: center;
   background-color: #424242;
 
-  .today {
-    margin: 0 12px; 
-  }
-
-  .refresh {
-    margin: 0 20px;
+  .today, .refresh {
+    margin: 0 4px; 
   }
 
   .spacer {
@@ -17,6 +13,7 @@
 
   .date-picker {
     input {
+      width: 110px;
       text-align: center;
     }
   }
