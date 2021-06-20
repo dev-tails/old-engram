@@ -86,7 +86,8 @@ struct NoteListView: View {
     private func deleteItems(offsets: IndexSet) {
         var removedCount = 0;
         for i in offsets {
-            vm.notes.remove(at: i - removedCount)
+            let indexToRemove = i - removedCount
+            vm.deleteNote(index: indexToRemove, id: vm.notes[i - removedCount]._id!)
             removedCount += 1
         }
     }

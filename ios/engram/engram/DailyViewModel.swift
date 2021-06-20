@@ -92,4 +92,27 @@ class DailyViewModel: ObservableObject {
         }
         task.resume()
     }
+    
+    func deleteNote(index: Int, id: String) {
+        notes.remove(at: index)
+        let url = URL(string: String(format: "https://engram.xyzdigital.com/api/notes/%@", id))!
+        var request = URLRequest(url: url)
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")
+        
+        request.httpMethod = "DELETE"
+        
+        let session = URLSession.shared
+        let task = session.dataTask(with: request) { (data, response, error) in
+
+            if let error = error {
+                print(error)
+            } else if let data = data {
+                
+            } else {
+                // Handle unexpected error
+            }
+        }
+        task.resume()
+    }
 }
