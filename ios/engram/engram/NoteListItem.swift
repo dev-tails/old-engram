@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct NoteListItem: View {
+    @ObservedObject var vm = sharedDailyViewModel
     private var _note: Note
     
     init(note: Note) {
@@ -15,10 +16,10 @@ struct NoteListItem: View {
     
     func toggleType() {
         let type = _note.type == "task" ? "task_completed" : "task"
+
+        let noteToSave = Note(_id: _note._id, type: type)
         
-        withAnimation {
-//            _note.type = type
-        }
+        vm.updateNote(note: noteToSave)
     }
     
     var body: some View {

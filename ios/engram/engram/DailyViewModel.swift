@@ -93,6 +93,34 @@ class DailyViewModel: ObservableObject {
         task.resume()
     }
     
+    func updateNote(note: Note) {
+        let url = URL(string: String(format: "https://engram.xyzdigital.com/api/notes/%@", note._id!))!
+        var request = URLRequest(url: url)
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")
+        
+        let bodyData = try? JSONSerialization.data(
+            withJSONObject: ["body": note.body, "date": note.date, "type": note.type],
+            options: []
+        )
+
+        request.httpMethod = "PUT"
+        request.httpBody = bodyData
+        
+        let session = URLSession.shared
+        let task = session.dataTask(with: request) { (data, response, error) in
+
+            if let error = error {
+                print(error)
+            } else if let data = data {
+                
+            } else {
+                // Handle unexpected error
+            }
+        }
+        task.resume()
+    }
+    
     func deleteNote(index: Int, id: String) {
         notes.remove(at: index)
         let url = URL(string: String(format: "https://engram.xyzdigital.com/api/notes/%@", id))!
