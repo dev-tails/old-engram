@@ -35,14 +35,16 @@ struct NoteListView: View {
         VStack {
             List {
                 ForEach(Array(vm.notes.enumerated()), id: \.offset) { index, note in
-                    NoteListItem(note: note)
-                        .contextMenu {
-                            Button(action: {
-                                deleteItems(offsets: IndexSet([index]))
-                            }){
-                                Text("Delete")
+                    if type == "all" || note.type == type{
+                        NoteListItem(note: note)
+                            .contextMenu {
+                                Button(action: {
+                                    deleteItems(offsets: IndexSet([index]))
+                                }){
+                                    Text("Delete")
+                                }
                             }
-                        }
+                    }
                 }.onDelete(perform: deleteItems)
             }
             HStack {
