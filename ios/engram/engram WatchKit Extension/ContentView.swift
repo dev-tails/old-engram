@@ -11,6 +11,7 @@ struct ContentView: View {
     @State private var notes : [Note] = []
     
     init() {
+        
     }
     
     func handleDictateButtonPressed(type: String) -> Void {

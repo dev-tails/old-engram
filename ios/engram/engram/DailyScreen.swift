@@ -9,21 +9,24 @@ import SwiftUI
 
 struct DailyScreen: View {
     @ObservedObject var vm = DailyViewModel()
-
-    var type: String
+    
+    init(type: String) {
+        self.vm.typeFilter = type
+        self.vm.fetchNotesForDate(date: vm.date)
+    }
     
     func navigateDateLeft() {
         let timeInterval = TimeInterval(-24 * 60 * 60)
-        vm.date = Date(timeInterval: timeInterval, since: vm.date)
+        vm.setDate(date: Date(timeInterval: timeInterval, since: vm.date))
     }
     
     func navigateDateRight() {
         let timeInterval = TimeInterval(24 * 60 * 60)
-        vm.date = Date(timeInterval: timeInterval, since: vm.date)
+        vm.setDate(date: Date(timeInterval: timeInterval, since: vm.date))
     }
     
     func handleTodayPressed() {
-        vm.date = Date()
+        vm.setDate(date: Date())
     }
     
     func handleSync() {
@@ -65,7 +68,7 @@ struct DailyScreen: View {
                         .imageScale(.large)
                 }
             }.padding()
-            NoteListView(vm: vm, type: type)
+            NoteListView(vm: vm, type: vm.typeFilter)
         }
     }
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Note: Identifiable {
+struct Note: Identifiable, Decodable {
     var id: UUID
     var _id: String?
     var body: String?
