@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftKeychainWrapper
 
 let sharedLoginViewModel = LoginViewModel()
 
@@ -19,9 +20,14 @@ class LoginViewModel: ObservableObject {
     @Published var hasSignupError = false
     @Published var loginError: String = ""
     @Published var signupError: String = ""
+    @Published var email: String = ""
+    @Published var password: String = ""
     
     init() {
-//        fetchMe()
+        email = KeychainWrapper.standard.string(forKey: "email") ?? ""
+        password = KeychainWrapper.standard.string(forKey: "password") ?? ""
+
+        fetchMe()
     }
     
     func fetchMe() {
@@ -52,7 +58,7 @@ class LoginViewModel: ObservableObject {
         task.resume()
     }
     
-    func login(email: String, password: String) {
+    func login() {
         let url = URL(string: "https://engram.xyzdigital.com/api/users/login")!
         var request = URLRequest(url: url)
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
@@ -76,6 +82,9 @@ class LoginViewModel: ObservableObject {
                     if let httpResponse = response as? HTTPURLResponse {
                         if httpResponse.statusCode == 200 {
                             self.loggedIn = true
+                            
+                            KeychainWrapper.standard.set(self.email, forKey: "email")
+                            KeychainWrapper.standard.set(self.password, forKey: "password")
                         } else {
                             let decoder = JSONDecoder()
                             let decoded = try! decoder.decode(LoginDataDecodable.self, from: data)
@@ -92,7 +101,7 @@ class LoginViewModel: ObservableObject {
         task.resume()
     }
     
-    func signup(email: String, password: String) {
+    func signup() {
         let url = URL(string: "https://engram.xyzdigital.com/api/users/signup")!
         var request = URLRequest(url: url)
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
@@ -116,6 +125,10 @@ class LoginViewModel: ObservableObject {
                     if let httpResponse = response as? HTTPURLResponse {
                         if httpResponse.statusCode == 200 {
                             self.loggedIn = true
+                            
+                            KeychainWrapper.standard.set(self.email, forKey: "email")
+                            KeychainWrapper.standard.set(self.password, forKey: "password")
+                            
                         } else {
                             let decoder = JSONDecoder()
                             let decoded = try! decoder.decode(LoginDataDecodable.self, from: data)

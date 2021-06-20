@@ -10,24 +10,19 @@ import SwiftUI
 struct LoginScreen: View {
     @ObservedObject var vm = sharedLoginViewModel
     
-    @State var showingAlert = false
-    
-    @State var email: String = ""
-    @State var password: String = ""
-    
     func handleLogin() {
-        vm.login(email: email, password: password)
+        vm.login()
     }
     
     func handleSignup() {
-        vm.signup(email: email, password: password)
+        vm.signup()
     }
     
     var body: some View {
         VStack {
-            TextField("Email", text: $email)
+            TextField("Email", text: $vm.email)
                 .textContentType(.emailAddress)
-            SecureField("Password", text: $password)
+            SecureField("Password", text: $vm.password)
                 .textContentType(.password)
             HStack {
                 Button("Sign Up", action: handleSignup)
