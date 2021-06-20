@@ -1,7 +1,6 @@
 import './App.css';
 
 import DateFnsUtils from '@date-io/date-fns';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import React from 'react';
@@ -50,7 +49,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <CssBaseline />
+        {/* <CssBaseline /> */}
         <div className="App">
           <Provider store={store}>
             <DndProvider backend={HTML5Backend}>
