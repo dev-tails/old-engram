@@ -18,13 +18,21 @@ class ShareViewController: SLComposeServiceViewController {
 
     override func didSelectPost() {
         
+        if let item = extensionContext?.inputItems.first as? NSExtensionItem,
+            let itemProvider = item.attachments?.first as? NSItemProvider,
+            itemProvider.hasItemConformingToTypeIdentifier("public.url") {
+            itemProvider.loadItem(forTypeIdentifier: "public.url", options: nil) { (url, error) in
+                if let shareURL = url as? URL {
+                    loginAndAddNote(body: String(format: "[%@](%@)", self.contentText!, shareURL.absoluteString))
+                }
+                self.extensionContext?.completeRequest(returningItems: [], completionHandler:nil)
+            }
+        } else {
+            loginAndAddNote(body: contentText!)
         
-        // This is called after the user selects Post. Do the upload of contentText and/or NSExtensionContext attachments.
-        print(contentText!)
-        loginAndAddNote(body: contentText!)
-    
-        // Inform the host that we're done, so it un-blocks its UI. Note: Alternatively you could call super's -didSelectPost, which will similarly complete the extension context.
-        self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
+            // Inform the host that we're done, so it un-blocks its UI. Note: Alternatively you could call super's -didSelectPost, which will similarly complete the extension context.
+            self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
+        }
     }
 
     override func configurationItems() -> [Any]! {
@@ -47,8 +55,6 @@ func loginAndAddNote(body: String) {
     
     let email = customKeychainWrapperInstance.string(forKey: "email") ?? ""
     let password = customKeychainWrapperInstance.string(forKey: "password") ?? ""
-    
-    print(email)
     
     let bodyData = try? JSONSerialization.data(
         withJSONObject: ["username": email, "password": password],
