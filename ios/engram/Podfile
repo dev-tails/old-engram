@@ -4,3 +4,7 @@ platform :ios, '14.5'
 target 'engram' do
    pod 'SwiftKeychainWrapper'
 end
+
+target 'Send to engram' do
+  pod 'SwiftKeychainWrapper'
+end

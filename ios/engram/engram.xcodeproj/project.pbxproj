@@ -13,6 +13,9 @@
 		665D9717267FA98300B4B549 /* DailyScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D9716267FA98300B4B549 /* DailyScreen.swift */; };
 		665D971B267FC65300B4B549 /* LoginScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D971A267FC65300B4B549 /* LoginScreen.swift */; };
 		665D971E267FC96E00B4B549 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D971D267FC96E00B4B549 /* LoginViewModel.swift */; };
+		66855151268116D000086094 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66855150268116D000086094 /* ShareViewController.swift */; };
+		66855154268116D000086094 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66855152268116D000086094 /* MainInterface.storyboard */; };
+		66855158268116D000086094 /* Send to engram.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 6685514E268116D000086094 /* Send to engram.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		66ABEA6126589C6F006C9FD5 /* engramApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66ABEA6026589C6F006C9FD5 /* engramApp.swift */; };
 		66ABEA6326589C6F006C9FD5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66ABEA6226589C6F006C9FD5 /* ContentView.swift */; };
 		66ABEA6826589C72006C9FD5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66ABEA6726589C72006C9FD5 /* Preview Assets.xcassets */; };
@@ -37,10 +40,18 @@
 		66E5915B2659A23D00E38067 /* CheckboxToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E591592659A23C00E38067 /* CheckboxToggleStyle.swift */; };
 		66E591602659B6E000E38067 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E5915F2659B6E000E38067 /* CustomTextField.swift */; };
 		66E59163265B2B7700E38067 /* ComplicationViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E59162265B2B7700E38067 /* ComplicationViews.swift */; };
+		6DFEDE24FC040CC249CDE01A /* Pods_Send_to_engram.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 020F6D248FB91B73308CD63F /* Pods_Send_to_engram.framework */; };
 		E753DF5463FBCBFCAD4387C4 /* Pods_engram.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90B7F836578CD2E385E4E26C /* Pods_engram.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		66855156268116D000086094 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 66ABEA5526589C6E006C9FD5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6685514D268116D000086094;
+			remoteInfo = "Send to engram";
+		};
 		66ABEA6E26589C72006C9FD5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 66ABEA5526589C6E006C9FD5 /* Project object */;
@@ -58,6 +69,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		6685515D268116D000086094 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				66855158268116D000086094 /* Send to engram.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		66ABEA9326589C74006C9FD5 /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -83,12 +105,20 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		020F6D248FB91B73308CD63F /* Pods_Send_to_engram.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Send_to_engram.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E8CFF9F882DA1E721F420C1 /* Pods-engram.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-engram.release.xcconfig"; path = "Target Support Files/Pods-engram/Pods-engram.release.xcconfig"; sourceTree = "<group>"; };
+		2B6E9C3843B1BB614C3A21F4 /* Pods-Send to engram.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Send to engram.debug.xcconfig"; path = "Target Support Files/Pods-Send to engram/Pods-Send to engram.debug.xcconfig"; sourceTree = "<group>"; };
+		660120EB26811B2200D7D4ED /* engram WatchKit Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "engram WatchKit Extension.entitlements"; sourceTree = "<group>"; };
 		665D970E267F9CFA00B4B549 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		665D9713267FA24D00B4B549 /* DailyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyViewModel.swift; sourceTree = "<group>"; };
 		665D9716267FA98300B4B549 /* DailyScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyScreen.swift; sourceTree = "<group>"; };
 		665D971A267FC65300B4B549 /* LoginScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreen.swift; sourceTree = "<group>"; };
 		665D971D267FC96E00B4B549 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		6685514E268116D000086094 /* Send to engram.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Send to engram.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		66855150268116D000086094 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		66855153268116D000086094 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		66855155268116D000086094 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		66855159268116D000086094 /* Send to engram.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Send to engram.entitlements"; sourceTree = "<group>"; };
 		66ABEA5D26589C6F006C9FD5 /* engram.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = engram.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		66ABEA6026589C6F006C9FD5 /* engramApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = engramApp.swift; sourceTree = "<group>"; };
 		66ABEA6226589C6F006C9FD5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -120,6 +150,7 @@
 		66F0709E266019CB006E767B /* engramDebug.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = engramDebug.entitlements; sourceTree = "<group>"; };
 		90B7F836578CD2E385E4E26C /* Pods_engram.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_engram.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C8220EC11461B4023E365790 /* Pods-engram.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-engram.debug.xcconfig"; path = "Target Support Files/Pods-engram/Pods-engram.debug.xcconfig"; sourceTree = "<group>"; };
+		F11C31CF0D7984E997A171BA /* Pods-Send to engram.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Send to engram.release.xcconfig"; path = "Target Support Files/Pods-Send to engram/Pods-Send to engram.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +158,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6685514B268116D000086094 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6DFEDE24FC040CC249CDE01A /* Pods_Send_to_engram.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -150,12 +189,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6685514F268116D000086094 /* Send to engram */ = {
+			isa = PBXGroup;
+			children = (
+				66855159268116D000086094 /* Send to engram.entitlements */,
+				66855150268116D000086094 /* ShareViewController.swift */,
+				66855152268116D000086094 /* MainInterface.storyboard */,
+				66855155268116D000086094 /* Info.plist */,
+			);
+			path = "Send to engram";
+			sourceTree = "<group>";
+		};
 		66ABEA5426589C6E006C9FD5 = {
 			isa = PBXGroup;
 			children = (
 				66ABEA5F26589C6F006C9FD5 /* engram */,
 				66ABEA7026589C72006C9FD5 /* engram WatchKit App */,
 				66ABEA7C26589C73006C9FD5 /* engram WatchKit Extension */,
+				6685514F268116D000086094 /* Send to engram */,
 				66ABEA5E26589C6F006C9FD5 /* Products */,
 				66E591232659787C00E38067 /* Frameworks */,
 				D2734189A952296D8B08FD80 /* Pods */,
@@ -168,6 +219,7 @@
 				66ABEA5D26589C6F006C9FD5 /* engram.app */,
 				66ABEA6C26589C72006C9FD5 /* engram WatchKit App.app */,
 				66ABEA7826589C73006C9FD5 /* engram WatchKit Extension.appex */,
+				6685514E268116D000086094 /* Send to engram.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -215,6 +267,7 @@
 		66ABEA7C26589C73006C9FD5 /* engram WatchKit Extension */ = {
 			isa = PBXGroup;
 			children = (
+				660120EB26811B2200D7D4ED /* engram WatchKit Extension.entitlements */,
 				66E591222659787900E38067 /* engram WatchKit ExtensionDebug.entitlements */,
 				66ABEA7D26589C73006C9FD5 /* engramApp.swift */,
 				66ABEA7F26589C73006C9FD5 /* ContentView.swift */,
@@ -244,6 +297,7 @@
 				66E591272659788A00E38067 /* CloudKit.framework */,
 				66E591242659787C00E38067 /* CloudKit.framework */,
 				90B7F836578CD2E385E4E26C /* Pods_engram.framework */,
+				020F6D248FB91B73308CD63F /* Pods_Send_to_engram.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -253,6 +307,8 @@
 			children = (
 				C8220EC11461B4023E365790 /* Pods-engram.debug.xcconfig */,
 				0E8CFF9F882DA1E721F420C1 /* Pods-engram.release.xcconfig */,
+				2B6E9C3843B1BB614C3A21F4 /* Pods-Send to engram.debug.xcconfig */,
+				F11C31CF0D7984E997A171BA /* Pods-Send to engram.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -260,6 +316,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		6685514D268116D000086094 /* Send to engram */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6685515A268116D000086094 /* Build configuration list for PBXNativeTarget "Send to engram" */;
+			buildPhases = (
+				6C0B2E355EDB340C161C2D6D /* [CP] Check Pods Manifest.lock */,
+				6685514A268116D000086094 /* Sources */,
+				6685514B268116D000086094 /* Frameworks */,
+				6685514C268116D000086094 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Send to engram";
+			productName = "Send to engram";
+			productReference = 6685514E268116D000086094 /* Send to engram.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		66ABEA5C26589C6F006C9FD5 /* engram */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 66ABEA9826589C74006C9FD5 /* Build configuration list for PBXNativeTarget "engram" */;
@@ -270,11 +344,13 @@
 				66ABEA5B26589C6F006C9FD5 /* Resources */,
 				66ABEA9726589C74006C9FD5 /* Embed Watch Content */,
 				EE98EDFBDC47C637B88687DD /* [CP] Embed Pods Frameworks */,
+				6685515D268116D000086094 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				66ABEA6F26589C72006C9FD5 /* PBXTargetDependency */,
+				66855157268116D000086094 /* PBXTargetDependency */,
 			);
 			name = engram;
 			productName = engram;
@@ -325,6 +401,9 @@
 				LastSwiftUpdateCheck = 1250;
 				LastUpgradeCheck = 1250;
 				TargetAttributes = {
+					6685514D268116D000086094 = {
+						CreatedOnToolsVersion = 12.5;
+					};
 					66ABEA5C26589C6F006C9FD5 = {
 						CreatedOnToolsVersion = 12.5;
 					};
@@ -353,11 +432,20 @@
 				66ABEA5C26589C6F006C9FD5 /* engram */,
 				66ABEA6B26589C72006C9FD5 /* engram WatchKit App */,
 				66ABEA7726589C73006C9FD5 /* engram WatchKit Extension */,
+				6685514D268116D000086094 /* Send to engram */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		6685514C268116D000086094 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				66855154268116D000086094 /* MainInterface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		66ABEA5B26589C6F006C9FD5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -411,6 +499,28 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		6C0B2E355EDB340C161C2D6D /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Send to engram-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		EE98EDFBDC47C637B88687DD /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -431,6 +541,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		6685514A268116D000086094 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				66855151268116D000086094 /* ShareViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		66ABEA5926589C6F006C9FD5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -467,6 +585,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		66855157268116D000086094 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6685514D268116D000086094 /* Send to engram */;
+			targetProxy = 66855156268116D000086094 /* PBXContainerItemProxy */;
+		};
 		66ABEA6F26589C72006C9FD5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			platformFilter = ios;
@@ -480,7 +603,67 @@
 		};
 /* End PBXTargetDependency section */
 
+/* Begin PBXVariantGroup section */
+		66855152268116D000086094 /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				66855153268116D000086094 /* Base */,
+			);
+			name = MainInterface.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
+		6685515B268116D000086094 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2B6E9C3843B1BB614C3A21F4 /* Pods-Send to engram.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "Send to engram/Send to engram.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = V3T29AUKGC;
+				INFOPLIST_FILE = "Send to engram/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.xyzdigital.engram.Send-to-engram";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		6685515C268116D000086094 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F11C31CF0D7984E997A171BA /* Pods-Send to engram.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "Send to engram/Send to engram.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = V3T29AUKGC;
+				INFOPLIST_FILE = "Send to engram/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.xyzdigital.engram.Send-to-engram";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		66ABEA8E26589C74006C9FD5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -621,6 +804,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CODE_SIGN_ENTITLEMENTS = "engram WatchKit Extension/engram WatchKit Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"engram WatchKit Extension/Preview Content\"";
 				DEVELOPMENT_TEAM = V3T29AUKGC;
@@ -704,6 +888,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C8220EC11461B4023E365790 /* Pods-engram.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = engram/engramDebug.entitlements;
@@ -734,6 +919,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0E8CFF9F882DA1E721F420C1 /* Pods-engram.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = engram/engram.entitlements;
@@ -764,6 +950,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		6685515A268116D000086094 /* Build configuration list for PBXNativeTarget "Send to engram" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6685515B268116D000086094 /* Debug */,
+				6685515C268116D000086094 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		66ABEA5826589C6E006C9FD5 /* Build configuration list for PBXProject "engram" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
