@@ -7,7 +7,7 @@
 
 import UIKit
 import Social
-import SwiftKeychainWrapper
+import KeychainAccess
 
 class ShareViewController: SLComposeServiceViewController {
 
@@ -51,10 +51,10 @@ func loginAndAddNote(body: String) {
     let uniqueServiceName = "com.xyzdigital.engram"
     let uniqueAccessGroup = "group.engram"
     
-    let customKeychainWrapperInstance = KeychainWrapper(serviceName: uniqueServiceName, accessGroup: uniqueAccessGroup)
+    let keychain = Keychain(service: uniqueServiceName, accessGroup: uniqueAccessGroup)
     
-    let email = customKeychainWrapperInstance.string(forKey: "email") ?? ""
-    let password = customKeychainWrapperInstance.string(forKey: "password") ?? ""
+    let email = try? keychain.get("email") ?? ""
+    let password = try? keychain.get("password") ?? ""
     
     let bodyData = try? JSONSerialization.data(
         withJSONObject: ["username": email, "password": password],
@@ -69,7 +69,7 @@ func loginAndAddNote(body: String) {
 
         if let error = error {
             print(error)
-        } else if let data = data {
+        } else if data != nil {
             
             if let httpResponse = response as? HTTPURLResponse {
                 if httpResponse.statusCode == 200 {

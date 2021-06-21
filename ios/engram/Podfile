@@ -1,10 +1,11 @@
 use_frameworks!
 platform :ios, '14.5'
+pod 'KeychainAccess'
 
 target 'engram' do
-  pod 'SwiftKeychainWrapper'
+
 end
 
 target 'Send to engram' do
-  pod 'SwiftKeychainWrapper'
+
 end

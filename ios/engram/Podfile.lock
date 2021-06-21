@@ -1,16 +1,16 @@
 PODS:
-  - SwiftKeychainWrapper (3.4.0)
+  - KeychainAccess (4.2.2)
 
 DEPENDENCIES:
-  - SwiftKeychainWrapper
+  - KeychainAccess
 
 SPEC REPOS:
   trunk:
-    - SwiftKeychainWrapper
+    - KeychainAccess
 
 SPEC CHECKSUMS:
-  SwiftKeychainWrapper: 6fc49fbf7d4a6b0772917acb0e53a1639f6078d6
+  KeychainAccess: c0c4f7f38f6fc7bbe58f5702e25f7bd2f65abf51
 
-PODFILE CHECKSUM: c466dfbb350db45ec8f7cbe09420b396532cf1e7
+PODFILE CHECKSUM: ed103c39f069172f30ecd41b2aa392267d703e97
 
 COCOAPODS: 1.10.1

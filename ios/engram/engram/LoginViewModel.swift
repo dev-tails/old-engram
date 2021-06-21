@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import SwiftKeychainWrapper
+import KeychainAccess
 
 let sharedLoginViewModel = LoginViewModel()
 
@@ -24,16 +24,16 @@ class LoginViewModel: ObservableObject {
     @Published var password: String = ""
     
     
-    let customKeychainWrapperInstance: KeychainWrapper
+    let keychain: Keychain
     
     init() {
         let uniqueServiceName = "com.xyzdigital.engram"
         let uniqueAccessGroup = "group.engram"
         
-        customKeychainWrapperInstance = KeychainWrapper(serviceName: uniqueServiceName, accessGroup: uniqueAccessGroup)
+        keychain = Keychain(service: uniqueServiceName, accessGroup: uniqueAccessGroup)
         
-        email = customKeychainWrapperInstance.string(forKey: "email") ?? ""
-        password = customKeychainWrapperInstance.string(forKey: "password") ?? ""
+        email = (try? keychain.get("email")) ?? ""
+        password = (try? keychain.get("password")) ?? ""
 
         fetchMe()
     }
@@ -91,8 +91,8 @@ class LoginViewModel: ObservableObject {
                         if httpResponse.statusCode == 200 {
                             self.loggedIn = true
                             
-                            self.customKeychainWrapperInstance.set(self.email, forKey: "email")
-                            self.customKeychainWrapperInstance.set(self.password, forKey: "password")
+                            try? self.keychain.set(self.email, key: "email")
+                            try? self.keychain.set(self.password, key: "password")
                         } else {
                             let decoder = JSONDecoder()
                             let decoded = try! decoder.decode(LoginDataDecodable.self, from: data)
@@ -134,8 +134,8 @@ class LoginViewModel: ObservableObject {
                         if httpResponse.statusCode == 200 {
                             self.loggedIn = true
                             
-                            self.customKeychainWrapperInstance.set(self.email, forKey: "email")
-                            self.customKeychainWrapperInstance.set(self.password, forKey: "password")
+                            try? self.keychain.set(self.email, key: "email")
+                            try? self.keychain.set(self.password, key: "password")
                             
                         } else {
                             let decoder = JSONDecoder()
