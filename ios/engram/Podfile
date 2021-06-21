@@ -6,6 +6,16 @@ target 'engram' do
 
 end
 
+target 'engram WatchKit App' do
+  platform :watchos, '7.2'
+  pod 'KeychainAccess'
+end
+
+target 'engram WatchKit Extension' do
+  platform :watchos, '7.2'
+  pod 'KeychainAccess'
+end
+
 target 'Send to engram' do
 
 end

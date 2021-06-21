@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    @ObservedObject var vm = sharedLoginViewModel
     @State private var notes : [Note] = []
     
     init() {
@@ -31,25 +32,29 @@ struct ContentView: View {
     }
     
     var body: some View {
-        VStack {
-            List {
-                ForEach(notes) {note in
-                    Text(note.body!)
-                }.onDelete(perform: deleteItems)
+        if sharedLoginViewModel.loggedIn {
+            VStack {
+                List {
+                    ForEach(notes) {note in
+                        Text(note.body!)
+                    }.onDelete(perform: deleteItems)
+                }
+                HStack {
+                    
+                    Button("-") {
+                        handleDictateButtonPressed(type: "note");
+                    }
+                    Button("•") {
+                        handleDictateButtonPressed(type: "task");
+                    }
+                    Button("◦") {
+                        handleDictateButtonPressed(type: "event");
+                    }
+                    
+                }
             }
-            HStack {
-                
-                Button("-") {
-                    handleDictateButtonPressed(type: "note");
-                }
-                Button("•") {
-                    handleDictateButtonPressed(type: "task");
-                }
-                Button("◦") {
-                    handleDictateButtonPressed(type: "event");
-                }
-                
-            }
+        } else {
+            LoginView()
         }
     }
     
