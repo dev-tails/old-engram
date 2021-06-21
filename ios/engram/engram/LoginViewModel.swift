@@ -35,7 +35,7 @@ class LoginViewModel: ObservableObject {
         email = customKeychainWrapperInstance.string(forKey: "email") ?? ""
         password = customKeychainWrapperInstance.string(forKey: "password") ?? ""
 
-//        fetchMe()
+        fetchMe()
     }
     
     func fetchMe() {

@@ -33,9 +33,9 @@ struct ContentView: View {
     var body: some View {
         VStack {
             List {
-//                ForEach(notes) {note in
-//                    Text(note.body!)
-//                }.onDelete(perform: deleteItems)
+                ForEach(notes) {note in
+                    Text(note.body!)
+                }.onDelete(perform: deleteItems)
             }
             HStack {
                 
@@ -54,9 +54,7 @@ struct ContentView: View {
     }
     
     private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            
-        }
+        
     }
 }
 

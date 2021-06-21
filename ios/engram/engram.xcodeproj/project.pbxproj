@@ -109,6 +109,7 @@
 		0E8CFF9F882DA1E721F420C1 /* Pods-engram.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-engram.release.xcconfig"; path = "Target Support Files/Pods-engram/Pods-engram.release.xcconfig"; sourceTree = "<group>"; };
 		2B6E9C3843B1BB614C3A21F4 /* Pods-Send to engram.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Send to engram.debug.xcconfig"; path = "Target Support Files/Pods-Send to engram/Pods-Send to engram.debug.xcconfig"; sourceTree = "<group>"; };
 		660120EB26811B2200D7D4ED /* engram WatchKit Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "engram WatchKit Extension.entitlements"; sourceTree = "<group>"; };
+		660120EC268122E000D7D4ED /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		665D970E267F9CFA00B4B549 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		665D9713267FA24D00B4B549 /* DailyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyViewModel.swift; sourceTree = "<group>"; };
 		665D9716267FA98300B4B549 /* DailyScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyScreen.swift; sourceTree = "<group>"; };
@@ -279,6 +280,7 @@
 				66ABEA8D26589C74006C9FD5 /* PushNotificationPayload.apns */,
 				66ABEA8926589C74006C9FD5 /* Preview Content */,
 				66E59162265B2B7700E38067 /* ComplicationViews.swift */,
+				660120EC268122E000D7D4ED /* LoginView.swift */,
 			);
 			path = "engram WatchKit Extension";
 			sourceTree = "<group>";
