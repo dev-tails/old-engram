@@ -60,7 +60,12 @@ struct ContentView: View {
     }
     
     private func deleteItems(offsets: IndexSet) {
-        
+        var removedCount = 0;
+        for i in offsets {
+            let indexToRemove = i - removedCount
+            dailyVM.deleteNote(index: indexToRemove, id: dailyVM.notes[indexToRemove]._id!)
+            removedCount += 1
+        }
     }
 }
 
