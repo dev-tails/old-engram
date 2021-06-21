@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @ObservedObject var vm = sharedLoginViewModel
-    @State private var notes : [Note] = []
+    @ObservedObject var dailyVM = sharedDailyViewModel
     
     init() {
         
@@ -25,8 +25,9 @@ struct ContentView: View {
                 
                 withAnimation {
                     let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "yyyy-MM-dd"
                     let newNote = Note(body: result[0], date: dateFormatter.string(from: Date()), type: type)
-                    notes.append(newNote)
+                    dailyVM.addNote(note: newNote)
                 }
             }
     }
@@ -35,7 +36,7 @@ struct ContentView: View {
         if sharedLoginViewModel.loggedIn {
             VStack {
                 List {
-                    ForEach(notes) {note in
+                    ForEach(dailyVM.notes) {note in
                         Text(note.body!)
                     }.onDelete(perform: deleteItems)
                 }
