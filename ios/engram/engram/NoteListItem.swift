@@ -30,10 +30,10 @@ struct NoteListItem: View {
                     Image(systemName: _note.type == "task_completed" ? "checkmark.square" : "square")
                 }
             }
-            if (_note.type == "event") {
-                DatePicker("", selection: $start, displayedComponents: .hourAndMinute)
-                    .labelsHidden()
-            }
+//            if (_note.type == "event") {
+//                DatePicker("", selection: $start, displayedComponents: .hourAndMinute)
+//                    .labelsHidden()
+//            }
             Text(_note.body!)
         }.opacity(_note.type == "task_completed" ? 0.25 : 1.0)
     }
