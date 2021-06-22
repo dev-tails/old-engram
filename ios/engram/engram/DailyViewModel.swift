@@ -46,15 +46,17 @@ class DailyViewModel: ObservableObject {
                 print(error)
             } else if let data = data {
                 let decoder = JSONDecoder()
-                let decodedNotes = try! decoder.decode([DecodableNote].self, from: data)
+                let decodedNotes = try? decoder.decode([DecodableNote].self, from: data)
                 
-                var newNotes: [Note] = []
-                for note in decodedNotes {
-                    newNotes.append(Note(_id: note._id, body: note.body, type: note.type))
-                }
-                
-                DispatchQueue.main.async {
-                    self.notes = newNotes.reversed()
+                if let decodedNotesNeverNil = decodedNotes {
+                    var newNotes: [Note] = []
+                    for note in decodedNotesNeverNil {
+                        newNotes.append(Note(_id: note._id, body: note.body, type: note.type))
+                    }
+                    
+                    DispatchQueue.main.async {
+                        self.notes = newNotes.reversed()
+                    }
                 }
                 
             } else {

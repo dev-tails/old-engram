@@ -44,6 +44,7 @@
 		66E591602659B6E000E38067 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E5915F2659B6E000E38067 /* CustomTextField.swift */; };
 		66E59163265B2B7700E38067 /* ComplicationViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E59162265B2B7700E38067 /* ComplicationViews.swift */; };
 		66FC7999268157DB005AE4DD /* DailyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D9713267FA24D00B4B549 /* DailyViewModel.swift */; };
+		66FC799B26816046005AE4DD /* DailyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66FC799A26816046005AE4DD /* DailyView.swift */; };
 		6DFEDE24FC040CC249CDE01A /* Pods_Send_to_engram.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 020F6D248FB91B73308CD63F /* Pods_Send_to_engram.framework */; };
 		8E66BE55422F6D5A7419CCA1 /* Pods_engram_WatchKit_Extension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93B26201B82098AA16082343 /* Pods_engram_WatchKit_Extension.framework */; };
 		E753DF5463FBCBFCAD4387C4 /* Pods_engram.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90B7F836578CD2E385E4E26C /* Pods_engram.framework */; };
@@ -156,6 +157,7 @@
 		66E5915F2659B6E000E38067 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
 		66E59162265B2B7700E38067 /* ComplicationViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationViews.swift; sourceTree = "<group>"; };
 		66F0709E266019CB006E767B /* engramDebug.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = engramDebug.entitlements; sourceTree = "<group>"; };
+		66FC799A26816046005AE4DD /* DailyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyView.swift; sourceTree = "<group>"; };
 		7139AB58E4B13D003DE6CBEA /* Pods-engram WatchKit App.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-engram WatchKit App.release.xcconfig"; path = "Target Support Files/Pods-engram WatchKit App/Pods-engram WatchKit App.release.xcconfig"; sourceTree = "<group>"; };
 		90B7F836578CD2E385E4E26C /* Pods_engram.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_engram.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		93B26201B82098AA16082343 /* Pods_engram_WatchKit_Extension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_engram_WatchKit_Extension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -296,6 +298,7 @@
 				66ABEA8926589C74006C9FD5 /* Preview Content */,
 				66E59162265B2B7700E38067 /* ComplicationViews.swift */,
 				660120EC268122E000D7D4ED /* LoginView.swift */,
+				66FC799A26816046005AE4DD /* DailyView.swift */,
 			);
 			path = "engram WatchKit Extension";
 			sourceTree = "<group>";
@@ -658,6 +661,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				66FC799B26816046005AE4DD /* DailyView.swift in Sources */,
 				66ABEA8226589C73006C9FD5 /* NotificationController.swift in Sources */,
 				66ABEA8026589C73006C9FD5 /* ContentView.swift in Sources */,
 				66ABEA8626589C73006C9FD5 /* ComplicationController.swift in Sources */,
