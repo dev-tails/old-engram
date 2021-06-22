@@ -77,7 +77,7 @@ struct NoteListView: View {
             dateFormatter.dateFormat = "yyyy-MM-dd"
             
             let typeToSave = type == "all" ? "note" : type
-            let newNote = Note(body: noteBody, date: dateFormatter.string(from: Date()), type: typeToSave)
+            let newNote = Note(body: noteBody, date: dateFormatter.string(from: vm.date), type: typeToSave)
             
             noteBody = ""
             
