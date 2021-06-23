@@ -35,15 +35,11 @@ struct DailyScreen: View {
             HStack {
                 Button(action: handleTodayPressed) {
                     Image(systemName: "calendar")
-                        .renderingMode(.template)
-                        .foregroundColor(.white)
                         .imageScale(.large)
                 }
                 Spacer()
                 Button(action: navigateDateLeft) {
                     Image(systemName: "arrow.left")
-                        .renderingMode(.template)
-                        .foregroundColor(.white)
                         .imageScale(.large)
                 }
                 DatePicker(
@@ -53,15 +49,11 @@ struct DailyScreen: View {
                     ).labelsHidden()
                 Button(action: navigateDateRight) {
                     Image(systemName: "arrow.right")
-                        .renderingMode(.template)
-                        .foregroundColor(.white)
                         .imageScale(.large)
                 }
                 Spacer()
                 Button(action: handleSync) {
                     Image(systemName: "arrow.clockwise.icloud")
-                        .renderingMode(.template)
-                        .foregroundColor(.white)
                         .imageScale(.large)
                 }
             }.padding()
