@@ -30,10 +30,28 @@ struct NoteListItem: View {
                     Image(systemName: _note.type == "task_completed" ? "checkmark.square" : "square")
                 }
             }
-//            if (_note.type == "event") {
-//                DatePicker("", selection: $start, displayedComponents: .hourAndMinute)
-//                    .labelsHidden()
-//            }
+            if (_note.type == "event") {
+                DatePicker("", selection: $start, displayedComponents: .hourAndMinute)
+                    .labelsHidden()
+                    .onAppear() {
+                        if _note.start != nil {
+                            let dateFormatter = DateFormatter()
+                            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+                            let optDate = dateFormatter.date(from: _note.start!)
+                            
+                            if optDate != nil {
+                                start = optDate!
+                            }
+                        }
+                    }
+                    .onChange(of: start) { newValue in
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+                        let startString = dateFormatter.string(from: start)
+                        
+                        vm.updateNote(note: Note(_id: _note._id, type: "event", start: startString))
+                    }
+            }
             Text(_note.body!)
         }.opacity(_note.type == "task_completed" ? 0.25 : 1.0)
     }

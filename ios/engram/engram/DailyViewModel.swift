@@ -14,6 +14,7 @@ struct DecodableNote: Decodable, Encodable {
     var body: String?
     var date: String?
     var type: String?
+    var start: String?
 }
 
 class DailyViewModel: ObservableObject {
@@ -51,7 +52,7 @@ class DailyViewModel: ObservableObject {
                 if let decodedNotesNeverNil = decodedNotes {
                     var newNotes: [Note] = []
                     for note in decodedNotesNeverNil {
-                        newNotes.append(Note(_id: note._id, body: note.body, type: note.type))
+                        newNotes.append(Note(_id: note._id, body: note.body, type: note.type, start: note.start))
                     }
                     
                     DispatchQueue.main.async {
@@ -67,7 +68,6 @@ class DailyViewModel: ObservableObject {
     }
     
     func addNote(note: Note) {
-        notes.insert(note, at: 0)
         let url = URL(string: "https://engram.xyzdigital.com/api/notes")!
         var request = URLRequest(url: url)
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
@@ -87,7 +87,16 @@ class DailyViewModel: ObservableObject {
             if let error = error {
                 print(error)
             } else if data != nil {
+                let decoder = JSONDecoder()
+                let decodedNote = try? decoder.decode(DecodableNote.self, from: data!)
                 
+                if let note = decodedNote {
+                    let newNote = Note(_id: note._id, body: note.body, type: note.type, start: note.start)
+                    
+                    DispatchQueue.main.async {
+                        self.notes.insert(newNote, at: 0)
+                    }
+                }
             } else {
                 // Handle unexpected error
             }
@@ -97,15 +106,27 @@ class DailyViewModel: ObservableObject {
     
     func updateNote(note: Note) {
         let noteIndex = notes.firstIndex(where: { $0._id == note._id})
-        notes[noteIndex!].type = note.type
         
         let url = URL(string: String(format: "https://engram.xyzdigital.com/api/notes/%@", note._id!))!
         var request = URLRequest(url: url)
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")
         
+        let jsonObject: NSMutableDictionary = NSMutableDictionary()
+
+        if note.type != nil {
+            jsonObject.setValue(note.type, forKey: "type")
+            notes[noteIndex!].type = note.type
+        }
+        
+        if (note.start != nil) {
+            jsonObject.setValue(note.start, forKey: "start")
+            notes[noteIndex!].start = note.start
+        }
+        
+        
         let bodyData = try? JSONSerialization.data(
-            withJSONObject: ["type": note.type],
+            withJSONObject: jsonObject,
             options: []
         )
 

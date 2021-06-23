@@ -12,15 +12,17 @@ struct Note: Identifiable, Decodable {
     var _id: String?
     var body: String?
     var date: String?
+    var start: String?
     var type: String?
     var createdAt: Date?
     
-    init(_id: String? = nil, body: String? = "", date: String? = nil, type: String? = "note") {
+    init(_id: String? = nil, body: String? = "", date: String? = nil, type: String? = "note", start: String? = nil) {
         self.id = UUID()
         self._id = _id
         self.body = body
         self.date = date
         self.type = type
+        self.start = start
         self.createdAt = Date()
     }
 }
