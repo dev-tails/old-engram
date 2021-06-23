@@ -31,7 +31,7 @@ struct DailyView: View {
         var removedCount = 0;
         for i in offsets {
             let indexToRemove = i - removedCount
-            vm.deleteNote(index: indexToRemove, id: vm.notes[indexToRemove]._id!)
+            vm.deleteNote(id: vm.notes[indexToRemove]._id!)
             removedCount += 1
         }
     }
