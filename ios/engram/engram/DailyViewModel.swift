@@ -17,51 +17,13 @@ struct DecodableNote: Decodable, Encodable {
     var start: String?
 }
 
-func sortNotesByStart(note1: Note, note2: Note) -> Bool {
-    if note1.start == nil {
-        return true
-    }
-    if note2.start == nil {
-        return false
-    }
-    
-    return note1.start! < note2.start!
-}
-
 class DailyViewModel: ObservableObject {
-    @Published var allNotes: [Note] = []
     @Published var notes: [Note] = []
-    @Published var typeFilter: String = "event"
+    @Published var typeFilter: String = "all"
     @Published var date: Date = Date()
     
     init() {
         fetchNotesForDate(date: date)
-    }
-    
-    func setTypeFilter(type: String) {
-        typeFilter = type
-        updateNotesForType()
-    }
-    
-    func updateNotesForType() {
-        if typeFilter == "all" {
-            self.notes = allNotes
-            return
-        }
-
-        
-        var notesForType: [Note] = []
-        for note in allNotes {
-            if (note.type == typeFilter) {
-                notesForType.append(note)
-            }
-        }
-        
-        notesForType.sort(by: sortNotesByStart)
-        
-        self.notes = notesForType
-        
-        print(self.notes)
     }
     
     func setDate(date: Date) {
@@ -94,8 +56,7 @@ class DailyViewModel: ObservableObject {
                     }
                     
                     DispatchQueue.main.async {
-                        self.allNotes = newNotes.reversed()
-                        self.updateNotesForType()
+                        self.notes = newNotes.reversed()
                     }
                 }
                 
@@ -133,8 +94,7 @@ class DailyViewModel: ObservableObject {
                     let newNote = Note(_id: note._id, body: note.body, type: note.type, start: note.start)
                     
                     DispatchQueue.main.async {
-                        self.allNotes.insert(newNote, at: 0)
-                        self.updateNotesForType()
+                        self.notes.insert(newNote, at: 0)
                     }
                 }
             } else {
@@ -145,7 +105,7 @@ class DailyViewModel: ObservableObject {
     }
     
     func updateNote(note: Note) {
-        let noteIndex = allNotes.firstIndex(where: { $0._id == note._id})
+        let noteIndex = notes.firstIndex(where: { $0._id == note._id})
         
         let url = URL(string: String(format: "https://engram.xyzdigital.com/api/notes/%@", note._id!))!
         var request = URLRequest(url: url)
@@ -156,15 +116,14 @@ class DailyViewModel: ObservableObject {
 
         if note.type != nil {
             jsonObject.setValue(note.type, forKey: "type")
-            allNotes[noteIndex!].type = note.type
+            notes[noteIndex!].type = note.type
         }
         
         if (note.start != nil) {
             jsonObject.setValue(note.start, forKey: "start")
-            allNotes[noteIndex!].start = note.start
+            notes[noteIndex!].start = note.start
         }
         
-        updateNotesForType()
         
         let bodyData = try? JSONSerialization.data(
             withJSONObject: jsonObject,
@@ -188,13 +147,8 @@ class DailyViewModel: ObservableObject {
         task.resume()
     }
     
-    func deleteNote(id: String) {
-        allNotes.removeAll(where: {
-            $0._id == id
-        })
-        
-        updateNotesForType()
-        
+    func deleteNote(index: Int, id: String) {
+        notes.remove(at: index)
         let url = URL(string: String(format: "https://engram.xyzdigital.com/api/notes/%@", id))!
         var request = URLRequest(url: url)
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")

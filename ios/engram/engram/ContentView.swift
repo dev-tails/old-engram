@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct ContentView: View {
-    @ObservedObject var dailyVM = sharedDailyViewModel
     @ObservedObject var vm = sharedLoginViewModel
     @State private var tab = 0
     
@@ -18,30 +17,21 @@ struct ContentView: View {
                 TabView(selection: $tab) {
                     DailyScreen(type: "all")
                         .tabItem {
-                            Button(action: {
-//                                tab = 0
-                                dailyVM.setTypeFilter(type: "all")
-                            }) {
+                            Button(action: {tab = 0}) {
                                 Image(systemName: "list.dash")
                                 Text("All")
                             }
                         }.tag(0)
                     DailyScreen(type: "note")
                         .tabItem {
-                            Button(action: {
-//                                tab = 1
-                                dailyVM.setTypeFilter(type: "note")
-                            }) {
+                            Button(action: {tab = 1}) {
                                 Image(systemName: "minus")
                                 Text("Notes")
                             }.keyboardShortcut("n", modifiers: .control)
                         }.tag(1)
                     DailyScreen(type: "task")
                         .tabItem {
-                            Button(action: {
-//                                tab = 2
-                                dailyVM.setTypeFilter(type: "task")
-                            }) {
+                            Button(action: {tab = 2}) {
                                 Image(systemName: "square")
                                 Text("Tasks")
                             }.keyboardShortcut("t", modifiers: .control)
@@ -49,10 +39,7 @@ struct ContentView: View {
                         }.tag(2)
                     DailyScreen(type: "event")
                         .tabItem {
-                            Button(action: {
-//                                tab = 3
-                                dailyVM.setTypeFilter(type: "event")
-                            }) {
+                            Button(action: {tab = 3}) {
                                 Image(systemName: "circle")
                                 Text("Events")
                             }.keyboardShortcut("e", modifiers: .control)
