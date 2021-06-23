@@ -147,8 +147,8 @@ class DailyViewModel: ObservableObject {
         task.resume()
     }
     
-    func deleteNote(index: Int, id: String) {
-        notes.remove(at: index)
+    func deleteNote(id: String) {
+        notes.removeAll(where: { $0._id == id })
         let url = URL(string: String(format: "https://engram.xyzdigital.com/api/notes/%@", id))!
         var request = URLRequest(url: url)
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
