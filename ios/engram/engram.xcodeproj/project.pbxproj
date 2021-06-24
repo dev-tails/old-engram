@@ -715,7 +715,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Send to engram/Send to engram.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = V3T29AUKGC;
 				INFOPLIST_FILE = "Send to engram/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
@@ -740,7 +740,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Send to engram/Send to engram.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = V3T29AUKGC;
 				INFOPLIST_FILE = "Send to engram/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
@@ -878,7 +878,7 @@
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CODE_SIGN_ENTITLEMENTS = "engram WatchKit Extension/engram WatchKit ExtensionDebug.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"engram WatchKit Extension/Preview Content\"";
 				DEVELOPMENT_TEAM = V3T29AUKGC;
 				ENABLE_PREVIEWS = YES;
@@ -905,7 +905,7 @@
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CODE_SIGN_ENTITLEMENTS = "engram WatchKit Extension/engram WatchKit Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"engram WatchKit Extension/Preview Content\"";
 				DEVELOPMENT_TEAM = V3T29AUKGC;
 				ENABLE_PREVIEWS = YES;
@@ -936,7 +936,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "engram WatchKit App/engram WatchKit App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = V3T29AUKGC;
 				IBSC_MODULE = engram_WatchKit_Extension;
 				INFOPLIST_FILE = "engram WatchKit App/Info.plist";
@@ -967,7 +967,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "engram WatchKit App/engram WatchKit App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = V3T29AUKGC;
 				IBSC_MODULE = engram_WatchKit_Extension;
 				INFOPLIST_FILE = "engram WatchKit App/Info.plist";
@@ -997,7 +997,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = engram/engramDebug.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"engram/Preview Content\"";
 				DEVELOPMENT_TEAM = V3T29AUKGC;
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = NO;
@@ -1028,7 +1028,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = engram/engram.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"engram/Preview Content\"";
 				DEVELOPMENT_TEAM = V3T29AUKGC;
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = NO;
