@@ -24,6 +24,7 @@ body {
   overflow: hidden;
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
   background-color: #3f51b5;
+  color: white;
 }
 
 .container {
