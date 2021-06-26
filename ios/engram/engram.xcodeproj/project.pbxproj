@@ -13,6 +13,7 @@
 		665D9717267FA98300B4B549 /* DailyScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D9716267FA98300B4B549 /* DailyScreen.swift */; };
 		666DB8A82686C6E5008DD7BC /* CKDailyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 666DB8A72686C6E5008DD7BC /* CKDailyViewModel.swift */; };
 		666DB8A92686E21B008DD7BC /* CKDailyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 666DB8A72686C6E5008DD7BC /* CKDailyViewModel.swift */; };
+		666DB8AA2687D210008DD7BC /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66E591272659788A00E38067 /* CloudKit.framework */; };
 		66855151268116D000086094 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66855150268116D000086094 /* ShareViewController.swift */; };
 		66855154268116D000086094 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66855152268116D000086094 /* MainInterface.storyboard */; };
 		66855158268116D000086094 /* Send to engram.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 6685514E268116D000086094 /* Send to engram.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -181,6 +182,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6DFEDE24FC040CC249CDE01A /* Pods_Send_to_engram.framework in Frameworks */,
+				666DB8AA2687D210008DD7BC /* CloudKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

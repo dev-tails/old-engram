@@ -80,7 +80,7 @@ class CKDailyViewModel: ObservableObject {
                     self.handleNoteSave(savedRecord: record, error: nil)
                 }
             } else {
-                print(error)
+                print(error as Any)
             }
         }
         db.add(modifyRecords)
@@ -88,7 +88,7 @@ class CKDailyViewModel: ObservableObject {
     
     func handleNoteSave(savedRecord: CKRecord?, error: Error?) -> Void {
         if error != nil {
-            print(error)
+            print(error as Any)
         }
         
         if savedRecord == nil {
