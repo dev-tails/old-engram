@@ -23,7 +23,7 @@ struct DailyView: View {
                     let dateFormatter = DateFormatter()
                     dateFormatter.dateFormat = "yyyy-MM-dd"
                     let newNote = Note(body: result[0], date: dateFormatter.string(from: Date()), type: type, recordId: CKRecord.ID())
-                    vm.saveNote(note: newNote)
+                    vm.addNote(note: newNote)
                 }
             }
     }
@@ -41,7 +41,7 @@ struct DailyView: View {
         VStack {
             List {
                 ForEach(vm.notes) {note in
-                    Text(note.body!)
+                    Text(note.body ?? "")
                 }.onDelete(perform: deleteItems)
             }
             HStack {
