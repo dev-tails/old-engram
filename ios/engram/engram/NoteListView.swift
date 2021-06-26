@@ -6,9 +6,10 @@
 //
 
 import SwiftUI
+import CloudKit
 
 struct NoteListView: View {
-    @ObservedObject var vm: DailyViewModel
+    @ObservedObject var vm = sharedCKDailyViewModel
     @State private var inputActive = true
     @State private var noteBody = ""
     var type: String
@@ -20,15 +21,13 @@ struct NoteListView: View {
         "event": "What's happening today?"
     ]
     
-    init(vm: DailyViewModel, type: String) {
+    init(type: String) {
         self.type = type
         
         var types = [type]
         if (type == "task") {
             types.append("task_completed")
         }
-        
-        self.vm = vm
     }
     
     var body: some View {
@@ -77,10 +76,10 @@ struct NoteListView: View {
             dateFormatter.dateFormat = "yyyy-MM-dd"
             
             let typeToSave = type == "all" ? "note" : type
-            let newNote = Note(body: noteBody, date: dateFormatter.string(from: vm.date), type: typeToSave)
-            
+            let newNote = Note(body: noteBody, date: dateFormatter.string(from: vm.date), type: typeToSave, recordId: CKRecord.ID())
+
             noteBody = ""
-            
+
             vm.addNote(note: newNote)
         }
     }
@@ -89,7 +88,7 @@ struct NoteListView: View {
         var removedCount = 0;
         for i in offsets {
             let indexToRemove = i - removedCount
-            vm.deleteNote(id: vm.notes[indexToRemove]._id!)
+            vm.deleteNote(id: vm.notes[indexToRemove].recordId!)
             removedCount += 1
         }
     }
@@ -97,6 +96,6 @@ struct NoteListView: View {
 
 struct NoteListView_Previews: PreviewProvider {
     static var previews: some View {
-        NoteListView(vm: DailyViewModel(), type: "note")
+        NoteListView(type: "note")
     }
 }

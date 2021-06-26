@@ -6,9 +6,10 @@
 //
 
 import SwiftUI
+import CloudKit
 
 struct DailyView: View {
-    @ObservedObject var vm = sharedDailyViewModel
+    @ObservedObject var vm = sharedCKDailyViewModel
     
     func handleDictateButtonPressed(type: String) -> Void {
         WKExtension.shared()
@@ -21,8 +22,8 @@ struct DailyView: View {
                 withAnimation {
                     let dateFormatter = DateFormatter()
                     dateFormatter.dateFormat = "yyyy-MM-dd"
-                    let newNote = Note(body: result[0], date: dateFormatter.string(from: Date()), type: type)
-                    vm.addNote(note: newNote)
+                    let newNote = Note(body: result[0], date: dateFormatter.string(from: Date()), type: type, recordId: CKRecord.ID())
+                    vm.saveNote(note: newNote)
                 }
             }
     }
@@ -31,7 +32,7 @@ struct DailyView: View {
         var removedCount = 0;
         for i in offsets {
             let indexToRemove = i - removedCount
-            vm.deleteNote(id: vm.notes[indexToRemove]._id!)
+            vm.deleteNote(id: vm.notes[indexToRemove].recordId!)
             removedCount += 1
         }
     }

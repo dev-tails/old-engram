@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import CloudKit
 
-struct Note: Identifiable, Decodable {
+struct Note: Identifiable {
     var id: UUID
     var _id: String?
     var body: String?
@@ -15,8 +16,9 @@ struct Note: Identifiable, Decodable {
     var start: String?
     var type: String?
     var createdAt: Date?
+    var recordId: CKRecord.ID?
     
-    init(_id: String? = nil, body: String? = "", date: String? = nil, type: String? = "note", start: String? = nil) {
+    init(_id: String? = nil, body: String? = "", date: String? = nil, type: String? = "note", start: String? = nil, recordId: CKRecord.ID?) {
         self.id = UUID()
         self._id = _id
         self.body = body
@@ -24,5 +26,6 @@ struct Note: Identifiable, Decodable {
         self.type = type
         self.start = start
         self.createdAt = Date()
+        self.recordId = recordId
     }
 }

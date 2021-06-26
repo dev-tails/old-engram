@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct DailyScreen: View {
-    @ObservedObject var vm = sharedDailyViewModel
+    @ObservedObject var vm = sharedCKDailyViewModel
     
     var type: String
     
@@ -57,7 +57,7 @@ struct DailyScreen: View {
                         .imageScale(.large)
                 }
             }.padding()
-            NoteListView(vm: vm, type: type)
+            NoteListView(type: type)
         }
     }
 }
