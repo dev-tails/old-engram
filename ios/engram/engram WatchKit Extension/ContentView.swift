@@ -8,14 +8,8 @@
 import SwiftUI
 
 struct ContentView: View {
-    @ObservedObject var vm = sharedLoginViewModel
-    
     var body: some View {
-        if sharedLoginViewModel.loggedIn {
-            DailyView()
-        } else {
-            LoginView()
-        }
+        DailyView()
     }
 }
 

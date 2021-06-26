@@ -36,21 +36,15 @@ struct NoteListItem: View {
                     .labelsHidden()
                     .onAppear() {
                         if _note.start != nil {
-                            let dateFormatter = DateFormatter()
-                            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-                            let optDate = dateFormatter.date(from: _note.start!)
-                            
-                            if optDate != nil {
-                                start = optDate!
-                            }
+                            start = _note.start!
                         }
                     }
                     .onChange(of: start) { newValue in
-                        let dateFormatter = DateFormatter()
-                        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-                        let startString = dateFormatter.string(from: start)
+//                        let dateFormatter = DateFormatter()
+//                        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+//                        let startString = dateFormatter.string(from: start)
                         
-                        vm.saveNote(note: Note(type: "event", start: startString, recordId: _note.recordId))
+                        vm.saveNote(note: Note(type: "event", start: start, recordId: _note.recordId))
                     }
             }
             Text(_note.body!)

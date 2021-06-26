@@ -64,8 +64,12 @@ class CKDailyViewModel: ObservableObject {
     
     func saveNote(note: Note) {
         let recordToSave = CKRecord(recordType: "note", recordID: note.recordId!)
-//        recordToSave["start"] = note.start
-        recordToSave["type"] = note.type
+        if note.start != nil {
+            recordToSave["start"] = note.start
+        }
+        if note.type != nil {
+            recordToSave["type"] = note.type
+        }
         
         let modifyRecords = CKModifyRecordsOperation(recordsToSave:[recordToSave], recordIDsToDelete: nil)
         modifyRecords.savePolicy = CKModifyRecordsOperation.RecordSavePolicy.changedKeys
@@ -105,7 +109,13 @@ class CKDailyViewModel: ObservableObject {
             }
             
             if foundIndex >= 0 {
-                self.notes[foundIndex].type = savedNote.type
+                if savedNote.type != nil {
+                    self.notes[foundIndex].type = savedNote.type
+                }
+                if savedNote.start != nil {
+                    self.notes[foundIndex].start = savedNote.start
+                }
+                
             } else {
                 self.notes.insert(savedNote, at: 0)
             }

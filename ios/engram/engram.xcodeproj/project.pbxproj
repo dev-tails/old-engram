@@ -8,13 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		3416329B2C96DDB66B54C56D /* Pods_engram_WatchKit_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AC5F774F8530BDD6CD732AD /* Pods_engram_WatchKit_App.framework */; };
-		663FAED0268152CC001C73BC /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660120EC268122E000D7D4ED /* LoginView.swift */; };
-		663FAED1268153D2001C73BC /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D971D267FC96E00B4B549 /* LoginViewModel.swift */; };
 		665D9711267FA08600B4B549 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D970E267F9CFA00B4B549 /* Note.swift */; };
 		665D9712267FA08A00B4B549 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D970E267F9CFA00B4B549 /* Note.swift */; };
 		665D9717267FA98300B4B549 /* DailyScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D9716267FA98300B4B549 /* DailyScreen.swift */; };
-		665D971B267FC65300B4B549 /* LoginScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D971A267FC65300B4B549 /* LoginScreen.swift */; };
-		665D971E267FC96E00B4B549 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D971D267FC96E00B4B549 /* LoginViewModel.swift */; };
 		666DB8A82686C6E5008DD7BC /* CKDailyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 666DB8A72686C6E5008DD7BC /* CKDailyViewModel.swift */; };
 		666DB8A92686E21B008DD7BC /* CKDailyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 666DB8A72686C6E5008DD7BC /* CKDailyViewModel.swift */; };
 		66855151268116D000086094 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66855150268116D000086094 /* ShareViewController.swift */; };
@@ -652,14 +648,12 @@
 				6689D59626840CD200F5DD2B /* MainView.swift in Sources */,
 				66ABEA6126589C6F006C9FD5 /* engramApp.swift in Sources */,
 				666DB8A82686C6E5008DD7BC /* CKDailyViewModel.swift in Sources */,
-				665D971E267FC96E00B4B549 /* LoginViewModel.swift in Sources */,
 				665D9711267FA08600B4B549 /* Note.swift in Sources */,
 				66E5911F2658A58600E38067 /* NoteListItem.swift in Sources */,
 				66E591212658C30F00E38067 /* NoteListView.swift in Sources */,
 				66E5915A2659A23D00E38067 /* CheckboxToggleStyle.swift in Sources */,
 				66E591602659B6E000E38067 /* CustomTextField.swift in Sources */,
 				665D9717267FA98300B4B549 /* DailyScreen.swift in Sources */,
-				665D971B267FC65300B4B549 /* LoginScreen.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -671,12 +665,10 @@
 				66ABEA8226589C73006C9FD5 /* NotificationController.swift in Sources */,
 				66ABEA8026589C73006C9FD5 /* ContentView.swift in Sources */,
 				66ABEA8626589C73006C9FD5 /* ComplicationController.swift in Sources */,
-				663FAED0268152CC001C73BC /* LoginView.swift in Sources */,
 				665D9712267FA08A00B4B549 /* Note.swift in Sources */,
 				66E59163265B2B7700E38067 /* ComplicationViews.swift in Sources */,
 				66ABEA7E26589C73006C9FD5 /* engramApp.swift in Sources */,
 				66E5915B2659A23D00E38067 /* CheckboxToggleStyle.swift in Sources */,
-				663FAED1268153D2001C73BC /* LoginViewModel.swift in Sources */,
 				666DB8A92686E21B008DD7BC /* CKDailyViewModel.swift in Sources */,
 				66ABEA8426589C73006C9FD5 /* NotificationView.swift in Sources */,
 			);
