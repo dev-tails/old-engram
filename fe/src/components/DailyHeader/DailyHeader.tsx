@@ -1,19 +1,30 @@
-import './DailyHeader.scss';
+import "./DailyHeader.scss";
 
-import { IconButton } from '@material-ui/core';
-import { ChevronLeft, ChevronRight, Refresh, Today } from '@material-ui/icons';
-import { DatePicker } from '@material-ui/pickers';
-import moment from 'moment';
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { IconButton } from "@material-ui/core";
+import {
+  ChevronLeft,
+  ChevronRight,
+  WifiOff,
+  Refresh,
+  Today,
+} from "@material-ui/icons";
+import { DatePicker } from "@material-ui/pickers";
+import moment from "moment";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import { setDate } from '../../redux/actions/DateActions';
+import { setDate } from "../../redux/actions/DateActions";
 
 type DailyHeaderProps = {};
 
 export const DailyHeader: React.FC<DailyHeaderProps> = (props) => {
   const dispatch = useDispatch();
-  const date = useSelector((state: any) => state.date);
+  const { date, user } = useSelector((state: any) => {
+    return {
+      user: state.user,
+      date: state.date,
+    };
+  });
 
   function handleDateChanged(date: Date | null) {
     if (date) {
@@ -63,9 +74,15 @@ export const DailyHeader: React.FC<DailyHeaderProps> = (props) => {
 
       <div className="spacer" />
 
-      <IconButton className="refresh" onClick={() => {}}>
-        <Refresh />
-      </IconButton>
+      {!user ? (
+        <IconButton className="refresh" onClick={() => {}} disabled>
+          <WifiOff />
+        </IconButton>
+      ) : (
+        <IconButton className="refresh" onClick={() => {}}>
+          <Refresh />
+        </IconButton>
+      )}
     </div>
   );
 };
