@@ -14,7 +14,7 @@ export async function getDecodedToken(token) {
   return new Promise((resolve, reject) => {
     jwt.verify(token, jwtSecret, function (err, decoded) {
       if (err) {
-        reject(new UnauthorizedError());
+        resolve(null);
       }
       resolve(decoded);
     });
@@ -23,8 +23,8 @@ export async function getDecodedToken(token) {
 
 export async function AuthMiddleware(req, res, next) {
   if (req.cookies.token) {
-    const { user } = await getDecodedToken(req.cookies.token);
-    req.user = user;
+    const decoded = await getDecodedToken(req.cookies.token);
+    req.user = decoded?.user;
   }
   next();
 }
