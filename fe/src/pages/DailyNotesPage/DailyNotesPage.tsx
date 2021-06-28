@@ -1,14 +1,15 @@
-import './DailyNotesPage.scss';
+import "./DailyNotesPage.scss";
 
-import React from 'react';
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import { BottomTypeNavigator } from '../../components/BottomTypeNavigator/BottomTypeNavigator';
-import { DailyHeader } from '../../components/DailyHeader/DailyHeader';
-import { NoteList } from '../../components/NoteList/NoteList';
-import { NoteTextInput } from '../../components/NoteTextInput/NoteTextInput';
-import { fetchNotesForDate } from '../../redux/actions/NotesActions';
+import { BottomTypeNavigator } from "../../components/BottomTypeNavigator/BottomTypeNavigator";
+import { DailyHeader } from "../../components/DailyHeader/DailyHeader";
+import { NoteList } from "../../components/NoteList/NoteList";
+import { NoteTextInput } from "../../components/NoteTextInput/NoteTextInput";
+import { fetchNotesForDate } from "../../redux/actions/NotesActions";
+import { fetchUser } from "../../redux/actions/UserActions";
 
 type DailyNotesPageProps = {};
 
@@ -24,6 +25,10 @@ export const DailyNotesPage: React.FC<DailyNotesPageProps> = () => {
   useEffect(() => {
     fetchNotesForDate(dispatch, date);
   }, [date, dispatch]);
+
+  useEffect(() => {
+    fetchUser(dispatch);
+  }, []);
 
   return (
     <div className="daily-notes-page">

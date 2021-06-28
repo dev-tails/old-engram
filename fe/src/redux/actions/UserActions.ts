@@ -1,7 +1,7 @@
-import { Dispatch } from 'redux';
+import { Dispatch } from "redux";
 
-import { Note } from '../../components/notes/NotesApi';
-import * as UserApi from '../../UsersApi';
+import { Note } from "../../components/notes/NotesApi";
+import * as UserApi from "../../UsersApi";
 
 export type LogoutAction = {
   type: "LOGOUT";

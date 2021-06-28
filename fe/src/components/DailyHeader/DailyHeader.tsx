@@ -79,7 +79,12 @@ export const DailyHeader: React.FC<DailyHeaderProps> = (props) => {
           <WifiOff />
         </IconButton>
       ) : (
-        <IconButton className="refresh" onClick={() => {}}>
+        <IconButton
+          className="refresh"
+          onClick={() => {
+            handleDateChanged(moment(date).toDate());
+          }}
+        >
           <Refresh />
         </IconButton>
       )}

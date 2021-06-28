@@ -1,5 +1,5 @@
-import { User } from '../../UsersApi';
-import { FetchUserAction } from '../actions/UserActions';
+import { User } from "../../UsersApi";
+import { FetchUserAction } from "../actions/UserActions";
 
 const INITIAL_STATE = null;
 
