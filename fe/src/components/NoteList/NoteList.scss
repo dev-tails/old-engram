@@ -1,14 +1,13 @@
 .note-list {
-
   position: fixed;
   top: 112px;
   bottom: 104px;
   width: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   display: flex;
   flex-direction: column-reverse;
-  
+
   .note-list-item {
     &.selected {
       background-color: #3f51b5;
