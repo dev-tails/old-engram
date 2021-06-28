@@ -30,7 +30,6 @@ import {
   TermsOfServicePagePath,
 } from "../TermsOfServicePage/TermsOfServicePage";
 import { getMe } from "../UsersApi";
-import { isFeatureEnabled } from "../utils/FeatureFlagUtils";
 
 function getStartDate(date: Date, dateRangeValue: string) {
   switch (dateRangeValue) {
@@ -88,10 +87,12 @@ export default function Routes() {
 
   const [date, setDate] = useState(moment().startOf("day").toDate());
   const [dateRangeValue, setDateRangeValue] = useState("Day");
-  const [activeParentId, setActiveParentId] =
-    useState<string | null | undefined>(null);
-  const [workspaceName, setWorkspaceName] =
-    useState<string | null | undefined>(null);
+  const [activeParentId, setActiveParentId] = useState<
+    string | null | undefined
+  >(null);
+  const [workspaceName, setWorkspaceName] = useState<string | null | undefined>(
+    null
+  );
 
   const startDate = getStartDate(date, dateRangeValue);
   const endDate = getEndDate(date, dateRangeValue);
@@ -165,11 +166,7 @@ export default function Routes() {
           <LogPage />
         </AuthenticatedRoute>
         <Route exact path="/daily">
-          {isFeatureEnabled("engram.newDailyPage") ? (
-            <DailyNotesPage />
-          ) : (
-            <LogPage date={date} onDateChanged={handleDateChanged} />
-          )}
+          <DailyNotesPage />
         </Route>
         {isPluginEnabled(PluginName.PLUGIN_DASHBOARD) ? (
           <AuthenticatedRoute exact={true} path="/dashboard">
