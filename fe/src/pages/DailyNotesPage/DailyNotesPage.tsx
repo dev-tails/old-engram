@@ -28,7 +28,7 @@ export const DailyNotesPage: React.FC<DailyNotesPageProps> = () => {
 
   useEffect(() => {
     fetchUser(dispatch);
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="daily-notes-page">
