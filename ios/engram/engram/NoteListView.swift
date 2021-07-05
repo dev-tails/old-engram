@@ -89,7 +89,7 @@ struct NoteListView: View {
         var removedCount = 0;
         for i in offsets {
             let indexToRemove = i - removedCount
-            vm.deleteNote(id: vm.notes[indexToRemove].recordId!)
+            vm2.deleteNote(id: vm2.notes[indexToRemove].id)
             removedCount += 1
         }
     }
