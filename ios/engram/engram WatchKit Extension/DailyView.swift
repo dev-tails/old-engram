@@ -9,7 +9,7 @@ import SwiftUI
 import CloudKit
 
 struct DailyView: View {
-    @ObservedObject var vm = sharedCKDailyViewModel
+    @ObservedObject var vm = sharedCDDailyViewModel
     
     func handleDictateButtonPressed(type: String) -> Void {
         WKExtension.shared()
@@ -32,7 +32,7 @@ struct DailyView: View {
         var removedCount = 0;
         for i in offsets {
             let indexToRemove = i - removedCount
-            vm.deleteNote(id: vm.notes[indexToRemove].recordId!)
+            vm.deleteNote(id: vm.notes[indexToRemove].id)
             removedCount += 1
         }
     }
