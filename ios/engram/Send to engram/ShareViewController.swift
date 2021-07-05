@@ -38,21 +38,17 @@ class ShareViewController: SLComposeServiceViewController {
 
     
     func addNote(body: String) {
-        let container = CKContainer(identifier: "iCloud.com.xyzdigital.engram")
-        let db: CKDatabase = container.privateCloudDatabase
-        
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd";
         let dateString = dateFormatter.string(from: Date())
         
-        let noteRecord = CKRecord(recordType: "note")
-        noteRecord["date"] = dateString
-        noteRecord["body"] = body
-        noteRecord["type"] = "note"
-        db.save(noteRecord, completionHandler: handleNoteSaved)
-    }
-
-    func handleNoteSaved(record: CKRecord?, error: Error?) {
+        let cdNote = CDNote(context: persistentContainer.viewContext)
+        cdNote.id = UUID()
+        cdNote.date = dateString
+        cdNote.body = body
+        cdNote.type = "note"
+        
+        saveContext()
         self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
     }
 }
