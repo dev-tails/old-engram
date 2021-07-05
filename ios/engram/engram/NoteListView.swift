@@ -10,6 +10,7 @@ import CloudKit
 
 struct NoteListView: View {
     @ObservedObject var vm = sharedCKDailyViewModel
+    @ObservedObject var vm2 = sharedCDDailyViewModel
     @State private var inputActive = true
     @State private var noteBody = ""
     var type: String
@@ -80,7 +81,7 @@ struct NoteListView: View {
 
             noteBody = ""
 
-            vm.addNote(note: newNote)
+            vm2.addNote(note: newNote)
         }
     }
     

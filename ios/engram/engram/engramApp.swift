@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct engramApp: App {
+    let context = persistentContainer.viewContext
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView().environment(\.managedObjectContext, context)
         }
     }
 }

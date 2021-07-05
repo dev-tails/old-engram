@@ -1,5 +1,6 @@
-import jwt from "jsonwebtoken";
-import { getEnv } from "../env.js";
+import jwt from 'jsonwebtoken';
+
+import { getEnv } from '../env.js';
 
 const { jwtSecret } = getEnv();
 
@@ -22,6 +23,7 @@ export async function getDecodedToken(token) {
 }
 
 export async function AuthMiddleware(req, res, next) {
+  console.log(req);
   if (req.cookies.token) {
     const { user } = await getDecodedToken(req.cookies.token);
     req.user = user;

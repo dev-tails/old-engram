@@ -9,6 +9,7 @@ import SwiftUI
 
 struct DailyScreen: View {
     @ObservedObject var vm = sharedCKDailyViewModel
+    @ObservedObject var vm2 = sharedCDDailyViewModel
     
     var type: String
     

@@ -17,17 +17,24 @@ export const LoginPagePath = "/login";
 
 export default function LoginPage(props: LoginPageProps) {
   const history = useHistory();
-  const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("testtest");
+  const [username, setUsername] = useState("test");
   const [errors, setErrors] = useState<Note[]>([]);
+  const [debug, setDebug] = useState("");
 
   const handleSignIn = () => {
     axios
-      .post("/api/users/login", { username, password })
-      .then(navigateToHome)
+      .post(
+        "/api/users/login",
+        { username, password },
+        { withCredentials: true }
+      )
+      .then((res) => {
+        return axios.get("/api/notes", { withCredentials: true });
+      })
       .catch((err) => {
         let errorMessage = err.message;
-        if (err.response.status === 400) {
+        if (err.response?.status === 400) {
           errorMessage = "The username or password is incorrect";
         }
 
@@ -62,6 +69,7 @@ export default function LoginPage(props: LoginPageProps) {
   return (
     <div className="login-page">
       <div className="container">
+        <p>{debug}</p>
         <div className="logo">
           <img
             alt="engram logo"
