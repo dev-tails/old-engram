@@ -38,6 +38,7 @@ class CDDailyViewModel: ObservableObject {
                 let newCDNotes = try request.execute()
                 var newNotes: [Note] = []
                 for n in newCDNotes {
+                    print(n)
                     newNotes.append(self.CDNoteToNote(cdNote: n))
                 }
                 self.notes = newNotes
@@ -58,8 +59,20 @@ class CDDailyViewModel: ObservableObject {
         saveContext()
     }
     
+//    func deleteNote() {
+//        let fetch = NSFetchRequest<NSFetchRequestResult>(entityName: "CDNote")
+//        fetch.predicate = NSPredicate(format: "terminationDate < %@", NSDate())
+//        let request = NSBatchDeleteRequest(fetchRequest: fetch)
+//
+//        do {
+//            let result = try moc.execute(request)
+//        } catch {
+//            fatalError("Failed to execute request: \(error)")
+//        }
+//    }
+    
     func CDNoteToNote(cdNote: CDNote) -> Note {
-        return Note(body: cdNote.body, date: cdNote.date, type: cdNote.type, start: cdNote.start)
+        return Note(id:cdNote.id, body: cdNote.body, date: cdNote.date, type: cdNote.type, start: cdNote.start)
     }
 }
     
