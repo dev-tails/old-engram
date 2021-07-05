@@ -41,7 +41,20 @@ struct DailyView: View {
         VStack {
             List {
                 ForEach(vm.notes) {note in
-                    Text(note.body ?? "")
+                    HStack {
+                        if (note.type == "task" || note.type == "task_completed") {
+                            Button(action: {
+                                let type = note.type == "task" ? "task_completed" : "task"
+
+                                let noteToSave = Note(id: note.id, type: type)
+
+                                vm.saveNote(note: noteToSave)
+                            }) {
+                                Image(systemName: note.type == "task_completed" ? "checkmark.square" : "square")
+                            }.frame(width: 16)
+                        }
+                        Text(note.body ?? "")
+                    }
                 }.onDelete(perform: deleteItems)
             }
             HStack {
