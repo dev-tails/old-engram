@@ -55,6 +55,7 @@ struct DailyScreen: View {
                 Button(action: handleSync) {
                     Image(systemName: "arrow.clockwise.icloud")
                         .imageScale(.large)
+                        .hidden()
                 }
             }.padding()
             NoteListView(type: type)
