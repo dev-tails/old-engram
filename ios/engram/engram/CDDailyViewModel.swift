@@ -76,6 +76,14 @@ class CDDailyViewModel: ObservableObject {
         
         do {
             try persistentContainer.viewContext.execute(request)
+            
+            if note.type != nil {
+                for i in 0..<self.notes.count {
+                    if self.notes[i].id == note.id {
+                        self.notes[i].type = note.type
+                    }
+                }
+            }
         } catch {
             print("Failed to execute request: \(error)")
         }
