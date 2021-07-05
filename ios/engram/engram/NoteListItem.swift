@@ -2,7 +2,7 @@ import SwiftUI
 import CloudKit
 
 struct NoteListItem: View {
-    @ObservedObject var vm = sharedCKDailyViewModel
+    @ObservedObject var vm = sharedCDDailyViewModel
     private var _note: Note
     @State var start: Date = Date()
     
@@ -19,7 +19,7 @@ struct NoteListItem: View {
     func toggleType() {
         let type = _note.type == "task" ? "task_completed" : "task"
 
-        let noteToSave = Note(type: type, recordId: _note.recordId)
+        let noteToSave = Note(id: _note.id, type: type, recordId: _note.recordId)
 
         vm.saveNote(note: noteToSave)
     }
@@ -44,7 +44,7 @@ struct NoteListItem: View {
 //                        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
 //                        let startString = dateFormatter.string(from: start)
                         
-                        vm.saveNote(note: Note(type: "event", start: start, recordId: _note.recordId))
+                        vm.saveNote(note: Note(id: _note.id, type: "event", start: start))
                     }
             }
             Text(_note.body!)
