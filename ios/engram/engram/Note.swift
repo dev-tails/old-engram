@@ -18,7 +18,7 @@ struct Note: Identifiable {
     var createdAt: Date?
     var recordId: CKRecord.ID?
     
-    init(_id: String? = nil, body: String? = "", date: String? = nil, type: String? = "note", start: Date? = nil, recordId: CKRecord.ID?) {
+    init(_id: String? = nil, body: String? = "", date: String? = nil, type: String? = "note", start: Date? = nil, recordId: CKRecord.ID? = nil) {
         self.id = UUID()
         self._id = _id
         self.body = body

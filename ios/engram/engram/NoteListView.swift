@@ -34,7 +34,7 @@ struct NoteListView: View {
     var body: some View {
         VStack {
             List {
-                ForEach(Array(vm.notes.enumerated()), id: \.offset) { index, note in
+                ForEach(Array(vm2.notes.enumerated()), id: \.offset) { index, note in
                     if type == "all" || note.type == type || (type == "task" && note.type == "task_completed") {
                         NoteListItem(note: note)
                             .contextMenu {
@@ -77,7 +77,7 @@ struct NoteListView: View {
             dateFormatter.dateFormat = "yyyy-MM-dd"
             
             let typeToSave = type == "all" ? "note" : type
-            let newNote = Note(body: noteBody, date: dateFormatter.string(from: vm.date), type: typeToSave, recordId: CKRecord.ID())
+            let newNote = Note(body: noteBody, date: dateFormatter.string(from: vm2.date), type: typeToSave, recordId: CKRecord.ID())
 
             noteBody = ""
 
