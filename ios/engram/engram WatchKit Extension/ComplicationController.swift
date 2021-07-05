@@ -5,6 +5,7 @@
 //  Created by Adam Berg on 2021-05-21.
 //
 
+import SwiftUI
 import ClockKit
 
 
@@ -14,11 +15,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
 
     func getComplicationDescriptors(handler: @escaping ([CLKComplicationDescriptor]) -> Void) {
         let descriptors = [
-            CLKComplicationDescriptor(identifier: "engramComplication", displayName: "Open engram", supportedFamilies: CLKComplicationFamily.allCases),
-//            CLKComplicationDescriptor(identifier: "engramNoteComplication", displayName: "Create Note", supportedFamilies: CLKComplicationFamily.circularSmall),
-//            CLKComplicationDescriptor(identifier: "engramTaskComplication", displayName: "Create Task", supportedFamilies: CLKComplicationFamily.circularSmall),
-//            CLKComplicationDescriptor(identifier: "engramEventComplication", displayName: "Create Event", supportedFamilies: CLKComplicationFamily.circularSmall)
-            // Multiple complication support can be added here with more descriptors
+            CLKComplicationDescriptor(identifier: "engramComplication", displayName: "engram", supportedFamilies: [CLKComplicationFamily.circularSmall, CLKComplicationFamily.graphicCircular]),
         ]
         
         // Call the handler with the currently supported complication descriptors
@@ -44,8 +41,9 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     // MARK: - Timeline Population
     
     func getCurrentTimelineEntry(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTimelineEntry?) -> Void) {
-        // Call the handler with the current timeline entry
-        handler(nil)
+        let template = makeTemplate(complication: complication)
+        let entry = CLKComplicationTimelineEntry(date: Date(), complicationTemplate: template!)
+        handler(entry)
     }
     
     func getTimelineEntries(for complication: CLKComplication, after date: Date, limit: Int, withHandler handler: @escaping ([CLKComplicationTimelineEntry]?) -> Void) {
@@ -56,7 +54,16 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     // MARK: - Sample Templates
     
     func getLocalizableSampleTemplate(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTemplate?) -> Void) {
-        // This method will be called once per supported complication, and the results will be cached
-        handler(nil)
+        let template = makeTemplate(complication: complication)
+        handler(template)
     }
+}
+
+extension ComplicationController {
+  func makeTemplate(
+    complication: CLKComplication
+  ) -> CLKComplicationTemplate? {
+    return CLKComplicationTemplateGraphicCircularView(
+      ComplicationViewCircular())
+  }
 }
