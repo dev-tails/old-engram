@@ -12,6 +12,8 @@ import CoreData
 let sharedCDDailyViewModel = CDDailyViewModel()
 
 class CDDailyViewModel: ObservableObject {
+    @Published var noteToEditID: UUID?
+    @Published var noteBody: String = ""
     @Published var notes: [Note] = []
     @Published var typeFilter: String = "all"
     @Published var date: Date = Date()
@@ -23,6 +25,11 @@ class CDDailyViewModel: ObservableObject {
     func setDate(date: Date) {
         self.date = date
         self.fetchNotesForDate(date: date)
+    }
+    
+    func setNoteForEdit(note: Note) {
+        noteToEditID = note.id
+        noteBody = note.body ?? ""
     }
     
     func fetchNotesForDate(date: Date) {
@@ -57,6 +64,8 @@ class CDDailyViewModel: ObservableObject {
         
         notes.insert(note, at: 0)
         saveContext()
+        
+        self.noteBody = ""
     }
     
     func saveNote(note: Note) {
@@ -65,6 +74,12 @@ class CDDailyViewModel: ObservableObject {
 
         var propertiesToUpdate: [String:Any] = [:]
 
+        if note.body != nil {
+            propertiesToUpdate["body"] = note.body
+        }
+        if note.date != nil {
+            propertiesToUpdate["date"] = note.date
+        }
         if note.type != nil {
             propertiesToUpdate["type"] = note.type
         }
@@ -77,13 +92,25 @@ class CDDailyViewModel: ObservableObject {
         do {
             try persistentContainer.viewContext.execute(request)
             
-            if note.type != nil {
-                for i in 0..<self.notes.count {
-                    if self.notes[i].id == note.id {
+            for i in 0..<self.notes.count {
+                if self.notes[i].id == note.id {
+                    if note.body != nil {
+                        self.notes[i].body = note.body
+                    }
+                    if note.date != nil {
+                        self.notes[i].date = note.date
+                    }
+                    if note.type != nil {
                         self.notes[i].type = note.type
+                    }
+                    if note.start != nil {
+                        self.notes[i].start = note.start
                     }
                 }
             }
+            
+            self.noteBody = ""
+            self.noteToEditID = nil
         } catch {
             print("Failed to execute request: \(error)")
         }
