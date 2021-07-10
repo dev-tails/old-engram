@@ -23,6 +23,7 @@ struct LoginScreen: View {
             Text("Connect your engram account to sync across all devices").multilineTextAlignment(.center).padding(.bottom)
             TextField("Email", text: $vm.email)
                 .textContentType(.emailAddress)
+                .autocapitalization(.none)
             SecureField("Password", text: $vm.password)
                 .textContentType(.password)
             HStack {
