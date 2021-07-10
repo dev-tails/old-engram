@@ -2,8 +2,8 @@ import Foundation
 import SwiftUI
 
 struct DecodableNote: Decodable, Encodable {
-    var id: String
     var _id: String?
+    var localId: String
     var body: String?
     var date: String?
     var type: String?
@@ -21,7 +21,7 @@ class NoteApi {
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")
         
         let bodyData = try? JSONSerialization.data(
-            withJSONObject: ["body": note.body, "date": note.date, "type": note.type],
+            withJSONObject: ["localId": note.id.uuidString, "body": note.body, "date": note.date, "type": note.type],
             options: []
         )
 
@@ -38,7 +38,7 @@ class NoteApi {
                 let decodedNote = try? decoder.decode(DecodableNote.self, from: data!)
                 
                 if let note = decodedNote {
-                    let newNote = Note(id: UUID(uuidString: note.id), _id: note._id, body: note.body, type: note.type)
+                    let newNote = Note(id: UUID(uuidString: note.localId), _id: note._id, body: note.body, type: note.type)
                     
                     completion(nil, newNote)
                 }
