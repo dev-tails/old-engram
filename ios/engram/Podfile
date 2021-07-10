@@ -2,7 +2,7 @@ use_frameworks!
 platform :ios, '14.5'
 
 target 'engram' do
-
+  pod 'KeychainAccess'
 end
 
 target 'engram WatchKit App' do

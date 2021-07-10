@@ -9,17 +9,11 @@ import SwiftUI
 
 struct SettingsScreen: View {
     var body: some View {
-        VStack {
-            Text("Sync")
-            Text("Sign up to sync across all devices")
-            HStack {
-                Button(action: {}) {
-                    Text("Sign Up")
-                }
-                Button(action: {}) {
-                    Text("Log in")
-                }
-            }
+        List {
+            NavigationLink(destination: LoginScreen(), label: {
+                Image(systemName: "icloud.and.arrow.up")
+                Text("Sync")
+            })
         }.navigationTitle(Text("Settings"))
     }
 }
