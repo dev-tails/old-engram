@@ -11,4 +11,5 @@ end
 
 target 'engram WatchKit Extension' do
   platform :watchos, '7.2'
+  pod 'KeychainAccess'
 end

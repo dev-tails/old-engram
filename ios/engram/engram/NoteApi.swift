@@ -15,6 +15,10 @@ let sharedNoteApi = NoteApi()
 class NoteApi {
 
     func addRemoteNote(note: Note, completion: @escaping (Error?, Note?) -> ()) {
+        if (!sharedLoginViewModel.loggedIn) {
+            return
+        }
+        
         let url = URL(string: "https://engram.xyzdigital.com/api/notes")!
         var request = URLRequest(url: url)
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
