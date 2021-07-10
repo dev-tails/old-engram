@@ -59,6 +59,7 @@ struct LoginScreen: View {
                     Spacer()
                     Text(vm.email).foregroundColor(.gray)
                 }
+                Button(action: {vm.logout()}, label: {Text("Logout")}).foregroundColor(Color.red)
             }.navigationTitle("Sync Settings")
         }
     }

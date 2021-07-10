@@ -109,6 +109,15 @@ class LoginViewModel: ObservableObject {
         task.resume()
     }
     
+    func logout() {
+        self.email = ""
+        self.password = ""
+        self.loggedIn = false
+        
+        try? self.keychain.set(self.email, key: "email")
+        try? self.keychain.set(self.password, key: "password")
+    }
+    
     func signup() {
         let url = URL(string: "https://engram.xyzdigital.com/api/users/signup")!
         var request = URLRequest(url: url)
