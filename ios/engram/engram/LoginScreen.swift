@@ -21,13 +21,19 @@ struct LoginScreen: View {
     var body: some View {
         if !vm.loggedIn {
             VStack {
+                #if os(watchOS)
+                TextField("Email", text: $vm.email)
+                    .textContentType(.emailAddress)
+                #else
                 Text("Connect your engram account to sync across all devices").multilineTextAlignment(.center).padding(.bottom)
                 TextField("Email", text: $vm.email)
                     .textContentType(.emailAddress)
                     .autocapitalization(.none)
+                #endif
                 SecureField("Password", text: $vm.password)
                     .textContentType(.password)
                 HStack {
+                    #if !os(watchOS)
                     Button("Sign Up", action: handleSignup)
                         .alert(isPresented: $vm.hasSignupError) {
                             Alert(
@@ -36,6 +42,7 @@ struct LoginScreen: View {
                             )
                         }
                     Spacer()
+                    #endif
                     Button("Login", action: handleLogin)
                         .alert(isPresented: $vm.hasLoginError) {
                             Alert(
@@ -44,13 +51,15 @@ struct LoginScreen: View {
                             )
                         }
                 }
+                #if !os(watchOS)
                 HStack {
                     Link("Terms", destination: URL(string: "https://engram.xyzdigital.com/legal/terms-of-service")!)
                     Text("&")
                     Link("Privacy", destination: URL(string: "https://engram.xyzdigital.com/legal/privacy-policy")!)
                 }.padding()
+                #endif
                 
-            }.frame(width: 256).navigationTitle("Sync Settings")
+            }.navigationTitle("Sync Settings")
         } else {
             List {
                 HStack {

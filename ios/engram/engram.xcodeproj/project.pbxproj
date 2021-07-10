@@ -16,6 +16,8 @@
 		6641569F269A39DC00B063D5 /* NoteApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6641569E269A39DB00B063D5 /* NoteApi.swift */; };
 		664156A0269A3ED600B063D5 /* NoteApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6641569E269A39DB00B063D5 /* NoteApi.swift */; };
 		664156A1269A5BE100B063D5 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D971D267FC96E00B4B549 /* LoginViewModel.swift */; };
+		664156A2269A60CD00B063D5 /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6641569A269A096000B063D5 /* SettingsScreen.swift */; };
+		664156A3269A60D800B063D5 /* LoginScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D971A267FC65300B4B549 /* LoginScreen.swift */; };
 		665D9711267FA08600B4B549 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D970E267F9CFA00B4B549 /* Note.swift */; };
 		665D9712267FA08A00B4B549 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D970E267F9CFA00B4B549 /* Note.swift */; };
 		665D9717267FA98300B4B549 /* DailyScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D9716267FA98300B4B549 /* DailyScreen.swift */; };
@@ -603,6 +605,7 @@
 				66BD3953269374CB0073D52D /* engram.xcdatamodeld in Sources */,
 				66ABEA8026589C73006C9FD5 /* ContentView.swift in Sources */,
 				66ABEA8626589C73006C9FD5 /* ComplicationController.swift in Sources */,
+				664156A3269A60D800B063D5 /* LoginScreen.swift in Sources */,
 				665D9712267FA08A00B4B549 /* Note.swift in Sources */,
 				664156A1269A5BE100B063D5 /* LoginViewModel.swift in Sources */,
 				66E59163265B2B7700E38067 /* ComplicationViews.swift in Sources */,
@@ -611,6 +614,7 @@
 				66ABEA7E26589C73006C9FD5 /* engramApp.swift in Sources */,
 				66E5915B2659A23D00E38067 /* CheckboxToggleStyle.swift in Sources */,
 				66BD3952269374BD0073D52D /* Persistence.swift in Sources */,
+				664156A2269A60CD00B063D5 /* SettingsScreen.swift in Sources */,
 				66ABEA8426589C73006C9FD5 /* NotificationView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
