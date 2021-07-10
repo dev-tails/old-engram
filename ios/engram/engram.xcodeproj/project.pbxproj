@@ -10,6 +10,7 @@
 		3416329B2C96DDB66B54C56D /* Pods_engram_WatchKit_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AC5F774F8530BDD6CD732AD /* Pods_engram_WatchKit_App.framework */; };
 		6620D2CC268F64D700282E2C /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6620D2CB268F64D700282E2C /* Persistence.swift */; };
 		6620D2D1268F67BD00282E2C /* CDDailyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6620D2D0268F67BD00282E2C /* CDDailyViewModel.swift */; };
+		6641569B269A096100B063D5 /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6641569A269A096000B063D5 /* SettingsScreen.swift */; };
 		665D9711267FA08600B4B549 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D970E267F9CFA00B4B549 /* Note.swift */; };
 		665D9712267FA08A00B4B549 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D970E267F9CFA00B4B549 /* Note.swift */; };
 		665D9717267FA98300B4B549 /* DailyScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D9716267FA98300B4B549 /* DailyScreen.swift */; };
@@ -106,6 +107,7 @@
 		660120EC268122E000D7D4ED /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		6620D2CB268F64D700282E2C /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		6620D2D0268F67BD00282E2C /* CDDailyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CDDailyViewModel.swift; sourceTree = "<group>"; };
+		6641569A269A096000B063D5 /* SettingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScreen.swift; sourceTree = "<group>"; };
 		6654B6DF2681561500E590DC /* engram WatchKit App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "engram WatchKit App.entitlements"; sourceTree = "<group>"; };
 		665D970E267F9CFA00B4B549 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		665D9713267FA24D00B4B549 /* DailyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyViewModel.swift; sourceTree = "<group>"; };
@@ -246,6 +248,7 @@
 				666DB8A72686C6E5008DD7BC /* CKDailyViewModel.swift */,
 				6620D2CB268F64D700282E2C /* Persistence.swift */,
 				6620D2D0268F67BD00282E2C /* CDDailyViewModel.swift */,
+				6641569A269A096000B063D5 /* SettingsScreen.swift */,
 			);
 			path = engram;
 			sourceTree = "<group>";
@@ -536,6 +539,7 @@
 				665D9711267FA08600B4B549 /* Note.swift in Sources */,
 				66E5911F2658A58600E38067 /* NoteListItem.swift in Sources */,
 				6620D2D1268F67BD00282E2C /* CDDailyViewModel.swift in Sources */,
+				6641569B269A096100B063D5 /* SettingsScreen.swift in Sources */,
 				66E591212658C30F00E38067 /* NoteListView.swift in Sources */,
 				66E5915A2659A23D00E38067 /* CheckboxToggleStyle.swift in Sources */,
 				66E591602659B6E000E38067 /* CustomTextField.swift in Sources */,

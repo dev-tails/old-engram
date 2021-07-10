@@ -17,6 +17,7 @@ class CDDailyViewModel: ObservableObject {
     @Published var notes: [Note] = []
     @Published var typeFilter: String = "all"
     @Published var date: Date = Date()
+    @Published var screen = "daily"
     
     init() {
         fetchNotesForDate(date: date)
