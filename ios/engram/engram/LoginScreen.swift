@@ -19,37 +19,48 @@ struct LoginScreen: View {
     }
     
     var body: some View {
-        VStack {
-            Text("Connect your engram account to sync across all devices").multilineTextAlignment(.center).padding(.bottom)
-            TextField("Email", text: $vm.email)
-                .textContentType(.emailAddress)
-                .autocapitalization(.none)
-            SecureField("Password", text: $vm.password)
-                .textContentType(.password)
-            HStack {
-                Button("Sign Up", action: handleSignup)
-                    .alert(isPresented: $vm.hasSignupError) {
-                        Alert(
-                            title: Text("Error"),
-                            message: Text(vm.signupError)
-                        )
-                    }
-                Spacer()
-                Button("Login", action: handleLogin)
-                    .alert(isPresented: $vm.hasLoginError) {
-                        Alert(
-                            title: Text("Error"),
-                            message: Text(vm.loginError)
-                        )
-                    }
-            }
-            HStack {
-                Link("Terms", destination: URL(string: "https://engram.xyzdigital.com/legal/terms-of-service")!)
-                Text("&")
-                Link("Privacy", destination: URL(string: "https://engram.xyzdigital.com/legal/privacy-policy")!)
-            }.padding()
-            
-        }.frame(width: 256)
+        if !vm.loggedIn {
+            VStack {
+                Text("Connect your engram account to sync across all devices").multilineTextAlignment(.center).padding(.bottom)
+                TextField("Email", text: $vm.email)
+                    .textContentType(.emailAddress)
+                    .autocapitalization(.none)
+                SecureField("Password", text: $vm.password)
+                    .textContentType(.password)
+                HStack {
+                    Button("Sign Up", action: handleSignup)
+                        .alert(isPresented: $vm.hasSignupError) {
+                            Alert(
+                                title: Text("Error"),
+                                message: Text(vm.signupError)
+                            )
+                        }
+                    Spacer()
+                    Button("Login", action: handleLogin)
+                        .alert(isPresented: $vm.hasLoginError) {
+                            Alert(
+                                title: Text("Error"),
+                                message: Text(vm.loginError)
+                            )
+                        }
+                }
+                HStack {
+                    Link("Terms", destination: URL(string: "https://engram.xyzdigital.com/legal/terms-of-service")!)
+                    Text("&")
+                    Link("Privacy", destination: URL(string: "https://engram.xyzdigital.com/legal/privacy-policy")!)
+                }.padding()
+                
+            }.frame(width: 256).navigationTitle("Sync Settings")
+        } else {
+            List {
+                HStack {
+                    Image(systemName: "person")
+                    Text("Account")
+                    Spacer()
+                    Text(vm.email).foregroundColor(.gray)
+                }
+            }.navigationTitle("Sync Settings")
+        }
     }
 }
 

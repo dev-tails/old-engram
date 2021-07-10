@@ -4,5 +4,13 @@
 <dict>
 	<key>com.apple.developer.icloud-container-environment</key>
 	<string>Development</string>
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.engram</string>
+	</array>
+	<key>keychain-access-groups</key>
+	<array>
+		<string>$(AppIdentifierPrefix)com.xyzdigital.engram</string>
+	</array>
 </dict>
 </plist>
