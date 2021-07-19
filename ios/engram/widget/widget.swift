@@ -44,7 +44,24 @@ struct widgetEntryView : View {
     var entry: Provider.Entry
 
     var body: some View {
-        Text(entry.date, style: .time)
+        VStack {
+            ZStack {
+                Color(hex: 0x3f51b5)
+                Text(entry.date, style: .date).foregroundColor(.white)
+            }.frame(height: 32)
+            HStack {
+                Text("This is a note")
+                Spacer()
+            }.padding(.horizontal)
+            Divider()
+            HStack {
+                Text("This is a note")
+                Spacer()
+            }.padding(.horizontal)
+            Divider()
+
+            Spacer()
+        }
     }
 }
 
@@ -65,5 +82,17 @@ struct widget_Previews: PreviewProvider {
     static var previews: some View {
         widgetEntryView(entry: SimpleEntry(date: Date(), configuration: ConfigurationIntent()))
             .previewContext(WidgetPreviewContext(family: .systemSmall))
+    }
+}
+
+extension Color {
+    init(hex: UInt, alpha: Double = 1) {
+        self.init(
+            .sRGB,
+            red: Double((hex >> 16) & 0xff) / 255,
+            green: Double((hex >> 08) & 0xff) / 255,
+            blue: Double((hex >> 00) & 0xff) / 255,
+            opacity: alpha
+        )
     }
 }
