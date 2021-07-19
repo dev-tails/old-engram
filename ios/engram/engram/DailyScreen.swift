@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct DailyScreen: View {
-    @ObservedObject var vm = sharedDailyViewModel
+    @ObservedObject var vm = sharedCDDailyViewModel
     
     var type: String
     
@@ -55,9 +55,10 @@ struct DailyScreen: View {
                 Button(action: handleSync) {
                     Image(systemName: "arrow.clockwise.icloud")
                         .imageScale(.large)
+                        .hidden()
                 }
             }.padding()
-            NoteListView(vm: vm, type: type)
+            NoteListView(type: type)
         }
     }
 }

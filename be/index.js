@@ -24,6 +24,8 @@ async function run() {
 
   const app = express();
 
+  app.disable("x-powered-by");
+
   if (app.get("env") === "production") {
     app.set("trust proxy", 1); // trust first proxy
   }

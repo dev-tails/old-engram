@@ -20,6 +20,7 @@ struct LoginScreen: View {
     
     var body: some View {
         VStack {
+            Text("Connect your engram account to sync across all devices").multilineTextAlignment(.center).padding(.bottom)
             TextField("Email", text: $vm.email)
                 .textContentType(.emailAddress)
             SecureField("Password", text: $vm.password)
@@ -41,6 +42,11 @@ struct LoginScreen: View {
                         )
                     }
             }
+            HStack {
+                Link("Terms", destination: URL(string: "https://engram.xyzdigital.com/legal/terms-of-service")!)
+                Text("&")
+                Link("Privacy", destination: URL(string: "https://engram.xyzdigital.com/legal/privacy-policy")!)
+            }.padding()
             
         }.frame(width: 256)
     }

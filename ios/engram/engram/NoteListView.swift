@@ -6,11 +6,11 @@
 //
 
 import SwiftUI
+import CloudKit
 
 struct NoteListView: View {
-    @ObservedObject var vm: DailyViewModel
+    @ObservedObject var vm2 = sharedCDDailyViewModel
     @State private var inputActive = true
-    @State private var noteBody = ""
     var type: String
     
     let placeHolderByType = [
@@ -20,26 +20,29 @@ struct NoteListView: View {
         "event": "What's happening today?"
     ]
     
-    init(vm: DailyViewModel, type: String) {
+    init(type: String) {
         self.type = type
         
         var types = [type]
         if (type == "task") {
             types.append("task_completed")
         }
-        
-        self.vm = vm
     }
     
     var body: some View {
         VStack {
             List {
-                ForEach(Array(vm.notes.enumerated()), id: \.offset) { index, note in
+                ForEach(Array(vm2.notes), id: \.id) { note in
                     if type == "all" || note.type == type || (type == "task" && note.type == "task_completed") {
                         NoteListItem(note: note)
                             .contextMenu {
                                 Button(action: {
-                                    deleteItems(offsets: IndexSet([index]))
+                                    handleEditNotePressed(note: note)
+                                }){
+                                    Text("Edit")
+                                }
+                                Button(action: {
+                                    deleteNote(note: note)
                                 }){
                                     Text("Delete")
                                 }
@@ -48,7 +51,7 @@ struct NoteListView: View {
                 }.onDelete(perform: deleteItems)
             }
             HStack {
-                TextField(placeHolderByType[type]!, text: $noteBody, onCommit: addNote)
+                TextField(placeHolderByType[type]!, text: $vm2.noteBody, onCommit: addNote)
 //                ScrollView(.horizontal, showsIndicators: false) {
                     
 //                    CustomTextField(placeholder: placeHolderByType[type]!, text: $noteBody, onCommit: addNote).frame(height: 16)
@@ -67,8 +70,12 @@ struct NoteListView: View {
         }
     }
     
+    private func handleEditNotePressed(note: Note) {
+        vm2.setNoteForEdit(note: note)
+    }
+    
     private func addNote() {
-        if (noteBody == "") {
+        if (vm2.noteBody == "") {
             return
         }
         
@@ -76,20 +83,27 @@ struct NoteListView: View {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
             
-            let typeToSave = type == "all" ? "note" : type
-            let newNote = Note(body: noteBody, date: dateFormatter.string(from: vm.date), type: typeToSave)
-            
-            noteBody = ""
-            
-            vm.addNote(note: newNote)
+            if vm2.noteToEditID != nil {
+                let typeToSave = type == "all" ? nil : type
+                let updatedNote = Note(id: vm2.noteToEditID, body: vm2.noteBody, date: dateFormatter.string(from: vm2.date), type: typeToSave)
+                vm2.saveNote(note: updatedNote)
+            } else {
+                let typeToSave = type == "all" ? "note" : type
+                let newNote = Note(body: vm2.noteBody, date: dateFormatter.string(from: vm2.date), type: typeToSave, recordId: CKRecord.ID())
+                vm2.addNote(note: newNote)
+            }
         }
+    }
+    
+    private func deleteNote(note: Note) {
+        vm2.deleteNote(id: note.id)
     }
     
     private func deleteItems(offsets: IndexSet) {
         var removedCount = 0;
         for i in offsets {
             let indexToRemove = i - removedCount
-            vm.deleteNote(id: vm.notes[indexToRemove]._id!)
+            vm2.deleteNote(id: vm2.notes[indexToRemove].id)
             removedCount += 1
         }
     }
@@ -97,6 +111,6 @@ struct NoteListView: View {
 
 struct NoteListView_Previews: PreviewProvider {
     static var previews: some View {
-        NoteListView(vm: DailyViewModel(), type: "note")
+        NoteListView(type: "note")
     }
 }

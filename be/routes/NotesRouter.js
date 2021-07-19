@@ -12,6 +12,8 @@ export function initializeNotesRouter() {
   router.use(AuthRequiredMiddleware);
 
   router.get("", async function (req, res) {
+    console.log(req);
+
     const { user, db } = req;
 
     const querySchema = yup.object().shape({

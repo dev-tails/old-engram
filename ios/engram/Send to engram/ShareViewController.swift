@@ -7,7 +7,7 @@
 
 import UIKit
 import Social
-import KeychainAccess
+import CloudKit
 
 class ShareViewController: SLComposeServiceViewController {
 
@@ -23,15 +23,11 @@ class ShareViewController: SLComposeServiceViewController {
             itemProvider.hasItemConformingToTypeIdentifier("public.url") {
             itemProvider.loadItem(forTypeIdentifier: "public.url", options: nil) { (url, error) in
                 if let shareURL = url as? URL {
-                    loginAndAddNote(body: String(format: "[%@](%@)", self.contentText!, shareURL.absoluteString))
+                    self.addNote(body: String(format: "[%@](%@)", self.contentText!, shareURL.absoluteString))
                 }
-                self.extensionContext?.completeRequest(returningItems: [], completionHandler:nil)
             }
         } else {
-            loginAndAddNote(body: contentText!)
-        
-            // Inform the host that we're done, so it un-blocks its UI. Note: Alternatively you could call super's -didSelectPost, which will similarly complete the extension context.
-            self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
+            self.addNote(body: contentText!)
         }
     }
 
@@ -40,79 +36,19 @@ class ShareViewController: SLComposeServiceViewController {
         return []
     }
 
-}
-
-func loginAndAddNote(body: String) {
-    let url = URL(string: "https://engram.xyzdigital.com/api/users/login")!
-    var request = URLRequest(url: url)
-    request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-    request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")
     
-    let uniqueServiceName = "com.xyzdigital.engram"
-    let uniqueAccessGroup = "group.engram"
-    
-    let keychain = Keychain(service: uniqueServiceName, accessGroup: uniqueAccessGroup)
-    
-    let email = try? keychain.get("email") ?? ""
-    let password = try? keychain.get("password") ?? ""
-    
-    let bodyData = try? JSONSerialization.data(
-        withJSONObject: ["username": email, "password": password],
-        options: []
-    )
-
-    request.httpMethod = "POST"
-    request.httpBody = bodyData
-    
-    let session = URLSession.shared
-    let task = session.dataTask(with: request) { (data, response, error) in
-
-        if let error = error {
-            print(error)
-        } else if data != nil {
-            
-            if let httpResponse = response as? HTTPURLResponse {
-                if httpResponse.statusCode == 200 {
-                    addNote(body: body)
-                }
-            }
-            
-        } else {
-            // Handle unexpected error
-        }
+    func addNote(body: String) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd";
+        let dateString = dateFormatter.string(from: Date())
+        
+        let cdNote = CDNote(context: persistentContainer.viewContext)
+        cdNote.id = UUID()
+        cdNote.date = dateString
+        cdNote.body = body
+        cdNote.type = "note"
+        
+        saveContext()
+        self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
     }
-    task.resume()
-}
-
-func addNote(body: String) {
-    let url = URL(string: "https://engram.xyzdigital.com/api/notes")!
-    var request = URLRequest(url: url)
-    request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-    request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")
-    
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "yyyy-MM-dd";
-    let dateString = dateFormatter.string(from: Date())
-    
-    let bodyData = try? JSONSerialization.data(
-        withJSONObject: ["body": body, "date": dateString, "type": "note"],
-        options: []
-    )
-
-    request.httpMethod = "POST"
-    request.httpBody = bodyData
-    
-    let session = URLSession.shared
-    let task = session.dataTask(with: request) { (data, response, error) in
-
-        if let error = error {
-            print(error)
-        } else if data != nil {
-            print("success")
-        } else {
-            // Handle unexpected error
-            print("unexpected")
-        }
-    }
-    task.resume()
 }

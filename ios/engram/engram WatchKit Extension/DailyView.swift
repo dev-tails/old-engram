@@ -6,9 +6,10 @@
 //
 
 import SwiftUI
+import CloudKit
 
 struct DailyView: View {
-    @ObservedObject var vm = sharedDailyViewModel
+    @ObservedObject var vm = sharedCDDailyViewModel
     
     func handleDictateButtonPressed(type: String) -> Void {
         WKExtension.shared()
@@ -21,7 +22,7 @@ struct DailyView: View {
                 withAnimation {
                     let dateFormatter = DateFormatter()
                     dateFormatter.dateFormat = "yyyy-MM-dd"
-                    let newNote = Note(body: result[0], date: dateFormatter.string(from: Date()), type: type)
+                    let newNote = Note(body: result[0], date: dateFormatter.string(from: Date()), type: type, recordId: CKRecord.ID())
                     vm.addNote(note: newNote)
                 }
             }
@@ -31,7 +32,7 @@ struct DailyView: View {
         var removedCount = 0;
         for i in offsets {
             let indexToRemove = i - removedCount
-            vm.deleteNote(id: vm.notes[indexToRemove]._id!)
+            vm.deleteNote(id: vm.notes[indexToRemove].id)
             removedCount += 1
         }
     }
@@ -40,7 +41,20 @@ struct DailyView: View {
         VStack {
             List {
                 ForEach(vm.notes) {note in
-                    Text(note.body!)
+                    HStack {
+                        if (note.type == "task" || note.type == "task_completed") {
+                            Button(action: {
+                                let type = note.type == "task" ? "task_completed" : "task"
+
+                                let noteToSave = Note(id: note.id, type: type)
+
+                                vm.saveNote(note: noteToSave)
+                            }) {
+                                Image(systemName: note.type == "task_completed" ? "checkmark.square" : "square")
+                            }.frame(width: 16)
+                        }
+                        Text(note.body ?? "")
+                    }
                 }.onDelete(perform: deleteItems)
             }
             HStack {

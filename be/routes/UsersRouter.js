@@ -1,12 +1,12 @@
-import bcrypt from "bcrypt";
-import express from "express";
-import jwt from "jsonwebtoken";
-import yup from "yup";
+import bcrypt from 'bcrypt';
+import express from 'express';
+import jwt from 'jsonwebtoken';
+import yup from 'yup';
 
-import { ObjectId } from "../Database.js";
-import { getEnv } from "../env.js";
-import { AuthAPIKeyMiddleware } from "../middleware/AuthAPIKeyMiddleware.js";
-import { AuthRequiredMiddleware } from "../middleware/AuthRequiredMiddleware.js";
+import { ObjectId } from '../Database.js';
+import { getEnv } from '../env.js';
+import { AuthAPIKeyMiddleware } from '../middleware/AuthAPIKeyMiddleware.js';
+import { AuthRequiredMiddleware } from '../middleware/AuthRequiredMiddleware.js';
 
 async function setToken(res, user) {
   const { jwtSecret, production } = getEnv();
@@ -23,11 +23,18 @@ async function setToken(res, user) {
         if (err) {
           return reject(err);
         }
+        console.log("COOKIE");
+        res.cookie("test", "test value", {
+          maxAge: expiresInSeconds * 1000,
+          secure: production,
+          httpOnly: true,
+          sameSite: false,
+        });
         res.cookie("token", token, {
           maxAge: expiresInSeconds * 1000,
           secure: production,
           httpOnly: true,
-          sameSite: true,
+          sameSite: false,
         });
         resolve();
       }

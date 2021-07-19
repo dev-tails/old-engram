@@ -1,7 +1,8 @@
 import SwiftUI
+import CloudKit
 
 struct NoteListItem: View {
-    @ObservedObject var vm = sharedDailyViewModel
+    @ObservedObject var vm = sharedCDDailyViewModel
     private var _note: Note
     @State var start: Date = Date()
     
@@ -18,9 +19,9 @@ struct NoteListItem: View {
     func toggleType() {
         let type = _note.type == "task" ? "task_completed" : "task"
 
-        let noteToSave = Note(_id: _note._id, type: type)
-        
-        vm.updateNote(note: noteToSave)
+        let noteToSave = Note(id: _note.id, type: type, recordId: _note.recordId)
+
+        vm.saveNote(note: noteToSave)
     }
     
     var body: some View {
@@ -35,21 +36,15 @@ struct NoteListItem: View {
                     .labelsHidden()
                     .onAppear() {
                         if _note.start != nil {
-                            let dateFormatter = DateFormatter()
-                            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-                            let optDate = dateFormatter.date(from: _note.start!)
-                            
-                            if optDate != nil {
-                                start = optDate!
-                            }
+                            start = _note.start!
                         }
                     }
                     .onChange(of: start) { newValue in
-                        let dateFormatter = DateFormatter()
-                        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-                        let startString = dateFormatter.string(from: start)
+//                        let dateFormatter = DateFormatter()
+//                        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+//                        let startString = dateFormatter.string(from: start)
                         
-                        vm.updateNote(note: Note(_id: _note._id, type: "event", start: startString))
+                        vm.saveNote(note: Note(id: _note.id, type: "event", start: start))
                     }
             }
             Text(_note.body!)
