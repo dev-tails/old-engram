@@ -66,7 +66,13 @@ class CDDailyViewModel: ObservableObject {
         notes.insert(note, at: 0)
         saveContext()
         
+        sharedNoteApi.addRemoteNote(note: note, completion: handleRemoteNoteAdded)
+        
         self.noteBody = ""
+    }
+    
+    func handleRemoteNoteAdded(error: Error?, note: Note?) {
+        
     }
     
     func saveNote(note: Note) {

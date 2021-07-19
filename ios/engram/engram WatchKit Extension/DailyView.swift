@@ -56,6 +56,12 @@ struct DailyView: View {
                         Text(note.body ?? "")
                     }
                 }.onDelete(perform: deleteItems)
+            }.toolbar {
+                ToolbarItemGroup {
+                    NavigationLink(destination: SettingsScreen(), label: {
+                        Image(systemName: "gear")
+                    })
+                }
             }
             HStack {
                 
@@ -70,7 +76,7 @@ struct DailyView: View {
                 }
                 
             }
-        }
+        }.navigationTitle("engram")
     }
 }
 
