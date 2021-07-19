@@ -21,6 +21,13 @@
 		665D9711267FA08600B4B549 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D970E267F9CFA00B4B549 /* Note.swift */; };
 		665D9712267FA08A00B4B549 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D970E267F9CFA00B4B549 /* Note.swift */; };
 		665D9717267FA98300B4B549 /* DailyScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D9716267FA98300B4B549 /* DailyScreen.swift */; };
+		666F9D9726A4FEAD007E8796 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 666F9D9626A4FEAD007E8796 /* WidgetKit.framework */; platformFilter = maccatalyst; };
+		666F9D9926A4FEAD007E8796 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 666F9D9826A4FEAD007E8796 /* SwiftUI.framework */; platformFilter = maccatalyst; };
+		666F9D9C26A4FEAD007E8796 /* widget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 666F9D9B26A4FEAD007E8796 /* widget.swift */; };
+		666F9D9F26A4FEB0007E8796 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 666F9D9E26A4FEB0007E8796 /* Assets.xcassets */; };
+		666F9DA126A4FEB0007E8796 /* widget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 666F9D9D26A4FEAD007E8796 /* widget.intentdefinition */; };
+		666F9DA226A4FEB0007E8796 /* widget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 666F9D9D26A4FEAD007E8796 /* widget.intentdefinition */; };
+		666F9DA526A4FEB0007E8796 /* widgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 666F9D9526A4FEAD007E8796 /* widgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		6689D59626840CD200F5DD2B /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6689D59526840CD200F5DD2B /* MainView.swift */; };
 		66ABEA6126589C6F006C9FD5 /* engramApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66ABEA6026589C6F006C9FD5 /* engramApp.swift */; };
 		66ABEA6326589C6F006C9FD5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66ABEA6226589C6F006C9FD5 /* ContentView.swift */; };
@@ -56,6 +63,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		666F9DA326A4FEB0007E8796 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 66ABEA5526589C6E006C9FD5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 666F9D9426A4FEAD007E8796;
+			remoteInfo = widgetExtension;
+		};
 		66ABEA6E26589C72006C9FD5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 66ABEA5526589C6E006C9FD5 /* Project object */;
@@ -79,6 +93,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				666F9DA526A4FEB0007E8796 /* widgetExtension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -123,6 +138,14 @@
 		665D971A267FC65300B4B549 /* LoginScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreen.swift; sourceTree = "<group>"; };
 		665D971D267FC96E00B4B549 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		666DB8A72686C6E5008DD7BC /* CKDailyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKDailyViewModel.swift; sourceTree = "<group>"; };
+		666F9D9526A4FEAD007E8796 /* widgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = widgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		666F9D9626A4FEAD007E8796 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		666F9D9826A4FEAD007E8796 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		666F9D9B26A4FEAD007E8796 /* widget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = widget.swift; sourceTree = "<group>"; };
+		666F9D9D26A4FEAD007E8796 /* widget.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = widget.intentdefinition; sourceTree = "<group>"; };
+		666F9D9E26A4FEB0007E8796 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		666F9DA026A4FEB0007E8796 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		666F9DA626A4FEB0007E8796 /* widgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = widgetExtension.entitlements; sourceTree = "<group>"; };
 		66855150268116D000086094 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		66855153268116D000086094 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		66855155268116D000086094 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -177,6 +200,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		666F9D9226A4FEAD007E8796 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				666F9D9926A4FEAD007E8796 /* SwiftUI.framework in Frameworks */,
+				666F9D9726A4FEAD007E8796 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		66ABEA5A26589C6F006C9FD5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -198,6 +230,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		666F9D9A26A4FEAD007E8796 /* widget */ = {
+			isa = PBXGroup;
+			children = (
+				666F9D9B26A4FEAD007E8796 /* widget.swift */,
+				666F9D9D26A4FEAD007E8796 /* widget.intentdefinition */,
+				666F9D9E26A4FEB0007E8796 /* Assets.xcassets */,
+				666F9DA026A4FEB0007E8796 /* Info.plist */,
+			);
+			path = widget;
+			sourceTree = "<group>";
+		};
 		6685514F268116D000086094 /* Send to engram */ = {
 			isa = PBXGroup;
 			children = (
@@ -212,10 +255,12 @@
 		66ABEA5426589C6E006C9FD5 = {
 			isa = PBXGroup;
 			children = (
+				666F9DA626A4FEB0007E8796 /* widgetExtension.entitlements */,
 				66ABEA5F26589C6F006C9FD5 /* engram */,
 				66ABEA7026589C72006C9FD5 /* engram WatchKit App */,
 				66ABEA7C26589C73006C9FD5 /* engram WatchKit Extension */,
 				6685514F268116D000086094 /* Send to engram */,
+				666F9D9A26A4FEAD007E8796 /* widget */,
 				66ABEA5E26589C6F006C9FD5 /* Products */,
 				66E591232659787C00E38067 /* Frameworks */,
 				D2734189A952296D8B08FD80 /* Pods */,
@@ -228,6 +273,7 @@
 				66ABEA5D26589C6F006C9FD5 /* engram.app */,
 				66ABEA6C26589C72006C9FD5 /* engram WatchKit App.app */,
 				66ABEA7826589C73006C9FD5 /* engram WatchKit Extension.appex */,
+				666F9D9526A4FEAD007E8796 /* widgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -317,6 +363,8 @@
 				90B7F836578CD2E385E4E26C /* Pods_engram.framework */,
 				9AC5F774F8530BDD6CD732AD /* Pods_engram_WatchKit_App.framework */,
 				93B26201B82098AA16082343 /* Pods_engram_WatchKit_Extension.framework */,
+				666F9D9626A4FEAD007E8796 /* WidgetKit.framework */,
+				666F9D9826A4FEAD007E8796 /* SwiftUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -337,6 +385,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		666F9D9426A4FEAD007E8796 /* widgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 666F9DA926A4FEB0007E8796 /* Build configuration list for PBXNativeTarget "widgetExtension" */;
+			buildPhases = (
+				666F9D9126A4FEAD007E8796 /* Sources */,
+				666F9D9226A4FEAD007E8796 /* Frameworks */,
+				666F9D9326A4FEAD007E8796 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = widgetExtension;
+			productName = widgetExtension;
+			productReference = 666F9D9526A4FEAD007E8796 /* widgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		66ABEA5C26589C6F006C9FD5 /* engram */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 66ABEA9826589C74006C9FD5 /* Build configuration list for PBXNativeTarget "engram" */;
@@ -353,6 +418,7 @@
 			);
 			dependencies = (
 				66ABEA6F26589C72006C9FD5 /* PBXTargetDependency */,
+				666F9DA426A4FEB0007E8796 /* PBXTargetDependency */,
 			);
 			name = engram;
 			productName = engram;
@@ -403,9 +469,12 @@
 		66ABEA5526589C6E006C9FD5 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1250;
+				LastSwiftUpdateCheck = 1300;
 				LastUpgradeCheck = 1250;
 				TargetAttributes = {
+					666F9D9426A4FEAD007E8796 = {
+						CreatedOnToolsVersion = 13.0;
+					};
 					66ABEA5C26589C6F006C9FD5 = {
 						CreatedOnToolsVersion = 12.5;
 					};
@@ -434,11 +503,20 @@
 				66ABEA5C26589C6F006C9FD5 /* engram */,
 				66ABEA6B26589C72006C9FD5 /* engram WatchKit App */,
 				66ABEA7726589C73006C9FD5 /* engram WatchKit Extension */,
+				666F9D9426A4FEAD007E8796 /* widgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		666F9D9326A4FEAD007E8796 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				666F9D9F26A4FEB0007E8796 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		66ABEA5B26589C6F006C9FD5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -573,12 +651,22 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		666F9D9126A4FEAD007E8796 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				666F9DA126A4FEB0007E8796 /* widget.intentdefinition in Sources */,
+				666F9D9C26A4FEAD007E8796 /* widget.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		66ABEA5926589C6F006C9FD5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				6620D2CC268F64D700282E2C /* Persistence.swift in Sources */,
 				66ABEA6326589C6F006C9FD5 /* ContentView.swift in Sources */,
+				666F9DA226A4FEB0007E8796 /* widget.intentdefinition in Sources */,
 				6689D59626840CD200F5DD2B /* MainView.swift in Sources */,
 				66ABEA6126589C6F006C9FD5 /* engramApp.swift in Sources */,
 				665D9711267FA08600B4B549 /* Note.swift in Sources */,
@@ -622,6 +710,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		666F9DA426A4FEB0007E8796 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 666F9D9426A4FEAD007E8796 /* widgetExtension */;
+			targetProxy = 666F9DA326A4FEB0007E8796 /* PBXContainerItemProxy */;
+		};
 		66ABEA6F26589C72006C9FD5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			platformFilter = ios;
@@ -647,6 +740,69 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		666F9DA726A4FEB0007E8796 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = widgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V3T29AUKGC;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = widget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = widget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.xyzdigital.engram.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		666F9DA826A4FEB0007E8796 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = widgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V3T29AUKGC;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = widget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = widget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.xyzdigital.engram.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		66ABEA8E26589C74006C9FD5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -943,6 +1099,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		666F9DA926A4FEB0007E8796 /* Build configuration list for PBXNativeTarget "widgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				666F9DA726A4FEB0007E8796 /* Debug */,
+				666F9DA826A4FEB0007E8796 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		66ABEA5826589C6E006C9FD5 /* Build configuration list for PBXProject "engram" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
