@@ -9,8 +9,22 @@
   flex-direction: column-reverse;
 
   .note-list-item {
+    .right-icon {
+      display: none;
+    }
+
+    &:hover {
+      .right-icon {
+        display: inline-block;
+      }
+    }
+
     &.selected {
       background-color: #3f51b5;
+
+      .right-icon {
+        display: inline-block;
+      }
     }
 
     .right-icon {
