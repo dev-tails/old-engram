@@ -20,7 +20,6 @@ export default function LoginPage(props: LoginPageProps) {
   const [password, setPassword] = useState("testtest");
   const [username, setUsername] = useState("test");
   const [errors, setErrors] = useState<Note[]>([]);
-  const [debug, setDebug] = useState("");
 
   const handleSignIn = () => {
     axios
@@ -69,7 +68,6 @@ export default function LoginPage(props: LoginPageProps) {
   return (
     <div className="login-page">
       <div className="container">
-        <p>{debug}</p>
         <div className="logo">
           <img
             alt="engram logo"
