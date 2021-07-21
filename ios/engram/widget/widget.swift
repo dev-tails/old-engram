@@ -11,11 +11,11 @@ import Intents
 
 struct Provider: IntentTimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date(), configuration: ConfigurationIntent())
+        SimpleEntry(date: Date(), notes: [], configuration: ConfigurationIntent())
     }
 
     func getSnapshot(for configuration: ConfigurationIntent, in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-        let entry = SimpleEntry(date: Date(), configuration: configuration)
+        let entry = SimpleEntry(date: Date(), notes: [], configuration: configuration)
         completion(entry)
     }
 
@@ -24,19 +24,23 @@ struct Provider: IntentTimelineProvider {
 
         // Generate a timeline consisting of five entries an hour apart, starting from the current date.
         let currentDate = Date()
-        for hourOffset in 0 ..< 5 {
-            let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = SimpleEntry(date: entryDate, configuration: configuration)
-            entries.append(entry)
-        }
+        let notes = [
+            Note(body: "Note 1"),
+            Note(body: "Note 2")
+        ]
+        
+        let entry = SimpleEntry(date: currentDate, notes: notes, configuration: configuration)
+        entries.append(entry)
 
-        let timeline = Timeline(entries: entries, policy: .atEnd)
+        let nextDate = Calendar.current.date(byAdding: .hour, value: 1, to: currentDate)!
+        let timeline = Timeline(entries: entries, policy: .after(nextDate))
         completion(timeline)
     }
 }
 
 struct SimpleEntry: TimelineEntry {
     let date: Date
+    let notes: [Note]
     let configuration: ConfigurationIntent
 }
 
@@ -49,17 +53,13 @@ struct widgetEntryView : View {
                 Color(hex: 0x3f51b5)
                 Text(entry.date, style: .date).foregroundColor(.white)
             }.frame(height: 32)
-            HStack {
-                Text("This is a note")
-                Spacer()
-            }.padding(.horizontal)
-            Divider()
-            HStack {
-                Text("This is a note")
-                Spacer()
-            }.padding(.horizontal)
-            Divider()
-
+            ForEach(entry.notes, id: \.id) { note in
+                HStack {
+                    Text(note.body  ?? "")
+                    Spacer()
+                }.padding(.horizontal)
+                Divider()
+            }
             Spacer()
         }
     }
@@ -80,7 +80,7 @@ struct widget: Widget {
 
 struct widget_Previews: PreviewProvider {
     static var previews: some View {
-        widgetEntryView(entry: SimpleEntry(date: Date(), configuration: ConfigurationIntent()))
+        widgetEntryView(entry: SimpleEntry(date: Date(), notes: [], configuration: ConfigurationIntent()))
             .previewContext(WidgetPreviewContext(family: .systemSmall))
     }
 }
