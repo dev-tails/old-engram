@@ -40,8 +40,9 @@ export const NoteList: React.FC<NoteListProps> = (props) => {
   }, [notes, type]);
 
   const [selectedNoteId, setSelectedNoteId] = useState<string>("");
-  const [menuAnchoEl, setMenuAnchorEl] =
-    React.useState<null | HTMLDivElement>(null);
+  const [menuAnchoEl, setMenuAnchorEl] = React.useState<null | HTMLDivElement>(
+    null
+  );
 
   function handleToggleType(note: Note) {
     if (type === "note" || type === "event") {
@@ -60,6 +61,11 @@ export const NoteList: React.FC<NoteListProps> = (props) => {
   }
 
   function handleMoreClicked(note: Note, event: any) {
+    if (!note || !note.localId) {
+      return;
+    }
+
+    setSelectedNoteId(note.localId);
     setMenuAnchorEl(event.target as any);
   }
 
@@ -105,9 +111,11 @@ export const NoteList: React.FC<NoteListProps> = (props) => {
     return notesForType.find((note: Note) => note.localId === localId);
   }
 
-  function handleQuickEdit(note: Note) {
+  function handleQuickEdit() {
+    const note = getNoteById(selectedNoteId);
     setSelectedNoteId(note.localId || "");
     setNote(dispatch, note);
+    hideMenu();
   }
 
   const isShareEnabled = Boolean(navigator.share);
@@ -126,11 +134,8 @@ export const NoteList: React.FC<NoteListProps> = (props) => {
               <Divider />
               <ListItem
                 button
-                className={`note-list-item`}
+                className={`note-list-item ${isSelectedNote ? "selected" : ""}`}
                 selected={isSelectedNote}
-                onClick={() => {
-                  handleQuickEdit(listItemNote);
-                }}
               >
                 <ListItemIcon>
                   <IconButton
@@ -146,32 +151,31 @@ export const NoteList: React.FC<NoteListProps> = (props) => {
                 <ListItemText>
                   <Markdown body={listItemNote.body || ""} />
                 </ListItemText>
-                {isSelectedNote ? (
-                  <>
-                    <ListItemIcon className="right-icon">
-                      <IconButton
-                        edge="end"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleMoreClicked(listItemNote, e);
-                        }}
-                      >
-                        <MoreVert />
-                      </IconButton>
-                    </ListItemIcon>
-                    <ListItemIcon className="right-icon">
-                      <IconButton
-                        edge="end"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          clearSelectedNote();
-                        }}
-                      >
-                        <Cancel />
-                      </IconButton>
-                    </ListItemIcon>
-                  </>
-                ) : null}
+
+                <ListItemIcon className="right-icon">
+                  <IconButton
+                    edge="end"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleMoreClicked(listItemNote, e);
+                    }}
+                  >
+                    <MoreVert />
+                  </IconButton>
+                </ListItemIcon>
+                {isSelectedNote && (
+                  <ListItemIcon className="right-icon">
+                    <IconButton
+                      edge="end"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        clearSelectedNote();
+                      }}
+                    >
+                      <Cancel />
+                    </IconButton>
+                  </ListItemIcon>
+                )}
               </ListItem>
             </div>
           );
@@ -184,7 +188,8 @@ export const NoteList: React.FC<NoteListProps> = (props) => {
         open={Boolean(menuAnchoEl)}
         onClose={hideMenu}
       >
-        <MenuItem onClick={handleEditNote}>Edit</MenuItem>
+        <MenuItem onClick={handleQuickEdit}>Quick Edit</MenuItem>
+        <MenuItem onClick={handleEditNote}>Edit...</MenuItem>
         {isShareEnabled ? (
           <MenuItem onClick={handleShareClicked}>Share...</MenuItem>
         ) : null}
