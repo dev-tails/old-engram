@@ -6,6 +6,7 @@ import React from 'react';
 import { useMemo } from 'react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router';
 
 import { isPluginEnabled, PluginName } from '../../Plugins';
 import { setNote } from '../../redux/actions/NoteActions';
@@ -18,6 +19,7 @@ import { Note, NoteType } from '../notes/NotesApi';
 type NoteListProps = {};
 
 export const NoteList: React.FC<NoteListProps> = (props) => {
+  const history = useHistory();
   const dispatch = useDispatch();
   const { note, notes, type } = useSelector((state: any) => {
     return {
@@ -79,9 +81,7 @@ export const NoteList: React.FC<NoteListProps> = (props) => {
   }
 
   function handleEditNote() {
-    hideMenu();
-    const note = getNoteById(selectedNoteId);
-    setNote(dispatch, note);
+    history.push(`/notes/edit/${selectedNoteId}`);
   }
 
   function handleShareClicked() {

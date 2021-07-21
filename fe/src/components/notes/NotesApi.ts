@@ -67,31 +67,8 @@ export async function createRemoteNote(note: Partial<Note>) {
   }
 }
 
-export async function getNote(params: { id: string }): Promise<Note[]> {
-  let notes: Note[] = [];
-  let parentNote = await db.getNote(params.id);
-  if (parentNote) {
-    notes.push(parentNote);
-  }
-
-  let depth = 1;
-  const maxDepth = 10;
-  let parentIds = [params.id];
-  do {
-    let childrenNotes: Note[] = [];
-    for (const parentId of parentIds) {
-      const childNotes = await db.getNotesByParent(parentId);
-      childrenNotes = childrenNotes.concat(childNotes);
-    }
-
-    parentIds = childrenNotes.map((childNote) => childNote.localId || "");
-
-    notes = [...notes, ...childrenNotes];
-    depth++;
-  } while (parentIds.length > 0 && depth < maxDepth);
-
-  const sortedNotes = sortNotes(notes);
-  return sortedNotes;
+export async function getNote(params: { id: string }): Promise<Note | undefined> {
+  return db.getNote(params.id);
 }
 
 export async function getRemoteNote(id: string): Promise<Note[]> {

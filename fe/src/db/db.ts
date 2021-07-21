@@ -46,6 +46,7 @@ export type Note = {
   iv?: string;
   encryptedBody?: string;
   permissions?: Permission[];
+  content?: string;
   createdAt?: Date;
   updatedAt?: Date;
   syncedAt?: Date;
