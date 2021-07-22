@@ -23,13 +23,7 @@ async function setToken(res, user) {
         if (err) {
           return reject(err);
         }
-        console.log("COOKIE");
-        res.cookie("test", "test value", {
-          maxAge: expiresInSeconds * 1000,
-          secure: production,
-          httpOnly: true,
-          sameSite: false,
-        });
+
         res.cookie("token", token, {
           maxAge: expiresInSeconds * 1000,
           secure: production,

@@ -23,7 +23,6 @@ export async function getDecodedToken(token) {
 }
 
 export async function AuthMiddleware(req, res, next) {
-  console.log(req);
   if (req.cookies.token) {
     const decoded = await getDecodedToken(req.cookies.token);
     req.user = decoded?.user;

@@ -152,6 +152,7 @@ export function initializeNotesRouter() {
     const bodySchema = yup.object().shape({
       start: yup.date(),
       body: yup.string(),
+      content: yup.string(),
       date: yup.string(),
       encryptedBody: yup.string(),
       iv: yup.string(),
@@ -214,6 +215,7 @@ export function initializeNotesRouter() {
       start: yup.date(),
       date: yup.string(),
       body: yup.string(),
+      content: yup.string(),
       encryptedBody: yup.string(),
       iv: yup.string(),
       type: yup.string().default("note"),
