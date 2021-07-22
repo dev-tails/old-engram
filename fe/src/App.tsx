@@ -17,7 +17,6 @@ import { initializePlugins } from './Plugins';
 import rootReducer from './redux/reducers';
 import Routes from './routes/Routes';
 import { initializeFeatureFlags } from './utils/FeatureFlagUtils';
-import { initGoogleUtils } from './utils/GoogleUtils';
 
 let theme = createMuiTheme({
   palette: {
@@ -37,7 +36,6 @@ function App() {
     async function init() {
       await initializeFeatureFlags();
       initializePlugins();
-      initGoogleUtils();
       setInitialized(true);
     }
 
