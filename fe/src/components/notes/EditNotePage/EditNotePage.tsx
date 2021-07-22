@@ -74,7 +74,7 @@ export const EditNotePage: React.FC<EditNotePageProps> = (props) => {
           {note?.body}
         </div>
         <div className="title__icons">
-          <IconButton size="small" className={`save-icon ${saving ? "save-icon--saving" : ""}`}>
+          <IconButton size="small" disabled={saving || dirty} className={`save-icon ${saving ? "save-icon--saving" : ""}`}>
             {!saving && dirty && <Save/> }
             {saving && <Sync/> }
           </IconButton>
