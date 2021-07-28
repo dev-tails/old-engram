@@ -10,8 +10,10 @@ import CloudKit
 
 struct NoteListView: View {
     @ObservedObject var vm2 = sharedCDDailyViewModel
-    @State private var inputActive = true
+
+    @State var noteBody = ""
     var type: String
+    @State var noteToEditID: UUID?
     
     let placeHolderByType = [
         "all": "What's on your mind?",
@@ -51,11 +53,7 @@ struct NoteListView: View {
                 }.onDelete(perform: deleteItems)
             }
             HStack {
-                TextField(placeHolderByType[type]!, text: $vm2.noteBody, onCommit: addNote)
-//                ScrollView(.horizontal, showsIndicators: false) {
-                    
-//                    CustomTextField(placeholder: placeHolderByType[type]!, text: $noteBody, onCommit: addNote).frame(height: 16)
-//                }
+                TextField(placeHolderByType[type]!, text: $noteBody, onCommit: addNote)
                     
                 Button(action: addNote) {
                     Image(systemName: "arrow.up.circle.fill")
@@ -70,12 +68,17 @@ struct NoteListView: View {
         }
     }
     
+    private func setNoteForEdit(note: Note) {
+        noteToEditID = note.id
+        noteBody = note.body ?? ""
+    }
+    
     private func handleEditNotePressed(note: Note) {
-        vm2.setNoteForEdit(note: note)
+        setNoteForEdit(note: note)
     }
     
     private func addNote() {
-        if (vm2.noteBody == "") {
+        if (noteBody == "") {
             return
         }
         
@@ -83,15 +86,17 @@ struct NoteListView: View {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
             
-            if vm2.noteToEditID != nil {
+            if noteToEditID != nil {
                 let typeToSave = type == "all" ? nil : type
-                let updatedNote = Note(id: vm2.noteToEditID, body: vm2.noteBody, date: dateFormatter.string(from: vm2.date), type: typeToSave)
+                let updatedNote = Note(id: noteToEditID, body: noteBody, date: dateFormatter.string(from: vm2.date), type: typeToSave)
                 vm2.saveNote(note: updatedNote)
             } else {
                 let typeToSave = type == "all" ? "note" : type
-                let newNote = Note(body: vm2.noteBody, date: dateFormatter.string(from: vm2.date), type: typeToSave, recordId: CKRecord.ID())
+                let newNote = Note(body: noteBody, date: dateFormatter.string(from: vm2.date), type: typeToSave, recordId: CKRecord.ID())
                 vm2.addNote(note: newNote)
             }
+            noteBody = ""
+            noteToEditID = nil
         }
     }
     

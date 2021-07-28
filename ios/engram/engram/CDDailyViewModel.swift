@@ -12,8 +12,6 @@ import CoreData
 let sharedCDDailyViewModel = CDDailyViewModel()
 
 class CDDailyViewModel: ObservableObject {
-    @Published var noteToEditID: UUID?
-    @Published var noteBody: String = ""
     @Published var notes: [Note] = []
     @Published var typeFilter: String = "all"
     @Published var date: Date = Date()
@@ -26,11 +24,6 @@ class CDDailyViewModel: ObservableObject {
     func setDate(date: Date) {
         self.date = date
         self.fetchNotesForDate(date: date)
-    }
-    
-    func setNoteForEdit(note: Note) {
-        noteToEditID = note.id
-        noteBody = note.body ?? ""
     }
     
     func fetchNotesForDate(date: Date) {
@@ -67,8 +60,6 @@ class CDDailyViewModel: ObservableObject {
         saveContext()
         
         sharedNoteApi.addRemoteNote(note: note, completion: handleRemoteNoteAdded)
-        
-        self.noteBody = ""
     }
     
     func handleRemoteNoteAdded(error: Error?, note: Note?) {
@@ -115,9 +106,6 @@ class CDDailyViewModel: ObservableObject {
                     }
                 }
             }
-            
-            self.noteBody = ""
-            self.noteToEditID = nil
         } catch {
             print("Failed to execute request: \(error)")
         }
