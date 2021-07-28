@@ -61,7 +61,6 @@
 		66E59158265999BD00E38067 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E59155265999BD00E38067 /* Assets.xcassets */; };
 		66E5915A2659A23D00E38067 /* CheckboxToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E591592659A23C00E38067 /* CheckboxToggleStyle.swift */; };
 		66E5915B2659A23D00E38067 /* CheckboxToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E591592659A23C00E38067 /* CheckboxToggleStyle.swift */; };
-		66E591602659B6E000E38067 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E5915F2659B6E000E38067 /* CustomTextField.swift */; };
 		66E59163265B2B7700E38067 /* ComplicationViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E59162265B2B7700E38067 /* ComplicationViews.swift */; };
 		66FC799B26816046005AE4DD /* DailyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66FC799A26816046005AE4DD /* DailyView.swift */; };
 		8E66BE55422F6D5A7419CCA1 /* Pods_engram_WatchKit_Extension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93B26201B82098AA16082343 /* Pods_engram_WatchKit_Extension.framework */; };
@@ -185,7 +184,6 @@
 		66E5915426598B0C00E38067 /* engram.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = engram.entitlements; sourceTree = "<group>"; };
 		66E59155265999BD00E38067 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		66E591592659A23C00E38067 /* CheckboxToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxToggleStyle.swift; sourceTree = "<group>"; };
-		66E5915F2659B6E000E38067 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
 		66E59162265B2B7700E38067 /* ComplicationViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationViews.swift; sourceTree = "<group>"; };
 		66F0709E266019CB006E767B /* engramDebug.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = engramDebug.entitlements; sourceTree = "<group>"; };
 		66FC799A26816046005AE4DD /* DailyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyView.swift; sourceTree = "<group>"; };
@@ -300,7 +298,6 @@
 				66E5911E2658A58600E38067 /* NoteListItem.swift */,
 				66E591202658C30F00E38067 /* NoteListView.swift */,
 				66E591592659A23C00E38067 /* CheckboxToggleStyle.swift */,
-				66E5915F2659B6E000E38067 /* CustomTextField.swift */,
 				665D9713267FA24D00B4B549 /* DailyViewModel.swift */,
 				665D9716267FA98300B4B549 /* DailyScreen.swift */,
 				665D971A267FC65300B4B549 /* LoginScreen.swift */,
@@ -690,7 +687,6 @@
 				66E591212658C30F00E38067 /* NoteListView.swift in Sources */,
 				66E5915A2659A23D00E38067 /* CheckboxToggleStyle.swift in Sources */,
 				666F9DAB26A50C2B007E8796 /* AppGroup.swift in Sources */,
-				66E591602659B6E000E38067 /* CustomTextField.swift in Sources */,
 				6641569C269A1F5700B063D5 /* LoginScreen.swift in Sources */,
 				665D9717267FA98300B4B549 /* DailyScreen.swift in Sources */,
 				66BD395026935F4C0073D52D /* engram.xcdatamodeld in Sources */,
@@ -766,6 +762,9 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = widget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = widget;
+				INFOPLIST_KEY_CFBundleExecutable = widgetExtension;
+				INFOPLIST_KEY_CFBundleName = widgetExtension;
+				INFOPLIST_KEY_CFBundleVersion = 1;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -773,7 +772,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.5.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.xyzdigital.engram.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -797,6 +796,9 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = widget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = widget;
+				INFOPLIST_KEY_CFBundleExecutable = widgetExtension;
+				INFOPLIST_KEY_CFBundleName = widgetExtension;
+				INFOPLIST_KEY_CFBundleVersion = 1;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -804,7 +806,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.5.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.xyzdigital.engram.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -945,7 +947,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.5.0;
+				MARKETING_VERSION = 1.5.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.xyzdigital.engram.watchkitapp.extension;
 				PRODUCT_NAME = "${TARGET_NAME}";
 				SDKROOT = watchos;
@@ -973,7 +975,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.5.0;
+				MARKETING_VERSION = 1.5.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.xyzdigital.engram.watchkitapp.extension;
 				PRODUCT_NAME = "${TARGET_NAME}";
 				SDKROOT = watchos;
@@ -1004,7 +1006,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.5.0;
+				MARKETING_VERSION = 1.5.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.xyzdigital.engram.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1035,7 +1037,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.5.0;
+				MARKETING_VERSION = 1.5.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.xyzdigital.engram.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1067,7 +1069,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.0;
+				MARKETING_VERSION = 1.5.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.xyzdigital.engram;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -1098,7 +1100,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.0;
+				MARKETING_VERSION = 1.5.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.xyzdigital.engram;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;

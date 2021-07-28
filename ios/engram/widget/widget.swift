@@ -8,6 +8,7 @@
 import WidgetKit
 import SwiftUI
 import Intents
+import CoreData
 
 struct Provider: IntentTimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
@@ -23,19 +24,42 @@ struct Provider: IntentTimelineProvider {
         var entries: [SimpleEntry] = []
 
         // Generate a timeline consisting of five entries an hour apart, starting from the current date.
-        let currentDate = Date()
-        let notes = [
-            Note(body: "Note 1"),
-            Note(body: "Note 2")
-        ]
         
-        let entry = SimpleEntry(date: currentDate, notes: notes, configuration: configuration)
-        entries.append(entry)
+        let currentDate = Date()
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd";
+        let dateString = dateFormatter.string(from: currentDate)
+         
+        let request: NSFetchRequest<CDNote> = CDNote.fetchRequest()
+        request.predicate = NSPredicate(format: "date == %@ AND type == 'task'", dateString)
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \CDNote.date, ascending: false)]
+        request.fetchLimit = 10
 
-        let nextDate = Calendar.current.date(byAdding: .hour, value: 1, to: currentDate)!
-        let timeline = Timeline(entries: entries, policy: .after(nextDate))
-        completion(timeline)
+            
+        persistentContainer.viewContext.perform {
+            do {
+                let newCDNotes = try request.execute()
+                var newNotes: [Note] = []
+                for n in newCDNotes {
+                    newNotes.append(CDNoteToNote(cdNote: n))
+                }
+                
+                let entry = SimpleEntry(date: currentDate, notes: newNotes, configuration: configuration)
+                entries.append(entry)
+
+                let nextDate = Calendar.current.date(byAdding: .minute, value: 15, to: currentDate)!
+                let timeline = Timeline(entries: entries, policy: .after(nextDate))
+                completion(timeline)
+            } catch {
+                print("Unable to Execute Fetch Request, \(error)")
+            }
+        }
     }
+}
+
+func CDNoteToNote(cdNote: CDNote) -> Note {
+    return Note(id:cdNote.id, body: cdNote.body, date: cdNote.date, type: cdNote.type, start: cdNote.start)
 }
 
 struct SimpleEntry: TimelineEntry {
@@ -55,13 +79,15 @@ struct widgetEntryView : View {
             }.frame(height: 32)
             ForEach(entry.notes, id: \.id) { note in
                 HStack {
+                    if note.type == "task" {
+                        Image(systemName: "square")
+                    }
                     Text(note.body  ?? "")
                     Spacer()
                 }.padding(.horizontal)
                 Divider()
             }
-            Spacer()
-        }
+        }.frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
     }
 }
 
@@ -73,8 +99,8 @@ struct widget: Widget {
         IntentConfiguration(kind: kind, intent: ConfigurationIntent.self, provider: Provider()) { entry in
             widgetEntryView(entry: entry)
         }
-        .configurationDisplayName("My Widget")
-        .description("This is an example widget.")
+        .configurationDisplayName("Tasks")
+        .description("Keep track of your tasks on your home screen")
     }
 }
 
