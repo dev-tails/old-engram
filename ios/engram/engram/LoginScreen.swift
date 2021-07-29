@@ -59,7 +59,9 @@ struct LoginScreen: View {
                 }.padding()
                 #endif
                 
-            }.navigationTitle("Sync Settings")
+            }
+            .navigationTitle("Sync Settings")
+            .padding()
         } else {
             List {
                 HStack {

@@ -44,11 +44,11 @@ struct MainView: View {
         }
         .navigationTitle("engram")
         .toolbar {
-            ToolbarItemGroup {
+            ToolbarItemGroup(placement: .navigationBarLeading, content: {
                 NavigationLink(destination: SettingsScreen(), label: {
-                    Image(systemName: "gear")
+                    Image(systemName: "line.horizontal.3")
                 })
-            }
+            })
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationViewStyle(StackNavigationViewStyle())

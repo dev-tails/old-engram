@@ -14,6 +14,18 @@ struct SettingsScreen: View {
                 Image(systemName: "icloud.and.arrow.up")
                 Text("Sync")
             })
+            Link(destination: URL(string: "https://engramhq.xyz/contact")!, label: {
+                HStack {
+                    Image(systemName: "exclamationmark.bubble")
+                    Text("Send Feedback")
+                }
+            })
+            Link(destination: URL(string: "https://engramhq.xyz/help")!, label: {
+                HStack {
+                    Image(systemName: "questionmark.circle")
+                    Text("Help")
+                }
+            })
         }.navigationTitle(Text("Settings"))
     }
 }
