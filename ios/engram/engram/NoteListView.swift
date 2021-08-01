@@ -44,6 +44,11 @@ struct NoteListView: View {
                                     Text("Edit")
                                 }
                                 Button(action: {
+                                    handleSharePressed(note: note)
+                                }){
+                                    Text("Share")
+                                }
+                                Button(action: {
                                     deleteNote(note: note)
                                 }){
                                     Text("Delete")
@@ -66,6 +71,12 @@ struct NoteListView: View {
                     .fill(Color(UIColor.separator))
             ).padding(16)
         }
+    }
+    
+    private func handleSharePressed(note: Note) {
+        let textToShare = [ note.body ]
+        let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
+        UIApplication.shared.windows.first?.rootViewController?.present(activityViewController, animated: true, completion: nil)
     }
     
     private func setNoteForEdit(note: Note) {

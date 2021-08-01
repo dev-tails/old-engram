@@ -56,8 +56,10 @@
       allowLocationSimulation = "YES"
       launchAutomaticallySubstyle = "8"
       notificationPayloadFile = "engram WatchKit Extension/PushNotificationPayload.apns">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <RemoteRunnable
+         runnableDebuggingMode = "2"
+         BundleIdentifier = "com.apple.Carousel"
+         RemotePath = "/engram">
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "66ABEA6B26589C72006C9FD5"
@@ -65,7 +67,7 @@
             BlueprintName = "engram WatchKit App"
             ReferencedContainer = "container:engram.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </RemoteRunnable>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -75,8 +77,10 @@
       debugDocumentVersioning = "YES"
       launchAutomaticallySubstyle = "8"
       notificationPayloadFile = "engram WatchKit Extension/PushNotificationPayload.apns">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <RemoteRunnable
+         runnableDebuggingMode = "2"
+         BundleIdentifier = "com.apple.Carousel"
+         RemotePath = "/engram">
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "66ABEA6B26589C72006C9FD5"
@@ -84,7 +88,16 @@
             BlueprintName = "engram WatchKit App"
             ReferencedContainer = "container:engram.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </RemoteRunnable>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "66ABEA6B26589C72006C9FD5"
+            BuildableName = "engram WatchKit App.app"
+            BlueprintName = "engram WatchKit App"
+            ReferencedContainer = "container:engram.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
