@@ -56,6 +56,8 @@ struct NoteListView: View {
                             }
                     }
                 }.onDelete(perform: deleteItems)
+            }.onTapGesture {
+                UIApplication.shared.endEditing()
             }
             HStack {
                 TextField(placeHolderByType[type]!, text: $noteBody, onCommit: addNote)
@@ -122,6 +124,12 @@ struct NoteListView: View {
             vm2.deleteNote(id: vm2.notes[indexToRemove].id)
             removedCount += 1
         }
+    }
+}
+
+extension UIApplication {
+    func endEditing() {
+        sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
 
