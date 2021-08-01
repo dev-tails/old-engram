@@ -53,8 +53,6 @@ class ShareViewController: SLComposeServiceViewController {
         let note = CDNoteToNote(cdNote: cdNote)
         
         sharedLoginViewModel.login(completion: { error in
-            print("loging completed")
-            print(error)
             sharedNoteApi.addRemoteNote(note: note, completion: self.handleRemoteNoteAdded)
         })
         
@@ -62,8 +60,6 @@ class ShareViewController: SLComposeServiceViewController {
     }
     
     func handleRemoteNoteAdded(error: Error?, note: Note?) {
-        print("remote added")
-        print(error)
     }
     
     func CDNoteToNote(cdNote: CDNote) -> Note {
