@@ -11,7 +11,9 @@ struct LoginScreen: View {
     @ObservedObject var vm = sharedLoginViewModel
     
     func handleLogin() {
-        vm.login()
+        vm.login(completion: { error in
+            return
+        })
     }
     
     func handleSignup() {

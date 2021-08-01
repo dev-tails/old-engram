@@ -66,7 +66,7 @@ class LoginViewModel: ObservableObject {
         task.resume()
     }
     
-    func login() {
+    func login(completion: @escaping (Error?) -> ()) {
         let url = URL(string: "https://engram.xyzdigital.com/api/users/login")!
         var request = URLRequest(url: url)
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
@@ -85,6 +85,7 @@ class LoginViewModel: ObservableObject {
 
             if let error = error {
                 print(error)
+                completion(error);
             } else if let data = data {
                 DispatchQueue.main.async {
                     if let httpResponse = response as? HTTPURLResponse {
@@ -101,6 +102,7 @@ class LoginViewModel: ObservableObject {
                             self.hasLoginError = true
                         }
                     }
+                    completion(nil);
                 }
             } else {
                 // Handle unexpected error
