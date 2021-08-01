@@ -49,6 +49,24 @@ class ShareViewController: SLComposeServiceViewController {
         cdNote.type = "note"
         
         saveContext()
+        
+        let note = CDNoteToNote(cdNote: cdNote)
+        
+        sharedLoginViewModel.login(completion: { error in
+            print("loging completed")
+            print(error)
+            sharedNoteApi.addRemoteNote(note: note, completion: self.handleRemoteNoteAdded)
+        })
+        
         self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
+    }
+    
+    func handleRemoteNoteAdded(error: Error?, note: Note?) {
+        print("remote added")
+        print(error)
+    }
+    
+    func CDNoteToNote(cdNote: CDNote) -> Note {
+        return Note(id:cdNote.id, body: cdNote.body, date: cdNote.date, type: cdNote.type, start: cdNote.start)
     }
 }

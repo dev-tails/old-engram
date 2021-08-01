@@ -69,8 +69,12 @@
 		66F9769426B6DF86008E78B7 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6620D2CB268F64D700282E2C /* Persistence.swift */; };
 		66F9769526B6DFBF008E78B7 /* AppGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 666F9DAA26A50C2B007E8796 /* AppGroup.swift */; };
 		66F9769626B6DFC9008E78B7 /* engram.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 66BD394E26935F4C0073D52D /* engram.xcdatamodeld */; };
+		66F9769726B6E0AA008E78B7 /* NoteApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6641569E269A39DB00B063D5 /* NoteApi.swift */; };
+		66F9769826B6E0B0008E78B7 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D971D267FC96E00B4B549 /* LoginViewModel.swift */; };
+		66F9769926B6E11D008E78B7 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665D970E267F9CFA00B4B549 /* Note.swift */; };
 		66FC799B26816046005AE4DD /* DailyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66FC799A26816046005AE4DD /* DailyView.swift */; };
 		8E66BE55422F6D5A7419CCA1 /* Pods_engram_WatchKit_Extension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93B26201B82098AA16082343 /* Pods_engram_WatchKit_Extension.framework */; };
+		AB75311D22C6B5E25687B871 /* Pods_Send_to_engram.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1539DBDEB50300C1C098363 /* Pods_Send_to_engram.framework */; };
 		E753DF5463FBCBFCAD4387C4 /* Pods_engram.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90B7F836578CD2E385E4E26C /* Pods_engram.framework */; };
 /* End PBXBuildFile section */
 
@@ -145,6 +149,8 @@
 /* Begin PBXFileReference section */
 		0E8CFF9F882DA1E721F420C1 /* Pods-engram.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-engram.release.xcconfig"; path = "Target Support Files/Pods-engram/Pods-engram.release.xcconfig"; sourceTree = "<group>"; };
 		13320BA5F47EDA434C2EB695 /* Pods-engram WatchKit Extension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-engram WatchKit Extension.release.xcconfig"; path = "Target Support Files/Pods-engram WatchKit Extension/Pods-engram WatchKit Extension.release.xcconfig"; sourceTree = "<group>"; };
+		2A476A73C5E2A8B1C1B9C314 /* Pods-Send to engram.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Send to engram.release.xcconfig"; path = "Target Support Files/Pods-Send to engram/Pods-Send to engram.release.xcconfig"; sourceTree = "<group>"; };
+		2E0FEBD4E443EF56A52688BE /* Pods-Send to engram.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Send to engram.debug.xcconfig"; path = "Target Support Files/Pods-Send to engram/Pods-Send to engram.debug.xcconfig"; sourceTree = "<group>"; };
 		660120EB26811B2200D7D4ED /* engram WatchKit Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "engram WatchKit Extension.entitlements"; sourceTree = "<group>"; };
 		660120EC268122E000D7D4ED /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		6620D2CB268F64D700282E2C /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -212,6 +218,7 @@
 		9AC5F774F8530BDD6CD732AD /* Pods_engram_WatchKit_App.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_engram_WatchKit_App.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C2AB2A7231E056C72126EF27 /* Pods-engram WatchKit Extension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-engram WatchKit Extension.debug.xcconfig"; path = "Target Support Files/Pods-engram WatchKit Extension/Pods-engram WatchKit Extension.debug.xcconfig"; sourceTree = "<group>"; };
 		C8220EC11461B4023E365790 /* Pods-engram.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-engram.debug.xcconfig"; path = "Target Support Files/Pods-engram/Pods-engram.debug.xcconfig"; sourceTree = "<group>"; };
+		D1539DBDEB50300C1C098363 /* Pods_Send_to_engram.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Send_to_engram.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E06D2128427F86E1B91CD3B8 /* Pods-engram WatchKit App.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-engram WatchKit App.debug.xcconfig"; path = "Target Support Files/Pods-engram WatchKit App/Pods-engram WatchKit App.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -255,6 +262,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB75311D22C6B5E25687B871 /* Pods_Send_to_engram.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -398,6 +406,7 @@
 				93B26201B82098AA16082343 /* Pods_engram_WatchKit_Extension.framework */,
 				666F9D9626A4FEAD007E8796 /* WidgetKit.framework */,
 				666F9D9826A4FEAD007E8796 /* SwiftUI.framework */,
+				D1539DBDEB50300C1C098363 /* Pods_Send_to_engram.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -421,6 +430,8 @@
 				7139AB58E4B13D003DE6CBEA /* Pods-engram WatchKit App.release.xcconfig */,
 				C2AB2A7231E056C72126EF27 /* Pods-engram WatchKit Extension.debug.xcconfig */,
 				13320BA5F47EDA434C2EB695 /* Pods-engram WatchKit Extension.release.xcconfig */,
+				2E0FEBD4E443EF56A52688BE /* Pods-Send to engram.debug.xcconfig */,
+				2A476A73C5E2A8B1C1B9C314 /* Pods-Send to engram.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -511,6 +522,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 66F9769126B6DF45008E78B7 /* Build configuration list for PBXNativeTarget "Send to engram" */;
 			buildPhases = (
+				1482B259586504D1910635C4 /* [CP] Check Pods Manifest.lock */,
 				66F9768226B6DF44008E78B7 /* Sources */,
 				66F9768326B6DF44008E78B7 /* Frameworks */,
 				66F9768426B6DF44008E78B7 /* Resources */,
@@ -621,6 +633,28 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		1482B259586504D1910635C4 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Send to engram-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		1E9B07449652F855FD5B711C /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -792,7 +826,10 @@
 			files = (
 				66F9768926B6DF45008E78B7 /* ShareViewController.swift in Sources */,
 				66F9769626B6DFC9008E78B7 /* engram.xcdatamodeld in Sources */,
+				66F9769926B6E11D008E78B7 /* Note.swift in Sources */,
+				66F9769826B6E0B0008E78B7 /* LoginViewModel.swift in Sources */,
 				66F9769526B6DFBF008E78B7 /* AppGroup.swift in Sources */,
+				66F9769726B6E0AA008E78B7 /* NoteApi.swift in Sources */,
 				66F9769426B6DF86008E78B7 /* Persistence.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1207,6 +1244,7 @@
 		};
 		66F9769226B6DF45008E78B7 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2E0FEBD4E443EF56A52688BE /* Pods-Send to engram.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Send to engram/Send to engram.entitlements";
 				CODE_SIGN_STYLE = Automatic;
@@ -1230,6 +1268,7 @@
 		};
 		66F9769326B6DF45008E78B7 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2A476A73C5E2A8B1C1B9C314 /* Pods-Send to engram.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Send to engram/Send to engram.entitlements";
 				CODE_SIGN_STYLE = Automatic;
