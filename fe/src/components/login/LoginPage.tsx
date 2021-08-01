@@ -10,6 +10,8 @@ import { objectIdFromDate } from '../../utils/ObjectId';
 import { Note } from '../notes/NotesApi';
 import { SignupPagePath } from '../SignupPage/SignupPage';
 import { DividerWithText } from './DividerWithText/DividerWithText';
+import { fetchUser } from '../../redux/actions/UserActions';
+import { useDispatch } from 'react-redux';
 
 export type LoginPageProps = {};
 
@@ -17,6 +19,7 @@ export const LoginPagePath = "/login";
 
 export default function LoginPage(props: LoginPageProps) {
   const history = useHistory();
+  const dispatch = useDispatch();
   const [password, setPassword] = useState("testtest");
   const [username, setUsername] = useState("test");
   const [errors, setErrors] = useState<Note[]>([]);
@@ -28,9 +31,10 @@ export default function LoginPage(props: LoginPageProps) {
         { username, password },
         { withCredentials: true }
       )
-      .then((res) => {
-        return axios.get("/api/notes", { withCredentials: true });
+      .then(() => {
+        fetchUser(dispatch);
       })
+      .then(navigateToHome)
       .catch((err) => {
         let errorMessage = err.message;
         if (err.response?.status === 400) {
