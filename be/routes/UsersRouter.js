@@ -176,7 +176,7 @@ export function initializeUserRouter() {
 
       res.json({
         _id: userDocument._id,
-        username: userDocument.username,
+        username: userDocument.username || userDocument.email,
       });
     }
   );

@@ -41,6 +41,7 @@ import { isPluginEnabled, PluginName } from '../../Plugins';
 import * as UsersApi from '../../UsersApi';
 import { Holdable } from '../Holdable/Holdable';
 import { createOrUpdateNote, getNotes, Note, removeNote } from '../notes/NotesApi';
+import { trimEllip } from '../../utils/StringUtils';
 
 type HeaderProps = {
   title?: string;
@@ -418,7 +419,7 @@ export const Header: React.FC<HeaderProps> = ({
                     <ListItemIcon>
                       <AccountCircle />
                     </ListItemIcon>
-                    <ListItemText>{user.username}</ListItemText>
+                    <ListItemText title={user.username}>{trimEllip(user.username, 12)}</ListItemText>
                   </ListItem>
                   <Link
                     to={`/logout`}
