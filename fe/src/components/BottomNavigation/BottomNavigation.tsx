@@ -1,7 +1,7 @@
 import './BottomNavigation.scss';
 
 import { BottomNavigation as MaterialBottomNavigation, BottomNavigationAction } from '@material-ui/core';
-import { List as ListIcon } from '@material-ui/icons';
+import { Search as SearchIcon } from '@material-ui/icons';
 import React from 'react';
 
 import { BulletIcon } from '../notes/BulletIcon/BulletIcon';
@@ -22,7 +22,6 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
         onChange={(e, newValue) => onChange(newValue)}
         showLabels
       >
-        <BottomNavigationAction label="All" value="all" icon={<ListIcon />} />
         <BottomNavigationAction
           label="Notes"
           value="note"
@@ -52,6 +51,11 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
               color={value === "event" ? "#90caf9" : ""}
             />
           }
+        />
+        <BottomNavigationAction
+          label="Search"
+          value="search"
+          icon={<SearchIcon />}
         />
       </MaterialBottomNavigation>
     </div>
