@@ -58,3 +58,26 @@ code {
   overflow-wrap: break-word;
   word-wrap: break-word;
 }
+
+.page {
+  position: fixed;
+  top: 64px;
+  bottom: 0px;
+  width: 100%;
+}
+
+.page__content {
+  position: relative;
+  max-width: 960px;
+  margin: 0 auto;
+  height: 100%;
+}
+
+.page__container {
+  position: absolute;
+  top: 0px;
+  bottom: calc(65px + 56px);
+  width: 100%;
+  display: flex;
+  overflow-y: scroll;
+}
