@@ -81,3 +81,15 @@ code {
   display: flex;
   overflow-y: scroll;
 }
+
+.footer {
+  position: absolute;
+  bottom: 56px;
+  width: 100%;
+  background-color: #424242;
+}
+
+.footer__textBox {
+  max-width: 960px;
+  margin: 0 auto;
+}
