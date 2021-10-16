@@ -8,6 +8,7 @@ import { BottomNavigation } from '../../components/BottomNavigation/BottomNaviga
 import * as NotesApi from '../../components/notes/NotesApi';
 import TextBox from '../../components/textbox/TextBox';
 import { setDate } from '../../redux/actions/DateActions';
+import { setNoteType } from '../../redux/actions/NoteActions';
 
 type SearchPageProps = {};
 
@@ -22,7 +23,10 @@ export const SearchPage: React.FC<SearchPageProps> = (props) => {
     }
   }
 
-  function handleBottomNavChanged() {}
+  function handleBottomNavChanged(newValue: string) {
+    setNoteType(dispatch, newValue);
+    history.push("/daily");
+  }
 
   function handleNoteClicked(note: NotesApi.Note) {
     setDate(dispatch, moment(note.date).toDate());

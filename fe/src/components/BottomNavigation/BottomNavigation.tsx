@@ -55,7 +55,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
         <BottomNavigationAction
           label="Search"
           value="search"
-          icon={<SearchIcon />}
+          icon={<SearchIcon style={{fontSize: 18}} />}
         />
       </MaterialBottomNavigation>
     </div>
