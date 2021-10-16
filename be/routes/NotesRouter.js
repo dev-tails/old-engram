@@ -93,7 +93,7 @@ export function initializeNotesRouter() {
     const searchQuery = db.collection("notes").find({
       user: ObjectId(user),
       $text: { $search: query.search }
-    }).limit(50);
+    }).sort({ date: -1 }).limit(50);
 
     const notes = await searchQuery.toArray();
     return res.json({
