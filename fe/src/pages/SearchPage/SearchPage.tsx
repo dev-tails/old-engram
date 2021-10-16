@@ -1,37 +1,20 @@
 import { List, ListItem, ListItemText } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
+import moment from 'moment';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router';
 
 import { BottomNavigation } from '../../components/BottomNavigation/BottomNavigation';
 import * as NotesApi from '../../components/notes/NotesApi';
 import TextBox from '../../components/textbox/TextBox';
+import { setDate } from '../../redux/actions/DateActions';
 
 type SearchPageProps = {};
 
 export const SearchPage: React.FC<SearchPageProps> = (props) => {
+  const dispatch = useDispatch();
+  const history = useHistory();
   const [notes, setNotes] = useState<NotesApi.Note[]>([]);
-
-  // const notes = [
-  //   {
-  //     body: "This is a test",
-  //     date: "2021-10-01",
-  //   },
-  //   {
-  //     body: "This is a test",
-  //     date: "2021-10-01",
-  //   },
-  //   {
-  //     body: "This is a test",
-  //     date: "2021-10-01",
-  //   },
-  //   {
-  //     body: "This is a test",
-  //     date: "2021-10-01",
-  //   },
-  //   {
-  //     body: "This is a test",
-  //     date: "2021-10-01",
-  //   },
-  // ];
 
   function handleSubmit(note: Partial<NotesApi.Note>) {
     if (note.body) {
@@ -41,22 +24,29 @@ export const SearchPage: React.FC<SearchPageProps> = (props) => {
 
   function handleBottomNavChanged() {}
 
+  function handleNoteClicked(note: NotesApi.Note) {
+    setDate(dispatch, moment(note.date).toDate());
+    history.push("/daily");
+  }
+
   return (
     <div className="search-page page">
       <div className="page__content">
         <div className="page__container">
-          <List>
-            {notes.map((note) => {
-              return (
-                <ListItem>
-                  <ListItemText
-                    primary={note.body}
-                    secondary={note.date}
-                  ></ListItemText>
-                </ListItem>
-              );
-            })}
-          </List>
+          <div style={{ width: "100%" }}>
+            <List disablePadding={true} dense={true}>
+              {notes.map((note) => {
+                return (
+                  <ListItem onClick={handleNoteClicked.bind(this, note)} button>
+                    <ListItemText
+                      primary={note.body}
+                      secondary={note.date}
+                    ></ListItemText>
+                  </ListItem>
+                );
+              })}
+            </List>
+          </div>
         </div>
       </div>
 
