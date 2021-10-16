@@ -502,3 +502,8 @@ export async function syncLocalNotes() {
     await createRemoteNote(note);
   }
 }
+
+export async function searchNotes(search: string) {
+  const res = await axios.get(`/api/notes/search?${querystring.stringify({search})}`);
+  return res.data.data;
+}

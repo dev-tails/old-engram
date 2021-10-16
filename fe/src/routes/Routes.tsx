@@ -18,6 +18,7 @@ import SignupPage, { SignupPagePath } from '../components/SignupPage/SignupPage'
 import { hasLocalDevice } from '../DeviceApi';
 import { DailyNotesPage } from '../pages/DailyNotesPage/DailyNotesPage';
 import { GoogleSettingsPage } from '../pages/GoogleSettingsPage/GoogleSettingsPage';
+import { SearchPage } from '../pages/SearchPage/SearchPage';
 import { EncryptionPage } from '../pages/settings/EncryptionPage';
 import { ViewNotePage } from '../pages/ViewNotePage/ViewNotePage';
 import { isPluginEnabled, PluginName } from '../Plugins';
@@ -160,6 +161,9 @@ export default function Routes() {
         </AuthenticatedRoute>
         <Route exact path="/daily">
           <DailyNotesPage />
+        </Route>
+        <Route exact path="/search">
+          <SearchPage />
         </Route>
         {isPluginEnabled(PluginName.PLUGIN_DASHBOARD) ? (
           <AuthenticatedRoute exact={true} path="/dashboard">

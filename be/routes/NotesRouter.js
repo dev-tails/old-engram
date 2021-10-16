@@ -88,6 +88,19 @@ export function initializeNotesRouter() {
     return res.json(notesToReturn);
   });
 
+  router.get("/search", async function (req, res) {
+    const { user, db, query } = req;
+    const searchQuery = db.collection("notes").find({
+      user: ObjectId(user),
+      $text: { $search: query.search }
+    }).limit(50);
+
+    const notes = await searchQuery.toArray();
+    return res.json({
+      data: notes
+    });
+  });
+
   router.get("/:id", async function (req, res) {
     const { user, db } = req;
 
@@ -257,5 +270,6 @@ export function initializeNotesRouter() {
 
     return res.json();
   });
+
   return router;
 }

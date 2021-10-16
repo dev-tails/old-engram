@@ -1,60 +1,95 @@
-* {
-  box-sizing: border-box;
-}
+  * {
+    box-sizing: border-box;
+  }
 
-*,
-*:focus {
-  outline: none;
-}
+  *,
+  *:focus {
+    outline: none;
+  }
 
-textarea,
-input {
-  background-color: #303030;
-  caret-color: white;
-  color: white;
-}
+  textarea,
+  input {
+    background-color: #303030;
+    caret-color: white;
+    color: white;
+  }
 
-.App {
-  height: 100vh;
-  overflow: hidden;
-  background-color: #303030;
-}
+  .App {
+    height: 100vh;
+    overflow: hidden;
+    background-color: #303030;
+  }
 
-body {
-  overflow: hidden;
-  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-  background-color: #3f51b5;
-  color: white;
-}
+  body {
+    overflow: hidden;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    background-color: #3f51b5;
+    color: white;
+  }
 
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 8px;
-}
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 8px;
+  }
 
-.noselect {
-  -webkit-touch-callout: none;
-  /* iOS Safari */
-  -webkit-user-select: none;
-  /* Safari */
-  -khtml-user-select: none;
-  /* Konqueror HTML */
-  -moz-user-select: none;
-  /* Old versions of Firefox */
-  -ms-user-select: none;
-  /* Internet Explorer/Edge */
-  user-select: none;
-  /* Non-prefixed version, currently
-                                  supported by Chrome, Edge, Opera and Firefox */
-}
+  .noselect {
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Safari */
+    -khtml-user-select: none;
+    /* Konqueror HTML */
+    -moz-user-select: none;
+    /* Old versions of Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
+    user-select: none;
+    /* Non-prefixed version, currently
+                                    supported by Chrome, Edge, Opera and Firefox */
+  }
 
-a {
-  color: #90caf9;
-}
+  a {
+    color: #90caf9;
+  }
 
-code {
-  white-space: pre-wrap;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-}
+  code {
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+
+  .page {
+    position: fixed;
+    top: 64px;
+    bottom: 0px;
+    width: 100%;
+  }
+
+  .page__content {
+    position: relative;
+    max-width: 960px;
+    margin: 0 auto;
+    height: 100%;
+  }
+
+  .page__container {
+    position: absolute;
+    top: 0px;
+    bottom: calc(65px + 56px);
+    width: 100%;
+    display: flex;
+    overflow-y: scroll;
+  }
+
+  .footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #424242;
+  }
+
+  .footer__textBox {
+    max-width: 960px;
+    margin: 0 auto;
+  }
