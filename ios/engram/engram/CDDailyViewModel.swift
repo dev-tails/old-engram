@@ -38,7 +38,7 @@ class CDDailyViewModel: ObservableObject {
             do {
                 let newCDNotes = try request.execute()
                 var newNotes: [Note] = []
-                for n in newCDNotes {
+                for n in newCDNotes.reversed() {
                     newNotes.append(self.CDNoteToNote(cdNote: n))
                 }
                 self.notes = newNotes

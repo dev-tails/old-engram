@@ -7,9 +7,5 @@
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.widgetkit-extension</string>
 	</dict>
-	<key>CFBundleDisplayName</key>
-	<string>$(PRODUCT_NAME)</string>
-	<key>CFBundleName</key>
-	<string>$(PRODUCT_NAME)</string>
 </dict>
 </plist>
