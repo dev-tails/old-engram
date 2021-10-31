@@ -1,5 +1,5 @@
 use_frameworks!
-platform :ios, '14.5'
+platform :ios, '15.0'
 
 target 'engram' do
   pod 'KeychainAccess'

@@ -4,10 +4,14 @@ import CloudKit
 struct NoteListItem: View {
     @ObservedObject var vm = sharedCDDailyViewModel
     private var _note: Note
+    private var _onEdit: (Note)->()
+    private var _onDelete: (Note)->()
     @State var start: Date = Date()
     
-    init(note: Note) {
+    init(note: Note, onEdit: @escaping (Note)->(), onDelete: @escaping (Note)->()) {
         self._note = note
+        self._onEdit = onEdit
+        self._onDelete = onDelete
     }
     
     let typeToIconMap = [
@@ -48,6 +52,31 @@ struct NoteListItem: View {
                     }
             }
             Text(_note.body!)
-        }.opacity(_note.type == "task_completed" ? 0.25 : 1.0)
+        }
+            .contextMenu {
+                Button(action: {
+                    _onEdit(_note)
+                }){
+                    Text("Edit")
+                }
+                Button(action: {
+                    handleSharePressed(note: _note)
+                }){
+                    Text("Share")
+                }
+                Button(action: {
+                    _onDelete(_note)
+                }){
+                    Text("Delete")
+                }
+            }
+            .opacity(_note.type == "task_completed" ? 0.25 : 1.0)
     }
+    
+    func handleSharePressed(note: Note) {
+        let textToShare = [ note.body ]
+        let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
+        UIApplication.shared.windows.first?.rootViewController?.present(activityViewController, animated: true, completion: nil)
+    }
+
 }

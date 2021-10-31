@@ -36,31 +36,20 @@ struct NoteListView: View {
             List {
                 ForEach(Array(vm2.notes), id: \.id) { note in
                     if type == "all" || note.type == type || (type == "task" && note.type == "task_completed") {
-                        NoteListItem(note: note)
-                            .contextMenu {
-                                Button(action: {
-                                    handleEditNotePressed(note: note)
-                                }){
-                                    Text("Edit")
-                                }
-                                Button(action: {
-                                    handleSharePressed(note: note)
-                                }){
-                                    Text("Share")
-                                }
-                                Button(action: {
-                                    deleteNote(note: note)
-                                }){
-                                    Text("Delete")
-                                }
-                            }
+                        NoteListItem(note: note, onEdit: handleEditNotePressed, onDelete: deleteNote)
                     }
                 }.onDelete(perform: deleteItems)
-            }.onTapGesture {
-                UIApplication.shared.endEditing()
             }
             HStack {
                 TextField(placeHolderByType[type]!, text: $noteBody, onCommit: addNote)
+                    .toolbar {
+                        ToolbarItemGroup(placement: .keyboard) {
+                            Button("Done") {
+                                UIApplication.shared.endEditing()
+                            }
+                        }
+                    }
+                    .submitLabel(.send)
                     
                 Button(action: addNote) {
                     Image(systemName: "arrow.up.circle.fill")
@@ -74,23 +63,17 @@ struct NoteListView: View {
             ).padding(16)
         }
     }
-    
-    private func handleSharePressed(note: Note) {
-        let textToShare = [ note.body ]
-        let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
-        UIApplication.shared.windows.first?.rootViewController?.present(activityViewController, animated: true, completion: nil)
-    }
-    
-    private func setNoteForEdit(note: Note) {
+        
+    func setNoteForEdit(note: Note) {
         noteToEditID = note.id
         noteBody = note.body ?? ""
     }
     
-    private func handleEditNotePressed(note: Note) {
+    func handleEditNotePressed(note: Note) {
         setNoteForEdit(note: note)
     }
     
-    private func addNote() {
+    func addNote() {
         if (noteBody == "") {
             return
         }
@@ -113,11 +96,11 @@ struct NoteListView: View {
         }
     }
     
-    private func deleteNote(note: Note) {
+    func deleteNote(note: Note) {
         vm2.deleteNote(id: note.id)
     }
     
-    private func deleteItems(offsets: IndexSet) {
+    func deleteItems(offsets: IndexSet) {
         var removedCount = 0;
         for i in offsets {
             let indexToRemove = i - removedCount
