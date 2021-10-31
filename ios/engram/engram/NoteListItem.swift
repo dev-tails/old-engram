@@ -51,7 +51,7 @@ struct NoteListItem: View {
                         vm.saveNote(note: Note(id: _note.id, type: "event", start: start))
                     }
             }
-            Text(_note.body!)
+            Text(try! AttributedString(markdown: _note.body!))
         }
             .contextMenu {
                 Button(action: {
