@@ -75,6 +75,7 @@ struct LoginScreen: View {
                 Button(action: {vm.logout()}, label: {Text("Logout")}).foregroundColor(Color.red)
             }.navigationTitle("Sync Settings")
         }
+        Text("Sync is still early in development, it currently only supports sending new notes from your device to your engram account. This data is stored unencrypted in engram's database. If this is not ok with you, continue to use engram offline and more secure syncing options will be available in the future.").padding()
     }
 }
 
