@@ -1,0 +1,19 @@
+.textbox {
+   background-color: #424242;
+  text-align: center;  
+}
+
+input {
+  background-color: transparent;
+  color: white;
+  border: none;
+  border-bottom: 1px solid black;
+  width: 100%;
+  max-width: 800px;
+  padding: 4px;
+  font-size: 1.25rem;
+}
+
+input:focus {
+  outline: none;
+}
