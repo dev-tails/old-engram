@@ -74,6 +74,7 @@ export default function TextBox(props: TextBoxProps) {
   };
 
   const refocusInput = () => {
+    console.log("refocus input")
     if (textFieldRef.current) {
       textFieldRef.current.focus();
     }
