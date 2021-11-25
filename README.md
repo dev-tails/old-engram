@@ -2,7 +2,7 @@
   <img src="clients/web/react/public/logo512.png" alt="engram logo" height="256px"/>
 </p>
 
-<h1 align="center">engram</h1>
+# [engram](https://engramhq.xyz/)
 
 > a hypothetical permanent change in the brain accounting for the existence of memory; a memory trace.
 
