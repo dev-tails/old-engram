@@ -1,1 +1,0 @@
-docker run -it --env-file .env -p 4000:4000 --rm xyzdigital/engram-api:latest

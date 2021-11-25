@@ -1,5 +1,5 @@
 {
-  "name": "journal",
+  "name": "@engram/react",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

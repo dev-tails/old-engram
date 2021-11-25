@@ -1,1 +1,0 @@
-docker run -it --env-file be/.env -p 80:80 --rm devtails/engram:latest
