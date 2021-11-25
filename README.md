@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="fe/public/logo512.png" alt="engram logo" height="256px"/>
+  <img src="clients/web/react/public/logo512.png" alt="engram logo" height="256px"/>
 </p>
 
 <h1 align="center">engram</h1>
