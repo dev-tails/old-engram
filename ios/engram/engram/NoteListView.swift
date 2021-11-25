@@ -12,7 +12,7 @@ struct NoteListView: View {
     @ObservedObject var vm2 = sharedCDDailyViewModel
 
     @State var noteBody = ""
-    var type: String
+    @State var type: String = "note"
     @State var noteToEditID: UUID?
     
     let placeHolderByType = [
@@ -31,6 +31,19 @@ struct NoteListView: View {
         }
     }
     
+    func getSystemIcon() -> String {
+        switch(self.type) {
+        case "task":
+            return "square"
+        case "note":
+            return "minus"
+        case "event":
+            return "circle"
+        default:
+            return "minus"
+        }
+    }
+    
     var body: some View {
         VStack {
             List {
@@ -41,6 +54,12 @@ struct NoteListView: View {
                 }.onDelete(perform: deleteItems)
             }
             HStack {
+                Button(action: toggleType) {
+                    Image(systemName: getSystemIcon())
+                        .renderingMode(.template)
+                        .foregroundColor(.white)
+                        .imageScale(.large)
+                }
                 TextField(placeHolderByType[type]!, text: $noteBody, onCommit: addNote)
                     .toolbar {
                         ToolbarItemGroup(placement: .keyboard) {
@@ -49,14 +68,14 @@ struct NoteListView: View {
                             }
                         }
                     }
-                    .submitLabel(.send)
+                    .submitLabel(.return)
                     
                 Button(action: addNote) {
                     Image(systemName: "arrow.up.circle.fill")
                         .renderingMode(.template)
                         .foregroundColor(.white)
                         .imageScale(.large)
-                }.keyboardShortcut(.return, modifiers: .control)
+                }
             }.padding(.horizontal, 16).padding(.vertical, 8).background(
                 RoundedRectangle(cornerRadius: 8)
                     .fill(Color(UIColor.separator))
@@ -71,6 +90,22 @@ struct NoteListView: View {
     
     func handleEditNotePressed(note: Note) {
         setNoteForEdit(note: note)
+    }
+    
+    func toggleType() {
+        switch (self.type) {
+        case "task":
+            self.type = "event"
+            break
+        case "event":
+            self.type = "note"
+            break
+        case "note":
+            self.type = "task"
+            break
+        default:
+            break
+        }
     }
     
     func addNote() {

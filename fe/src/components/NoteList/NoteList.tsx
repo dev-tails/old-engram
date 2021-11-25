@@ -47,6 +47,8 @@ export const NoteList: React.FC<NoteListProps> = (props) => {
   );
 
   function handleToggleType(note: Note) {
+    console.log("handleToggleType");
+
     if (type === "note" || type === "event") {
       return;
     }
@@ -136,14 +138,16 @@ export const NoteList: React.FC<NoteListProps> = (props) => {
                 button
                 className={`note-list-item ${isSelectedNote ? "selected" : ""}`}
                 selected={isSelectedNote}
+                onClick={() => {
+                  console.log("List item clicked")
+                }}
               >
-                <ListItemIcon>
+                <ListItemIcon onClick={(e) => {
+                  e.stopPropagation();
+                  handleToggleType(listItemNote);
+                }}>
                   <IconButton
                     edge="start"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleToggleType(listItemNote);
-                    }}
                   >
                     <NoteIcon type={listItemNote.type} />
                   </IconButton>
