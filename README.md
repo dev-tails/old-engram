@@ -58,6 +58,39 @@ WIP
 
 WIP
 
+## Local Development
+
+The primary website https://engram.xyzdigital.com runs the `web/react` frontend and `api`  for the REST API.  engram has primarily developed with Node 14, but should work with future ones as well without issue.
+
+### Running the React App
+
+```
+cd clients/web/react
+yarn
+yarn start
+```
+
+If successful this should open http://localhost:3000 in your browser
+
+### Running the API
+
+A local installation of [mongodb community server](https://docs.mongodb.com/manual/administration/install-community/) is recommended.  If you would prefer to use a hosted mongodb instance, you will just have to update the `DB_URL` below accordingly.
+
+You will need to create a `.env` file inside the `api` folder:
+
+```
+DB_URL=mongodb://localhost:27017/engram
+JWT_SECRET={Insert random string of characters}
+```
+
+Then you can start the express server with:
+
+```
+cd api
+yarn
+yarn start
+```
+
 # Resources
 
 - [Introduction](https://engramhq.xyz/2020/11/21/introducing-engram/)
