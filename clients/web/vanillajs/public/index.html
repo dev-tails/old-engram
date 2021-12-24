@@ -50,7 +50,7 @@
     #content {
       flex: 1;
       overflow: auto;
-    }    
+    }
 
     .container {
       width: 100%;
@@ -113,13 +113,15 @@
       <img src="img/logo.png" width="48px" height="48px" />
     </header>
     <div id="content">
-      <div id="notes"></div>
+      <div class="container">
+        <div id="notes"></div>
+      </div>
     </div>
     <div id="bottom-bar">
       <div class="container">
         <div class="input-wrapper">
           <input id="input" />
-          <button >Submit</button>
+          <button id="submit">Submit</button>
         </div>
       </div>
     </div>
