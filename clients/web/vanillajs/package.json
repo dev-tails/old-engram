@@ -1,0 +1,19 @@
+{
+  "dependencies": {
+    "@capacitor-community/electron": "^4.0.3",
+    "@capacitor/android": "^3.3.3",
+    "@capacitor/cli": "^3.3.3",
+    "@capacitor/core": "^3.3.3",
+    "@capacitor/filesystem": "^1.0.6",
+    "@capacitor/ios": "^3.3.3",
+    "esbuild": "^0.14.8",
+    "sql.js": "^1.6.2"
+  },
+  "name": "vanillajs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "esbuild src/app.ts --bundle --outfile=public/js/app.js"
+  }
+}

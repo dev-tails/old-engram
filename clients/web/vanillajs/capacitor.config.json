@@ -1,0 +1,6 @@
+{
+  "appId": "com.xyzdigital.engram",
+  "appName": "engram",
+  "webDir": "public",
+  "bundledWebRuntime": false
+}

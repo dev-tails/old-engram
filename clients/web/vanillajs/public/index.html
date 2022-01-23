@@ -1,22 +1,68 @@
+</body>
+
+</html>
+
 <html lang="en">
 
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
   <title>Notes</title>
+  <script src="sql-wasm.js"></script>
+  <script src="js/app.js"></script>
   <script>
-    window.onload = function () {
-      var submitBtn = document.getElementById("submit");
-      var inputElement = document.getElementById("input");
-      var notesElement = document.getElementById("notes");
+    window.onload = async function () {
+      try {
+        var submitBtn = document.getElementById("submit");
+        var inputElement = document.getElementById("input");
+        var notesElement = document.getElementById("notes");
 
-      submitBtn.addEventListener("click", function () {
-        var div = document.createElement("div");
-        div.setAttribute("class", "note");
-        div.innerText = inputElement.value;
-        notesElement.appendChild(div);
+        function addNoteElement(text) {
+          var div = document.createElement("div");
+          div.setAttribute("class", "note");
+          div.innerText = text;
+          notesElement.appendChild(div);
+        }
 
-        inputElement.value = "";
-      });
+        const SQL = await initSqlJs({});
+        const db = await window.initDb(SQL);
+
+        let sqlstr = `create table if not exists notes (
+             id integer primary key autoincrement,
+             body text not null unique
+         );`
+        db.run(sqlstr);
+
+        function addNoteToDb(body) {
+          const stmt = db.prepare("INSERT into notes (body) VALUES (?)");
+          stmt.bind([body]);
+          stmt.run();
+          stmt.free();
+
+          window.exportDb(db);
+        }
+
+        const stmt = db.prepare("SELECT id, body FROM notes");
+        const result = stmt.getAsObject();
+
+        const notes = [];
+        while (stmt.step()) {
+          const note = stmt.getAsObject();
+          notes.push(note);
+          addNoteElement(note.body)
+        }
+
+        stmt.free();
+
+        submitBtn.addEventListener("click", function () {
+          addNoteToDb(inputElement.value)
+          addNoteElement(inputElement.value)
+
+          inputElement.value = "";
+        });
+      } catch (err) {
+        console.error(err);
+      }
     }
   </script>
   <style>
@@ -43,8 +89,10 @@
       background-color: #3f51b5;
       height: 64px;
       display: flex;
-      align-items: center;
+      align-items: flex-end;
       justify-content: center;
+      padding-top: 24px;
+      padding-bottom: 8px;
     }
 
     #content {
