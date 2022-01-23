@@ -42,6 +42,7 @@ export const NoteList: React.FC<NoteListProps> = (props) => {
   }, [notes, type]);
 
   const [selectedNoteId, setSelectedNoteId] = useState<string>("");
+  const [selectedNoteBody, setSelectedNoteBody] = useState<string>("");
   const [menuAnchoEl, setMenuAnchorEl] = React.useState<null | HTMLDivElement>(
     null
   );
@@ -65,11 +66,12 @@ export const NoteList: React.FC<NoteListProps> = (props) => {
   }
 
   function handleMoreClicked(note: Note, event: any) {
-    if (!note || !note.localId) {
+    if (!note || !note.localId || !note.body) {
       return;
     }
 
     setSelectedNoteId(note.localId);
+    setSelectedNoteBody(note.body);
     setMenuAnchorEl(event.target as any);
   }
 
@@ -84,6 +86,11 @@ export const NoteList: React.FC<NoteListProps> = (props) => {
 
   function handleEditNote() {
     history.push(`/notes/edit/${selectedNoteId}`);
+  }
+
+  function handleCopyNote() {
+    navigator.clipboard.writeText(selectedNoteBody);
+    hideMenu();
   }
 
   function handleShareClicked() {
@@ -116,6 +123,7 @@ export const NoteList: React.FC<NoteListProps> = (props) => {
   function handleQuickEdit() {
     const note = getNoteById(selectedNoteId);
     setSelectedNoteId(note.localId || "");
+    setSelectedNoteBody(note.body || "");
     setNote(dispatch, note);
     hideMenu();
   }
@@ -194,6 +202,7 @@ export const NoteList: React.FC<NoteListProps> = (props) => {
       >
         <MenuItem onClick={handleQuickEdit}>Quick Edit</MenuItem>
         <MenuItem onClick={handleEditNote}>Edit...</MenuItem>
+        <MenuItem onClick={handleCopyNote}>Copy...</MenuItem>
         {isShareEnabled ? (
           <MenuItem onClick={handleShareClicked}>Share...</MenuItem>
         ) : null}
