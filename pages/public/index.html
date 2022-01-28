@@ -1,0 +1,87 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>engram Pages</title>
+  <style>
+    .flex {
+      display: flex;
+    }
+
+    .flex-1 { 
+      flex: 1;
+    }
+
+    .ml-1 {
+      margin-left: 0.25rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="flex">
+    <div id="left-sidebar">
+      <button id="btnAdd">Add</button>
+    </div>
+    <div id="content" class="ml-1 flex-1">
+      <div id="post-title"></div>
+      <div id="post-body" contenteditable=""></div>
+    </div>
+  </div>
+</body>
+
+<script>
+  function byId(id) {
+    return document.getElementById(id);
+  }
+
+  function onClick(el, cb) {
+    el.addEventListener("click", cb);
+  }
+
+  function Div() {
+    return document.createElement("div");
+  }
+
+  const posts = [];
+  let activePost = null;
+  const leftSidebar = byId("left-sidebar");
+  const content = byId("content")
+  const postTitle = byId("post-title")
+  const postBody = byId("post-body")
+  
+  function setActivePost(post) {
+    activePost = post;
+    postTitle.innerText = post.title;
+    postBody.focus();
+  }
+
+  function SidebarPost(post) {
+    const el = Div();
+    el.innerText = post.title
+
+    onClick(el, () => {
+      setActivePost(post);
+    })
+
+    return el;
+  }
+
+  const btnAddPost = document.getElementById("btnAdd");
+  btnAddPost.addEventListener("click", () => {
+    const title = prompt("Post Title");
+    const post = {
+      id: posts.length,
+      title
+    }
+
+    leftSidebar.appendChild(SidebarPost(post))
+    setActivePost(post);
+
+    posts.push(post);
+  })
+</script>
+
+</html>
