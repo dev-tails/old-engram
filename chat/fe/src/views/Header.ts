@@ -48,7 +48,7 @@ export function Header() {
       });
 
       if (res.ok) {
-        btnLogin.style.display = "none";
+        window.location.reload();
       }
     });
   }
