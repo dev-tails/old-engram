@@ -1,8 +1,10 @@
 import { io } from 'socket.io-client';
 
 import { getRoomMessages, MessageType } from '../apis/RoomApi';
+import { getUser } from '../apis/UserApi';
 import { Div } from '../components/Div';
 import { Input } from '../components/Input';
+import { setStyle, setText } from '../utils/DomUtils';
 
 type RoomViewProps = {
   roomId: string;
@@ -36,7 +38,23 @@ export function RoomView(props: RoomViewProps) {
       class: "message",
     });
 
-    el.innerText = props.body;
+    async function init() {
+      const userNameEl = Div();
+      setStyle(userNameEl, {
+        fontWeight: "bold"
+      })
+      const user = await getUser(props.user);
+      setText(userNameEl, user.name)
+      el.append(userNameEl);
+
+      const bodyEl = Div();
+
+      setText(bodyEl, props.body)
+
+      el.append(bodyEl);
+    }
+
+    init();
 
     return el;
   }

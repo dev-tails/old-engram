@@ -28,6 +28,16 @@ async function run() {
 
   app.use(express.static("../fe/public"));
 
+  app.use((req, res, next) => {
+    req.user = req.cookies["user"];
+    next();
+  })
+
+  app.get("/api/users", async (req, res, next) => {
+    const users = await User.find({}, { projection: { name: 1 } }).toArray();
+    res.json({ data: users });
+  })
+
   app.post("/api/users/login", async (req, res, next) => {
     const { email, password } = req.body;
 
@@ -42,7 +52,7 @@ async function run() {
   });
 
   app.get("/api/rooms", async (req, res) => {
-    const user = req.cookies["user"];
+    const user = req.user;
 
     const rooms = await Room.find({
       users: mongodb.ObjectId(user),
@@ -67,6 +77,7 @@ async function run() {
     const { insertedId } = await Message.insertOne({
       room: new mongodb.ObjectId(id),
       body: req.body.body,
+      user: mongodb.ObjectId(req.user)
     });
 
     const newMessage = await Message.findOne({ _id: insertedId });
