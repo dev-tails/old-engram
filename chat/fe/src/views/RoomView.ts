@@ -92,6 +92,10 @@ export function RoomView(props: RoomViewProps) {
 
     el.appendChild(input);
 
+    setTimeout(() => {
+      input.focus();
+    }, 0)
+
     return el;
   }
 
