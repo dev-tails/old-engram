@@ -4,16 +4,19 @@ body {
 }
 
 .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
     height: 50px;
     background-color: #424242;
     color: white;
     font-size: 2em;
-    display: flex;
-    align-items: center;
+    padding: 0 20px;
 }
 
 .room-title {
-    margin: 0 auto;
+    font-family: 'Courier New', Courier, monospace;
 }
 
 .message-list {
