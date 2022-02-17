@@ -1,0 +1,6 @@
+{
+  "appId": "com.xyzdigital.chat",
+  "appName": "chat",
+  "webDir": "public",
+  "bundledWebRuntime": false
+}

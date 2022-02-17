@@ -1,0 +1,16 @@
+{
+  "name": "vanilla",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "esbuild src/app.ts --bundle --outfile=public/js/app.js"
+  },
+  "dependencies": {
+    "@capacitor/android": "^3.3.4",
+    "@capacitor/cli": "^3.3.4",
+    "@capacitor/core": "^3.3.4",
+    "@capacitor/push-notifications": "^1.0.7",
+    "esbuild": "^0.14.10"
+  }
+}
