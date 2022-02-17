@@ -1,32 +1,14 @@
 import { initializeRoomApi } from './apis/RoomApi';
-import { getUsers } from './apis/UserApi';
+import { initializeUserApi } from './apis/UserApi';
+import { Header } from './views/Header';
 import { Router } from './views/Router';
 
 async function run() {
   const root = document.getElementById("root");
 
-  await Promise.all([initializeRoomApi(), getUsers()]);
+  await Promise.all([initializeRoomApi(), initializeUserApi()]);
 
-  const btnLogin = document.getElementById("login");
-  btnLogin.addEventListener("click", async function () {
-    const email = prompt("email");
-    const password = prompt("password");
-
-    const res = await fetch("/api/users/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-    });
-
-    if (res.ok) {
-      btnLogin.style.display = "none";
-    }
-  });
+  root.append(Header())
 
   const router = Router();
 

@@ -34,8 +34,12 @@ async function run() {
   })
 
   app.get("/api/users", async (req, res, next) => {
-    const users = await User.find({}, { projection: { name: 1 } }).toArray();
-    res.json({ data: users });
+    if (req.user) {
+      const users = await User.find({}, { projection: { name: 1 } }).toArray();
+      res.json({ data: users });
+    } else {
+      res.sendStatus(400);
+    }
   })
 
   app.post("/api/users/login", async (req, res, next) => {

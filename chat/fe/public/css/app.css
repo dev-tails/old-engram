@@ -9,23 +9,6 @@ body {
     height: 100%;
 }
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    flex-shrink: 0;
-    height: 50px;
-    background-color: #424242;
-    color: white;
-    font-size: 2em;
-    padding: 0 20px;
-}
-
-.room-title {
-    font-family: 'Courier New', Courier, monospace;
-}
-
 .message-list {
     width: 100%;
     max-width: 900px;

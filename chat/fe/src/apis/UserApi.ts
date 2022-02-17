@@ -5,13 +5,32 @@ type User = {
   name: string;
 }
 
+export async function initializeUserApi() {
+  await getUsers();
+}
+
+let bIsLoggedIn = false;
+
+export function isLoggedIn() {
+  return bIsLoggedIn;
+}
+
 let userGetAllPromise = null;
 
 export async function getUsers(): Promise<User[]> {
-  if (!userGetAllPromise) {
-    userGetAllPromise = httpGet("/api/users");
+  try {
+    if (!userGetAllPromise) {
+      userGetAllPromise = httpGet("/api/users");
+    }
+  
+    const users = await userGetAllPromise;
+  
+    bIsLoggedIn = true;
+    return users;
+  } catch(err) {
+    bIsLoggedIn = false;
+    return [];
   }
-  return userGetAllPromise;
 }
 
 export async function getUser(id: string) {
