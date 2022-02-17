@@ -64,6 +64,15 @@ async function run() {
 
   app.get("/api/rooms/:id/messages", async (req, res, next) => {
     const { id } = req.params;
+
+    const room = await Room.findOne({
+      _id: mongodb.ObjectId(id),
+      users: mongodb.ObjectId(req.user),
+    });
+    if (!room) {
+      return res.sendStatus(404);
+    }
+
     const messages = await Message.find({
       room: new mongodb.ObjectId(id),
     }).toArray();

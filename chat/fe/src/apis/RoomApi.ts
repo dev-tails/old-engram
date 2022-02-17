@@ -1,3 +1,5 @@
+import { httpGet } from './Api';
+
 type Room = {
   _id: string;
   name: string;
@@ -20,12 +22,6 @@ export type MessageType = {
   room: string;
 }
 
-type GetRoomMessagesResponse = {
-  data: MessageType[];
-}
-
 export async function getRoomMessages(roomId: string) {
-  const res = await fetch(`/api/rooms/${roomId}/messages`);
-  const jsonData: GetRoomMessagesResponse = await res.json();
-  return jsonData.data;
+  return httpGet<MessageType[]>(`/api/rooms/${roomId}/messages`);
 }

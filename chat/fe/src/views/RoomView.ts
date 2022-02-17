@@ -8,21 +8,10 @@ import { setStyle, setText } from '../utils/DomUtils';
 
 type RoomViewProps = {
   roomId: string;
-}
+};
 
 export function RoomView(props: RoomViewProps) {
   const roomView = Div();
-
-  async function init() {
-    const messages = await getRoomMessages(props.roomId);
-    for (const message of messages) {
-      const messageEl = Message(message);
-
-      roomView.append(messageEl);
-    }
-  }
-
-  init();
 
   const socket = io();
 
@@ -31,7 +20,6 @@ export function RoomView(props: RoomViewProps) {
     messageList.appendChild(newMessage);
     newMessage.scrollIntoView();
   });
-  
 
   function Message(props: MessageType) {
     const el = Div({
@@ -41,15 +29,15 @@ export function RoomView(props: RoomViewProps) {
     async function init() {
       const userNameEl = Div();
       setStyle(userNameEl, {
-        fontWeight: "bold"
-      })
+        fontWeight: "bold",
+      });
       const user = await getUser(props.user);
-      setText(userNameEl, user.name)
+      setText(userNameEl, user.name);
       el.append(userNameEl);
 
       const bodyEl = Div();
 
-      setText(bodyEl, props.body)
+      setText(bodyEl, props.body);
 
       el.append(bodyEl);
     }
@@ -64,12 +52,18 @@ export function RoomView(props: RoomViewProps) {
       class: "message-list",
     });
 
-    fetch("/api/rooms/611f1cca1def03484db6db32/messages").then(async (res) => {
-      const jsonData = await res.json();
-      const messages = jsonData.data;
+    async function init() {
+      const messages = await getRoomMessages(props.roomId);
       for (const message of messages) {
         el.appendChild(Message(message));
       }
+    }
+
+    init();
+
+    fetch("/api/rooms/611f1cca1def03484db6db32/messages").then(async (res) => {
+      const jsonData = await res.json();
+      const messages = jsonData.data;
     });
 
     return el;

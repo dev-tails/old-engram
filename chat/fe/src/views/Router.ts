@@ -18,7 +18,7 @@ export function Router() {
     if (path === "/") {
       router.append(RoomList());
     } else if (path.includes("rooms")) {
-      const roomId = path.split("/")[1];
+      const roomId = path.split("/")[2];
       router.append(RoomView({
         roomId
       }))
