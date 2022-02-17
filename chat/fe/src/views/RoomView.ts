@@ -47,15 +47,20 @@ export function RoomView(props: RoomViewProps) {
     setStyle(userIcon, {
       fontWeight: "bold",
       borderRadius: "999px",
-      height: "24px",
-      width: "24px",
+      height: "30px",
+      width: "30px",
       backgroundColor: user.color || "black",
       color: "white",
       textAlign: "center",
-      lineHeight: "24px",
-      marginRight: "8px"
+      lineHeight: "30px",
+      marginRight: "10px",
+      fontSize: "12px"
     })
-    userIcon.innerText = user.name.charAt(0);
+
+    const firstInitial = user.name.charAt(0);
+    const lastInitial = user.name.split(" ")[1].charAt(0);
+
+    userIcon.innerText = firstInitial + lastInitial;
     el.append(userIcon);
 
     const messageContentEl = Div();
