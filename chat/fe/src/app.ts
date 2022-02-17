@@ -1,11 +1,11 @@
-import { getRooms } from './apis/RoomApi';
+import { initializeRoomApi } from './apis/RoomApi';
 import { getUsers } from './apis/UserApi';
 import { Router } from './views/Router';
 
 async function run() {
   const root = document.getElementById("root");
 
-  await Promise.all([getRooms(), getUsers()]);
+  await Promise.all([initializeRoomApi(), getUsers()]);
 
   const btnLogin = document.getElementById("login");
   btnLogin.addEventListener("click", async function () {

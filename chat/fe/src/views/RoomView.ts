@@ -1,6 +1,4 @@
-import { io } from 'socket.io-client';
-
-import { getRoom, getRoomMessages, MessageType, sendRoomMessage } from '../apis/RoomApi';
+import { getRoom, getRoomMessages, MessageType, onRoomMessage, sendRoomMessage } from '../apis/RoomApi';
 import { getUser } from '../apis/UserApi';
 import { Button } from '../components/Button';
 import { Div } from '../components/Div';
@@ -16,6 +14,7 @@ type RoomViewProps = {
 
 export function RoomView(props: RoomViewProps) {
   const roomView = Div();
+
   setStyle(roomView, {
     display: "flex",
     flexDirection: "column",
@@ -25,13 +24,11 @@ export function RoomView(props: RoomViewProps) {
 
   const room = getRoom(props.roomId);
 
-  const socket = io();
-
-  socket.on("message", (message) => {
+  onRoomMessage(props.roomId, (message) => {
     const newMessage = Message(message);
     messageList.appendChild(newMessage);
     newMessage.scrollIntoView();
-  });
+  })
 
   function Message(props: MessageType) {
     const el = Div({

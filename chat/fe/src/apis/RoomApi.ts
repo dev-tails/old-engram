@@ -1,9 +1,32 @@
+import { io } from 'socket.io-client';
+
 import { httpGet } from './Api';
+
+type MessageListener = (message: MessageType) => any;
+
+const messageListenerByRoomId: { [id: string]: MessageListener } = {};
 
 type Room = {
   _id: string;
   name: string;
 };
+
+export async function initializeRoomApi() {
+  await getRooms();
+
+  const socket = io();
+
+  socket.on("message", (message: MessageType) => {
+    const roomId = message.room;
+    if (messagesByRoomID[roomId]) {
+      messagesByRoomID[roomId].push(message);
+
+      if (messageListenerByRoomId[roomId]) {
+        messageListenerByRoomId[roomId](message);
+      }
+    }
+  });
+}
 
 const roomsById: { [key: string]: Room } = {};
 
@@ -34,8 +57,14 @@ export type MessageType = {
   room: string;
 };
 
+const messagesByRoomID: { [id: string]: MessageType[] } = {};
+
 export async function getRoomMessages(roomId: string) {
-  return httpGet<MessageType[]>(`/api/rooms/${roomId}/messages`);
+  const messages = await httpGet<MessageType[]>(
+    `/api/rooms/${roomId}/messages`
+  );
+  messagesByRoomID[roomId] = messages;
+  return messagesByRoomID[roomId];
 }
 
 type SendRoomMessageParams = {
@@ -51,4 +80,11 @@ export async function sendRoomMessage(params: SendRoomMessageParams) {
     },
     body: JSON.stringify({ body: params.body }),
   });
+}
+
+export async function onRoomMessage(
+  roomId: string,
+  handler: (message: MessageType) => any
+) {
+  messageListenerByRoomId[roomId] = handler;
 }
