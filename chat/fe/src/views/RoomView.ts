@@ -18,7 +18,7 @@ export function RoomView(props: RoomViewProps) {
   setStyle(roomView, {
     display: "flex",
     flexDirection: "column",
-    height: "100%",
+    height: "calc(100vh - 50px)",
     flexGrow: "1",
   });
 
@@ -61,6 +61,10 @@ export function RoomView(props: RoomViewProps) {
       class: "message-list",
     });
 
+    setStyle(el, {
+      overflowY: "auto"
+    })
+
     async function init() {
       const messages = await getRoomMessages(props.roomId);
       for (const message of messages) {
@@ -77,6 +81,9 @@ export function RoomView(props: RoomViewProps) {
     const el = Div({
       class: "textbox",
     });
+    setStyle(el, {
+      flexShrink: "0"
+    })
 
     const input = Input();
 
