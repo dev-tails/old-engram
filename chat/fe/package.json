@@ -11,6 +11,7 @@
     "esbuild": "^0.13.15"
   },
   "dependencies": {
+    "autolinker": "^3.14.3",
     "socket.io-client": "^4.4.0"
   }
 }

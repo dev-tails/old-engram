@@ -1,3 +1,5 @@
+import autolinker from 'autolinker';
+
 import { getRoom, getRoomMessages, MessageType, onRoomMessage, sendRoomMessage } from '../apis/RoomApi';
 import { getUser } from '../apis/UserApi';
 import { Button } from '../components/Button';
@@ -45,7 +47,7 @@ export function RoomView(props: RoomViewProps) {
 
       const bodyEl = Div();
 
-      setText(bodyEl, props.body);
+      bodyEl.innerHTML = autolinker.link(props.body)
 
       el.append(bodyEl);
     }
