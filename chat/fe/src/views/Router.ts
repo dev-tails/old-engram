@@ -15,12 +15,13 @@ export function Router() {
     router.innerHTML = "";
     const path = window.location.pathname;
 
-    console.log(path)
-
     if (path === "/") {
       router.append(RoomList());
     } else if (path.includes("rooms")) {
-      router.append(RoomView())
+      const roomId = path.split("/")[1];
+      router.append(RoomView({
+        roomId
+      }))
     }
   }
 

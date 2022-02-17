@@ -64,12 +64,14 @@ async function run() {
 
   app.post("/api/rooms/:id/messages", async (req, res, next) => {
     const { id } = req.params;
-    await Message.insertOne({
+    const { insertedId } = await Message.insertOne({
       room: new mongodb.ObjectId(id),
       body: req.body.body,
     });
 
-    io.emit("message", req.body.body);
+    const newMessage = await Message.findOne({ _id: insertedId });
+
+    io.emit("message", newMessage);
 
     res.sendStatus(200);
   });

@@ -1,20 +1,37 @@
 import { io } from 'socket.io-client';
 
+import { getRoomMessages, MessageType } from '../apis/RoomApi';
 import { Div } from '../components/Div';
 import { Input } from '../components/Input';
 
-export function RoomView() {
+type RoomViewProps = {
+  roomId: string;
+}
+
+export function RoomView(props: RoomViewProps) {
   const roomView = Div();
+
+  async function init() {
+    const messages = await getRoomMessages(props.roomId);
+    for (const message of messages) {
+      const messageEl = Message(message);
+
+      roomView.append(messageEl);
+    }
+  }
+
+  init();
 
   const socket = io();
 
-  socket.on("message", (body) => {
-    const newMessage = Message({ body });
+  socket.on("message", (message) => {
+    const newMessage = Message(message);
     messageList.appendChild(newMessage);
     newMessage.scrollIntoView();
   });
+  
 
-  function Message(props: { body: string }) {
+  function Message(props: MessageType) {
     const el = Div({
       class: "message",
     });
@@ -33,7 +50,7 @@ export function RoomView() {
       const jsonData = await res.json();
       const messages = jsonData.data;
       for (const message of messages) {
-        el.appendChild(Message({ body: message.body }));
+        el.appendChild(Message(message));
       }
     });
 
