@@ -5,8 +5,13 @@ type User = {
   name: string;
 }
 
+let userGetAllPromise = null;
+
 export async function getUsers(): Promise<User[]> {
-  return httpGet("/api/users", { cache: "force-cache" });
+  if (!userGetAllPromise) {
+    userGetAllPromise = httpGet("/api/users");
+  }
+  return userGetAllPromise;
 }
 
 export async function getUser(id: string) {

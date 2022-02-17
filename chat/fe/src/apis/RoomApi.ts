@@ -20,8 +20,23 @@ export type MessageType = {
   user: string;
   body: string;
   room: string;
-}
+};
 
 export async function getRoomMessages(roomId: string) {
   return httpGet<MessageType[]>(`/api/rooms/${roomId}/messages`);
+}
+
+type SendRoomMessageParams = {
+  room: string;
+  body: string;
+};
+
+export async function sendRoomMessage(params: SendRoomMessageParams) {
+  fetch(`/api/rooms/${params.room}/messages`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ body: params.body }),
+  });
 }

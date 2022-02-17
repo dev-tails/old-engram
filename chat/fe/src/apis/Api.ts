@@ -1,10 +1,7 @@
 import { setURL } from '../utils/HistoryUtils';
 
-export async function httpGet<D>(
-  url: string,
-  fetchOptions?: RequestInit
-): Promise<D> {
-  const res = await fetch(url, fetchOptions);
+export async function httpGet<D>(url: string): Promise<D> {
+  const res = await fetch(url);
 
   if (res.status === 404) {
     setURL("/");

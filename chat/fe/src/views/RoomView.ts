@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client';
 
-import { getRoomMessages, MessageType } from '../apis/RoomApi';
+import { getRoomMessages, MessageType, sendRoomMessage } from '../apis/RoomApi';
 import { getUser } from '../apis/UserApi';
 import { Div } from '../components/Div';
 import { Input } from '../components/Input';
@@ -61,11 +61,6 @@ export function RoomView(props: RoomViewProps) {
 
     init();
 
-    fetch("/api/rooms/611f1cca1def03484db6db32/messages").then(async (res) => {
-      const jsonData = await res.json();
-      const messages = jsonData.data;
-    });
-
     return el;
   }
 
@@ -91,15 +86,10 @@ export function RoomView(props: RoomViewProps) {
   const messageList = MessageList();
 
   function handleSubmit(text: string) {
-    fetch("/api/rooms/611f1cca1def03484db6db32/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ body: text }),
-    }).catch((err) => {
-      alert(err.message);
-    });
+    sendRoomMessage({
+      room: props.roomId,
+      body: text
+    })
   }
 
   const textBox = TextBox({ onSubmit: handleSubmit });
