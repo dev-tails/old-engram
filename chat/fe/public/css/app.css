@@ -51,3 +51,9 @@ body {
     border: none;
     color: white;
 }
+
+.hover\:text-primary:hover {
+    cursor: pointer;
+    background-color: #424242;
+    color: white;
+}

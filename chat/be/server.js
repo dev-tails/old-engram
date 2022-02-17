@@ -47,7 +47,9 @@ async function run() {
     const rooms = await Room.find({
       users: mongodb.ObjectId(user),
     }).toArray();
-    return res.json(rooms);
+    return res.json({
+      data: rooms,
+    });
   });
 
   app.get("/api/rooms/:id/messages", async (req, res, next) => {
@@ -70,6 +72,10 @@ async function run() {
     io.emit("message", req.body.body);
 
     res.sendStatus(200);
+  });
+
+  app.get("*", (req, res) => {
+    res.sendFile(__dirname + "/public/index.html");
   });
 
   server.listen(1337);
