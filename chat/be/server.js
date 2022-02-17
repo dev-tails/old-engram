@@ -75,6 +75,10 @@ async function run() {
 
     const messages = await Message.find({
       room: new mongodb.ObjectId(id),
+    }, {
+      sort: {
+        _id: -1
+      }
     }).toArray();
     res.json({
       data: messages,

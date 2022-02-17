@@ -19,7 +19,7 @@ export async function initializeRoomApi() {
   socket.on("message", (message: MessageType) => {
     const roomId = message.room;
     if (messagesByRoomID[roomId]) {
-      messagesByRoomID[roomId].push(message);
+      messagesByRoomID[roomId].unshift(message);
 
       if (messageListenerByRoomId[roomId]) {
         messageListenerByRoomId[roomId](message);

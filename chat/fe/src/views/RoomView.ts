@@ -26,8 +26,7 @@ export function RoomView(props: RoomViewProps) {
 
   onRoomMessage(props.roomId, (message) => {
     const newMessage = Message(message);
-    messageList.appendChild(newMessage);
-    newMessage.scrollIntoView();
+    messageList.prepend(newMessage);
   })
 
   function Message(props: MessageType) {
@@ -62,7 +61,9 @@ export function RoomView(props: RoomViewProps) {
     });
 
     setStyle(el, {
-      overflowY: "auto"
+      overflowY: "auto",
+      display: "flex",
+      flexDirection: "column-reverse"
     })
 
     async function init() {
