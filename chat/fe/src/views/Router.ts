@@ -1,9 +1,14 @@
 import { Div } from '../components/Div';
+import { setStyle } from '../utils/DomUtils';
 import { RoomList } from './RoomList';
 import { RoomView } from './RoomView';
 
 export function Router() {
   const router = Div();
+
+  setStyle(router, {
+    flexGrow: "1"
+  })
 
   function init() {
     handleRouteUpdated();

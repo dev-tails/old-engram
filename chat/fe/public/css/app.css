@@ -3,6 +3,12 @@ body {
     overflow: hidden;
 }
 
+#root {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
 .header {
     display: flex;
     justify-content: space-between;
@@ -20,23 +26,13 @@ body {
 }
 
 .message-list {
-    position: absolute;
-    bottom: 50px;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    top: 50px;
-    left: 0;
-    right: 0;
+    width: 100%;
     max-width: 900px;
     margin: 0 auto;
+    flex-grow: 1;
 }
 
 .textbox {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 50px;
     background-color: #424242;
     text-align: center;
 }

@@ -1,10 +1,14 @@
 import { io } from 'socket.io-client';
 
-import { getRoomMessages, MessageType, sendRoomMessage } from '../apis/RoomApi';
+import { getRoom, getRoomMessages, MessageType, sendRoomMessage } from '../apis/RoomApi';
 import { getUser } from '../apis/UserApi';
+import { Button } from '../components/Button';
 import { Div } from '../components/Div';
 import { Input } from '../components/Input';
-import { setStyle, setText } from '../utils/DomUtils';
+import { Routes } from '../routes/Routes';
+import { Borders } from '../theme/Borders';
+import { onClick, setStyle, setText } from '../utils/DomUtils';
+import { setURL } from '../utils/HistoryUtils';
 
 type RoomViewProps = {
   roomId: string;
@@ -12,6 +16,14 @@ type RoomViewProps = {
 
 export function RoomView(props: RoomViewProps) {
   const roomView = Div();
+  setStyle(roomView, {
+    display: "flex",
+    flexDirection: "column",
+    height: "100%",
+    flexGrow: "1",
+  });
+
+  const room = getRoom(props.roomId);
 
   const socket = io();
 
@@ -83,13 +95,47 @@ export function RoomView(props: RoomViewProps) {
     return el;
   }
 
+  function RoomHeader() {
+    const el = Div();
+
+    setStyle(el, {
+      display: "flex",
+      borderBottom: Borders.bottom,
+      padding: "8px",
+      width: "100%",
+      maxWidth: "900px",
+      margin: "0 auto",
+    });
+
+    const btnBack = Button({
+      text: "<",
+    });
+    el.append(btnBack);
+    onClick(btnBack, () => {
+      setURL(Routes.home);
+    });
+
+    const roomNameEl = Div();
+    setStyle(roomNameEl, {
+      paddingLeft: "8px",
+    });
+    setText(roomNameEl, room.name);
+
+    el.append(roomNameEl);
+
+    return el;
+  }
+
+  const roomHeader = RoomHeader();
+  roomView.append(roomHeader);
+
   const messageList = MessageList();
 
   function handleSubmit(text: string) {
     sendRoomMessage({
       room: props.roomId,
-      body: text
-    })
+      body: text,
+    });
   }
 
   const textBox = TextBox({ onSubmit: handleSubmit });
