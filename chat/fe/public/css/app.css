@@ -1,0 +1,50 @@
+body {
+    margin: 0;
+    overflow: hidden;
+}
+
+.header {
+    height: 50px;
+    background-color: #424242;
+    color: white;
+    font-size: 2em;
+    display: flex;
+    align-items: center;
+}
+
+.room-title {
+    margin: 0 auto;
+}
+
+.message-list {
+    position: absolute;
+    bottom: 50px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    top: 50px;
+    left: 0;
+    right: 0;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.textbox {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background-color: #424242;
+    text-align: center;
+}
+
+.textbox input {
+    max-width: 900px;
+    width: 100%;
+    background-color: transparent;
+    font-size: 1.25rem;
+    padding: 8px;
+    height: 50px;
+    border: none;
+    color: white;
+}

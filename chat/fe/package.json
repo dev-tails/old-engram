@@ -1,0 +1,16 @@
+{
+  "name": "chat-web",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "esbuild src/app.ts --outfile=public/js/app.js --bundle",
+    "dev": "yarn build --servedir=public"
+  },
+  "devDependencies": {
+    "esbuild": "^0.13.15"
+  },
+  "dependencies": {
+    "socket.io-client": "^4.4.0"
+  }
+}

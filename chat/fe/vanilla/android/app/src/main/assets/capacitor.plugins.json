@@ -1,6 +1,0 @@
-[
-	{
-		"pkg": "@capacitor/push-notifications",
-		"classpath": "com.capacitorjs.plugins.pushnotifications.PushNotificationsPlugin"
-	}
-]
