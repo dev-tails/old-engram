@@ -36,20 +36,45 @@ export function RoomView(props: RoomViewProps) {
       class: "message",
     });
 
+    setStyle(el, {
+      display: "flex",
+      margin: "4px 0px"
+    })
+
+    const user = getUser(props.user);
+
+    const userIcon = Div();
+    setStyle(userIcon, {
+      fontWeight: "bold",
+      borderRadius: "999px",
+      height: "24px",
+      width: "24px",
+      backgroundColor: user.color || "black",
+      color: "white",
+      textAlign: "center",
+      lineHeight: "24px",
+      marginRight: "8px"
+    })
+    userIcon.innerText = user.name.charAt(0);
+    el.append(userIcon);
+
+    const messageContentEl = Div();
+    el.append(messageContentEl);
+
     async function init() {
       const userNameEl = Div();
       setStyle(userNameEl, {
         fontWeight: "bold",
       });
-      const user = await getUser(props.user);
+      
       setText(userNameEl, user.name);
-      el.append(userNameEl);
+      messageContentEl.append(userNameEl);
 
       const bodyEl = Div();
 
       bodyEl.innerHTML = autolinker.link(props.body)
 
-      el.append(bodyEl);
+      messageContentEl.append(bodyEl);
     }
 
     init();

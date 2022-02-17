@@ -3,10 +3,13 @@ import { httpGet } from './Api';
 type User = {
   _id: string;
   name: string;
+  color: string;
 }
 
+let users: User[] = [];
+
 export async function initializeUserApi() {
-  await getUsers();
+  users = await getUsers();
 }
 
 let bIsLoggedIn = false;
@@ -33,8 +36,7 @@ export async function getUsers(): Promise<User[]> {
   }
 }
 
-export async function getUser(id: string) {
-  const users = await getUsers();
+export function getUser(id: string) {
   const user =  users.find((user) => user._id === id);
 
   if (!user) {
