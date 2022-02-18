@@ -1,10 +1,15 @@
 import { httpGet } from './Api';
 
+const defaultUser = {
+  _id: "-1",
+  name: "MissigNo.",
+};
+
 type User = {
   _id: string;
   name: string;
   color: string;
-}
+};
 
 let self: User | null = null;
 let users: User[] = [];
@@ -27,33 +32,34 @@ export async function getUsers(): Promise<User[]> {
     if (!userGetAllPromise) {
       userGetAllPromise = httpGet("/api/users");
     }
-  
+
     const users = await userGetAllPromise;
-  
+
     bIsLoggedIn = true;
     return users;
-  } catch(err) {
+  } catch (err) {
     bIsLoggedIn = false;
     return [];
   }
 }
 
 export function getUser(id: string) {
-  const user =  users.find((user) => user._id === id);
+  const user = users.find((user) => user._id === id);
 
   if (!user) {
-    return {
-      _id: "-1",
-      name: "MissigNo."
-    }
+    return defaultUser;
   }
 
   return user;
 }
 
 export async function fetchSelf() {
-  const user = await httpGet<User>("/api/users/self");
-  return user;
+  try {
+    const user = await httpGet<User>("/api/users/self");
+    return user;
+  } catch (err) {
+    return null;
+  }
 }
 
 export function getSelf() {
