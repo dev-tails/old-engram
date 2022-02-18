@@ -45,6 +45,8 @@ export function RoomView(props: RoomViewProps) {
 
     const userIcon = Div();
     setStyle(userIcon, {
+      display: "flex",
+      flexShrink: "0",
       fontWeight: "bold",
       borderRadius: "999px",
       height: "30px",
