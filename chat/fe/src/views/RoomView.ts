@@ -47,6 +47,8 @@ export function RoomView(props: RoomViewProps) {
     setStyle(userIcon, {
       display: "flex",
       flexShrink: "0",
+      justifyContent: "center",
+      alignItems: "center",
       fontWeight: "bold",
       borderRadius: "999px",
       height: "30px",
