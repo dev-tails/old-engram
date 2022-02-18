@@ -1,7 +1,8 @@
 import { isLoggedIn } from '../apis/UserApi';
 import { Button } from '../components/Button';
 import { Div } from '../components/Div';
-import { setStyle } from '../utils/DomUtils';
+import { areNotificationsEnabled, toggleNotificationsEnabled } from '../services/NotificationService';
+import { setStyle, setText } from '../utils/DomUtils';
 
 export function Header() {
   const el = Div();
@@ -25,12 +26,31 @@ export function Header() {
   });
   roomTitle.innerText = "XYZ";
   el.append(roomTitle);
+  
+  const headerActionsEl = Div();
+  el.append(headerActionsEl);
+
+  const btnNotifications = Button({
+    text: ""
+  });
+
+  updateNotificationButtonText();
+  function updateNotificationButtonText() {
+    setText(btnNotifications, areNotificationsEnabled() ? "pause notifications" : "enable notifications")
+  }
+
+  headerActionsEl.append(btnNotifications);
+
+  btnNotifications.addEventListener("click", async function () {
+    toggleNotificationsEnabled();
+    updateNotificationButtonText();
+  });
 
   if (!isLoggedIn()) {
     const btnLogin = Button({
       text: "login",
     });
-    el.append(btnLogin);
+    headerActionsEl.append(btnLogin);
 
     btnLogin.addEventListener("click", async function () {
       const email = prompt("email");

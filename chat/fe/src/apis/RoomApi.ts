@@ -1,6 +1,8 @@
-import { io } from 'socket.io-client';
+import { io } from "socket.io-client";
 
-import { httpGet } from './Api';
+import { sendNotification } from "../services/NotificationService";
+import { TextUtils } from "../utils/TextUtils";
+import { httpGet } from "./Api";
 
 type MessageListener = (message: MessageType) => any;
 
@@ -17,6 +19,18 @@ export async function initializeRoomApi() {
   const socket = io();
 
   socket.on("message", (message: MessageType) => {
+    const room = roomsById[message.room];
+    if (!room) {
+      // User doesn't have access to the room
+      // TODO: make sure websocket only sends to relevant parties
+      return;
+    }
+
+    sendNotification({
+      title: room.name,
+      body: TextUtils.truncate(message.body, 256),
+    });
+
     const roomId = message.room;
     if (messagesByRoomID[roomId]) {
       messagesByRoomID[roomId].unshift(message);
