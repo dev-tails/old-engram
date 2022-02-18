@@ -6,9 +6,11 @@ type User = {
   color: string;
 }
 
+let self: User | null = null;
 let users: User[] = [];
 
 export async function initializeUserApi() {
+  self = await fetchSelf();
   users = await getUsers();
 }
 
@@ -47,4 +49,13 @@ export function getUser(id: string) {
   }
 
   return user;
+}
+
+export async function fetchSelf() {
+  const user = await httpGet<User>("/api/users/self");
+  return user;
+}
+
+export function getSelf() {
+  return self;
 }

@@ -33,6 +33,15 @@ async function run() {
     next();
   })
 
+  app.get("/api/users/self", async (req, res, next) => {
+    if (req.user) {
+      const user = await User.findOne({_id: mongodb.ObjectId(req.user)}, { projection: { password: 0 } });
+      res.json({ data: user });
+    } else {
+      res.sendStatus(400);
+    }
+  })
+
   app.get("/api/users", async (req, res, next) => {
     if (req.user) {
       const users = await User.find({}, { projection: { password: 0 } }).toArray();

@@ -1,8 +1,9 @@
-import { io } from "socket.io-client";
+import { io } from 'socket.io-client';
 
-import { sendNotification } from "../services/NotificationService";
-import { TextUtils } from "../utils/TextUtils";
-import { httpGet } from "./Api";
+import { sendNotification } from '../services/NotificationService';
+import { TextUtils } from '../utils/TextUtils';
+import { httpGet } from './Api';
+import { getSelf, getUser } from './UserApi';
 
 type MessageListener = (message: MessageType) => any;
 
@@ -26,9 +27,13 @@ export async function initializeRoomApi() {
       return;
     }
 
+    const currentUser = getSelf();
+    const messageSender = getUser(message.user);
+
+    if (message.user !== currentUser._id)
     sendNotification({
       title: room.name,
-      body: TextUtils.truncate(message.body, 256),
+      body: `${messageSender.name}: ${TextUtils.truncate(message.body, 256)}`,
     });
 
     const roomId = message.room;
