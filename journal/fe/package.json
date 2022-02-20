@@ -7,7 +7,7 @@
     "esbuild": "^0.14.23"
   },
   "scripts": {
-    "build": "esbuild src/app.ts --outfile=public/js/app.js --bundle --minify",
+    "build": "esbuild src/app.ts --outfile=public/js/app.js --bundle",
     "dev": "yarn build --servedir=public"
   }
 }
