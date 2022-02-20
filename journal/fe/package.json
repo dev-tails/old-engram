@@ -1,0 +1,13 @@
+{
+  "name": "fe",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "esbuild": "^0.14.23"
+  },
+  "scripts": {
+    "build": "esbuild src/app.ts --outfile=public/js/app.js --bundle",
+    "dev": "yarn build --servedir=public"
+  }
+}
