@@ -1,0 +1,13 @@
+{
+  "name": "image-crop",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "esbuild src/ImageCropApp.ts --outfile=public/js/app.js --bundle",
+    "dev": "yarn build --servedir=public"
+  },
+  "dependencies": {
+    "esbuild": "^0.14.23"
+  }
+}
