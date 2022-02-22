@@ -1,0 +1,36 @@
+Arguments: 
+  /home/adam/.nvm/versions/node/v14.18.1/bin/node /home/adam/.nvm/versions/node/v14.18.1/bin/yarn init
+
+PATH: 
+  /home/adam/.nvm/versions/node/v14.18.1/bin:/opt/emsdk:/opt/emsdk/upstream/emscripten:/opt/emsdk/node/14.15.5_64bit/bin:/home/adam/.cargo/bin:/home/adam/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+
+Yarn version: 
+  1.22.17
+
+Node version: 
+  14.18.1
+
+Platform: 
+  linux x64
+
+Trace: 
+  Error: canceled
+      at Interface.<anonymous> (/home/adam/.nvm/versions/node/v14.18.1/lib/node_modules/yarn/lib/cli.js:137143:13)
+      at Interface.emit (events.js:400:28)
+      at Interface._ttyWrite (readline.js:1001:16)
+      at ReadStream.onkeypress (readline.js:265:10)
+      at ReadStream.emit (events.js:400:28)
+      at emitKeys (internal/readline/utils.js:358:14)
+      at emitKeys.next (<anonymous>)
+      at ReadStream.onData (readline.js:1270:36)
+      at ReadStream.emit (events.js:400:28)
+      at addChunk (internal/streams/readable.js:293:12)
+
+npm manifest: 
+  No manifest
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
