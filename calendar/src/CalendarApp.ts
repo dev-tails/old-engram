@@ -1,5 +1,6 @@
 import { Button } from '../../ui/components/Button';
 import { Div } from '../../ui/components/Div';
+import { Calendar } from './views/Calendar';
 
 const root = document.getElementById("root");
 
@@ -45,6 +46,8 @@ loginButton.addEventListener("click", () => {
 header.append(loginButton);
 
 root.append(header);
+
+root.append(Calendar());
 
 async function init() {
   const res = await fetch("/api/users/self");
