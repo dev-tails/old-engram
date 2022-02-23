@@ -30,6 +30,7 @@ export function Calendar() {
         borderBottom: "#dadce0 1px solid",
         boxSizing: "border-box",
         paddingRight: "8px",
+        justifyContent: "end"
       }
     });
     hourContainer.append(hourText);
