@@ -32,7 +32,9 @@ export function initializeUserController(apiRouter: Router) {
       password,
     });
 
-    res.cookie("user", user._id);
-    res.sendStatus(200);
+    res.cookie("user", user._id, { domain: "xyzdigital.local" });
+    res.json({
+      data: user._id
+    })
   });
 }

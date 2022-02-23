@@ -11,7 +11,8 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-  origin: process.env.ORIGIN
+  origin: ["http://calendar.xyzdigital.local", process.env.ORIGIN],
+  default: process.env.ORIGIN
 }))
 
 const apiRouter = Router();

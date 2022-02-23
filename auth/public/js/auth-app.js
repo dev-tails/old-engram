@@ -28,16 +28,28 @@
   submitButton.innerText = "Log in";
   authForm.append(submitButton);
   submitButton.addEventListener("click", async () => {
-    const res = await fetch("/api/users/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        email: emailInput.value,
-        password: passwordInput.value
-      })
-    });
+    try {
+      const res = await fetch("/api/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: emailInput.value,
+          password: passwordInput.value
+        })
+      });
+      if (res.ok) {
+        const urlSearchParams = new URLSearchParams(window.location.search);
+        const params = Object.fromEntries(urlSearchParams.entries());
+        console.log(params.redirect_to);
+        window.location.href = params.redirect_to;
+      } else {
+        alert("Failed to log in");
+      }
+    } catch (err) {
+      alert(err.message);
+    }
   });
   root.append(authForm);
 })();
