@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import express, { Router } from 'express';
 
+import { initializeAdminController } from './admin/AdminController';
 import { initializeUserController } from './auth/UserController';
 import { servicesMiddleware } from './middleware/ServicesMiddleware';
 
@@ -21,6 +22,7 @@ apiRouter.use(express.json());
 apiRouter.use(cookieParser());
 apiRouter.use(servicesMiddleware);
 
+initializeAdminController(apiRouter);
 initializeUserController(apiRouter);
 
 app.use("/api", apiRouter);

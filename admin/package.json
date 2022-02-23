@@ -1,0 +1,13 @@
+{
+  "name": "@engramhq/admin",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "esbuild src/AdminApp.ts --bundle --outfile=public/js/admin.app.js",
+    "dev": "yarn build --servedir=public"
+  },
+  "devDependencies": {
+    "esbuild": "^0.14.23"
+  }
+}

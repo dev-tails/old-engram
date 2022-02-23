@@ -5,7 +5,8 @@ const mongodb = require("mongodb");
 export type User = {
   email: string;
   password: string;
-}
+  superuser: boolean;
+};
 
 export type CheckLoginParams = {
   email: string;
@@ -32,13 +33,16 @@ export class UserService {
   }
 
   async findById(id: string) {
-    return this.User.findOne({
-      _id: new mongodb.ObjectId(id)
-    }, {
-      projection: {
-        password: 0
+    return this.User.findOne(
+      {
+        _id: new mongodb.ObjectId(id),
+      },
+      {
+        projection: {
+          password: 0,
+        },
       }
-    });
+    );
   }
 
   async checkLogin(params: CheckLoginParams) {
@@ -48,5 +52,9 @@ export class UserService {
     }
 
     return userWithEmail;
+  }
+
+  async adminFindAllUsers() {
+    return this.User.find({}, { projection: { password: 0 } }).toArray();
   }
 }
