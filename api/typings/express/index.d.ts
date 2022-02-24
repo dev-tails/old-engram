@@ -1,5 +1,8 @@
 declare namespace Express {
   export interface Request {
-    services?: { userService: import('../../auth/UserService').UserService };
+    services?: { 
+      roomService: import('../../rooms/RoomService').RoomService
+      userService: import('../../auth/UserService').UserService
+    };
   }
 }

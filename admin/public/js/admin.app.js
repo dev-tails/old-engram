@@ -16,6 +16,11 @@
     if (params?.innerText) {
       el.innerText = params.innerText;
     }
+    if (params?.onClick) {
+      el.addEventListener("click", () => {
+        params.onClick();
+      });
+    }
     return el;
   }
 
@@ -94,6 +99,13 @@
       columnEl.innerText = rowText;
       rowEl.append(columnEl);
     }
+  }
+
+  // src/apis/AdminRoomApi.ts
+  async function fetchRooms() {
+    const res = await fetch("/api/admin/rooms");
+    const jsonData = await res.json();
+    return jsonData.data;
   }
 
   // src/apis/AdminUserApi.ts
@@ -184,13 +196,17 @@
     styles: {}
   });
   page.append(collectionSelect);
-  var collections = ["Users", "Rooms"];
+  var collections = ["users", "rooms"];
   for (const collectionName of collections) {
     const collectionEl = Div({
-      innerText: collectionName
+      innerText: collectionName,
+      onClick: () => {
+        window.location.href = `/${collectionName}`;
+      }
     });
     collectionSelect.append(collectionEl);
   }
+  var collectionParam = window.location.pathname.split("/")[1];
   var collectionView = Div();
   page.append(collectionView);
   var collectionViewHeader = Div({
@@ -202,7 +218,10 @@
   });
   collectionView.append(collectionViewHeader);
   var collectionViewTitle = Div({
-    innerText: "Users"
+    styles: {
+      textTransform: "capitalize"
+    },
+    innerText: collectionParam
   });
   collectionViewHeader.append(collectionViewTitle);
   var addDocumentButton = Button({
@@ -214,18 +233,38 @@
     }
   });
   collectionViewHeader.append(addDocumentButton);
+  var listFieldsByCollection = {
+    users: ["_id", "name", "email", "color"],
+    rooms: ["_id", "name"]
+  };
   var userTable = Table({
-    rows: [["_id", "name", "email", "color"]]
+    rows: [listFieldsByCollection[collectionParam]]
   });
   collectionView.append(userTable);
   function handleDocumentSubmitted(doc) {
     Modal.close();
-    addTableRow(userTable, [doc._id, doc.name, doc.email, doc.color]);
+    const rowValues = [];
+    for (const field of listFieldsByCollection[collectionParam]) {
+      rowValues.push(doc[field]);
+    }
+    addTableRow(userTable, rowValues);
   }
   async function init2() {
-    const users = await fetchUsers();
-    for (const user of users) {
-      addTableRow(userTable, [user._id, user.name, user.email, user.color]);
+    let docs = [];
+    switch (collectionParam) {
+      case "rooms":
+        docs = await fetchRooms();
+        break;
+      case "users":
+        docs = await fetchUsers();
+        break;
+    }
+    for (const doc of docs) {
+      const rowValues = [];
+      for (const field of listFieldsByCollection[collectionParam]) {
+        rowValues.push(doc[field]);
+      }
+      addTableRow(userTable, rowValues);
     }
   }
   init2();

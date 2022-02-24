@@ -39,4 +39,28 @@ export function initializeAdminController(apiRouter: Router) {
 
     res.json({ data: createdDoc });
   });
+
+  router.get("/rooms", async (req, res) => {
+    const rooms = await req.services.roomService.adminFindAll();
+    res.json({ data: rooms });
+  });
+
+  router.post("/rooms", async (req, res) => {
+    const CreateUserSchema = Joi.object<CreateUserParams>({
+      name: Joi.string(),
+      email: Joi.string().email(),
+      password: Joi.string().min(12),
+      color: Joi.string(),
+    });
+
+    const { error, value } = CreateUserSchema.validate(req.body);
+    if (error) {
+      throw error;
+    }
+
+    const { insertedId } = await req.services.userService.createUser(value);
+    const createdDoc = await req.services.userService.findById(String(insertedId));
+
+    res.json({ data: createdDoc });
+  });
 }
