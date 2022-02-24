@@ -1,5 +1,7 @@
 import { Div } from '../../ui/components';
+import { Modal } from '../../ui/components/Modal';
 import { Table } from '../../ui/components/Table';
+import { CreateUserModal } from './views/CreateUserModal';
 
 const root = document.getElementById("root");
 
@@ -48,4 +50,7 @@ async function init() {
   collectionView.append(userTable);
 }
 
-init();
+// init();
+
+Modal.init(root);
+Modal.open(CreateUserModal())
