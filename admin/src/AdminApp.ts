@@ -1,7 +1,9 @@
 import { Div } from '../../ui/components';
+import { Button } from '../../ui/components/Button';
 import { Modal } from '../../ui/components/Modal';
-import { Table } from '../../ui/components/Table';
-import { CreateUserModal } from './views/CreateUserModal';
+import { addTableRow, Table } from '../../ui/components/Table';
+import { fetchUsers } from './apis/AdminUserApi';
+import { CreateUserModal } from './views/CreateDocumentModal';
 
 const root = document.getElementById("root");
 
@@ -28,29 +30,55 @@ for (const collectionName of collections) {
 const collectionView = Div();
 page.append(collectionView);
 
+const collectionViewHeader = Div({
+  styles: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center"
+  }
+})
+collectionView.append(collectionViewHeader)
+
 const collectionViewTitle = Div({
   innerText: "Users",
 });
 
-collectionView.append(collectionViewTitle);
+collectionViewHeader.append(collectionViewTitle);
 
-async function init() {
-  const res = await fetch("/api/admin/users");
-  const jsonData = await res.json();
-
-  const rows = [["_id", "name", "email", "color"]];
-
-  for (const user of jsonData.data) {
-    rows.push([user._id, user.name, user.email, user.color]);
+const addDocumentButton = Button({
+  innerText: "+",
+  onClick: () => {
+    Modal.open(CreateUserModal({
+      onSubmit: handleDocumentSubmitted
+    }))
   }
+})
+collectionViewHeader.append(addDocumentButton);
 
-  const userTable = Table({
-    rows: rows,
-  });
-  collectionView.append(userTable);
+const userTable = Table({
+  rows: [["_id", "name", "email", "color"]],
+});
+collectionView.append(userTable);
+
+function handleDocumentSubmitted(doc: any) {
+  Modal.close();
+  addTableRow(userTable, [doc._id, doc.name, doc.email, doc.color])
 }
 
-// init();
+async function init() {
+  // const users = await fetchUsers()  
+  const users = [{
+    _id: "1",
+    name: "Adam Berg",
+    email: "adam@xyzdigital.com",
+    color: "#FF0000"
+  }]
+
+  for (const user of users) {
+    addTableRow(userTable, [user._id, user.name, user.email, user.color]);
+  }
+}
+
+init();
 
 Modal.init(root);
-Modal.open(CreateUserModal())

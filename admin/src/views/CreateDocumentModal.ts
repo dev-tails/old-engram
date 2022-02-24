@@ -1,23 +1,28 @@
 import { Div } from "../../../ui/components";
 import { Button } from "../../../ui/components/Button";
+import { Modal } from "../../../ui/components/Modal";
 import { TextArea } from "../../../ui/components/TextArea";
 
-export function CreateUserModal() {
+type CreateDocumentModalProps = {
+  onSubmit: (doc: Object) => void;
+};
+
+export function CreateUserModal(props: CreateDocumentModalProps) {
   const el = Div({
     styles: {
       display: "flex",
       flexDirection: "column",
       width: "100%",
-      height: "100%"
-    }
+      height: "100%",
+    },
   });
 
   const textarea = TextArea({
     styles: {
       flex: "1",
       width: "100%",
-      resize: "none"
-    }
+      resize: "none",
+    },
   });
   el.append(textarea);
 
@@ -26,23 +31,32 @@ export function CreateUserModal() {
       display: "flex",
       justifyContent: "end",
       flexShrink: "0",
-      padding: "8px"
-    }
+      padding: "8px",
+    },
   });
   el.append(actions);
 
   const cancelButton = Button({
     innerText: "Cancel",
     styles: {
-      marginRight: "8px"
-    }
-  })
-  actions.append(cancelButton)
+      marginRight: "8px",
+    },
+    onClick: Modal.close,
+  });
+  actions.append(cancelButton);
 
   const submitButton = Button({
-    innerText: "Submit"
-  })
-  actions.append(submitButton)
+    innerText: "Submit",
+    onClick: () => {
+      try {
+        const doc = JSON.parse(textarea.value);
+        props.onSubmit(doc);
+      } catch (err) {
+        alert(err.message);
+      }
+    },
+  });
+  actions.append(submitButton);
 
   return el;
 }
