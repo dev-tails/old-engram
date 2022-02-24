@@ -66,13 +66,7 @@ function handleDocumentSubmitted(doc: any) {
 }
 
 async function init() {
-  // const users = await fetchUsers()  
-  const users = [{
-    _id: "1",
-    name: "Adam Berg",
-    email: "adam@xyzdigital.com",
-    color: "#FF0000"
-  }]
+  const users = await fetchUsers()  
 
   for (const user of users) {
     addTableRow(userTable, [user._id, user.name, user.email, user.color]);

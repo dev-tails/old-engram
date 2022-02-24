@@ -1,7 +1,8 @@
-import { Div } from "../../../ui/components";
-import { Button } from "../../../ui/components/Button";
-import { Modal } from "../../../ui/components/Modal";
-import { TextArea } from "../../../ui/components/TextArea";
+import { Div } from '../../../ui/components';
+import { Button } from '../../../ui/components/Button';
+import { Modal } from '../../../ui/components/Modal';
+import { TextArea } from '../../../ui/components/TextArea';
+import { postCreateUser } from '../apis/AdminUserApi';
 
 type CreateDocumentModalProps = {
   onSubmit: (doc: Object) => void;
@@ -47,10 +48,13 @@ export function CreateUserModal(props: CreateDocumentModalProps) {
 
   const submitButton = Button({
     innerText: "Submit",
-    onClick: () => {
+    onClick: async () => {
       try {
         const doc = JSON.parse(textarea.value);
-        props.onSubmit(doc);
+
+        const createdDoc = postCreateUser(doc);
+
+        props.onSubmit(createdDoc);
       } catch (err) {
         alert(err.message);
       }

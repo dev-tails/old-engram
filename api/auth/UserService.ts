@@ -3,8 +3,10 @@ import { Collection, Db } from 'mongodb';
 const mongodb = require("mongodb");
 
 export type User = {
+  name: string;
   email: string;
   password: string;
+  color: string;
   superuser: boolean;
 };
 
@@ -13,11 +15,13 @@ export type CheckLoginParams = {
   password: string;
 };
 
+export type CreateUserParams = Partial<User>;
+
 export class AuthenticationError extends Error {}
 
 export class UserService {
   private db: Db;
-  private User: Collection<User>;
+  private User: Collection<Partial<User>>;
 
   async init() {
     if (this.db) {
@@ -56,5 +60,9 @@ export class UserService {
 
   async adminFindAllUsers() {
     return this.User.find({}, { projection: { password: 0 } }).toArray();
+  }
+
+  async createUser(params: CreateUserParams) {
+    return this.User.insertOne(params);
   }
 }

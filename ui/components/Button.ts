@@ -1,4 +1,4 @@
-import { setElementStyles } from "./Element";
+import { setElementStyles } from './Element';
 
 type ButtonProps = {
   innerText?: string;
@@ -9,11 +9,11 @@ type ButtonProps = {
 export function Button(props?: ButtonProps) {
   const el = document.createElement("button");
 
-  setElementStyles(el, props.styles);
+  setElementStyles(el, props?.styles);
 
-  el.innerText = props.innerText;
+  el.innerText = props?.innerText;
 
-  if (props.onClick) {
+  if (props?.onClick) {
     el.addEventListener("click", props.onClick)
   }
 
