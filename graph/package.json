@@ -1,0 +1,13 @@
+{
+  "name": "@engramhq/graph",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "esbuild src/GraphApp.ts --bundle --outfile=public/js/graph.app.js",
+    "dev": "yarn build --servedir=public"
+  },
+  "devDependencies": {
+    "esbuild": "^0.14.23"
+  }
+}
