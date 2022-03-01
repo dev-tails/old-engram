@@ -1,11 +1,22 @@
+import { Button } from '../../../ui/components/Button';
 import { Div } from '../../../ui/components/Div';
 
 export type SidebarProps = {
   items: SidebarItem[];
+  onClick: (item: SidebarItem) => void;
 };
 
 export function Sidebar(props: SidebarProps) {
   const el = Div();
+
+  const addButton = Button({
+    innerText: "+",
+  });
+  addButton.addEventListener("click", () => {
+    const pageName = prompt("Page Name");
+    addItemsAndContent([{ title: pageName }]);
+  });
+  el.append(addButton);
 
   function addItemsAndContent(items: SidebarItem[], depth: number = 0) {
     if (!items || items.length === 0) {
@@ -13,7 +24,7 @@ export function Sidebar(props: SidebarProps) {
     }
 
     for (const item of items) {
-      el.append(SidebarItem({ item, depth }));
+      el.append(SidebarItem({ item, depth, onClick: props.onClick }));
       addItemsAndContent(item.content, depth + 1);
     }
   }
@@ -23,14 +34,16 @@ export function Sidebar(props: SidebarProps) {
   return el;
 }
 
-type SidebarItem = {
+export type SidebarItem = {
+  _id?: string;
   title: string;
   content?: SidebarItem[];
 };
 
-type SidebarItemProps = {
+export type SidebarItemProps = {
   item: SidebarItem;
   depth: number;
+  onClick: (item: SidebarItem) => void;
 };
 
 export function SidebarItem(props: SidebarItemProps) {
@@ -39,6 +52,9 @@ export function SidebarItem(props: SidebarItemProps) {
       display: "flex",
       alignItems: "center",
       marginLeft: `${8 * props.depth}px`,
+    },
+    onClick: () => {
+      props.onClick(props.item);
     },
   });
 
