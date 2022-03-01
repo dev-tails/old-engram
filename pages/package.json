@@ -1,0 +1,13 @@
+{
+  "name": "@engramhq/pages",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "esbuild src/PagesApp.ts --bundle --outfile=public/js/pages.app.js",
+    "dev": "yarn build --servedir=public"
+  },
+  "devDependencies": {
+    "esbuild": "^0.14.23"
+  }
+}
