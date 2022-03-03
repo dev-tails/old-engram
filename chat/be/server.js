@@ -71,9 +71,41 @@ async function run() {
     const rooms = await Room.find({
       users: mongodb.ObjectId(user),
     }).toArray();
+
+    const userRoomConfigs = await UserRoomConfig.find({
+      user: mongodb.ObjectId(user)
+    }).toArray();
+
+    const roomsById = {};
+    for (const room of rooms) {
+      roomsById[room._id] = room;
+    }
+
+    for (const userRoomConfig of userRoomConfigs) {
+      if (roomsById[userRoomConfig.room]) {
+        roomsById[userRoomConfig.room].userRoomConfig = userRoomConfig
+      }
+    }
+
     return res.json({
       data: rooms,
     });
+  });
+
+  app.post("/api/userroomconfigs", async (req, res) => {
+    const { _id } = req.body;
+    if (_id) {
+      await UserRoomConfig.updateOne({ _id: mongodb.ObjectId(_id) }, { $set: {
+        unreadCount: req.body.unreadCount
+      } })
+    } else {
+      await UserRoomConfig.insertOne({
+        room: mongodb.ObjectId(req.body.room),
+        user: mongodb.ObjectId(req.user),
+        unreadCount: req.body.unreadCount
+      })
+    }
+    res.sendStatus(200);
   });
 
   app.get("/api/rooms/:id/messages", async (req, res, next) => {
@@ -117,6 +149,7 @@ async function run() {
     });
 
     const newMessage = await Message.findOne({ _id: insertedId });
+    await UserRoomConfig.updateMany({ room: mongodb.ObjectId(id), user: {$ne: mongodb.ObjectId(req.user)}}, { $inc: { unreadCount: 1 } })
 
     io.emit("message", newMessage);
 
