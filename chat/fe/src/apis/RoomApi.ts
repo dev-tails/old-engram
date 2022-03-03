@@ -78,12 +78,22 @@ export type MessageType = {
 
 const messagesByRoomID: { [id: string]: MessageType[] } = {};
 
+type GetRoomMessagesData = {
+  messages: MessageType[];
+  userRoomConfig: {
+    lastReadMessageId: string;
+  }
+}
+
 export async function getRoomMessages(roomId: string) {
-  const messages = await httpGet<MessageType[]>(
+  const data = await httpGet<GetRoomMessagesData>(
     `/api/rooms/${roomId}/messages`
   );
-  messagesByRoomID[roomId] = messages;
-  return messagesByRoomID[roomId];
+  messagesByRoomID[roomId] = data.messages;
+  return {
+    messages: messagesByRoomID[roomId],
+    userRoomConfig: data.userRoomConfig
+  }
 }
 
 type SendRoomMessageParams = {

@@ -18,6 +18,7 @@ async function run() {
   const db = client.db();
   const Message = db.collection("messages");
   const Room = db.collection("rooms");
+  const UserRoomConfig = db.collection("userroomconfigs");
 
   const app = express();
   const server = http.createServer(app);
@@ -87,14 +88,23 @@ async function run() {
     }
 
     const messages = await Message.find({
-      room: new mongodb.ObjectId(id),
+      room: mongodb.ObjectId(id),
     }, {
       sort: {
         _id: -1
       }
     }).toArray();
+
+    const userRoomConfig = await UserRoomConfig.findOne({
+      user: mongodb.ObjectId(req.user),
+      room: mongodb.ObjectId(id)
+    }) || {}
+
     res.json({
-      data: messages,
+      data: {
+        messages,
+        userRoomConfig
+      }
     });
   });
 
