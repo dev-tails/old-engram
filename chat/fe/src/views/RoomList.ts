@@ -23,6 +23,7 @@ export const RoomList = () => {
       onClick(roomEl, async () => {
         await postUserRoomConfig({
           ...room.userRoomConfig,
+          room: room._id,
           unreadCount: 0
         })
         setURL(`/rooms/${room._id}`)
