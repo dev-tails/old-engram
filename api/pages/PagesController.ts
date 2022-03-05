@@ -5,7 +5,7 @@ export function initializePagesController(apiRouter: Router) {
   const router = Router();
   apiRouter.use("/pages", router);
 
-  router.get("/pages", async (req, res) => {
+  router.get("", async (req, res) => {
     const userId = req.cookies["user"];
     res.json({
       data: [

@@ -24,6 +24,27 @@
     return el;
   }
 
+  // src/apis/Api.ts
+  var Api = class {
+    async get(url) {
+      const res = await fetch(url);
+      if (res.ok) {
+        const jsonData = await res.json();
+        return jsonData.data;
+      } else {
+        throw new Error(`${res.status} Request Failed`);
+      }
+    }
+  };
+
+  // src/apis/PageApi.ts
+  var PageApi = class extends Api {
+    async getAll() {
+      return this.get("/api/pages");
+    }
+  };
+  var pageApi = new PageApi();
+
   // src/data/Notes.ts
   var notesById = {
     "1": {
@@ -58,6 +79,33 @@
     Create another new folder inside the code folder called html-intro`
     }
   };
+
+  // src/views/PageContent.ts
+  function PageContent(item) {
+    const el = Div();
+    const title = Div({
+      innerText: item.title
+    });
+    el.append(title);
+    const note = notesById[item._id];
+    for (const contentId of note.content) {
+      const noteContent = notesById[contentId];
+      const noteBodyEl = Div({
+        innerText: noteContent.body
+      });
+      noteBodyEl.contentEditable = "true";
+      setInterval(() => {
+        if (noteContent.body !== noteBodyEl.innerText) {
+          console.log(noteContent.body);
+          console.log(noteBodyEl.innerText);
+          console.log("different");
+          noteContent.body = noteBodyEl.innerText;
+        }
+      }, 3e3);
+      el.append(noteBodyEl);
+    }
+    return el;
+  }
 
   // ../ui/components/Button.ts
   function Button(props) {
@@ -116,63 +164,56 @@
   }
 
   // src/PagesApp.ts
-  var root = document.getElementById("root");
-  var sidebarItems = [];
-  for (const key of Object.keys(notesById)) {
-    const note = notesById[key];
-    if (note.type !== "page" || note.parent) {
-      continue;
+  async function main() {
+    const root = document.getElementById("root");
+    const pages = await pageApi.getAll();
+    const pagesById = {};
+    for (const page of pages) {
+      pagesById[page._id] = page;
     }
-    let itemContent = [];
-    if (note.content) {
-      for (const contentNoteId of note.content) {
-        const contentNote = notesById[contentNoteId];
-        if (contentNote.type !== "page") {
-          continue;
-        }
-        itemContent.push({
-          _id: contentNote._id,
-          title: contentNote.body
-        });
+    const sidebarItems = [];
+    for (const key of Object.keys(pagesById)) {
+      const note = pagesById[key];
+      if (note.type !== "page" || note.parent) {
+        continue;
       }
+      let itemContent = [];
+      if (note.content) {
+        for (const contentNoteId of note.content) {
+          const contentNote = pagesById[contentNoteId];
+          if (contentNote.type !== "page") {
+            continue;
+          }
+          itemContent.push({
+            _id: contentNote._id,
+            title: contentNote.body
+          });
+        }
+      }
+      sidebarItems.push({
+        _id: note._id,
+        title: note.body,
+        content: itemContent
+      });
     }
-    sidebarItems.push({
-      _id: note._id,
-      title: note.body,
-      content: itemContent
+    const container = Div({
+      styles: {
+        display: "flex"
+      }
     });
-  }
-  var container = Div({
-    styles: {
-      display: "flex"
+    root.append(container);
+    container.append(Sidebar({
+      items: sidebarItems,
+      onClick: handlePageClicked
+    }));
+    let pageContent = null;
+    function handlePageClicked(item) {
+      if (pageContent) {
+        pageContent.remove();
+      }
+      pageContent = PageContent(item);
+      container.append(pageContent);
     }
-  });
-  root.append(container);
-  container.append(Sidebar({
-    items: sidebarItems,
-    onClick: handlePageClicked
-  }));
-  function PageContent(item) {
-    const el = Div();
-    const title = Div({
-      innerText: item.title
-    });
-    el.append(title);
-    const note = notesById[item._id];
-    for (const contentId of note.content) {
-      const noteContent = notesById[contentId];
-      el.append(Div({
-        innerText: noteContent.body
-      }));
-    }
-    return el;
   }
-  var pageContent = null;
-  function handlePageClicked(item) {
-    if (pageContent) {
-      pageContent.remove();
-    }
-    pageContent = PageContent(item);
-    container.append(pageContent);
-  }
+  main();
 })();

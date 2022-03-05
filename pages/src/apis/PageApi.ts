@@ -5,3 +5,5 @@ export class PageApi extends Api {
     return this.get("/api/pages")
   }
 }
+
+export const pageApi = new PageApi();

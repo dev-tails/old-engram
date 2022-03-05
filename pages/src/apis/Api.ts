@@ -1,5 +1,5 @@
 export class Api {
-  public async get(url: string) {
+  protected async get(url: string) {
     const res = await fetch(url);
     if (res.ok) {
       const jsonData = await res.json();
