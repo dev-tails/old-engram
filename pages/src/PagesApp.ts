@@ -1,6 +1,7 @@
-import { Div } from '../../ui/components/Div';
-import { notesById } from './data/Notes';
-import { Sidebar, SidebarItem } from './views/Sidebar';
+import { Div } from "../../ui/components/Div";
+import { notesById } from "./data/Notes";
+import { PageContent } from "./views/PageContent";
+import { Sidebar, SidebarItem } from "./views/Sidebar";
 
 const root = document.getElementById("root");
 
@@ -47,34 +48,13 @@ container.append(
   })
 );
 
-function PageContent(item: SidebarItem) {
-  const el = Div();
-
-  const title = Div({
-    innerText: item.title
-  })
-  el.append(title)
-
-  const note = notesById[item._id];
-  
-  for (const contentId of note.content) {
-    const noteContent = notesById[contentId];
-
-    el.append(Div({
-      innerText: noteContent.body
-    }))
-  }
-
-  return el;
-}
-
 let pageContent = null;
 
 function handlePageClicked(item: SidebarItem) {
   if (pageContent) {
     pageContent.remove();
   }
-  
-  pageContent = PageContent(item)
+
+  pageContent = PageContent(item);
   container.append(pageContent);
 }
