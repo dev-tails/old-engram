@@ -103,14 +103,26 @@ export function RoomView(props: RoomViewProps) {
     })
 
     async function init() {
-      const messages = await getRoomMessages(props.roomId);
+      const { messages, userRoomConfig } = await getRoomMessages(props.roomId);
       for (const message of messages) {
+        if (message._id === userRoomConfig.lastReadMessageId) {
+          el.append(NewRow());
+        }
+
         el.appendChild(Message(message));
       }
     }
 
     init();
 
+    return el;
+  }
+
+  function NewRow() {
+    const el = Div();
+    setStyle(el, {
+      borderBottom: "1px solid red"
+    })
     return el;
   }
 

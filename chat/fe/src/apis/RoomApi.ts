@@ -4,14 +4,16 @@ import { sendNotification } from '../services/NotificationService';
 import { TextUtils } from '../utils/TextUtils';
 import { httpGet } from './Api';
 import { getSelf, getUser } from './UserApi';
+import { UserRoomConfig } from './UserRoomConfigApi';
 
 type MessageListener = (message: MessageType) => any;
 
 const messageListenerByRoomId: { [id: string]: MessageListener } = {};
 
-type Room = {
+export type Room = {
   _id: string;
   name: string;
+  userRoomConfig?: UserRoomConfig;
 };
 
 export async function initializeRoomApi() {
@@ -78,12 +80,22 @@ export type MessageType = {
 
 const messagesByRoomID: { [id: string]: MessageType[] } = {};
 
+type GetRoomMessagesData = {
+  messages: MessageType[];
+  userRoomConfig: {
+    lastReadMessageId: string;
+  }
+}
+
 export async function getRoomMessages(roomId: string) {
-  const messages = await httpGet<MessageType[]>(
+  const data = await httpGet<GetRoomMessagesData>(
     `/api/rooms/${roomId}/messages`
   );
-  messagesByRoomID[roomId] = messages;
-  return messagesByRoomID[roomId];
+  messagesByRoomID[roomId] = data.messages;
+  return {
+    messages: messagesByRoomID[roomId],
+    userRoomConfig: data.userRoomConfig
+  }
 }
 
 type SendRoomMessageParams = {
