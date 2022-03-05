@@ -35,12 +35,30 @@
         throw new Error(`${res.status} Request Failed`);
       }
     }
+    async post(url, params) {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(params)
+      });
+      if (res.ok) {
+        const jsonData = await res.json();
+        return jsonData.data;
+      } else {
+        throw new Error(`${res.status} Request Failed`);
+      }
+    }
   };
 
   // src/apis/PageApi.ts
   var PageApi = class extends Api {
     async getAll() {
       return this.get("/api/pages");
+    }
+    async create(params) {
+      return this.post("/api/pages", params);
     }
   };
   var pageApi = new PageApi();
@@ -120,12 +138,20 @@
 
   // src/views/Sidebar.ts
   function Sidebar(props) {
-    const el = Div();
+    const el = Div({
+      styles: {
+        flexShrink: "0",
+        width: "300px"
+      }
+    });
     const addButton = Button({
       innerText: "+"
     });
-    addButton.addEventListener("click", () => {
+    addButton.addEventListener("click", async () => {
       const pageName = prompt("Page Name");
+      const newPage = await pageApi.create({
+        body: pageName
+      });
       addItemsAndContent([{ title: pageName }]);
     });
     el.append(addButton);
@@ -167,6 +193,7 @@
   async function main() {
     const root = document.getElementById("root");
     const pages = await pageApi.getAll();
+    console.log(pages);
     const pagesById = {};
     for (const page of pages) {
       pagesById[page._id] = page;
@@ -174,7 +201,7 @@
     const sidebarItems = [];
     for (const key of Object.keys(pagesById)) {
       const note = pagesById[key];
-      if (note.type !== "page" || note.parent) {
+      if (note.parent) {
         continue;
       }
       let itemContent = [];

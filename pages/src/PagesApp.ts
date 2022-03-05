@@ -7,6 +7,7 @@ async function main() {
   const root = document.getElementById("root");
 
   const pages = await pageApi.getAll();
+  console.log(pages)
 
   const pagesById = {};
   for (const page of pages) {
@@ -16,7 +17,7 @@ async function main() {
   const sidebarItems = [];
   for (const key of Object.keys(pagesById)) {
     const note = pagesById[key];
-    if (note.type !== "page" || note.parent) {
+    if (note.parent) {
       continue;
     }
 

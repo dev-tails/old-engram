@@ -19,6 +19,8 @@ app.use(
   })
 );
 
+app.use(express.json());
+
 const apiRouter = Router();
 
 apiRouter.use(express.json());

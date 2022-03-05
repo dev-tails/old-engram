@@ -8,4 +8,20 @@ export class Api {
       throw new Error(`${res.status} Request Failed`)
     }
   }
+
+  protected async post<ResponseData>(url: string, params: any): Promise<ResponseData> {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(params)
+    });
+    if (res.ok) {
+      const jsonData = await res.json();
+      return jsonData.data;
+    } else {
+      throw new Error(`${res.status} Request Failed`)
+    }
+  }
 }

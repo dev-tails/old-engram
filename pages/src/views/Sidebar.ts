@@ -1,5 +1,6 @@
 import { Button } from '../../../ui/components/Button';
 import { Div } from '../../../ui/components/Div';
+import { pageApi } from '../apis/PageApi';
 
 export type SidebarProps = {
   items: SidebarItem[];
@@ -7,13 +8,23 @@ export type SidebarProps = {
 };
 
 export function Sidebar(props: SidebarProps) {
-  const el = Div();
+  const el = Div({
+    styles: {
+      flexShrink: "0",
+      width: "300px"
+    }
+  });
 
   const addButton = Button({
     innerText: "+",
   });
-  addButton.addEventListener("click", () => {
+  addButton.addEventListener("click", async () => {
     const pageName = prompt("Page Name");
+
+    const newPage = await pageApi.create({
+      body: pageName
+    })
+
     addItemsAndContent([{ title: pageName }]);
   });
   el.append(addButton);
