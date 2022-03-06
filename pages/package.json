@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "build": "esbuild src/PagesApp.ts --bundle --outfile=public/js/pages.app.js",
-    "dev": "yarn build --servedir=public"
+    "dev": "yarn build --servedir=public",
+    "deploy": "rsync -r ./public xyz@engram:engram/build/pages"
   },
   "devDependencies": {
     "esbuild": "^0.14.23"

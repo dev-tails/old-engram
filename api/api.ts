@@ -5,32 +5,41 @@ import express, { Router } from "express";
 
 import { initializeAdminController } from "./admin/AdminController";
 import { initializeUserController } from "./auth/UserController";
-import { servicesMiddleware } from "./middleware/ServicesMiddleware";
+import {
+  initServices,
+  servicesMiddleware,
+} from "./middleware/ServicesMiddleware";
 import { initializePagesController } from "./pages/PagesController";
 
-dotenv.config();
+async function main() {
+  dotenv.config();
 
-const app = express();
+  await initServices();
 
-app.use(
-  cors({
-    origin: ["http://calendar.xyzdigital.local", process.env.ORIGIN],
-    default: process.env.ORIGIN,
-  })
-);
+  const app = express();
 
-app.use(express.json());
+  app.use(
+    cors({
+      origin: ["http://calendar.xyzdigital.local", process.env.ORIGIN],
+      default: process.env.ORIGIN,
+    })
+  );
 
-const apiRouter = Router();
+  app.use(express.json());
 
-apiRouter.use(express.json());
-apiRouter.use(cookieParser());
-apiRouter.use(servicesMiddleware);
+  const apiRouter = Router();
 
-initializeAdminController(apiRouter);
-initializeUserController(apiRouter);
-initializePagesController(apiRouter);
+  apiRouter.use(express.json());
+  apiRouter.use(cookieParser());
+  apiRouter.use(servicesMiddleware);
 
-app.use("/api", apiRouter);
+  initializeAdminController(apiRouter);
+  initializeUserController(apiRouter);
+  initializePagesController(apiRouter);
 
-app.listen(3939);
+  app.use("/api", apiRouter);
+
+  app.listen(3939);
+}
+
+main();

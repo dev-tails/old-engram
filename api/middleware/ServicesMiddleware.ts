@@ -1,8 +1,18 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, Response } from "express";
 
-import { UserService } from '../auth/UserService';
-import { PageService } from '../pages/PageService';
-import { RoomService } from '../rooms/RoomService';
+import { UserService } from "../auth/UserService";
+import { PageService } from "../pages/PageService";
+import { RoomService } from "../rooms/RoomService";
+
+const userService = new UserService();
+const roomService = new RoomService();
+const pageService = new PageService();
+
+export async function initServices() {
+  await roomService.init();
+  await userService.init();
+  await pageService.init();
+}
 
 export async function servicesMiddleware(
   req: Request,
@@ -10,14 +20,6 @@ export async function servicesMiddleware(
   next: NextFunction
 ) {
   try {
-    const userService = new UserService();
-    const roomService = new RoomService();
-    const pageService = new PageService();
-
-    await roomService.init();
-    await userService.init();
-    await pageService.init();
-
     req.services = {
       pageService,
       roomService,

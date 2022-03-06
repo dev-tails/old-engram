@@ -6,7 +6,8 @@
   "scripts": {
     "build": "esbuild api.ts --bundle --outfile=built/api.js --platform=node",
     "build:w": "yarn build --watch",
-    "build:p": "yarn build --minify"
+    "build:p": "yarn build --minify",
+    "deploy": "scp built/api.js xyz@engram:engram/build/api && ssh xyz@engram 'pm2 reload api'"
   },
   "dependencies": {
     "cookie-parser": "^1.4.6",
