@@ -7,12 +7,28 @@ export function initializePagesController(apiRouter: Router) {
 
   router.post("", async (req, res) => {
     const user = req.cookies["user"];
-    console.log(user);
+
+    const createPageSchema = Joi.object<{
+      body?: string;
+      parent?: string;
+      type: string;
+    }>({
+      body: Joi.string(),
+      type: Joi.string().required(),
+      parent: Joi.string()
+    })
+
+    const {error, value} = createPageSchema.validate(req.body)
+    if (error) {
+      throw error;
+    }
+    console.log(value);
+
     const newPage = await req.services.pageService.createPage({
       user: "6223a2e222365c7a43e3d2da",
-      body: req.body.body,
-      type: req.body.type
+      ...value
     });
+
     res.json({
       data: newPage,
     });

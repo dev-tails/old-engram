@@ -2,8 +2,10 @@ import { Api } from "./Api";
 
 type Page = {
   _id: string;
+  type: "text" | "page";
   body: string;
   content: string[];
+  parent: string;
 }
 
 type CreatePageResponseData = Page[];
@@ -17,7 +19,7 @@ export class PageApi extends Api {
     return this.get("/api/pages")
   }
 
-  public async create(params: { body: string }) {
+  public async create(params: { type: string; body?: string; parent?: string }) {
     return this.post<CreatePageResponseData>("/api/pages", params)
   }
 }

@@ -1,3 +1,4 @@
+import { Button } from "../../../ui/components/Button";
 import { Div } from "../../../ui/components/Div";
 import { pageApi } from "../apis/PageApi";
 import { SidebarItem } from "./Sidebar";
@@ -5,25 +6,42 @@ import { SidebarItem } from "./Sidebar";
 export async function PageContent(item: SidebarItem) {
   const el = Div({
     styles: {
-      flexGrow: "1"
-    }
+      flexGrow: "1",
+    },
   });
 
-  const page = await pageApi.getById(item._id)
+  const page = await pageApi.getById(item._id);
 
   const title = Div({
     innerText: page.body,
   });
   el.append(title);
 
-  for (const contentId of page.content) {
+  const addTextButton = Button({
+    innerText: "+",
+    onClick: async () => {
+      const newTextContent = await pageApi.create({
+        type: "text",
+        parent: page._id
+      });
+      addContent(newTextContent);
+    },
+  });
+  el.append(addTextButton);
+
+  const content = page.content || []
+  for (const contentId of content) {
     const content = await pageApi.getById(contentId);
 
+    addContent(content);
+  }
+
+  function addContent(content) {
     const noteBodyEl = Div({
       innerText: content.body,
       styles: {
-        width: "100%"
-      }
+        width: "100%",
+      },
     });
 
     noteBodyEl.contentEditable = "true";

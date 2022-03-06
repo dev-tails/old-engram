@@ -7,6 +7,7 @@ export type Page = {
   user: string;
   body: string;
   type: string;
+  parent: string;
 };
 
 export type CreatePageParams = Partial<Page>;
@@ -28,7 +29,7 @@ export class PageService {
 
   async getForUser(user: string) {
     return this.Page.find({
-      user: mongodb.ObjectId(user)
+      user: mongodb.ObjectId(user),
     }).toArray();
   }
 
@@ -39,9 +40,19 @@ export class PageService {
   }
 
   async createPage(params: CreatePageParams) {
-    return this.Page.insertOne({
-      user: mongodb.ObjectId(params.user),
-      body: params.body
+    const { insertedId } = await this.Page.insertOne({
+      ...(params.user ? { user: mongodb.ObjectId(params.user) } : {}),
+      ...(params.parent ? { parent: mongodb.ObjectId(params.parent) } : {}),
+      body: params.body,
     });
+
+    if (params.parent) {
+      await this.Page.updateOne(
+        { _id: mongodb.ObjectId(params.parent) },
+        { $push: { content: insertedId } }
+      );
+    }
+
+    return insertedId;
   }
 }
