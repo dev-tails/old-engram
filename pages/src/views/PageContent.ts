@@ -25,7 +25,7 @@ export async function PageContent(item: SidebarItemType) {
         parent: page._id,
         body: "",
       });
-      addContent(newTextContent);
+      addContent(newTextContent, true);
     },
   });
   el.append(addTextButton);
@@ -37,7 +37,7 @@ export async function PageContent(item: SidebarItemType) {
     addContent(content);
   }
 
-  function addContent(content) {
+  function addContent(content, focusText = false) {
     const noteContentEl = Div({
       styles: {
         display: "flex",
@@ -53,6 +53,12 @@ export async function PageContent(item: SidebarItemType) {
     });
 
     noteBodyEl.contentEditable = "true";
+
+    if (focusText) {
+      setTimeout(function() {
+        noteBodyEl.focus();
+    }, 0);
+    }
 
     setInterval(() => {
       if (content.body !== noteBodyEl.innerText) {
