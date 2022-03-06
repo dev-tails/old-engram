@@ -5,6 +5,7 @@ import { pageApi } from "../apis/PageApi";
 export type SidebarProps = {
   items: SidebarItemType[];
   onClick: (item: SidebarItemType) => void;
+  onNewPage: (item: SidebarItemType) => void;
 };
 
 export function Sidebar(props: SidebarProps) {
@@ -26,7 +27,10 @@ export function Sidebar(props: SidebarProps) {
       type: "page",
     });
 
-    addItemsAndContent([{ _id: newPage._id, title: pageName }]);
+    const newPageItem = { _id: newPage._id, title: pageName }
+    addItemsAndContent([newPageItem]);
+
+    props.onNewPage(newPageItem);
   });
   el.append(addButton);
 

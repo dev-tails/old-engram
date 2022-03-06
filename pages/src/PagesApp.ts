@@ -53,6 +53,7 @@ async function main() {
     Sidebar({
       items: sidebarItems,
       onClick: handlePageClicked,
+      onNewPage: handlePageClicked
     })
   );
 
