@@ -1,7 +1,7 @@
 import { Div } from "../../ui/components/Div";
 import { pageApi } from "./apis/PageApi";
 import { PageContent } from "./views/PageContent";
-import { Sidebar, SidebarItem } from "./views/Sidebar";
+import { Sidebar, SidebarItemType } from "./views/Sidebar";
 
 async function main() {
   const root = document.getElementById("root");
@@ -58,7 +58,7 @@ async function main() {
 
   let pageContent = null;
 
-  async function handlePageClicked(item: SidebarItem) {
+  async function handlePageClicked(item: SidebarItemType) {
     if (pageContent) {
       pageContent.remove();
     }

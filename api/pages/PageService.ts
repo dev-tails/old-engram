@@ -66,7 +66,11 @@ export class PageService {
   }
 
   async removeById(id: string) {
-    await this.Page.updateOne({ content: mongodb.ObjectId(id) }, { $pull: { content: mongodb.ObjectId(id) }})
+    await this.Page.updateOne(
+      { content: mongodb.ObjectId(id) },
+      { $pull: { content: mongodb.ObjectId(id) } }
+    );
+    await this.Page.deleteMany({ parent: mongodb.ObjectId(id) });
     return this.Page.deleteOne({ _id: mongodb.ObjectId(id) });
   }
 }

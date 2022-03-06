@@ -1,9 +1,9 @@
 import { Button } from "../../../ui/components/Button";
 import { Div } from "../../../ui/components/Div";
 import { pageApi } from "../apis/PageApi";
-import { SidebarItem } from "./Sidebar";
+import { SidebarItemType } from "./Sidebar";
 
-export async function PageContent(item: SidebarItem) {
+export async function PageContent(item: SidebarItemType) {
   const el = Div({
     styles: {
       flexGrow: "1",
