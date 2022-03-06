@@ -4,7 +4,6 @@ const mongodb = require("mongodb");
 
 export type Page = {
   _id: string;
-  user: string;
   body: string;
   type: string;
   parent: string;
@@ -27,10 +26,8 @@ export class PageService {
     this.Page = this.db.collection("pages");
   }
 
-  async getForUser(user: string) {
-    return this.Page.find({
-      user: mongodb.ObjectId(user),
-    }).toArray();
+  async getAll() {
+    return this.Page.find({}).toArray();
   }
 
   async findById(id: string) {
@@ -41,7 +38,6 @@ export class PageService {
 
   async createPage(params: CreatePageParams) {
     const { insertedId } = await this.Page.insertOne({
-      ...(params.user ? { user: mongodb.ObjectId(params.user) } : {}),
       ...(params.parent ? { parent: mongodb.ObjectId(params.parent) } : {}),
       body: params.body,
     });
@@ -54,5 +50,18 @@ export class PageService {
     }
 
     return insertedId;
+  }
+
+  async updateById(id: string, params: { body: string }) {
+    return this.Page.updateOne(
+      {
+        _id: mongodb.ObjectId(id),
+      },
+      {
+        $set: {
+          ...params,
+        },
+      }
+    );
   }
 }

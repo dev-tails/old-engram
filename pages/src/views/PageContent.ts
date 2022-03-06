@@ -22,14 +22,15 @@ export async function PageContent(item: SidebarItem) {
     onClick: async () => {
       const newTextContent = await pageApi.create({
         type: "text",
-        parent: page._id
+        parent: page._id,
+        body: ""
       });
       addContent(newTextContent);
     },
   });
   el.append(addTextButton);
 
-  const content = page.content || []
+  const content = page.content || [];
   for (const contentId of content) {
     const content = await pageApi.getById(contentId);
 
@@ -48,6 +49,13 @@ export async function PageContent(item: SidebarItem) {
 
     setInterval(() => {
       if (content.body !== noteBodyEl.innerText) {
+        pageApi
+          .update(content._id, {
+            body: noteBodyEl.innerText,
+          })
+          .catch((err) => {
+            alert(err.message);
+          });
         content.body = noteBodyEl.innerText;
       }
     }, 3000);

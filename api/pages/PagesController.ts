@@ -6,8 +6,6 @@ export function initializePagesController(apiRouter: Router) {
   apiRouter.use("/pages", router);
 
   router.post("", async (req, res) => {
-    const user = req.cookies["user"];
-
     const createPageSchema = Joi.object<{
       body?: string;
       parent?: string;
@@ -22,10 +20,8 @@ export function initializePagesController(apiRouter: Router) {
     if (error) {
       throw error;
     }
-    console.log(value);
 
     const newPage = await req.services.pageService.createPage({
-      user: "6223a2e222365c7a43e3d2da",
       ...value
     });
 
@@ -35,19 +31,26 @@ export function initializePagesController(apiRouter: Router) {
   });
 
   router.get("", async (req, res) => {
-    const userId = req.cookies["user"];
-    const pages = await req.services.pageService.getForUser(
-      "6223a2e222365c7a43e3d2da"
-    );
+    const pages = await req.services.pageService.getAll();
     res.json({
       data: pages,
     });
   });
 
   router.get("/:id", async (req, res) => {
-    const userId = req.cookies["user"];
     const page = await req.services.pageService.findById(
       req.params.id
+    );
+    
+    res.json({
+      data: page,
+    });
+  });
+
+  router.put("/:id", async (req, res) => {
+    const page = await req.services.pageService.updateById(
+      req.params.id,
+      req.body
     );
     
     res.json({
