@@ -7,7 +7,6 @@ async function main() {
   const root = document.getElementById("root");
 
   const pages = await pageApi.getAll();
-  console.log(pages)
 
   const pagesById = {};
   for (const page of pages) {
@@ -26,7 +25,7 @@ async function main() {
       for (const contentNoteId of note.content) {
         const contentNote = pagesById[contentNoteId];
 
-        if (contentNote.type !== "page") {
+        if (contentNote?.type !== "page") {
           continue;
         }
         itemContent.push({
@@ -59,12 +58,12 @@ async function main() {
 
   let pageContent = null;
 
-  function handlePageClicked(item: SidebarItem) {
+  async function handlePageClicked(item: SidebarItem) {
     if (pageContent) {
       pageContent.remove();
     }
 
-    pageContent = PageContent(item);
+    pageContent = await PageContent(item);
     container.append(pageContent);
   }
 }

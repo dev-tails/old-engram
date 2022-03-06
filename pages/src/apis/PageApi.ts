@@ -9,6 +9,10 @@ type Page = {
 type CreatePageResponseData = Page[];
 
 export class PageApi extends Api {
+  public async getById(id: string) {
+    return this.get(`/api/pages/${id}`)
+  }
+
   public async getAll() {
     return this.get("/api/pages")
   }

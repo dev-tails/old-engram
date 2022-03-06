@@ -6,6 +6,7 @@ export type Page = {
   _id: string;
   user: string;
   body: string;
+  type: string;
 };
 
 export type CreatePageParams = Partial<Page>;

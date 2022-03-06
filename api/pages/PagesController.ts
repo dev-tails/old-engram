@@ -11,6 +11,7 @@ export function initializePagesController(apiRouter: Router) {
     const newPage = await req.services.pageService.createPage({
       user: "6223a2e222365c7a43e3d2da",
       body: req.body.body,
+      type: req.body.type
     });
     res.json({
       data: newPage,
@@ -24,6 +25,17 @@ export function initializePagesController(apiRouter: Router) {
     );
     res.json({
       data: pages,
+    });
+  });
+
+  router.get("/:id", async (req, res) => {
+    const userId = req.cookies["user"];
+    const page = await req.services.pageService.findById(
+      req.params.id
+    );
+    
+    res.json({
+      data: page,
     });
   });
 }

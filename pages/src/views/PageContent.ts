@@ -1,31 +1,36 @@
 import { Div } from "../../../ui/components/Div";
-import { notesById } from "../data/Notes";
+import { pageApi } from "../apis/PageApi";
 import { SidebarItem } from "./Sidebar";
 
-export function PageContent(item: SidebarItem) {
-  const el = Div();
+export async function PageContent(item: SidebarItem) {
+  const el = Div({
+    styles: {
+      flexGrow: "1"
+    }
+  });
+
+  const page = await pageApi.getById(item._id)
 
   const title = Div({
-    innerText: item.title,
+    innerText: page.body,
   });
   el.append(title);
 
-  const note = notesById[item._id];
-
-  for (const contentId of note.content) {
-    const noteContent = notesById[contentId];
+  for (const contentId of page.content) {
+    const content = await pageApi.getById(contentId);
 
     const noteBodyEl = Div({
-      innerText: noteContent.body,
+      innerText: content.body,
+      styles: {
+        width: "100%"
+      }
     });
+
     noteBodyEl.contentEditable = "true";
 
     setInterval(() => {
-      if (noteContent.body !== noteBodyEl.innerText) {
-        console.log(noteContent.body);
-        console.log(noteBodyEl.innerText);
-        console.log("different");
-        noteContent.body = noteBodyEl.innerText;
+      if (content.body !== noteBodyEl.innerText) {
+        content.body = noteBodyEl.innerText;
       }
     }, 3000);
 

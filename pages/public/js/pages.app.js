@@ -54,6 +54,9 @@
 
   // src/apis/PageApi.ts
   var PageApi = class extends Api {
+    async getById(id) {
+      return this.get(`/api/pages/${id}`);
+    }
     async getAll() {
       return this.get("/api/pages");
     }
@@ -63,61 +66,30 @@
   };
   var pageApi = new PageApi();
 
-  // src/data/Notes.ts
-  var notesById = {
-    "1": {
-      _id: "1",
-      type: "page",
-      body: "Web Development",
-      content: ["2"]
-    },
-    "2": {
-      _id: "2",
-      parent: "1",
-      type: "page",
-      body: "How to Build Your First HTML Page",
-      content: [
-        "3"
-      ]
-    },
-    "3": {
-      _id: "2",
-      parent: "2",
-      type: "text",
-      body: `# Pre-Requisites
-    How to Setup Your Development Environment
-    
-    # Intro to HTML
-    HTML stands for HyperText Markup Language. If you have never used it before you should read about the HTML Basics.
-    
-    # Creating Your First HTML Document
-    Open VS Code
-    Select File > Open Folder
-    Create a new folder called code in your home directory
-    Create another new folder inside the code folder called html-intro`
-    }
-  };
-
   // src/views/PageContent.ts
-  function PageContent(item) {
-    const el = Div();
+  async function PageContent(item) {
+    const el = Div({
+      styles: {
+        flexGrow: "1"
+      }
+    });
+    const page = await pageApi.getById(item._id);
     const title = Div({
-      innerText: item.title
+      innerText: page.body
     });
     el.append(title);
-    const note = notesById[item._id];
-    for (const contentId of note.content) {
-      const noteContent = notesById[contentId];
+    for (const contentId of page.content) {
+      const content = await pageApi.getById(contentId);
       const noteBodyEl = Div({
-        innerText: noteContent.body
+        innerText: content.body,
+        styles: {
+          width: "100%"
+        }
       });
       noteBodyEl.contentEditable = "true";
       setInterval(() => {
-        if (noteContent.body !== noteBodyEl.innerText) {
-          console.log(noteContent.body);
-          console.log(noteBodyEl.innerText);
-          console.log("different");
-          noteContent.body = noteBodyEl.innerText;
+        if (content.body !== noteBodyEl.innerText) {
+          content.body = noteBodyEl.innerText;
         }
       }, 3e3);
       el.append(noteBodyEl);
@@ -193,7 +165,6 @@
   async function main() {
     const root = document.getElementById("root");
     const pages = await pageApi.getAll();
-    console.log(pages);
     const pagesById = {};
     for (const page of pages) {
       pagesById[page._id] = page;
@@ -208,7 +179,7 @@
       if (note.content) {
         for (const contentNoteId of note.content) {
           const contentNote = pagesById[contentNoteId];
-          if (contentNote.type !== "page") {
+          if (contentNote?.type !== "page") {
             continue;
           }
           itemContent.push({
@@ -234,11 +205,11 @@
       onClick: handlePageClicked
     }));
     let pageContent = null;
-    function handlePageClicked(item) {
+    async function handlePageClicked(item) {
       if (pageContent) {
         pageContent.remove();
       }
-      pageContent = PageContent(item);
+      pageContent = await PageContent(item);
       container.append(pageContent);
     }
   }
