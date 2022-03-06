@@ -23,7 +23,7 @@ export async function PageContent(item: SidebarItem) {
       const newTextContent = await pageApi.create({
         type: "text",
         parent: page._id,
-        body: ""
+        body: "",
       });
       addContent(newTextContent);
     },
@@ -38,6 +38,13 @@ export async function PageContent(item: SidebarItem) {
   }
 
   function addContent(content) {
+    const noteContentEl = Div({
+      styles: {
+        display: "flex",
+      },
+    });
+    el.append(noteContentEl);
+
     const noteBodyEl = Div({
       innerText: content.body,
       styles: {
@@ -60,7 +67,16 @@ export async function PageContent(item: SidebarItem) {
       }
     }, 3000);
 
-    el.append(noteBodyEl);
+    noteContentEl.append(noteBodyEl);
+
+    const removeBtn = Button({
+      innerText: "-",
+      onClick() {
+        pageApi.removeById(content._id);
+        noteContentEl.remove();
+      },
+    });
+    noteContentEl.append(removeBtn);
   }
 
   return el;

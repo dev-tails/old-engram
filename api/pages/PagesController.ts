@@ -11,7 +11,7 @@ export function initializePagesController(apiRouter: Router) {
       parent?: string;
       type: string;
     }>({
-      body: Joi.string(),
+      body: Joi.string().allow(''),
       type: Joi.string().required(),
       parent: Joi.string()
     })
@@ -21,9 +21,11 @@ export function initializePagesController(apiRouter: Router) {
       throw error;
     }
 
-    const newPage = await req.services.pageService.createPage({
+    const newPageId = await req.services.pageService.createPage({
       ...value
     });
+
+    const newPage = await req.services.pageService.findById(newPageId);
 
     res.json({
       data: newPage,
@@ -56,5 +58,13 @@ export function initializePagesController(apiRouter: Router) {
     res.json({
       data: page,
     });
+  });
+
+  router.delete("/:id", async (req, res) => {
+    await req.services.pageService.removeById(
+      req.params.id
+    );
+    
+    res.sendStatus(200);
   });
 }

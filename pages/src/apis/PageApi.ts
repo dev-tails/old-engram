@@ -8,8 +8,6 @@ type Page = {
   parent: string;
 }
 
-type CreatePageResponseData = Page[];
-
 export class PageApi extends Api {
   public async getById(id: string) {
     return this.get(`/api/pages/${id}`)
@@ -20,11 +18,15 @@ export class PageApi extends Api {
   }
 
   public async create(params: { type: string; body?: string; parent?: string }) {
-    return this.post<CreatePageResponseData>("/api/pages", params)
+    return this.post<Page>("/api/pages", params)
   }
 
   public async update(id: string, params: { body: string; }) {
     return this.put<Page>(`/api/pages/${id}`, params)
+  }
+
+  public async removeById(id: string) {
+    return this.delete(`/api/pages/${id}`);
   }
 }
 
