@@ -114,5 +114,23 @@ export async function PageContent(item: SidebarItemType) {
     noteContentEl.append(removeBtn);
   }
 
+  const form = document.createElement("form");
+  form.action = "/api/files";
+  form.method = "post";
+  form.enctype = "multipart/form-data";
+
+  const input = document.createElement("input");
+  input.name = "file_upload";
+  input.type = "file";
+
+  form.append(input);
+
+  const submit = document.createElement("button");
+  submit.type = "submit";
+  submit.innerText = "Submit";
+  form.append(submit);
+
+  el.append(form);
+
   return el;
 }

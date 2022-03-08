@@ -1,15 +1,13 @@
-import cookieParser from "cookie-parser";
-import cors from "cors";
-import dotenv from "dotenv";
-import express, { Router } from "express";
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import express, { Router } from 'express';
 
-import { initializeAdminController } from "./admin/AdminController";
-import { initializeUserController } from "./auth/UserController";
-import {
-  initServices,
-  servicesMiddleware,
-} from "./middleware/ServicesMiddleware";
-import { initializePagesController } from "./pages/PagesController";
+import { initializeAdminController } from './admin/AdminController';
+import { initializeUserController } from './auth/UserController';
+import { initializeFileController } from './files/FileController';
+import { initServices, servicesMiddleware } from './middleware/ServicesMiddleware';
+import { initializePagesController } from './pages/PagesController';
 
 async function main() {
   dotenv.config();
@@ -36,6 +34,7 @@ async function main() {
   initializeAdminController(apiRouter);
   initializeUserController(apiRouter);
   initializePagesController(apiRouter);
+  initializeFileController(apiRouter);
 
   app.use("/api", apiRouter);
 
