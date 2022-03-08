@@ -1,7 +1,7 @@
-import { Button } from "../../../ui/components/Button";
-import { Div } from "../../../ui/components/Div";
-import { pageApi } from "../apis/PageApi";
-import { SidebarItemType } from "./Sidebar";
+import { Button } from '../../../ui/components/Button';
+import { Div } from '../../../ui/components/Div';
+import { pageApi } from '../apis/PageApi';
+import { SidebarItemType } from './Sidebar';
 
 export async function PageContent(item: SidebarItemType) {
   const el = Div({
@@ -55,12 +55,12 @@ export async function PageContent(item: SidebarItemType) {
     noteBodyEl.contentEditable = "true";
 
     if (focusText) {
-      setTimeout(function() {
+      setTimeout(function () {
         noteBodyEl.focus();
-    }, 0);
+      }, 0);
     }
 
-    setInterval(() => {
+    const intervalId = setInterval(() => {
       if (content.body !== noteBodyEl.innerText) {
         pageApi
           .update(content._id, {
@@ -72,6 +72,13 @@ export async function PageContent(item: SidebarItemType) {
         content.body = noteBodyEl.innerText;
       }
     }, 3000);
+
+    el.addEventListener("DOMNodeRemoved", (e) => {
+      if (e.target !== el) {
+        return;
+      }
+      clearInterval(intervalId);
+    });
 
     noteContentEl.append(noteBodyEl);
 
