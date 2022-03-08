@@ -12,10 +12,29 @@ export async function PageContent(item: SidebarItemType) {
 
   const page = await pageApi.getById(item._id);
 
+  const pageHeader = Div({
+    styles: {
+      display: "flex",
+      justifyContent: "space-between",
+    },
+  });
+
   const title = Div({
     innerText: page.body,
   });
-  el.append(title);
+  pageHeader.append(title);
+
+  const removeBtn = Button({
+    innerText: "🗑️",
+    onClick() {
+      if (confirm("Are you sure you want to delete the page!")) {
+        pageApi.removeById(item._id);
+        window.location.reload();
+      }
+    },
+  });
+  pageHeader.append(removeBtn);
+  el.append(pageHeader);
 
   const addTextButton = Button({
     innerText: "+",
@@ -85,7 +104,7 @@ export async function PageContent(item: SidebarItemType) {
     const removeBtn = Button({
       innerText: "🗑️",
       styles: {
-        height: "24px"
+        height: "24px",
       },
       onClick() {
         pageApi.removeById(content._id);

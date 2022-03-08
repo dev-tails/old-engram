@@ -1,6 +1,6 @@
-import { Button } from "../../../ui/components/Button";
-import { Div } from "../../../ui/components/Div";
-import { pageApi } from "../apis/PageApi";
+import { Button } from '../../../ui/components/Button';
+import { Div } from '../../../ui/components/Div';
+import { pageApi } from '../apis/PageApi';
 
 export type SidebarProps = {
   items: SidebarItemType[];
@@ -83,15 +83,6 @@ export function SidebarItem(props: SidebarItemProps) {
     innerText: props.item.title,
   });
   el.append(text);
-
-  const removeBtn = Button({
-    innerText: "-",
-    onClick() {
-      pageApi.removeById(props.item._id);
-      el.remove();
-    },
-  });
-  el.append(removeBtn);
 
   return el;
 }
