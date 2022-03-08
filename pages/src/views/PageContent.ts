@@ -36,6 +36,9 @@ export async function PageContent(item: SidebarItemType) {
   pageHeader.append(removeBtn);
   el.append(pageHeader);
 
+  const noteContentContainerEl = Div();
+  el.append(noteContentContainerEl)
+
   const content = page.content || [];
   for (const contentId of content) {
     const content = await pageApi.getById(contentId);
@@ -47,9 +50,10 @@ export async function PageContent(item: SidebarItemType) {
     const noteContentEl = Div({
       styles: {
         display: "flex",
+        width: "100%"
       },
     });
-    el.append(noteContentEl);
+    noteContentContainerEl.append(noteContentEl);
 
     if (content.type === "text") {
       const noteBodyEl = Div({
@@ -80,8 +84,8 @@ export async function PageContent(item: SidebarItemType) {
         }
       }, 3000);
 
-      el.addEventListener("DOMNodeRemoved", (e) => {
-        if (e.target !== el) {
+      noteBodyEl.addEventListener("DOMNodeRemoved", (e) => {
+        if (e.target !== noteBodyEl) {
           return;
         }
         clearInterval(intervalId);
@@ -89,16 +93,25 @@ export async function PageContent(item: SidebarItemType) {
 
       noteContentEl.append(noteBodyEl);
     } else if (content.type === "image") {
-      const imgEl = document.createElement("img");
-      imgEl.src = `/uploads/${content.fileUUID}`;
+      const imgContaineEl = Div({
+        styles: {
+          flexGrow: "1"
+        }
+      });
 
-      noteContentEl.append(imgEl);
+      const imgEl = document.createElement("img");
+      imgEl.style.width = "100%";
+      imgEl.src = `/uploads/${content.fileUUID}`;
+      imgContaineEl.append(imgEl)
+
+      noteContentEl.append(imgContaineEl);
     }
 
     const removeBtn = Button({
       innerText: "🗑️",
       styles: {
         height: "24px",
+        flexShrink: "0"
       },
       onClick() {
         pageApi.removeById(content._id);
