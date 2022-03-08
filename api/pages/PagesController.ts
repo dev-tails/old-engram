@@ -1,5 +1,5 @@
-import { Router } from "express";
-import Joi from "joi";
+import { Router } from 'express';
+import Joi from 'joi';
 
 export function initializePagesController(apiRouter: Router) {
   const router = Router();
@@ -10,10 +10,12 @@ export function initializePagesController(apiRouter: Router) {
       body?: string;
       parent?: string;
       type: string;
+      fileUUID?: string;
     }>({
       body: Joi.string().allow(''),
       type: Joi.string().required(),
-      parent: Joi.string()
+      parent: Joi.string(),
+      fileUUID: Joi.string()
     })
 
     const {error, value} = createPageSchema.validate(req.body)

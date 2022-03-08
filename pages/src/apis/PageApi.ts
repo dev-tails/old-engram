@@ -1,10 +1,11 @@
-import { Api } from "./Api";
+import { Api } from './Api';
 
 type Page = {
   _id: string;
-  type: "text" | "page";
+  type: "text" | "page" | "image";
   body: string;
   content: string[];
+  fileUUID: string;
   parent: string;
 }
 
@@ -17,7 +18,7 @@ export class PageApi extends Api {
     return this.get("/api/pages")
   }
 
-  public async create(params: { type: string; body?: string; parent?: string }) {
+  public async create(params: Partial<Page>) {
     return this.post<Page>("/api/pages", params)
   }
 

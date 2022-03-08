@@ -1,4 +1,4 @@
-import { Collection, Db } from "mongodb";
+import { Collection, Db } from 'mongodb';
 
 const mongodb = require("mongodb");
 
@@ -7,6 +7,7 @@ export type Page = {
   body: string;
   type: string;
   parent: string;
+  fileUUID: string;
 };
 
 export type CreatePageParams = Partial<Page>;
@@ -38,8 +39,8 @@ export class PageService {
 
   async createPage(params: CreatePageParams) {
     const { insertedId } = await this.Page.insertOne({
-      ...(params.parent ? { parent: mongodb.ObjectId(params.parent) } : {}),
-      body: params.body,
+      ...params,
+      ...(params.parent ? { parent: mongodb.ObjectId(params.parent) } : {})
     });
 
     if (params.parent) {

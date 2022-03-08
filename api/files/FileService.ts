@@ -4,10 +4,11 @@ const mongodb = require("mongodb");
 
 export type File = {
   _id: string;
+  filename: string;
   name: string;
   mimetype: string;
   encoding: string;
-  originalname: string;
+  uuid: string;
 };
 
 export type CreateFileParams = Partial<File>;
@@ -37,8 +38,8 @@ export class FileService {
     });
   }
 
-  async insertMany(params: CreateFileParams[]) {
-    return this.File.insertMany(params);
+  async insertOne(params: CreateFileParams) {
+    return this.File.insertOne(params);
   }
 
   async updateById(id: string, params: { name: string }) {

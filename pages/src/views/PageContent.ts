@@ -36,19 +36,6 @@ export async function PageContent(item: SidebarItemType) {
   pageHeader.append(removeBtn);
   el.append(pageHeader);
 
-  const addTextButton = Button({
-    innerText: "+",
-    onClick: async () => {
-      const newTextContent = await pageApi.create({
-        type: "text",
-        parent: page._id,
-        body: "",
-      });
-      addContent(newTextContent, true);
-    },
-  });
-  el.append(addTextButton);
-
   const content = page.content || [];
   for (const contentId of content) {
     const content = await pageApi.getById(contentId);
@@ -64,42 +51,49 @@ export async function PageContent(item: SidebarItemType) {
     });
     el.append(noteContentEl);
 
-    const noteBodyEl = Div({
-      innerText: content.body,
-      styles: {
-        width: "100%",
-      },
-    });
+    if (content.type === "text") {
+      const noteBodyEl = Div({
+        innerText: content.body,
+        styles: {
+          width: "100%",
+        },
+      });
 
-    noteBodyEl.contentEditable = "true";
+      noteBodyEl.contentEditable = "true";
 
-    if (focusText) {
-      setTimeout(function () {
-        noteBodyEl.focus();
-      }, 0);
+      if (focusText) {
+        setTimeout(function () {
+          noteBodyEl.focus();
+        }, 0);
+      }
+
+      const intervalId = setInterval(() => {
+        if (content.body !== noteBodyEl.innerText) {
+          pageApi
+            .update(content._id, {
+              body: noteBodyEl.innerText,
+            })
+            .catch((err) => {
+              alert(err.message);
+            });
+          content.body = noteBodyEl.innerText;
+        }
+      }, 3000);
+
+      el.addEventListener("DOMNodeRemoved", (e) => {
+        if (e.target !== el) {
+          return;
+        }
+        clearInterval(intervalId);
+      });
+
+      noteContentEl.append(noteBodyEl);
+    } else if (content.type === "image") {
+      const imgEl = document.createElement("img");
+      imgEl.src = `/uploads/${content.fileUUID}`;
+
+      noteContentEl.append(imgEl);
     }
-
-    const intervalId = setInterval(() => {
-      if (content.body !== noteBodyEl.innerText) {
-        pageApi
-          .update(content._id, {
-            body: noteBodyEl.innerText,
-          })
-          .catch((err) => {
-            alert(err.message);
-          });
-        content.body = noteBodyEl.innerText;
-      }
-    }, 3000);
-
-    el.addEventListener("DOMNodeRemoved", (e) => {
-      if (e.target !== el) {
-        return;
-      }
-      clearInterval(intervalId);
-    });
-
-    noteContentEl.append(noteBodyEl);
 
     const removeBtn = Button({
       innerText: "🗑️",
@@ -114,23 +108,54 @@ export async function PageContent(item: SidebarItemType) {
     noteContentEl.append(removeBtn);
   }
 
-  const form = document.createElement("form");
-  form.action = "/api/files";
-  form.method = "post";
-  form.enctype = "multipart/form-data";
+  const addTextButton = Button({
+    innerText: "+",
+    onClick: async () => {
+      const newTextContent = await pageApi.create({
+        type: "text",
+        parent: page._id,
+        body: "",
+      });
+      addContent(newTextContent, true);
+    },
+  });
+  el.append(addTextButton);
 
   const input = document.createElement("input");
+  input.style.display = "none";
   input.name = "file_upload";
   input.type = "file";
 
-  form.append(input);
+  input.addEventListener("change", async (e) => {
+    if (input.files.length !== 1) {
+      return alert("Must upload one image at a time");
+    }
 
-  const submit = document.createElement("button");
-  submit.type = "submit";
-  submit.innerText = "Submit";
-  form.append(submit);
+    const formData = new FormData();
+    formData.append("file_upload", input.files[0]);
 
-  el.append(form);
+    const res = await fetch("/api/files", {
+      method: "POST",
+      body: formData,
+    });
+    const jsonData = await res.json();
+
+    const newBlock = await pageApi.create({
+      type: "image",
+      fileUUID: jsonData.data.uuid,
+      parent: page._id,
+    });
+
+    addContent(newBlock);
+  });
+
+  const addImageBtn = Button({
+    innerText: "🖼️",
+  });
+  addImageBtn.addEventListener("click", () => {
+    input.click();
+  });
+  el.append(addImageBtn);
 
   return el;
 }
