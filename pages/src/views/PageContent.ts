@@ -83,7 +83,10 @@ export async function PageContent(item: SidebarItemType) {
     noteContentEl.append(noteBodyEl);
 
     const removeBtn = Button({
-      innerText: "-",
+      innerText: "🗑️",
+      styles: {
+        height: "24px"
+      },
       onClick() {
         pageApi.removeById(content._id);
         noteContentEl.remove();
