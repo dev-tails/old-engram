@@ -1,0 +1,30 @@
+body {
+  text-align: center;
+  margin: 0;
+}
+
+.card {
+  font-size: 2em;
+}
+
+.stages {
+  position: absolute;
+  width: 100%;
+  bottom: 16px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 16px;
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+.btn:hover, .btn:active {
+  background-color: #424242;
+  color: white;
+}
+
+.hidden {
+  display: none;
+}

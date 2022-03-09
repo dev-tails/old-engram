@@ -1,0 +1,14 @@
+{
+  "name": "flashcards",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "esbuild": "^0.14.25"
+  },
+  "dependencies": {
+    "csv": "^6.0.5",
+    "csv-parser": "^3.0.0",
+    "papaparse": "^5.3.1"
+  }
+}
