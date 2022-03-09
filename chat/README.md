@@ -7,8 +7,8 @@
 The be for chat was developed before the central engram api was started.  In order to bridge the gap for now you can set the `.env` file to the below when developing locally.  This allows it to eventually be replaced with the api as it points the user login to the user database.
 
 ```
-USER_DB_URL=mongodb://localhost:27017/users
-DB_URL=mongodb://localhost:27017/chat
+USER_DB_URL=mongodb://localhost:27017/engram
+DB_URL=mongodb://localhost:27017/engram
 ```
 
 Once that is set simply run `node server.js` from the `be` folder.
