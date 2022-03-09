@@ -5,8 +5,6 @@ if (cards) {
   cards = [];
 }
 
-console.log(cards)
-
 let currentCardIndex = 0;
 let currentCard = cards[currentCardIndex];
 
@@ -14,7 +12,8 @@ const showBtn = document.getElementById("show");
 const front = document.getElementById("front");
 const back = document.getElementById("back");
 
-showBtn.addEventListener("click", function () {
+showBtn.addEventListener("click", function (e) {
+  e.preventDefault();
   showBack();
 });
 
@@ -23,6 +22,7 @@ const stages = document.getElementsByClassName("stage");
 for (let i = 0; i < stages.length; i++) {
   let stage = stages[i];
   stage.addEventListener("click", function (e) {
+    e.preventDefault();
     nextCard();
   });
 }
