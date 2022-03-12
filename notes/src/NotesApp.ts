@@ -4,7 +4,7 @@ import { NoteList } from "./views/NoteList";
 
 const root = byId("root");
 
-root.appendChild(NoteList({
+const noteList = NoteList({
   notes: [
     {
       _id: "1",
@@ -15,6 +15,12 @@ root.appendChild(NoteList({
       body: "This is notes"
     }
   ]
-}));
+})
 
-root.appendChild(BottomBar())
+root.appendChild(noteList.el);
+
+root.appendChild(BottomBar({
+  onSubmit(body) {
+    noteList.addNote({ body } as any)
+  }
+}))

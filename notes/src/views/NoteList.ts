@@ -10,8 +10,15 @@ export function NoteList(props: NoteListProps) {
   const el = Div();
 
   for (const note of props.notes) {
+    addNote(note);
+  }
+
+  function addNote(note: NoteType) {
     el.appendChild(Note({ note }));
   }
 
-  return el;
+  return {
+    el,
+    addNote
+  };
 }

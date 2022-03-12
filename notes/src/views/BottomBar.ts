@@ -2,7 +2,11 @@ import { Button } from "../../../ui/components/Button";
 import { Div } from "../../../ui/components/Div";
 import { Input } from "../../../ui/components/Input";
 
-export function BottomBar() {
+export type BottomBarProps = {
+  onSubmit: (body: string) => void;
+}
+
+export function BottomBar(props: BottomBarProps) {
   const el = Div({
     styles: {
       display: "flex",
@@ -23,17 +27,24 @@ export function BottomBar() {
       padding: "8px"
     }
   });
+  input.addEventListener("keydown", (e) => {
+    if (!e.shiftKey && e.key === "Enter") {
+      handleSubmit();
+    }
+  })
 
   el.append(input);
 
   const submitBtn = Button({
     innerText: ">",
-    onClick() {
-      input.value = "";
-    }
+    onClick: handleSubmit
   })
   el.append(submitBtn)
 
+  function handleSubmit() {
+    props.onSubmit(input.value);
+    input.value = "";
+  }
   
   return el;
 }
