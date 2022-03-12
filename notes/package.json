@@ -1,0 +1,13 @@
+{
+  "name": "@engramhq/notes",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "esbuild src/NotesApp.ts --outfile=public/assets/notes.app.js --bundle",
+    "dev": "yarn build --servedir=public"
+  },
+  "devDependencies": {
+    "esbuild": "^0.14.25"
+  }
+}

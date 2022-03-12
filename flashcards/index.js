@@ -23,13 +23,32 @@ for (let i = 0; i < stages.length; i++) {
   let stage = stages[i];
   stage.addEventListener("click", function (e) {
     e.preventDefault();
+
+    currentCard.stage = i;
+    
     nextCard();
   });
 }
 
 function nextCard() {
-  currentCardIndex = (currentCardIndex + 1) % cards.length;
-  currentCard = cards[currentCardIndex];
+  let nextCard = null;
+  while (currentCardIndex < cards.length && !nextCard) {
+    currentCardIndex = (currentCardIndex + 1);
+
+    const card = cards[currentCardIndex];
+    const stageToDaysMap = {
+      0: 0,
+      1: 1,
+      2: 2,
+      3: 7,
+      4: 30
+    }
+
+    nextCard = cards[currentCardIndex];
+  }
+
+  currentCard = nextCard
+  
   updateCards();
   hideBack();
 }
