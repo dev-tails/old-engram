@@ -6,6 +6,13 @@ export function initializeBlockController(apiRouter: Router) {
   const router = Router();
   apiRouter.use("/blocks", router);
 
+  router.use((req, res, next) => {
+    if (!req.cookies["user"]) {
+      return res.sendStatus(401);
+    }
+    next();
+  })
+
   router.get("", async (req, res) => {
     const blockService = req.services.blockService as BlockService;
 
