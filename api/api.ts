@@ -5,6 +5,7 @@ import express, { Router } from 'express';
 
 import { initializeAdminController } from './admin/AdminController';
 import { initializeUserController } from './auth/UserController';
+import { initializeBlockController } from './blocks/BlockController';
 import { initializeFileController } from './files/FileController';
 import { initServices, servicesMiddleware } from './middleware/ServicesMiddleware';
 import { initializePagesController } from './pages/PagesController';
@@ -31,6 +32,7 @@ async function main() {
   apiRouter.use(cookieParser());
   apiRouter.use(servicesMiddleware);
 
+  initializeBlockController(apiRouter);
   initializeAdminController(apiRouter);
   initializeUserController(apiRouter);
   initializePagesController(apiRouter);
