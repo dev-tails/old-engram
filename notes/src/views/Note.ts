@@ -13,5 +13,7 @@ export function Note(props: NoteProps) {
     }
   });
 
+  el.contentEditable = "true";
+
   return el;
 }
