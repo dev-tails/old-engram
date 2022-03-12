@@ -14,8 +14,8 @@ export class BlockApi extends Api {
     return this.get(`/api/blocks/${id}`)
   }
 
-  public async getAll() {
-    return this.get("/api/blocks")
+  public async getAll({ type }: { type: string; }) {
+    return this.get(`/api/blocks?type=${type}`)
   }
 
   public async create(params: Partial<Block>) {
