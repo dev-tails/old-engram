@@ -1,0 +1,13 @@
+{
+  "name": "@engramhq/sheets",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "esbuild src/SheetsApp.ts --outfile=public/assets/sheets.app.js --bundle",
+    "dev": "yarn build --servedir=public"
+  },
+  "devDependencies": {
+    "esbuild": "^0.14.25"
+  }
+}
