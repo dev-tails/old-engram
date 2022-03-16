@@ -1,7 +1,7 @@
-import { Button } from '../../../ui/components/Button';
-import { Div } from '../../../ui/components/Div';
-import { pageApi } from '../apis/PageApi';
-import { SidebarItemType } from './Sidebar';
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { pageApi } from "../apis/PageApi";
+import { SidebarItemType } from "./Sidebar";
 
 export async function PageContent(item: SidebarItemType) {
   const el = Div({
@@ -9,6 +9,8 @@ export async function PageContent(item: SidebarItemType) {
       flexGrow: "1",
     },
   });
+
+  const intervalIds = [];
 
   const page = await pageApi.getById(item._id);
 
@@ -37,7 +39,7 @@ export async function PageContent(item: SidebarItemType) {
   el.append(pageHeader);
 
   const noteContentContainerEl = Div();
-  el.append(noteContentContainerEl)
+  el.append(noteContentContainerEl);
 
   const content = page.content || [];
   for (const contentId of content) {
@@ -50,7 +52,7 @@ export async function PageContent(item: SidebarItemType) {
     const noteContentEl = Div({
       styles: {
         display: "flex",
-        width: "100%"
+        width: "100%",
       },
     });
     noteContentContainerEl.append(noteContentEl);
@@ -72,6 +74,7 @@ export async function PageContent(item: SidebarItemType) {
       }
 
       const intervalId = setInterval(() => {
+        console.log("Interval called");
         if (content.body !== noteBodyEl.innerText) {
           pageApi
             .update(content._id, {
@@ -83,26 +86,20 @@ export async function PageContent(item: SidebarItemType) {
           content.body = noteBodyEl.innerText;
         }
       }, 3000);
-
-      noteBodyEl.addEventListener("DOMNodeRemoved", (e) => {
-        if (e.target !== noteBodyEl) {
-          return;
-        }
-        clearInterval(intervalId);
-      });
+      intervalIds.push(intervalId);
 
       noteContentEl.append(noteBodyEl);
     } else if (content.type === "image") {
       const imgContaineEl = Div({
         styles: {
-          flexGrow: "1"
-        }
+          flexGrow: "1",
+        },
       });
 
       const imgEl = document.createElement("img");
       imgEl.style.width = "100%";
       imgEl.src = `/uploads/${content.fileUUID}`;
-      imgContaineEl.append(imgEl)
+      imgContaineEl.append(imgEl);
 
       noteContentEl.append(imgContaineEl);
     }
@@ -111,7 +108,7 @@ export async function PageContent(item: SidebarItemType) {
       innerText: "🗑️",
       styles: {
         height: "24px",
-        flexShrink: "0"
+        flexShrink: "0",
       },
       onClick() {
         pageApi.removeById(content._id);
@@ -170,5 +167,14 @@ export async function PageContent(item: SidebarItemType) {
   });
   el.append(addImageBtn);
 
-  return el;
+  return {
+    el,
+    destroy() {
+      for (const intervalId of intervalIds) {
+        clearInterval(intervalId);
+      }
+
+      el.remove();
+    },
+  };
 }

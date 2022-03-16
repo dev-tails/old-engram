@@ -61,11 +61,11 @@ async function main() {
 
   async function handlePageClicked(item: SidebarItemType) {
     if (pageContent) {
-      pageContent.remove();
+      pageContent.destroy();
     }
 
     pageContent = await PageContent(item);
-    container.append(pageContent);
+    container.append(pageContent.el);
   }
 }
 
