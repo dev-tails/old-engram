@@ -21,7 +21,7 @@ export async function initializeRoomApi() {
 
   const socket = io();
 
-  socket.on("message", (message: MessageType) => {
+  socket.on('message', (message: MessageType) => {
     const room = roomsById[message.room];
     if (!room) {
       // User doesn't have access to the room
@@ -33,10 +33,10 @@ export async function initializeRoomApi() {
     const messageSender = getUser(message.user);
 
     if (message.user !== currentUser._id)
-    sendNotification({
-      title: room.name,
-      body: `${messageSender.name}: ${TextUtils.truncate(message.body, 256)}`,
-    });
+      sendNotification({
+        title: room.name,
+        body: `${messageSender.name}: ${TextUtils.truncate(message.body, 256)}`,
+      });
 
     const roomId = message.room;
     if (messagesByRoomID[roomId]) {
@@ -56,7 +56,7 @@ type GetRoomsResponse = {
 };
 
 export async function getRooms() {
-  const res = await fetch("/api/rooms");
+  const res = await fetch('/api/rooms');
   const jsonData: GetRoomsResponse = await res.json();
 
   const rooms = jsonData.data;
@@ -76,6 +76,7 @@ export type MessageType = {
   user: string;
   body: string;
   room: string;
+  createdAt: Date;
 };
 
 const messagesByRoomID: { [id: string]: MessageType[] } = {};
@@ -84,8 +85,8 @@ type GetRoomMessagesData = {
   messages: MessageType[];
   userRoomConfig: {
     lastReadMessageId: string;
-  }
-}
+  };
+};
 
 export async function getRoomMessages(roomId: string) {
   const data = await httpGet<GetRoomMessagesData>(
@@ -94,8 +95,8 @@ export async function getRoomMessages(roomId: string) {
   messagesByRoomID[roomId] = data.messages;
   return {
     messages: messagesByRoomID[roomId],
-    userRoomConfig: data.userRoomConfig
-  }
+    userRoomConfig: data.userRoomConfig,
+  };
 }
 
 type SendRoomMessageParams = {
@@ -105,9 +106,9 @@ type SendRoomMessageParams = {
 
 export async function sendRoomMessage(params: SendRoomMessageParams) {
   fetch(`/api/rooms/${params.room}/messages`, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({ body: params.body }),
   });
