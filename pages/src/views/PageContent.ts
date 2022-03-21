@@ -74,7 +74,6 @@ export async function PageContent(item: SidebarItemType) {
       }
 
       const intervalId = setInterval(() => {
-        console.log("Interval called");
         if (content.body !== noteBodyEl.innerText) {
           pageApi
             .update(content._id, {
