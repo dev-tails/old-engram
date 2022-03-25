@@ -1,5 +1,6 @@
 import { Div } from "../../ui/components/Div";
 import { byId } from "../../ui/utils/DomUtils";
+import { TaskType } from "./types/TaskType";
 import { Task } from "./views/Task";
 
 const root = byId("root");
@@ -14,6 +15,7 @@ if (tasksAsString) {
 
 let dragIndex = -1;
 const taskElements = [];
+let focusedIndex = -1;
 
 for (let i = 0; i < sortedTasks.length; i++) {
   const task = sortedTasks[i];
@@ -36,6 +38,8 @@ for (let i = 0; i < sortedTasks.length; i++) {
         list.appendChild(repositionedTaskElement);
       }
     },
+    onClick: handleTaskClicked,
+    onBlur: handleTaskBlurred.bind(this, task),
   });
   taskElements.push(taskEl);
 
@@ -46,10 +50,12 @@ root.append(list);
 
 document.addEventListener("keydown", (e) => {
   if (e.ctrlKey && e.key === "c") {
+    const newIndex = sortedTasks.length;
+
     const newTask = {
       body: "",
-      order: sortedTasks.length
-    }
+      order: newIndex,
+    };
     sortedTasks.push(newTask);
     localStorage.setItem("tasks", JSON.stringify(sortedTasks));
 
@@ -57,9 +63,40 @@ document.addEventListener("keydown", (e) => {
       task: newTask,
       onDrop: () => {},
       onDrag: () => {},
+      onClick: handleTaskClicked,
+      onBlur: handleTaskBlurred.bind(this, newTask),
     });
     taskElements.push(newTaskEl);
     list.append(newTaskEl);
     newTaskEl.focus();
+    focusedIndex = newIndex;
+  }
+  if (e.altKey && e.key == "Backspace") {
+    if (focusedIndex >= 0) {
+      sortedTasks.splice(focusedIndex, 1);
+
+      for (let i = focusedIndex; i < sortedTasks.length; i++) {
+        sortedTasks[i].order = i;
+      }
+
+      saveTasks();
+
+      taskElements[focusedIndex].remove();
+      focusedIndex = -1;
+    }
   }
 });
+
+function handleTaskClicked(task: TaskType) {
+  focusedIndex = task.order;
+}
+
+function handleTaskBlurred(task: TaskType) {
+  sortedTasks[task.order].body = taskElements[task.order].innerText;
+  saveTasks();
+  focusedIndex = -1;
+}
+
+function saveTasks() {
+  localStorage.setItem("tasks", JSON.stringify(sortedTasks));
+}

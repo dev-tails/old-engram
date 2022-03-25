@@ -3,11 +3,13 @@ import { TaskType } from "../types/TaskType";
 
 export type TaskProps = {
   task: TaskType;
-  onDrag: () => void;
-  onDrop: () => void;
+  onDrag?: (task: TaskType) => void;
+  onDrop?: (task: TaskType) => void;
+  onBlur?: (task: TaskType) => void;
+  onClick?: (task: TaskType) => void;
 };
 
-export function Task({ task, onDrag, onDrop }: TaskProps) {
+export function Task({ task, onClick, onDrag, onDrop, onBlur }: TaskProps) {
   const el = Div({
     innerText: task.body,
     styles: {
@@ -16,11 +18,14 @@ export function Task({ task, onDrag, onDrop }: TaskProps) {
       marginBottom: "4px",
       padding: "4px",
     },
+    onClick: () => {
+      onClick(task);
+    },
   });
   el.contentEditable = "true";
   el.draggable = true;
   el.ondrag = () => {
-    onDrag();
+    onDrag(task);
   };
 
   el.ondragover = (e) => {
@@ -34,7 +39,11 @@ export function Task({ task, onDrag, onDrop }: TaskProps) {
 
   el.ondrop = (e) => {
     el.style.borderColor = "black";
-    onDrop();
+    onDrop(task);
+  };
+
+  el.onblur = () => {
+    onBlur(task);
   };
 
   return el;
