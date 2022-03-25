@@ -52,3 +52,17 @@ for (let i = 0; i < tasks.length; i++) {
 }
 
 root.append(list);
+
+document.addEventListener("keydown", (e) => {
+  if (e.altKey && e.key === "c") {
+    const newTaskEl = Task({
+      task: {
+        body: ""
+      },
+      onDrop: () => {},
+      onDrag: () => {}
+    })
+    list.append(newTaskEl);
+    newTaskEl.focus();
+  }
+})

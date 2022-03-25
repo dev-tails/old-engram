@@ -9,12 +9,11 @@ export type TaskProps = {
 
 export function Task({ task, onDrag, onDrop }: TaskProps) {
   const el = Div({
-    innerText: task.body,
     styles: {
       position: "relative",
       border: "1px solid black",
-      padding: "4px",
       marginBottom: "4px",
+      boxSizing: "content-box"
     },
   });
   el.draggable = true;
@@ -22,31 +21,28 @@ export function Task({ task, onDrag, onDrop }: TaskProps) {
     onDrag();
   };
 
-  const aboveEl = Div({
-    styles: {
-      position: "absolute",
-      top: "0",
-      left: "0",
-      width: "100%",
-      height: "50%",
-      borderTop: "4px solid black",
-      borderColor: "rgba(0, 0, 0, 0)",
-    },
-  });
-
-  aboveEl.ondragover = (e) => {
+  el.ondragover = (e) => {
+    el.style.borderColor = "red";
     e.preventDefault();
-    aboveEl.style.borderColor = "rgba(0, 0, 0, 1)";
   };
 
-  aboveEl.ondragleave = (e) => {
-    aboveEl.style.borderColor = "rgba(0, 0, 0, 0)";
+  el.ondragleave = (e) => {
+    el.style.borderColor = "black";
   };
 
-  aboveEl.ondrop = (e) => {
+  el.ondrop = (e) => {
+    el.style.borderColor = "black";
     onDrop();
   };
-  el.append(aboveEl);
+
+  const textEl = Div({
+    innerText: task.body,
+    styles: {
+      padding: "4px",
+    },
+  });
+  textEl.contentEditable = "true";
+  el.append(textEl);
 
   return el;
 }
