@@ -12,13 +12,43 @@ const tasks = [
   },
   {
     body: "Task 2"
+  },
+  {
+    body: "Task 3"
+  },
+  {
+    body: "Task 4"
   }
 ]
 
-for (const task of tasks) {
-  list.append(Task({
-    task
-  }))
+let dragIndex = -1;
+const taskElements = [];
+
+for (let i = 0; i < tasks.length; i++) {
+  const task = tasks[i];
+
+  const taskEl = Task({
+    task,
+    onDrag() {
+      // TODO: i is no longer valid after first move
+      dragIndex = i;
+    },
+    onDrop() {
+      const dropIndex = i;
+      const draggedTaskEl = taskElements[dragIndex];
+
+      taskElements.splice(dragIndex, 1);
+      taskElements.splice(dropIndex, 0, draggedTaskEl);
+      
+      list.innerHTML = null;
+      for(const repositionedTaskElement of taskElements) {
+        list.appendChild(repositionedTaskElement);
+      }
+    }
+  });
+  taskElements.push(taskEl);
+
+  list.append(taskEl)
 }
 
 root.append(list);
