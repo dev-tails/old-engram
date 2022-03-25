@@ -8,18 +8,18 @@ const list = Div();
 
 const tasks = [
   {
-    body: "Task 1"
+    body: "Task 1",
   },
   {
-    body: "Task 2"
+    body: "Task 2",
   },
   {
-    body: "Task 3"
+    body: "Task 3",
   },
   {
-    body: "Task 4"
-  }
-]
+    body: "Task 4",
+  },
+];
 
 let dragIndex = -1;
 const taskElements = [];
@@ -39,30 +39,31 @@ for (let i = 0; i < tasks.length; i++) {
 
       taskElements.splice(dragIndex, 1);
       taskElements.splice(dropIndex, 0, draggedTaskEl);
-      
+
       list.innerHTML = null;
-      for(const repositionedTaskElement of taskElements) {
+      for (const repositionedTaskElement of taskElements) {
         list.appendChild(repositionedTaskElement);
       }
-    }
+    },
   });
   taskElements.push(taskEl);
 
-  list.append(taskEl)
+  list.append(taskEl);
 }
 
 root.append(list);
 
 document.addEventListener("keydown", (e) => {
-  if (e.altKey && e.key === "c") {
+  if (e.ctrlKey && e.key === "c") {
     const newTaskEl = Task({
       task: {
-        body: ""
+        body: "",
       },
       onDrop: () => {},
-      onDrag: () => {}
-    })
+      onDrag: () => {},
+    });
+    taskElements.push(newTaskEl);
     list.append(newTaskEl);
     newTaskEl.focus();
   }
-})
+});

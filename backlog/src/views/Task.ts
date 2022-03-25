@@ -9,13 +9,15 @@ export type TaskProps = {
 
 export function Task({ task, onDrag, onDrop }: TaskProps) {
   const el = Div({
+    innerText: task.body,
     styles: {
       position: "relative",
       border: "1px solid black",
       marginBottom: "4px",
-      boxSizing: "content-box"
+      padding: "4px",
     },
   });
+  el.contentEditable = "true";
   el.draggable = true;
   el.ondrag = () => {
     onDrag();
@@ -34,15 +36,6 @@ export function Task({ task, onDrag, onDrop }: TaskProps) {
     el.style.borderColor = "black";
     onDrop();
   };
-
-  const textEl = Div({
-    innerText: task.body,
-    styles: {
-      padding: "4px",
-    },
-  });
-  textEl.contentEditable = "true";
-  el.append(textEl);
 
   return el;
 }
