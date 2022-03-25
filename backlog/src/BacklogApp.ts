@@ -6,26 +6,17 @@ const root = byId("root");
 
 const list = Div();
 
-const tasks = [
-  {
-    body: "Task 1",
-  },
-  {
-    body: "Task 2",
-  },
-  {
-    body: "Task 3",
-  },
-  {
-    body: "Task 4",
-  },
-];
+let sortedTasks = [];
+const tasksAsString = localStorage.getItem("tasks");
+if (tasksAsString) {
+  sortedTasks = JSON.parse(tasksAsString);
+}
 
 let dragIndex = -1;
 const taskElements = [];
 
-for (let i = 0; i < tasks.length; i++) {
-  const task = tasks[i];
+for (let i = 0; i < sortedTasks.length; i++) {
+  const task = sortedTasks[i];
 
   const taskEl = Task({
     task,
@@ -55,10 +46,15 @@ root.append(list);
 
 document.addEventListener("keydown", (e) => {
   if (e.ctrlKey && e.key === "c") {
+    const newTask = {
+      body: "",
+      order: sortedTasks.length
+    }
+    sortedTasks.push(newTask);
+    localStorage.setItem("tasks", JSON.stringify(sortedTasks));
+
     const newTaskEl = Task({
-      task: {
-        body: "",
-      },
+      task: newTask,
       onDrop: () => {},
       onDrag: () => {},
     });
