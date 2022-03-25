@@ -1,0 +1,13 @@
+{
+  "name": "@engramhq/backlog",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "esbuild src/BacklogApp.ts --bundle --outfile=public/assets/backlog.app.js",
+    "start": "yarn build --servedir=public"
+  },
+  "devDependencies": {
+    "esbuild": "^0.14.27"
+  }
+}
