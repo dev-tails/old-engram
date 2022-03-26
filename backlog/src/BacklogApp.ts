@@ -44,6 +44,10 @@ function handleCreateNewTask() {
 }
 
 function handleTaskDelete(task: TaskType) {
+  if (selectedIndices.length > 1) {
+    return;
+  }
+
   sortedTasks.splice(task.order, 1);
 
   reorderTasks();
