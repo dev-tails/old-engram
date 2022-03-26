@@ -72,6 +72,10 @@ function addTaskView(task: TaskType) {
     },
     onFocus: handleTaskFocused,
     onBlur: handleTaskBlurred.bind(this, task),
+    onSubmit: (text: string) => {
+      task.body = text;
+      saveTasks();
+    },
   });
 
   list.append(taskEl);
@@ -86,17 +90,10 @@ function reorderTasks() {
 }
 
 function handleTaskFocused(task: TaskType) {
-  console.log("focus")
   focusedIndex = task.order;
 }
 
 function handleTaskBlurred() {
-  if (focusedIndex < 0) {
-    return;
-  }
-
-  sortedTasks[focusedIndex].body = list.children[focusedIndex].innerText;
-  saveTasks();
   focusedIndex = -1;
 }
 
