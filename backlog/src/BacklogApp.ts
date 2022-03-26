@@ -14,36 +14,11 @@ if (tasksAsString) {
 }
 
 let dragIndex = -1;
-const taskElements = [];
 let focusedIndex = -1;
 
 for (let i = 0; i < sortedTasks.length; i++) {
   const task = sortedTasks[i];
-
-  const taskEl = Task({
-    task,
-    onDrag() {
-      // TODO: i is no longer valid after first move
-      dragIndex = i;
-    },
-    onDrop() {
-      const dropIndex = i;
-      const draggedTaskEl = taskElements[dragIndex];
-
-      taskElements.splice(dragIndex, 1);
-      taskElements.splice(dropIndex, 0, draggedTaskEl);
-
-      list.innerHTML = null;
-      for (const repositionedTaskElement of taskElements) {
-        list.appendChild(repositionedTaskElement);
-      }
-    },
-    onClick: handleTaskClicked,
-    onBlur: handleTaskBlurred.bind(this, task),
-  });
-  taskElements.push(taskEl);
-
-  list.append(taskEl);
+  addTaskView(task);
 }
 
 root.append(list);
@@ -59,15 +34,8 @@ document.addEventListener("keydown", (e) => {
     sortedTasks.push(newTask);
     localStorage.setItem("tasks", JSON.stringify(sortedTasks));
 
-    const newTaskEl = Task({
-      task: newTask,
-      onDrop: () => {},
-      onDrag: () => {},
-      onClick: handleTaskClicked,
-      onBlur: handleTaskBlurred.bind(this, newTask),
-    });
-    taskElements.push(newTaskEl);
-    list.append(newTaskEl);
+    const newTaskEl = addTaskView(newTask);
+
     newTaskEl.focus();
     focusedIndex = newIndex;
   }
@@ -75,24 +43,58 @@ document.addEventListener("keydown", (e) => {
     if (focusedIndex >= 0) {
       sortedTasks.splice(focusedIndex, 1);
 
-      for (let i = focusedIndex; i < sortedTasks.length; i++) {
-        sortedTasks[i].order = i;
-      }
+      reorderTasks();
 
-      saveTasks();
-
-      taskElements[focusedIndex].remove();
+      let indexToRemove = focusedIndex;
       focusedIndex = -1;
+      list.children[indexToRemove].remove();
     }
   }
 });
+
+function addTaskView(task: TaskType) {
+  const taskEl = Task({
+    task,
+    onDrag() {
+      dragIndex = task.order;
+    },
+    onDrop(taskDroppedOnto) {
+      const dropIndex = taskDroppedOnto.order;
+      const elementDroppedOnto = list.children[dropIndex];
+      const draggedTaskEl = list.children[dragIndex];
+
+      const [draggedTask] = sortedTasks.splice(dragIndex, 1);
+      sortedTasks.splice(dropIndex, 0, draggedTask);
+
+      list.insertBefore(draggedTaskEl, elementDroppedOnto);
+
+      reorderTasks();
+    },
+    onClick: handleTaskClicked,
+    onBlur: handleTaskBlurred.bind(this, task),
+  });
+
+  list.append(taskEl);
+  return taskEl;
+}
+
+function reorderTasks() {
+  for (let i = 0; i < sortedTasks.length; i++) {
+    sortedTasks[i].order = i;
+  }
+  saveTasks();
+}
 
 function handleTaskClicked(task: TaskType) {
   focusedIndex = task.order;
 }
 
-function handleTaskBlurred(task: TaskType) {
-  sortedTasks[task.order].body = taskElements[task.order].innerText;
+function handleTaskBlurred() {
+  if (focusedIndex < 0) {
+    return;
+  }
+
+  sortedTasks[focusedIndex].body = list.children[focusedIndex].innerText;
   saveTasks();
   focusedIndex = -1;
 }
