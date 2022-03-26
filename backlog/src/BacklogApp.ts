@@ -24,20 +24,24 @@ root.append(list);
 
 document.addEventListener("keydown", (e) => {
   if (e.ctrlKey && e.key === "c") {
-    const newIndex = sortedTasks.length;
-
-    const newTask = {
-      body: "",
-      order: newIndex,
-    };
-    sortedTasks.push(newTask);
-    localStorage.setItem("tasks", JSON.stringify(sortedTasks));
-
-    const newTaskEl = addTaskView(newTask);
-
-    newTaskEl.focus();
+    handleCreateNewTask();
   }
 });
+
+function handleCreateNewTask() {
+  const newIndex = sortedTasks.length;
+
+  const newTask = {
+    body: "",
+    order: newIndex,
+  };
+  sortedTasks.push(newTask);
+  localStorage.setItem("tasks", JSON.stringify(sortedTasks));
+
+  const newTaskEl = addTaskView(newTask);
+
+  newTaskEl.focus();
+}
 
 function handleTaskDelete(task: TaskType) {
   sortedTasks.splice(task.order, 1);
@@ -67,7 +71,8 @@ function addTaskView(task: TaskType) {
       task.body = text;
       saveTasks();
     },
-    onDelete: handleTaskDelete
+    onDelete: handleTaskDelete,
+    onNewTask: handleCreateNewTask
   });
 
   list.append(taskEl);

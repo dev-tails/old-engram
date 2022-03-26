@@ -7,15 +7,10 @@ export type TaskProps = {
   onDrop?: (task: TaskType) => void;
   onSubmit?: (body: string) => void;
   onDelete?: (task: TaskType) => void;
+  onNewTask?: () => void;
 };
 
-export function Task({
-  task,
-  onDrag,
-  onDrop,
-  onSubmit,
-  onDelete
-}: TaskProps) {
+export function Task({ task, onDrag, onDrop, onSubmit, onDelete, onNewTask }: TaskProps) {
   const el = Div({
     innerText: task.body,
     styles: {
@@ -57,6 +52,9 @@ export function Task({
   function handleKeyDown(e: KeyboardEvent) {
     if (e.key === "Enter") {
       checkSubmit();
+      e.preventDefault();
+      el.blur();
+      onNewTask();
     }
     if (e.key === "Backspace" && (el.innerText.length === 0 || e.altKey)) {
       handleDelete();
@@ -72,7 +70,9 @@ export function Task({
   function checkSubmit() {
     if (task.body !== el.innerText) {
       onSubmit(el.innerText);
+      return true;
     }
+    return false;
   }
 
   return el;
