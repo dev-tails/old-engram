@@ -70,7 +70,7 @@ function addTaskView(task: TaskType) {
 
       reorderTasks();
     },
-    onClick: handleTaskClicked,
+    onFocus: handleTaskFocused,
     onBlur: handleTaskBlurred.bind(this, task),
   });
 
@@ -85,7 +85,8 @@ function reorderTasks() {
   saveTasks();
 }
 
-function handleTaskClicked(task: TaskType) {
+function handleTaskFocused(task: TaskType) {
+  console.log("focus")
   focusedIndex = task.order;
 }
 

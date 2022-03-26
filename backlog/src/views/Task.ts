@@ -5,11 +5,11 @@ export type TaskProps = {
   task: TaskType;
   onDrag?: (task: TaskType) => void;
   onDrop?: (task: TaskType) => void;
+  onFocus?: (task: TaskType) => void;
   onBlur?: (task: TaskType) => void;
-  onClick?: (task: TaskType) => void;
 };
 
-export function Task({ task, onClick, onDrag, onDrop, onBlur }: TaskProps) {
+export function Task({ task, onClick, onFocus, onDrag, onDrop, onBlur }: TaskProps) {
   const el = Div({
     innerText: task.body,
     styles: {
@@ -17,10 +17,7 @@ export function Task({ task, onClick, onDrag, onDrop, onBlur }: TaskProps) {
       border: "1px solid black",
       marginBottom: "4px",
       padding: "4px",
-    },
-    onClick: () => {
-      onClick(task);
-    },
+    }
   });
   el.contentEditable = "true";
   el.draggable = true;
@@ -41,6 +38,10 @@ export function Task({ task, onClick, onDrag, onDrop, onBlur }: TaskProps) {
     el.style.borderColor = "black";
     onDrop(task);
   };
+
+  el.onfocus = () => {
+    onFocus(task);
+  }
 
   el.onblur = () => {
     onBlur(task);
