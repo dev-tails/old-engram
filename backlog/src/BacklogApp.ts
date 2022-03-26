@@ -14,7 +14,6 @@ if (tasksAsString) {
 }
 
 let dragIndex = -1;
-let focusedIndex = -1;
 
 for (let i = 0; i < sortedTasks.length; i++) {
   const task = sortedTasks[i];
@@ -37,20 +36,14 @@ document.addEventListener("keydown", (e) => {
     const newTaskEl = addTaskView(newTask);
 
     newTaskEl.focus();
-    focusedIndex = newIndex;
-  }
-  if (e.altKey && e.key == "Backspace") {
-    if (focusedIndex >= 0) {
-      sortedTasks.splice(focusedIndex, 1);
-
-      reorderTasks();
-
-      let indexToRemove = focusedIndex;
-      focusedIndex = -1;
-      list.children[indexToRemove].remove();
-    }
   }
 });
+
+function handleTaskDelete(task: TaskType) {
+  sortedTasks.splice(task.order, 1);
+
+  reorderTasks();
+}
 
 function addTaskView(task: TaskType) {
   const taskEl = Task({
@@ -70,12 +63,11 @@ function addTaskView(task: TaskType) {
 
       reorderTasks();
     },
-    onFocus: handleTaskFocused,
-    onBlur: handleTaskBlurred.bind(this, task),
     onSubmit: (text: string) => {
       task.body = text;
       saveTasks();
     },
+    onDelete: handleTaskDelete
   });
 
   list.append(taskEl);
@@ -87,14 +79,6 @@ function reorderTasks() {
     sortedTasks[i].order = i;
   }
   saveTasks();
-}
-
-function handleTaskFocused(task: TaskType) {
-  focusedIndex = task.order;
-}
-
-function handleTaskBlurred() {
-  focusedIndex = -1;
 }
 
 function saveTasks() {

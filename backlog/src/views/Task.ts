@@ -5,18 +5,16 @@ export type TaskProps = {
   task: TaskType;
   onDrag?: (task: TaskType) => void;
   onDrop?: (task: TaskType) => void;
-  onFocus?: (task: TaskType) => void;
-  onBlur?: (task: TaskType) => void;
   onSubmit?: (body: string) => void;
+  onDelete?: (task: TaskType) => void;
 };
 
 export function Task({
   task,
-  onFocus,
   onDrag,
   onDrop,
-  onBlur,
   onSubmit,
+  onDelete
 }: TaskProps) {
   const el = Div({
     innerText: task.body,
@@ -48,13 +46,10 @@ export function Task({
   };
 
   el.onfocus = () => {
-    onFocus(task);
-
     el.addEventListener("keydown", handleKeyDown);
   };
 
   el.onblur = () => {
-    onBlur(task);
     checkSubmit();
     el.removeEventListener("keydown", handleKeyDown);
   };
@@ -63,6 +58,15 @@ export function Task({
     if (e.key === "Enter") {
       checkSubmit();
     }
+    if (e.key === "Backspace" && (el.innerText.length === 0 || e.altKey)) {
+      handleDelete();
+    }
+  }
+
+  function handleDelete() {
+    el.onblur = null;
+    el.remove();
+    onDelete(task);
   }
 
   function checkSubmit() {
