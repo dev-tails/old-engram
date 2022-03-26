@@ -49,12 +49,23 @@ function handleTaskDelete(task: TaskType) {
   reorderTasks();
 }
 
+function handleBulkDelete() {
+  const sortedSelectedIndices = selectedIndices.sort((a, b) => {
+    return b - a;
+  });
+  for (const indexToRemove of sortedSelectedIndices) {
+    sortedTasks.splice(indexToRemove, 1);
+    list.children[indexToRemove].remove();
+  }
+  reorderTasks();
+}
+
 function addTaskView(task: TaskType) {
   const taskEl = Task({
     task,
     onDrag() {
       if (selectedIndices.length === 0) {
-        selectedIndices.push(task.order)
+        selectedIndices.push(task.order);
       }
     },
     onDrop(taskDroppedOnto) {
@@ -69,7 +80,10 @@ function addTaskView(task: TaskType) {
         list.insertBefore(el, elementDroppedOnto);
       }
 
-      const movedTasks = sortedTasks.splice(selectedIndices[0], selectedIndices.length);
+      const movedTasks = sortedTasks.splice(
+        selectedIndices[0],
+        selectedIndices.length
+      );
       sortedTasks.splice(dropIndex, 0, ...movedTasks);
 
       reorderTasks();
@@ -109,7 +123,7 @@ document.addEventListener("mousedown", (e) => {
   if (e.target !== list && e.target !== root) {
     return;
   }
-  
+
   startMousePosition = [e.pageX, e.pageY];
 
   selectionBox.style.visibility = "visible";
@@ -170,3 +184,9 @@ function elementsOverlap(el1: Element, el2: Element) {
     domRect1.left > domRect2.right
   );
 }
+
+document.addEventListener("keydown", (e) => {
+  if (e.altKey && e.key === "Backspace") {
+    handleBulkDelete();
+  }
+})
