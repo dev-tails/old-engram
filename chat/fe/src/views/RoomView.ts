@@ -26,7 +26,7 @@ export function RoomView(props: RoomViewProps) {
   let messages: MessageType[] = [];
   let userRoomConfig: {
     lastReadMessageId: string;
-  } = null; //not sure if a better type
+  } = null;
 
   const roomView = Div();
 
