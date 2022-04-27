@@ -84,6 +84,9 @@ export function RoomView(props: RoomViewProps) {
     el.append(userIcon);
 
     const messageContentEl = Div();
+    setStyle(messageContentEl, {
+      width: '100%',
+    });
     el.append(messageContentEl);
 
     async function init() {
@@ -110,9 +113,28 @@ export function RoomView(props: RoomViewProps) {
       messageContentEl.append(messageTime);
 
       const bodyEl = Div();
+      setStyle(bodyEl, {
+        position: 'relative',
+      });
 
       bodyEl.innerHTML = autolinker.link(props.body);
 
+      const messageOptions = Span({
+        class: 'message-options',
+      });
+      setStyle(messageOptions, {
+        position: 'absolute',
+        top: '-28px',
+        right: '0px',
+        // display: 'none',
+        cursor: 'pointer',
+        width: '48px',
+        height: '28px',
+        textAlign: 'center',
+        // fontSize: '20px',
+      });
+      messageOptions.innerHTML = 'Delete';
+      bodyEl.append(messageOptions);
       messageContentEl.append(bodyEl);
     }
 
