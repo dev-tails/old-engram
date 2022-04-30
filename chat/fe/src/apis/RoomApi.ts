@@ -9,6 +9,9 @@ import { UserRoomConfig } from './UserRoomConfigApi';
 type MessageListener = (message: MessageType) => any;
 
 const messageListenerByRoomId: { [id: string]: MessageListener } = {};
+const deletingMessageListener: {
+  [id: string]: (messageId: string) => any;
+} = {};
 
 export type Room = {
   _id: string;
@@ -46,6 +49,10 @@ export async function initializeRoomApi() {
         messageListenerByRoomId[roomId](message);
       }
     }
+  });
+
+  socket.on('delete-message', ({ room, id }) => {
+    deletingMessageListener[room](id);
   });
 }
 
@@ -114,9 +121,33 @@ export async function sendRoomMessage(params: SendRoomMessageParams) {
   });
 }
 
+type DeleteRoomMessageParams = {
+  id: string;
+  room: string;
+};
+
+export async function deleteRoomMessage(params: DeleteRoomMessageParams) {
+  fetch(`/api/rooms/${params.room}/messages`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      id: params.id,
+    }),
+  });
+}
+
 export async function onRoomMessage(
   roomId: string,
   handler: (message: MessageType) => any
 ) {
   messageListenerByRoomId[roomId] = handler;
+}
+
+export function onDeleteMessage(
+  roomId: string,
+  handler: (messageId: string) => any
+) {
+  deletingMessageListener[roomId] = handler;
 }

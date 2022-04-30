@@ -6,9 +6,11 @@ import {
   MessageType,
   onRoomMessage,
   sendRoomMessage,
+  deleteRoomMessage,
+  onDeleteMessage,
 } from '../apis/RoomApi';
 
-import { getUser } from '../apis/UserApi';
+import { getSelf, getUser } from '../apis/UserApi';
 import { Button } from '../components/Button';
 import { Div } from '../components/Div';
 import { Span } from '../components/Span';
@@ -46,10 +48,15 @@ export function RoomView(props: RoomViewProps) {
     const newMessage = Message(message);
     messageList.prepend(newMessage);
   });
+  onDeleteMessage(props.roomId, (messageId) => {
+    const messageToDelete = document.getElementById(messageId);
+    messageToDelete.remove();
+  });
 
   function Message(props: MessageType) {
     const el = Div({
       class: 'message',
+      id: props._id,
     });
 
     setStyle(el, {
@@ -57,6 +64,17 @@ export function RoomView(props: RoomViewProps) {
       margin: '4px 0px',
     });
 
+    // const css = '.message:hover { background-color: #00ff00 }';
+    const css = '.message:hover .message-options { display: block !important }';
+    var style = document.createElement('style');
+
+    if ((style as any).styleSheet) {
+      (style as any).styleSheet.cssText = css;
+    } else {
+      style.appendChild(document.createTextNode(css));
+    }
+
+    el.appendChild(style);
     const user = getUser(props.user);
 
     const userIcon = Div();
@@ -119,22 +137,33 @@ export function RoomView(props: RoomViewProps) {
 
       bodyEl.innerHTML = autolinker.link(props.body);
 
-      const messageOptions = Span({
-        class: 'message-options',
-      });
-      setStyle(messageOptions, {
-        position: 'absolute',
-        top: '-28px',
-        right: '0px',
-        // display: 'none',
-        cursor: 'pointer',
-        width: '48px',
-        height: '28px',
-        textAlign: 'center',
-        // fontSize: '20px',
-      });
-      messageOptions.innerHTML = 'Delete';
-      bodyEl.append(messageOptions);
+      const currentUser = getSelf();
+      if (props.user === currentUser._id) {
+        const messageOptions = Span({
+          class: 'message-options',
+        });
+        setStyle(messageOptions, {
+          position: 'absolute',
+          top: '-20px',
+          right: '12px',
+          display: 'none',
+          cursor: 'pointer',
+          width: '24px',
+          height: '20px',
+          textAlign: 'center',
+          fontSize: '14px',
+          background: '#f7f7f7',
+          color: '#333',
+          borderRadius: '2px',
+        });
+
+        messageOptions.innerHTML = 'del';
+        bodyEl.append(messageOptions);
+
+        onClick(messageOptions, () => {
+          handleDeleteMessage(props._id);
+        });
+      }
       messageContentEl.append(bodyEl);
     }
 
@@ -315,6 +344,13 @@ export function RoomView(props: RoomViewProps) {
     sendRoomMessage({
       room: props.roomId,
       body: text,
+    });
+  }
+
+  function handleDeleteMessage(id: string) {
+    deleteRoomMessage({
+      room: props.roomId,
+      id: id,
     });
   }
 
