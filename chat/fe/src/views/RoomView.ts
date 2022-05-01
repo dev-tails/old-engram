@@ -58,9 +58,17 @@ export function RoomView(props: RoomViewProps) {
     const newMessage = Message(message);
     messageList.prepend(newMessage);
   });
-  onDeleteMessage(props.roomId, (messageId) => {
+  onDeleteMessage(props.roomId, async (messageId) => {
     const messageToDelete = document.getElementById(messageId);
     messageToDelete.remove();
+    const isLastMessageInList =
+      messageList.firstElementChild.classList.contains('date-divider');
+
+    if (isLastMessageInList) {
+      messageList.removeChild(messageList.firstChild);
+      const messagesList = await getRoomMessages(props.roomId);
+      messages = messagesList.messages;
+    }
   });
 
   function Message(props: MessageType) {
