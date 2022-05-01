@@ -17,8 +17,18 @@ import { Span } from '../components/Span';
 import { Input } from '../components/Input';
 import { Routes } from '../routes/Routes';
 import { Borders } from '../theme/Borders';
-import { onClick, setStyle, setText } from '../utils/DomUtils';
+import {
+  onClick,
+  onMouseLeave,
+  onMouseEnter,
+  setStyle,
+  setText,
+} from '../utils/DomUtils';
 import { setURL } from '../utils/HistoryUtils';
+
+function getOptionsButton(element: Element): HTMLSpanElement {
+  return element.querySelector('div:nth-child(2) > div > span');
+}
 
 type RoomViewProps = {
   roomId: string;
@@ -64,17 +74,16 @@ export function RoomView(props: RoomViewProps) {
       margin: '4px 0px',
     });
 
-    // const css = '.message:hover { background-color: #00ff00 }';
-    const css = '.message:hover .message-options { display: block !important }';
-    var style = document.createElement('style');
+    onMouseEnter(el, () => {
+      el.style.backgroundColor = '#f2f2f2';
+      getOptionsButton(el.lastElementChild).style.display = 'block';
+    });
 
-    if ((style as any).styleSheet) {
-      (style as any).styleSheet.cssText = css;
-    } else {
-      style.appendChild(document.createTextNode(css));
-    }
+    onMouseLeave(el, () => {
+      el.style.backgroundColor = '';
+      getOptionsButton(el.lastElementChild).style.display = 'none';
+    });
 
-    el.appendChild(style);
     const user = getUser(props.user);
 
     const userIcon = Div();
