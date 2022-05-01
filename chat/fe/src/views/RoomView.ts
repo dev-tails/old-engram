@@ -26,8 +26,8 @@ import {
 } from '../utils/DomUtils';
 import { setURL } from '../utils/HistoryUtils';
 
-function getOptionsButton(element: Element): HTMLSpanElement {
-  return element.querySelector('div:nth-child(2) > div > span');
+function getOptionsButton(element: Element): HTMLDivElement {
+  return element.querySelector('.options-button');
 }
 
 type RoomViewProps = {
@@ -64,6 +64,8 @@ export function RoomView(props: RoomViewProps) {
   });
 
   function Message(props: MessageType) {
+    let dropdownOpen = false;
+
     const el = Div({
       class: 'message',
       id: props._id,
@@ -76,12 +78,18 @@ export function RoomView(props: RoomViewProps) {
 
     onMouseEnter(el, () => {
       el.style.backgroundColor = '#f2f2f2';
-      getOptionsButton(el.lastElementChild).style.display = 'block';
+      const optionsButton = getOptionsButton(el.lastElementChild);
+      if (optionsButton) {
+        optionsButton.style.display = 'block';
+      }
     });
 
     onMouseLeave(el, () => {
       el.style.backgroundColor = '';
-      getOptionsButton(el.lastElementChild).style.display = 'none';
+      const optionsButton = getOptionsButton(el.lastElementChild);
+      if (optionsButton) {
+        optionsButton.style.display = dropdownOpen ? 'block' : 'none';
+      }
     });
 
     const user = getUser(props.user);
@@ -148,30 +156,90 @@ export function RoomView(props: RoomViewProps) {
 
       const currentUser = getSelf();
       if (props.user === currentUser._id) {
-        const messageOptions = Span({
-          class: 'message-options',
+        const messageOptions = Div({
+          class: 'options-button',
         });
         setStyle(messageOptions, {
           position: 'absolute',
-          top: '-20px',
+          top: '-18px',
           right: '12px',
           display: 'none',
           cursor: 'pointer',
           width: '24px',
-          height: '20px',
+          height: '12px',
+          paddingBottom: '10px',
           textAlign: 'center',
           fontSize: '14px',
-          background: '#f7f7f7',
-          color: '#333',
+          border: '1px solid #909090bf',
+          backgroundColor: '#f2f2f2',
+          color: '#909090',
           borderRadius: '2px',
         });
 
-        messageOptions.innerHTML = 'del';
+        messageOptions.innerHTML = '&#8230';
         bodyEl.append(messageOptions);
 
-        onClick(messageOptions, () => {
-          handleDeleteMessage(props._id);
+        onMouseEnter(messageOptions, () => {
+          messageOptions.style.borderColor = '#909090';
         });
+        onMouseLeave(messageOptions, () => {
+          messageOptions.style.borderColor = '#909090bf';
+        });
+        onClick(messageOptions, () => {
+          dropdownOpen = !dropdownOpen;
+          dropdown.style.display = dropdownOpen ? 'block' : 'none';
+        });
+
+        const dropdown = Div();
+        setStyle(dropdown, {
+          display: 'none',
+          position: 'absolute',
+          top: '24px',
+          right: '0',
+          cursor: 'pointer',
+          border: '1px solid #909090',
+          color: '#333',
+          backgroundColor: '#fff',
+          borderRadius: '2px',
+        });
+
+        const option = document.createElement('p');
+        setStyle(option, {
+          color: '#909090',
+          margin: '0',
+          padding: '8px 12px',
+        });
+        option.innerHTML = 'Delete';
+
+        onClick(option, () => handleDeleteMessage(props._id));
+        onMouseEnter(option, () => {
+          option.style.backgroundColor = '#f2f2f2';
+          option.style.color = '#424242';
+        });
+        onMouseLeave(option, () => {
+          option.style.backgroundColor = '';
+          option.style.color = '#333';
+        });
+
+        function handleClickOutsideDropdown(e) {
+          e.stopPropagation();
+          if (
+            dropdownOpen &&
+            !document
+              .getElementById(props._id)
+              .querySelector('.options-button')
+              .contains(e.target as Element)
+          ) {
+            dropdownOpen = !dropdownOpen;
+            dropdown.style.display = 'none';
+            messageOptions.style.display = '';
+          }
+        }
+
+        window.addEventListener('click', handleClickOutsideDropdown);
+
+        dropdown.append(option);
+        messageOptions.append(dropdown);
       }
       messageContentEl.append(bodyEl);
     }
