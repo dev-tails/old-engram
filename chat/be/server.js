@@ -1,9 +1,9 @@
-const dotenv = require("dotenv");
-const express = require("express");
-const mongodb = require("mongodb");
-const http = require("http");
-const cookieParser = require("cookie-parser");
-const { Server } = require("socket.io");
+const dotenv = require('dotenv');
+const express = require('express');
+const mongodb = require('mongodb');
+const http = require('http');
+const cookieParser = require('cookie-parser');
+const { Server } = require('socket.io');
 
 dotenv.config();
 
@@ -12,13 +12,13 @@ async function run() {
     process.env.USER_DB_URL
   );
   const userDb = userDatabaseClient.db();
-  const User = userDb.collection("users");
+  const User = userDb.collection('users');
 
   const client = await mongodb.MongoClient.connect(process.env.DB_URL);
   const db = client.db();
-  const Message = db.collection("messages");
-  const Room = db.collection("rooms");
-  const UserRoomConfig = db.collection("userroomconfigs");
+  const Message = db.collection('messages');
+  const Room = db.collection('rooms');
+  const UserRoomConfig = db.collection('userroomconfigs');
 
   const app = express();
   const server = http.createServer(app);
@@ -27,14 +27,14 @@ async function run() {
   app.use(cookieParser());
   app.use(express.json());
 
-  app.use(express.static("../fe/public"));
+  app.use(express.static('../fe/public'));
 
   app.use((req, res, next) => {
-    req.user = req.cookies["user"];
+    req.user = req.cookies['user'];
     next();
   });
 
-  app.get("/api/users/self", async (req, res, next) => {
+  app.get('/api/users/self', async (req, res, next) => {
     if (req.user) {
       const user = await User.findOne(
         { _id: mongodb.ObjectId(req.user) },
@@ -46,7 +46,7 @@ async function run() {
     }
   });
 
-  app.get("/api/users", async (req, res, next) => {
+  app.get('/api/users', async (req, res, next) => {
     if (req.user) {
       const users = await User.find(
         {},
@@ -58,20 +58,20 @@ async function run() {
     }
   });
 
-  app.post("/api/users/login", async (req, res, next) => {
+  app.post('/api/users/login', async (req, res, next) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email, password });
 
     if (user) {
-      res.cookie("user", user._id);
+      res.cookie('user', user._id);
       return res.sendStatus(200);
     }
 
     return res.sendStatus(400);
   });
 
-  app.get("/api/rooms", async (req, res) => {
+  app.get('/api/rooms', async (req, res) => {
     const user = req.user;
 
     const rooms = await Room.find({
@@ -98,7 +98,7 @@ async function run() {
     });
   });
 
-  app.post("/api/userroomconfigs", async (req, res) => {
+  app.post('/api/userroomconfigs', async (req, res) => {
     const { _id } = req.body;
     if (_id) {
       await UserRoomConfig.updateOne(
@@ -119,7 +119,7 @@ async function run() {
     res.sendStatus(200);
   });
 
-  app.get("/api/rooms/:id/messages", async (req, res, next) => {
+  app.get('/api/rooms/:id/messages', async (req, res, next) => {
     const { id } = req.params;
 
     const room = await Room.findOne({
@@ -159,7 +159,7 @@ async function run() {
     });
   });
 
-  app.post("/api/rooms/:id/messages", async (req, res, next) => {
+  app.post('/api/rooms/:id/messages', async (req, res, next) => {
     const { id } = req.params;
     const { insertedId } = await Message.insertOne({
       room: new mongodb.ObjectId(id),
@@ -175,13 +175,29 @@ async function run() {
       { $inc: { unreadCount: 1 } }
     );
 
-    io.emit("message", newMessage);
+    io.emit('message', newMessage);
 
     res.sendStatus(200);
   });
 
-  app.get("*", (req, res) => {
-    res.sendFile(__dirname + "/public/index.html");
+  app.delete('/api/rooms/:id/messages', async (req, res, next) => {
+    const roomId = req.params.id;
+    const messageId = req.body.id;
+
+    await db
+      .collection('messages')
+      .deleteOne({ _id: mongodb.ObjectId(messageId) });
+
+    io.emit('delete-message', {
+      type: 'delete-message',
+      room: roomId,
+      id: messageId,
+    });
+    res.sendStatus(200);
+  });
+
+  app.get('*', (req, res) => {
+    res.sendFile(__dirname + '/public/index.html');
   });
 
   server.listen(1337);

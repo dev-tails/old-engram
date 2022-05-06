@@ -6,16 +6,27 @@ import {
   MessageType,
   onRoomMessage,
   sendRoomMessage,
+  deleteRoomMessage,
+  onDeleteMessage,
 } from '../apis/RoomApi';
 
-import { getUser } from '../apis/UserApi';
+import { getSelf, getUser } from '../apis/UserApi';
 import { Button } from '../components/Button';
 import { Div } from '../components/Div';
 import { Span } from '../components/Span';
 import { Input } from '../components/Input';
 import { Routes } from '../routes/Routes';
 import { Borders } from '../theme/Borders';
-import { onClick, setStyle, setText } from '../utils/DomUtils';
+import {
+  bottomPosition,
+  byId,
+  bySelector,
+  onClick,
+  onMouseLeave,
+  onMouseOver,
+  setStyle,
+  setText,
+} from '../utils/DomUtils';
 import { setURL } from '../utils/HistoryUtils';
 
 type RoomViewProps = {
@@ -27,6 +38,7 @@ export function RoomView(props: RoomViewProps) {
   let userRoomConfig: {
     lastReadMessageId: string;
   } = null;
+  let messageButtonActive = false;
 
   const roomView = Div();
 
@@ -46,15 +58,55 @@ export function RoomView(props: RoomViewProps) {
     const newMessage = Message(message);
     messageList.prepend(newMessage);
   });
+  onDeleteMessage(props.roomId, async (messageId) => {
+    const messageToDelete = byId(messageId);
+    messageToDelete.remove();
+    const isLastMessageInList =
+      messageList.firstElementChild.classList.contains('date-divider');
+
+    if (isLastMessageInList) {
+      messageList.removeChild(messageList.firstChild);
+      const messagesList = await getRoomMessages(props.roomId);
+      messages = messagesList.messages;
+    }
+  });
 
   function Message(props: MessageType) {
+    let dropdownOpen = false;
+
     const el = Div({
       class: 'message',
+      id: props._id,
     });
 
     setStyle(el, {
       display: 'flex',
       margin: '4px 0px',
+    });
+
+    onMouseOver(el, (e) => {
+      e.stopPropagation();
+      if (messageButtonActive) {
+        return;
+      }
+
+      el.style.backgroundColor = '#f2f2f2';
+      const optionsButton = bySelector(el.lastElementChild, '.options-button');
+      if (optionsButton) {
+        optionsButton.style.display = 'block';
+      }
+    });
+
+    onMouseLeave(el, (e) => {
+      e.stopPropagation();
+      if (messageButtonActive) {
+        return;
+      }
+      el.style.backgroundColor = '';
+      const optionsButton = bySelector(el.lastElementChild, '.options-button');
+      if (optionsButton) {
+        optionsButton.style.display = dropdownOpen ? 'block' : 'none';
+      }
     });
 
     const user = getUser(props.user);
@@ -84,6 +136,9 @@ export function RoomView(props: RoomViewProps) {
     el.append(userIcon);
 
     const messageContentEl = Div();
+    setStyle(messageContentEl, {
+      width: '100%',
+    });
     el.append(messageContentEl);
 
     async function init() {
@@ -110,9 +165,113 @@ export function RoomView(props: RoomViewProps) {
       messageContentEl.append(messageTime);
 
       const bodyEl = Div();
+      setStyle(bodyEl, {
+        position: 'relative',
+      });
 
       bodyEl.innerHTML = autolinker.link(props.body);
 
+      const currentUser = getSelf();
+      if (props.user === currentUser._id) {
+        const messageOptions = Div({
+          class: 'options-button',
+        });
+        setStyle(messageOptions, {
+          position: 'absolute',
+          top: '-18px',
+          right: '0px',
+          display: 'none',
+          cursor: 'pointer',
+          width: '24px',
+          height: '12px',
+          paddingBottom: '10px',
+          textAlign: 'center',
+          fontSize: '14px',
+          border: '1px solid #909090bf',
+          backgroundColor: '#f2f2f2',
+          color: '#909090',
+          borderRadius: '2px',
+        });
+
+        messageOptions.innerHTML = '&#8230';
+        bodyEl.append(messageOptions);
+
+        onMouseOver(messageOptions, () => {
+          messageOptions.style.borderColor = '#909090';
+        });
+        onMouseLeave(messageOptions, () => {
+          messageOptions.style.borderColor = '#909090bf';
+        });
+
+        onClick(messageOptions, () => {
+          dropdownOpen = !dropdownOpen;
+          messageButtonActive = !messageButtonActive;
+
+          const element = byId(props._id);
+          const optionsButton = bySelector(element, '.options-button');
+
+          if (bottomPosition(optionsButton) > window.innerHeight - 100) {
+            dropdown.style.top = '-38px';
+            dropdown.style.zIndex = '1';
+          }
+          dropdown.style.display = dropdownOpen ? 'block' : 'none';
+        });
+
+        const dropdown = Div();
+        setStyle(dropdown, {
+          display: 'none',
+          position: 'absolute',
+          top: '24px',
+          right: '0',
+          cursor: 'pointer',
+          border: '1px solid #909090',
+          color: '#333',
+          backgroundColor: '#fff',
+          borderRadius: '2px',
+        });
+
+        const option = document.createElement('p');
+        setStyle(option, {
+          margin: '0',
+          padding: '8px 12px',
+        });
+        option.innerHTML = 'Delete';
+
+        onClick(option, () => {
+          handleDeleteMessage(props._id);
+          messageButtonActive = false;
+        });
+        onMouseOver(option, () => {
+          option.style.backgroundColor = '#f2f2f2';
+          dropdown.style.border = '1px solid #909090';
+        });
+        onMouseLeave(option, () => {
+          option.style.backgroundColor = '';
+          dropdown.style.border = '1px solid #909090bf';
+        });
+
+        function handleClickOutsideDropdown(e) {
+          e.stopPropagation();
+          const element = byId(props._id);
+          if (
+            dropdownOpen &&
+            !bySelector(element, '.options-button').contains(
+              e.target as Element
+            )
+          ) {
+            dropdownOpen = !dropdownOpen;
+            messageButtonActive = false;
+            dropdown.style.display = 'none';
+            messageOptions.style.display = 'none';
+            el.style.backgroundColor = '';
+          }
+        }
+
+        window.addEventListener('click', handleClickOutsideDropdown);
+
+        dropdown.append(option);
+        messageOptions.append(dropdown);
+      }
       messageContentEl.append(bodyEl);
     }
 
@@ -293,6 +452,13 @@ export function RoomView(props: RoomViewProps) {
     sendRoomMessage({
       room: props.roomId,
       body: text,
+    });
+  }
+
+  function handleDeleteMessage(id: string) {
+    deleteRoomMessage({
+      room: props.roomId,
+      id: id,
     });
   }
 
