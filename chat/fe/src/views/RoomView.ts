@@ -18,17 +18,16 @@ import { Input } from '../components/Input';
 import { Routes } from '../routes/Routes';
 import { Borders } from '../theme/Borders';
 import {
+  bottomPosition,
+  byId,
+  bySelector,
   onClick,
   onMouseLeave,
-  onMouseEnter,
+  onMouseOver,
   setStyle,
   setText,
 } from '../utils/DomUtils';
 import { setURL } from '../utils/HistoryUtils';
-
-function getOptionsButton(element: Element): HTMLDivElement {
-  return element.querySelector('.options-button');
-}
 
 type RoomViewProps = {
   roomId: string;
@@ -39,6 +38,7 @@ export function RoomView(props: RoomViewProps) {
   let userRoomConfig: {
     lastReadMessageId: string;
   } = null;
+  let messageButtonActive = false;
 
   const roomView = Div();
 
@@ -59,7 +59,7 @@ export function RoomView(props: RoomViewProps) {
     messageList.prepend(newMessage);
   });
   onDeleteMessage(props.roomId, async (messageId) => {
-    const messageToDelete = document.getElementById(messageId);
+    const messageToDelete = byId(messageId);
     messageToDelete.remove();
     const isLastMessageInList =
       messageList.firstElementChild.classList.contains('date-divider');
@@ -84,17 +84,26 @@ export function RoomView(props: RoomViewProps) {
       margin: '4px 0px',
     });
 
-    onMouseEnter(el, () => {
+    onMouseOver(el, (e) => {
+      e.stopPropagation();
+      if (messageButtonActive) {
+        return;
+      }
+
       el.style.backgroundColor = '#f2f2f2';
-      const optionsButton = getOptionsButton(el.lastElementChild);
+      const optionsButton = bySelector(el.lastElementChild, '.options-button');
       if (optionsButton) {
         optionsButton.style.display = 'block';
       }
     });
 
-    onMouseLeave(el, () => {
+    onMouseLeave(el, (e) => {
+      e.stopPropagation();
+      if (messageButtonActive) {
+        return;
+      }
       el.style.backgroundColor = '';
-      const optionsButton = getOptionsButton(el.lastElementChild);
+      const optionsButton = bySelector(el.lastElementChild, '.options-button');
       if (optionsButton) {
         optionsButton.style.display = dropdownOpen ? 'block' : 'none';
       }
@@ -170,7 +179,7 @@ export function RoomView(props: RoomViewProps) {
         setStyle(messageOptions, {
           position: 'absolute',
           top: '-18px',
-          right: '12px',
+          right: '0px',
           display: 'none',
           cursor: 'pointer',
           width: '24px',
@@ -187,14 +196,24 @@ export function RoomView(props: RoomViewProps) {
         messageOptions.innerHTML = '&#8230';
         bodyEl.append(messageOptions);
 
-        onMouseEnter(messageOptions, () => {
+        onMouseOver(messageOptions, () => {
           messageOptions.style.borderColor = '#909090';
         });
         onMouseLeave(messageOptions, () => {
           messageOptions.style.borderColor = '#909090bf';
         });
+
         onClick(messageOptions, () => {
           dropdownOpen = !dropdownOpen;
+          messageButtonActive = !messageButtonActive;
+
+          const element = byId(props._id);
+          const optionsButton = bySelector(element, '.options-button');
+
+          if (bottomPosition(optionsButton) > window.innerHeight - 100) {
+            dropdown.style.top = '-38px';
+            dropdown.style.zIndex = '1';
+          }
           dropdown.style.display = dropdownOpen ? 'block' : 'none';
         });
 
@@ -213,34 +232,38 @@ export function RoomView(props: RoomViewProps) {
 
         const option = document.createElement('p');
         setStyle(option, {
-          color: '#909090',
           margin: '0',
           padding: '8px 12px',
         });
         option.innerHTML = 'Delete';
 
-        onClick(option, () => handleDeleteMessage(props._id));
-        onMouseEnter(option, () => {
+        onClick(option, () => {
+          handleDeleteMessage(props._id);
+          messageButtonActive = false;
+        });
+        onMouseOver(option, () => {
           option.style.backgroundColor = '#f2f2f2';
-          option.style.color = '#424242';
+          dropdown.style.border = '1px solid #909090';
         });
         onMouseLeave(option, () => {
           option.style.backgroundColor = '';
-          option.style.color = '#333';
+          dropdown.style.border = '1px solid #909090bf';
         });
 
         function handleClickOutsideDropdown(e) {
           e.stopPropagation();
+          const element = byId(props._id);
           if (
             dropdownOpen &&
-            !document
-              .getElementById(props._id)
-              .querySelector('.options-button')
-              .contains(e.target as Element)
+            !bySelector(element, '.options-button').contains(
+              e.target as Element
+            )
           ) {
             dropdownOpen = !dropdownOpen;
             dropdown.style.display = 'none';
-            messageOptions.style.display = '';
+            messageOptions.style.display = 'none';
+            el.style.backgroundColor = '';
+            messageButtonActive = false;
           }
         }
 

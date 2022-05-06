@@ -14,13 +14,11 @@ body {
     max-width: 900px;
     margin: 0 auto;
     flex-grow: 1;
-    padding-bottom: 20px;
 }
 
 .textbox {
     background-color: #424242;
     text-align: center;
-    margin-top: -20px;
 }
 
 .textbox input {
