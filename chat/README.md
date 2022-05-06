@@ -11,7 +11,7 @@ USER_DB_URL=mongodb://localhost:27017/engram
 DB_URL=mongodb://localhost:27017/engram
 ```
 
-Once that is set simply run `node server.js` from the `be` folder.
+Once that is set simply run `node server.js` from the `be` folder.  The app will then be running on http://localhost:1337.
 
 ### fe
 
