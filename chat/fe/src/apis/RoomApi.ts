@@ -112,6 +112,9 @@ type SendRoomMessageParams = {
 };
 
 export async function sendRoomMessage(params: SendRoomMessageParams) {
+  if (!params.body) {
+    return;
+  }
   fetch(`/api/rooms/${params.room}/messages`, {
     method: 'POST',
     headers: {
