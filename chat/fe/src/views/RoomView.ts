@@ -260,10 +260,10 @@ export function RoomView(props: RoomViewProps) {
             )
           ) {
             dropdownOpen = !dropdownOpen;
+            messageButtonActive = false;
             dropdown.style.display = 'none';
             messageOptions.style.display = 'none';
             el.style.backgroundColor = '';
-            messageButtonActive = false;
           }
         }
 
