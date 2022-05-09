@@ -82,6 +82,7 @@ export function RoomView(props: RoomViewProps) {
     setStyle(el, {
       display: 'flex',
       margin: '4px 0px',
+      overflowWrap: 'Anywhere',
     });
 
     onMouseOver(el, (e) => {
@@ -234,6 +235,7 @@ export function RoomView(props: RoomViewProps) {
         setStyle(option, {
           margin: '0',
           padding: '8px 12px',
+          overflowWrap: 'Normal',
         });
         option.innerHTML = 'Delete';
 
