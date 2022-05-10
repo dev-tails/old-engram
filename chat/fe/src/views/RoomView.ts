@@ -16,7 +16,7 @@ import { getSelf, getUser } from '../apis/UserApi';
 import { Button } from '../components/Button';
 import { Div } from '../components/Div';
 import { Span } from '../components/Span';
-import { Input } from '../components/Input';
+import { Input, InputArea } from '../components/Input';
 import { Routes } from '../routes/Routes';
 import { Borders } from '../theme/Borders';
 import {
@@ -73,7 +73,7 @@ export function RoomView(props: RoomViewProps) {
       messages = messagesList.messages;
     }
   });
-  
+
   onEditMessage(props.roomId, async (message) => {
     const messageToEdit = byId(message._id);
     messageToEdit.getElementsByClassName('body')[0].innerHTML = autolinker.link(message.body);
@@ -177,6 +177,7 @@ export function RoomView(props: RoomViewProps) {
       bodyEl.className = 'body';
       setStyle(bodyEl, {
         position: 'relative',
+        whiteSpace: 'pre-wrap',
       });
 
       bodyEl.innerHTML = autolinker.link(props.body);
@@ -436,14 +437,33 @@ export function RoomView(props: RoomViewProps) {
     });
     setStyle(el, {
       flexShrink: '0',
+      maxHeight: '25%',
+      minHeight: '5%',
     });
 
-    const input = Input();
+    const originalHeight = el.style.height;
+
+    const input = InputArea();
+    setStyle(input, {
+      height: '100%',
+      width: '100%',
+      maxWidth: '900px',
+      boxSizing: 'border-box',
+      resize: 'none',
+      overflow: 'auto',
+    })
 
     input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        props.onSubmit(input.value);
+      const scrollHeight = input.scrollHeight;
+      if (scrollHeight > Number(originalHeight)) {
+        el.style.height = String(scrollHeight);
+      }
+      if (e.key === 'Enter' && !e.shiftKey) {
+        const inputText = input.value.trim();
+        e.preventDefault();
+        props.onSubmit(inputText);
         input.value = '';
+        el.style.height = originalHeight;
       }
     });
 
