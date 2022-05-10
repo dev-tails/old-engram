@@ -16,7 +16,8 @@ import { getSelf, getUser } from '../apis/UserApi';
 import { Button } from '../components/Button';
 import { Div } from '../components/Div';
 import { Span } from '../components/Span';
-import { Input, InputArea } from '../components/Input';
+import { Input } from '../components/Input';
+import { TextArea } from '../components/TextArea'
 import { Routes } from '../routes/Routes';
 import { Borders } from '../theme/Borders';
 import {
@@ -443,7 +444,7 @@ export function RoomView(props: RoomViewProps) {
 
     const originalHeight = el.style.height;
 
-    const input = InputArea();
+    const input = TextArea();
     setStyle(input, {
       height: '100%',
       width: '100%',
