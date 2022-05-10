@@ -42,6 +42,7 @@ export async function initializeRoomApi() {
       sendNotification({
         title: room.name,
         body: `${messageSender.name}: ${TextUtils.truncate(message.body, 256)}`,
+        roomId: message.room,
       });
 
     const roomId = message.room;

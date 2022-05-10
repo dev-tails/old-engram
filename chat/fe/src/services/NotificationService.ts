@@ -1,3 +1,5 @@
+import { setURL } from '../utils/HistoryUtils'
+
 let notificationsEnabled = false;
 
 function checkNotificationPromise() {
@@ -42,6 +44,7 @@ export function toggleNotificationsEnabled() {
 type SendNotificationParams = {
   title: string;
   body: string;
+  roomId: string;
 };
 
 export function sendNotification(params: SendNotificationParams) {
@@ -49,5 +52,9 @@ export function sendNotification(params: SendNotificationParams) {
     return;
   }
 
-  new Notification(params.title, { body: params.body });
+  const notification = new Notification(params.title, { body: params.body });
+  notification.onclick = () => {
+    window.focus()
+    setURL(`/rooms/${params.roomId}`)
+  }
 }
