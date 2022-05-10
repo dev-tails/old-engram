@@ -8,6 +8,8 @@ import {
   sendRoomMessage,
   deleteRoomMessage,
   onDeleteMessage,
+  editRoomMessage,
+  onEditMessage,
 } from '../apis/RoomApi';
 
 import { getSelf, getUser } from '../apis/UserApi';
@@ -58,6 +60,7 @@ export function RoomView(props: RoomViewProps) {
     const newMessage = Message(message);
     messageList.prepend(newMessage);
   });
+
   onDeleteMessage(props.roomId, async (messageId) => {
     const messageToDelete = byId(messageId);
     messageToDelete.remove();
@@ -69,6 +72,11 @@ export function RoomView(props: RoomViewProps) {
       const messagesList = await getRoomMessages(props.roomId);
       messages = messagesList.messages;
     }
+  });
+  
+  onEditMessage(props.roomId, async (message) => {
+    const messageToEdit = byId(message._id);
+    messageToEdit.getElementsByClassName('body')[0].innerHTML = autolinker.link(message.body);
   });
 
   function Message(props: MessageType) {
@@ -166,6 +174,7 @@ export function RoomView(props: RoomViewProps) {
       messageContentEl.append(messageTime);
 
       const bodyEl = Div();
+      bodyEl.className = 'body';
       setStyle(bodyEl, {
         position: 'relative',
       });
@@ -231,24 +240,57 @@ export function RoomView(props: RoomViewProps) {
           borderRadius: '2px',
         });
 
-        const option = document.createElement('p');
-        setStyle(option, {
+        const options = document.createElement('ul');
+        setStyle(options, {
+          listStyleType: 'none',
+          padding: '0px',
+          margin: '0px',
+        });
+
+        const delete_option = document.createElement('li');
+        setStyle(delete_option, {
           margin: '0',
           padding: '8px 12px',
           overflowWrap: 'Normal',
         });
-        option.innerHTML = 'Delete';
+        delete_option.innerHTML = 'Delete';
 
-        onClick(option, () => {
+
+        const edit_option = document.createElement('li');
+        setStyle(edit_option, {
+          margin: '0',
+          padding: '8px 12px',
+          overflowWrap: 'Normal',
+        });
+        edit_option.innerHTML = 'Edit';
+
+        options.appendChild(delete_option);
+        options.appendChild(edit_option);
+
+        onClick(delete_option, () => {
           handleDeleteMessage(props._id);
           messageButtonActive = false;
         });
-        onMouseOver(option, () => {
-          option.style.backgroundColor = '#f2f2f2';
+        onMouseOver(delete_option, () => {
+          delete_option.style.backgroundColor = '#f2f2f2';
           dropdown.style.border = '1px solid #909090';
         });
-        onMouseLeave(option, () => {
-          option.style.backgroundColor = '';
+        onMouseLeave(delete_option, () => {
+          delete_option.style.backgroundColor = '';
+          dropdown.style.border = '1px solid #909090bf';
+        });
+
+        onClick(edit_option, () => {
+          const editedMessage = prompt("Edit your message:");
+          handleEditMessage(props._id, editedMessage);
+          messageButtonActive = false;
+        });
+        onMouseOver(edit_option, () => {
+          edit_option.style.backgroundColor = '#f2f2f2';
+          dropdown.style.border = '1px solid #909090';
+        });
+        onMouseLeave(edit_option, () => {
+          edit_option.style.backgroundColor = '';
           dropdown.style.border = '1px solid #909090bf';
         });
 
@@ -271,7 +313,7 @@ export function RoomView(props: RoomViewProps) {
 
         window.addEventListener('click', handleClickOutsideDropdown);
 
-        dropdown.append(option);
+        dropdown.append(options);
         messageOptions.append(dropdown);
       }
       messageContentEl.append(bodyEl);
@@ -462,6 +504,14 @@ export function RoomView(props: RoomViewProps) {
       room: props.roomId,
       id: id,
     });
+  }
+
+  function handleEditMessage(id: string, newText: string) {
+    editRoomMessage({
+      room: props.roomId,
+      id: id,
+      body: newText,
+    })
   }
 
   const textBox = TextBox({ onSubmit: handleSubmit });
