@@ -12,6 +12,9 @@ const messageListenerByRoomId: { [id: string]: MessageListener } = {};
 const deletingMessageListener: {
   [id: string]: (messageId: string) => any;
 } = {};
+const editMessageListener: {
+  [id: string]: MessageListener
+} = {};
 
 export type Room = {
   _id: string;
@@ -50,6 +53,10 @@ export async function initializeRoomApi() {
       }
     }
   });
+
+  socket.on('edited-message', (message: MessageType) => {
+    editMessageListener[message.room](message);
+  })
 
   socket.on('delete-message', ({ room, id }) => {
     deletingMessageListener[room](id);
@@ -141,6 +148,25 @@ export async function deleteRoomMessage(params: DeleteRoomMessageParams) {
   });
 }
 
+type EditRoomMessageParams = {
+  room: string;
+  id: string;
+  body: string;
+}
+
+export async function editRoomMessage(params: EditRoomMessageParams) {
+  fetch(`/api/rooms/${params.room}/messages`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      id: params.id,
+      body: params.body,
+    })
+  })
+}
+
 export async function onRoomMessage(
   roomId: string,
   handler: (message: MessageType) => any
@@ -153,4 +179,11 @@ export function onDeleteMessage(
   handler: (messageId: string) => any
 ) {
   deletingMessageListener[roomId] = handler;
+}
+
+export function onEditMessage(
+  roomId: string,
+  handler: (message: MessageType) => any
+) {
+  editMessageListener[roomId] = handler;
 }

@@ -180,6 +180,26 @@ async function run() {
     res.sendStatus(200);
   });
 
+  app.put('/api/rooms/:id/messages', async (req, res, next) => {
+    const messageId = req.body.id;
+    const newBody = req.body.body;
+
+    await Message
+      .updateOne(
+        {
+          _id: mongodb.ObjectId(messageId)
+        },
+        {
+          $set: {
+            body: newBody,
+          }
+        });
+
+    const editedMessage = await Message.findOne({ _id: mongodb.ObjectId(messageId)});
+    io.emit('edited-message', editedMessage)
+    res.sendStatus(200);
+  })
+
   app.delete('/api/rooms/:id/messages', async (req, res, next) => {
     const roomId = req.params.id;
     const messageId = req.body.id;
