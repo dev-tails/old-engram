@@ -43,7 +43,9 @@ export function RoomView(props: RoomViewProps) {
   } = null;
   let messageButtonActive = false;
 
-  const roomView = Div();
+  const roomView = Div({
+    class: 'roomView',
+  });
 
   setStyle(roomView, {
     display: 'flex',
@@ -90,7 +92,7 @@ export function RoomView(props: RoomViewProps) {
 
     setStyle(el, {
       display: 'flex',
-      margin: '4px 0px',
+      margin: '4px 0px', // TODO: top/bottom padding between messages
       overflowWrap: 'Anywhere',
     });
 
@@ -327,14 +329,15 @@ export function RoomView(props: RoomViewProps) {
   }
 
   function MessageList() {
-    const el = Div({
-      class: 'message-list',
-    });
+    const el = Div();
 
     setStyle(el, {
       overflowY: 'auto',
       display: 'flex',
       flexDirection: 'column-reverse',
+      margin: '0',
+      width: '100%',
+      
     });
 
     async function init() {
@@ -478,14 +481,16 @@ export function RoomView(props: RoomViewProps) {
   }
 
   function RoomHeader() {
-    const el = Div();
+    const el = Div({
+      class: 'room-header'
+    });
 
     setStyle(el, {
       display: 'flex',
       borderBottom: Borders.bottom,
       padding: '8px',
       width: '100%',
-      maxWidth: '900px',
+      // maxWidth: '900px',
       margin: '0 auto',
     });
 
@@ -497,7 +502,9 @@ export function RoomView(props: RoomViewProps) {
       setURL(Routes.home);
     });
 
-    const roomNameEl = Div();
+    const roomNameEl = Div({
+      class: 'room-name-el'
+    });
     setStyle(roomNameEl, {
       paddingLeft: '8px',
     });

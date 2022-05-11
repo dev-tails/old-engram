@@ -4,10 +4,12 @@ import { RoomList } from './RoomList';
 import { RoomView } from './RoomView';
 
 export function Router() {
-  const router = Div();
+  const router = Div({
+    class: 'router',
+  });
 
   setStyle(router, {
-    flexGrow: "1"
+    flexGrow: "1",
   })
 
   function init() {
@@ -21,8 +23,11 @@ export function Router() {
     const path = window.location.pathname;
 
     if (path === "/") {
+      router.style.setProperty('display', 'block');
       router.append(RoomList());
     } else if (path.includes("rooms")) {
+      router.style.setProperty('display', 'flex');
+      router.append(RoomList());
       const roomId = path.split("/")[2];
       router.append(RoomView({
         roomId
