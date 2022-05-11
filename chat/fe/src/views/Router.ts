@@ -27,7 +27,7 @@ export function Router() {
       router.append(RoomList());
     } else if (path.includes("rooms")) {
       router.style.setProperty('display', 'flex');
-      router.append(RoomList());
+      // router.append(RoomList());
       const roomId = path.split("/")[2];
       router.append(RoomView({
         roomId

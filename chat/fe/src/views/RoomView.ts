@@ -12,6 +12,8 @@ import {
   onEditMessage,
 } from '../apis/RoomApi';
 
+import { RoomList } from './RoomList';
+
 import { getSelf, getUser } from '../apis/UserApi';
 import { Button } from '../components/Button';
 import { Div } from '../components/Div';
@@ -42,16 +44,29 @@ export function RoomView(props: RoomViewProps) {
     lastReadMessageId: string;
   } = null;
   let messageButtonActive = false;
+  // let sideBarToggle = false;
 
   const roomView = Div({
     class: 'roomView',
   });
-
   setStyle(roomView, {
+    display: 'flex',
+    flexGrow: '1',
+    // width: '100%'
+  })
+
+
+  const messageView = Div({
+    class: 'messageView',
+  });
+
+  setStyle(messageView, {
     display: 'flex',
     flexDirection: 'column',
     height: 'calc(100vh - 50px)',
-    flexGrow: '1',
+    width: '100%',
+    // flexGrow: '0',
+    // flex: '7',
   });
 
   const room = getRoom(props.roomId);
@@ -92,7 +107,7 @@ export function RoomView(props: RoomViewProps) {
 
     setStyle(el, {
       display: 'flex',
-      margin: '4px 0px', // TODO: top/bottom padding between messages
+      margin: '4px 0px',
       overflowWrap: 'Anywhere',
     });
 
@@ -336,8 +351,9 @@ export function RoomView(props: RoomViewProps) {
       display: 'flex',
       flexDirection: 'column-reverse',
       margin: '0',
+      paddingLeft: '10px',
       width: '100%',
-      
+
     });
 
     async function init() {
@@ -502,6 +518,19 @@ export function RoomView(props: RoomViewProps) {
       setURL(Routes.home);
     });
 
+    const btnSidebar = Button({
+      text: 'Toggle Sidebar'
+    });
+    setStyle(btnSidebar, {
+      marginLeft: '10px',
+    })
+    el.append(btnSidebar);
+
+    // TODO: add toggle sidebar functionality
+    onClick(btnSidebar, () => {
+
+    })
+
     const roomNameEl = Div({
       class: 'room-name-el'
     });
@@ -515,8 +544,34 @@ export function RoomView(props: RoomViewProps) {
     return el;
   }
 
+  // TODO: add sidebar element
+  function SideBar() {
+    const el = RoomList();
+    setStyle(el, {
+      flexShrink: '0',
+      flexGrow: '0',
+      width: '200px',
+    })
+
+    // const el = Div({
+    //   class: 'sidebar'
+    // });
+    // setStyle(el,{
+    //   width: '0px',
+    // })
+    // const roomList = RoomList();
+    // setStyle(roomList, {
+    //   flexShrink: '0',
+    // })
+    // el.append(roomList);
+    return el;
+  }
+
+  roomView.append(SideBar());
+  roomView.append(messageView);
+
   const roomHeader = RoomHeader();
-  roomView.append(roomHeader);
+  messageView.append(roomHeader);
 
   const messageList = MessageList();
 
@@ -544,8 +599,8 @@ export function RoomView(props: RoomViewProps) {
 
   const textBox = TextBox({ onSubmit: handleSubmit });
 
-  roomView.appendChild(messageList);
-  roomView.appendChild(textBox);
+  messageView.appendChild(messageList);
+  messageView.appendChild(textBox);
 
   return roomView;
 }
