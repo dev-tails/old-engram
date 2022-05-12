@@ -45,8 +45,9 @@ export function RoomView(props: RoomViewProps) {
   let userRoomConfig: {
     lastReadMessageId: string;
   } = null;
-  let messageButtonActive = false;
 
+  let messageButtonActive = false;
+  const mql = window.matchMedia('(max-width: 600px');
   sideBarEnabled = localStorage.getItem('sidebar') === 'true';
 
 
@@ -511,7 +512,18 @@ export function RoomView(props: RoomViewProps) {
     });
 
     el.appendChild(input);
-    el.appendChild(btnSubmit);
+
+    if (mql.matches) {
+      el.appendChild(btnSubmit);
+    }
+
+    mql.addEventListener('change', (e) => {
+      if (e.matches) {
+        el.appendChild(btnSubmit);
+      } else {
+        el.removeChild(btnSubmit);
+      }
+    })
 
     setTimeout(() => {
       input.focus();
@@ -600,7 +612,6 @@ export function RoomView(props: RoomViewProps) {
 
     localStorage.setItem('sidebar', sideBarEnabled ? 'true' : 'false');
   }
-
 
   roomView.append(SideBar());
   roomView.append(messageView);
