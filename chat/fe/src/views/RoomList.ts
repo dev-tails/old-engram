@@ -9,8 +9,6 @@ export const RoomList = () => {
   setStyle(el, {
     flex: '1',
     height: 'calc(100vh - 50px)',
-    // maxWidth: '12.5%',
-    // padding: '10px',
     borderRight: '1px solid black',
   })
 

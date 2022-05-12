@@ -56,6 +56,7 @@ export function RoomView(props: RoomViewProps) {
   setStyle(roomView, {
     display: 'flex',
     flexGrow: '1',
+    width: '100%',
   })
 
 
@@ -68,8 +69,7 @@ export function RoomView(props: RoomViewProps) {
     flexDirection: 'column',
     height: 'calc(100vh - 50px)',
     width: '100%',
-    // flexGrow: '0',
-    // flex: '7',
+    flexGrow: '1',
   });
 
   const room = getRoom(props.roomId);
@@ -462,6 +462,7 @@ export function RoomView(props: RoomViewProps) {
       flexShrink: '0',
       maxHeight: '25%',
       minHeight: '5%',
+      marginTop: 'auto',
     });
 
     const originalHeight = el.style.height;
@@ -509,7 +510,6 @@ export function RoomView(props: RoomViewProps) {
       borderBottom: Borders.bottom,
       padding: '8px',
       width: '100%',
-      // maxWidth: '900px',
       margin: '0 auto',
     });
 
@@ -529,19 +529,11 @@ export function RoomView(props: RoomViewProps) {
     })
     el.append(btnSidebar);
 
-    // TODO: add toggle sidebar functionality
     onClick(btnSidebar, () => {
-      console.log('toggle sidebar button clicked');
       toggleSidebar();
-      console.log('localstorage value after update' );
-      console.log(localStorage.getItem('sidebar'));
-      if (localStorage.getItem('sidebar') === 'true') {
-        console.log('sidebar set to 200px');
-        document.getElementById('sidebar').style.width = "200px"
-      } else {
-        console.log('sidebar set to 0px');
-        document.getElementById('sidebar').style.width = "0px"
-      }
+      localStorage.getItem('sidebar') === 'true' ?
+        document.getElementById('sidebar').style.width = "200px" :
+        document.getElementById('sidebar').style.width = "0px";
     })
 
     const roomNameEl = Div({
@@ -556,17 +548,8 @@ export function RoomView(props: RoomViewProps) {
 
     return el;
   }
-  // TODO: sometimes you have to click toggle sidebar twice in order for it to work?
-  // TODO: add sidebar element
 
   function SideBar() {
-    
-    // const el = RoomList();
-    // setStyle(el, {
-    //   flexShrink: '0',
-    //   flexGrow: '0',
-    //   width: '200px',
-    // })
     const el = Div({
       id: 'sidebar'
     });
@@ -577,22 +560,8 @@ export function RoomView(props: RoomViewProps) {
       maxWidth: '33.33%'
     })
     if (localStorage.getItem('sidebar') === 'true') {
-      // setStyle(el, {
-      //   width: '200px',
-      //   flexShrink: '0',
-      //   flexGrow: '0',
-      // })
-      console.log('sidebar enabled by user');
       el.style.width = '200px';
     }
-    // } else {
-    //   // setStyle(el, {
-    //   //   width: '0px',
-    //   //   flexShrink: '0',
-    //   //   flexGrow: '0',
-    //   // })
-    //   el.setAttribute('width', '0px');
-    // };
 
     const roomList = RoomList();
     setStyle(roomList, {
@@ -603,13 +572,9 @@ export function RoomView(props: RoomViewProps) {
   }
 
   function toggleSidebar() {
-    console.log(sideBarEnabled);
     sideBarEnabled = !sideBarEnabled;
-    console.log('sidebar toggled to');
-    console.log(sideBarEnabled);
 
     localStorage.setItem('sidebar', sideBarEnabled ? 'true' : 'false');
-    console.log('localstorage updated');
   }
 
 
