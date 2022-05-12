@@ -47,11 +47,14 @@ type SendNotificationParams = {
   roomId: string;
 };
 
+export function inSameRoom(roomID: string) {
+  return (document.URL.includes(roomID) && document.hasFocus()) ? true : false;
+}
+
 export function sendNotification(params: SendNotificationParams) {
-  if (!areNotificationsEnabled()) {
+  if (!areNotificationsEnabled() || inSameRoom(params.roomId)) {
     return;
   }
-
   const notification = new Notification(params.title, { body: params.body });
   notification.onclick = () => {
     window.focus()
