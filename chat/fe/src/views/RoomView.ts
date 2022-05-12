@@ -70,6 +70,7 @@ export function RoomView(props: RoomViewProps) {
     height: 'calc(100vh - 50px)',
     width: '100%',
     flexGrow: '1',
+    minWidth: '0',
   });
 
   const room = getRoom(props.roomId);
@@ -354,7 +355,6 @@ export function RoomView(props: RoomViewProps) {
       display: 'flex',
       flexDirection: 'column-reverse',
       margin: '0',
-      paddingLeft: '10px',
       width: '100%',
 
     });
@@ -539,8 +539,12 @@ export function RoomView(props: RoomViewProps) {
     const roomNameEl = Div({
       class: 'room-name-el'
     });
+
     setStyle(roomNameEl, {
       paddingLeft: '8px',
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+      paddingRight: '20px',
     });
     setText(roomNameEl, room.name);
 
