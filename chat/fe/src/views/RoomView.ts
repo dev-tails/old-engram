@@ -51,7 +51,7 @@ export function RoomView(props: RoomViewProps) {
 
 
   const roomView = Div({
-    class: 'roomView',
+    class: 'room-view',
   });
   setStyle(roomView, {
     display: 'flex',
@@ -61,7 +61,7 @@ export function RoomView(props: RoomViewProps) {
 
 
   const messageView = Div({
-    class: 'messageView',
+    class: 'message-view',
   });
 
   setStyle(messageView, {
