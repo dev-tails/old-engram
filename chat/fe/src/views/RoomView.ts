@@ -38,13 +38,17 @@ type RoomViewProps = {
   roomId: string;
 };
 
+let sideBarEnabled = false;
+
 export function RoomView(props: RoomViewProps) {
   let messages: MessageType[] = [];
   let userRoomConfig: {
     lastReadMessageId: string;
   } = null;
   let messageButtonActive = false;
-  // let sideBarToggle = false;
+
+  sideBarEnabled = localStorage.getItem('sidebar') === 'true';
+
 
   const roomView = Div({
     class: 'roomView',
@@ -52,7 +56,6 @@ export function RoomView(props: RoomViewProps) {
   setStyle(roomView, {
     display: 'flex',
     flexGrow: '1',
-    // width: '100%'
   })
 
 
@@ -528,7 +531,17 @@ export function RoomView(props: RoomViewProps) {
 
     // TODO: add toggle sidebar functionality
     onClick(btnSidebar, () => {
-
+      console.log('toggle sidebar button clicked');
+      toggleSidebar();
+      console.log('localstorage value after update' );
+      console.log(localStorage.getItem('sidebar'));
+      if (localStorage.getItem('sidebar') === 'true') {
+        console.log('sidebar set to 200px');
+        document.getElementById('sidebar').style.width = "200px"
+      } else {
+        console.log('sidebar set to 0px');
+        document.getElementById('sidebar').style.width = "0px"
+      }
     })
 
     const roomNameEl = Div({
@@ -543,29 +556,62 @@ export function RoomView(props: RoomViewProps) {
 
     return el;
   }
-
+  // TODO: sometimes you have to click toggle sidebar twice in order for it to work?
   // TODO: add sidebar element
+
   function SideBar() {
-    const el = RoomList();
+    
+    // const el = RoomList();
+    // setStyle(el, {
+    //   flexShrink: '0',
+    //   flexGrow: '0',
+    //   width: '200px',
+    // })
+    const el = Div({
+      id: 'sidebar'
+    });
     setStyle(el, {
       flexShrink: '0',
       flexGrow: '0',
-      width: '200px',
+      width: '0px',
+      maxWidth: '33.33%'
     })
+    if (localStorage.getItem('sidebar') === 'true') {
+      // setStyle(el, {
+      //   width: '200px',
+      //   flexShrink: '0',
+      //   flexGrow: '0',
+      // })
+      console.log('sidebar enabled by user');
+      el.style.width = '200px';
+    }
+    // } else {
+    //   // setStyle(el, {
+    //   //   width: '0px',
+    //   //   flexShrink: '0',
+    //   //   flexGrow: '0',
+    //   // })
+    //   el.setAttribute('width', '0px');
+    // };
 
-    // const el = Div({
-    //   class: 'sidebar'
-    // });
-    // setStyle(el,{
-    //   width: '0px',
-    // })
-    // const roomList = RoomList();
-    // setStyle(roomList, {
-    //   flexShrink: '0',
-    // })
-    // el.append(roomList);
+    const roomList = RoomList();
+    setStyle(roomList, {
+      flexShrink: '0',
+    })
+    el.append(roomList);
     return el;
   }
+
+  function toggleSidebar() {
+    console.log(sideBarEnabled);
+    sideBarEnabled = !sideBarEnabled;
+    console.log('sidebar toggled to');
+    console.log(sideBarEnabled);
+
+    localStorage.setItem('sidebar', sideBarEnabled ? 'true' : 'false');
+    console.log('localstorage updated');
+  }
+
 
   roomView.append(SideBar());
   roomView.append(messageView);
