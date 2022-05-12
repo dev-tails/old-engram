@@ -7,7 +7,7 @@ export function Router() {
   const router = Div();
 
   setStyle(router, {
-    flexGrow: "1"
+    flexGrow: "1",
   })
 
   function init() {

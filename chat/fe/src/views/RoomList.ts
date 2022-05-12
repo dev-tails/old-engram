@@ -6,9 +6,23 @@ import { setURL } from '../utils/HistoryUtils';
 
 export const RoomList = () => {
   const el = Div();
+  setStyle(el, {
+    flex: '1',
+    height: 'calc(100vh - 50px)',
+    borderRight: '1px solid black',
+  })
+
   let rooms: Room[] = [];
 
   async function init() {
+    const roomListEl = Div();
+    setStyle(roomListEl, {
+      display: "flex",
+      flexDirection: 'column',
+      overflowY: 'auto',
+      height: '100%',
+    })
+
     rooms = await getRooms();
 
     for (const room of rooms) {
@@ -17,7 +31,7 @@ export const RoomList = () => {
       setStyle(roomEl, {
         display: "flex",
         padding: "20px",
-        borderBottom: "1px solid black"
+        borderBottom: "1px solid black",
       });
 
       onClick(roomEl, async () => {
@@ -30,6 +44,10 @@ export const RoomList = () => {
       })
 
       const roomNameEl = Div();
+      setStyle(roomNameEl, {
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+      });
       roomNameEl.innerText = room.name;
       roomNameEl.classList.add("hover:text-primary");
 
@@ -48,9 +66,9 @@ export const RoomList = () => {
         unreadCountEl.innerText = String(room.userRoomConfig.unreadCount);
         roomEl.append(unreadCountEl)
       }
-
-      el.append(roomEl);
+      roomListEl.appendChild(roomEl);
     }
+    el.append(roomListEl);
   }
 
   init();

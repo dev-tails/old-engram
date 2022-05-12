@@ -12,6 +12,8 @@ import {
   onEditMessage,
 } from '../apis/RoomApi';
 
+import { RoomList } from './RoomList';
+
 import { getSelf, getUser } from '../apis/UserApi';
 import { Button } from '../components/Button';
 import { Div } from '../components/Div';
@@ -36,6 +38,8 @@ type RoomViewProps = {
   roomId: string;
 };
 
+let sideBarEnabled = false;
+
 export function RoomView(props: RoomViewProps) {
   let messages: MessageType[] = [];
   let userRoomConfig: {
@@ -43,13 +47,30 @@ export function RoomView(props: RoomViewProps) {
   } = null;
   let messageButtonActive = false;
 
-  const roomView = Div();
+  sideBarEnabled = localStorage.getItem('sidebar') === 'true';
 
+
+  const roomView = Div({
+    class: 'room-view',
+  });
   setStyle(roomView, {
+    display: 'flex',
+    flexGrow: '1',
+    width: '100%',
+  })
+
+
+  const messageView = Div({
+    class: 'message-view',
+  });
+
+  setStyle(messageView, {
     display: 'flex',
     flexDirection: 'column',
     height: 'calc(100vh - 50px)',
+    width: '100%',
     flexGrow: '1',
+    minWidth: '0',
   });
 
   const room = getRoom(props.roomId);
@@ -327,14 +348,15 @@ export function RoomView(props: RoomViewProps) {
   }
 
   function MessageList() {
-    const el = Div({
-      class: 'message-list',
-    });
+    const el = Div();
 
     setStyle(el, {
       overflowY: 'auto',
       display: 'flex',
       flexDirection: 'column-reverse',
+      margin: '0',
+      width: '100%',
+
     });
 
     async function init() {
@@ -440,6 +462,7 @@ export function RoomView(props: RoomViewProps) {
       flexShrink: '0',
       maxHeight: '25%',
       minHeight: '5%',
+      marginTop: 'auto',
     });
 
     const originalHeight = el.style.height;
@@ -478,14 +501,15 @@ export function RoomView(props: RoomViewProps) {
   }
 
   function RoomHeader() {
-    const el = Div();
+    const el = Div({
+      class: 'room-header'
+    });
 
     setStyle(el, {
       display: 'flex',
       borderBottom: Borders.bottom,
       padding: '8px',
       width: '100%',
-      maxWidth: '900px',
       margin: '0 auto',
     });
 
@@ -497,9 +521,30 @@ export function RoomView(props: RoomViewProps) {
       setURL(Routes.home);
     });
 
-    const roomNameEl = Div();
+    const btnSidebar = Button({
+      text: 'Toggle Sidebar'
+    });
+    setStyle(btnSidebar, {
+      marginLeft: '10px',
+    })
+    el.append(btnSidebar);
+
+    onClick(btnSidebar, () => {
+      toggleSidebar();
+      localStorage.getItem('sidebar') === 'true' ?
+        document.getElementById('sidebar').style.width = "200px" :
+        document.getElementById('sidebar').style.width = "0px";
+    })
+
+    const roomNameEl = Div({
+      class: 'room-name-el'
+    });
+
     setStyle(roomNameEl, {
       paddingLeft: '8px',
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+      paddingRight: '20px',
     });
     setText(roomNameEl, room.name);
 
@@ -508,8 +553,40 @@ export function RoomView(props: RoomViewProps) {
     return el;
   }
 
+  function SideBar() {
+    const el = Div({
+      id: 'sidebar'
+    });
+    setStyle(el, {
+      flexShrink: '0',
+      flexGrow: '0',
+      width: '0px',
+      maxWidth: '33.33%'
+    })
+    if (localStorage.getItem('sidebar') === 'true') {
+      el.style.width = '200px';
+    }
+
+    const roomList = RoomList();
+    setStyle(roomList, {
+      flexShrink: '0',
+    })
+    el.append(roomList);
+    return el;
+  }
+
+  function toggleSidebar() {
+    sideBarEnabled = !sideBarEnabled;
+
+    localStorage.setItem('sidebar', sideBarEnabled ? 'true' : 'false');
+  }
+
+
+  roomView.append(SideBar());
+  roomView.append(messageView);
+
   const roomHeader = RoomHeader();
-  roomView.append(roomHeader);
+  messageView.append(roomHeader);
 
   const messageList = MessageList();
 
@@ -537,8 +614,8 @@ export function RoomView(props: RoomViewProps) {
 
   const textBox = TextBox({ onSubmit: handleSubmit });
 
-  roomView.appendChild(messageList);
-  roomView.appendChild(textBox);
+  messageView.appendChild(messageList);
+  messageView.appendChild(textBox);
 
   return roomView;
 }
