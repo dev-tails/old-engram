@@ -6,6 +6,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vocab</title>
   <script type="module" src="index.js" async defer></script>
+  <style>
+    body {
+      margin: 0 auto;
+      max-width: 800px;
+    }
+
+    input, textarea, select, button {
+      width: 100%;
+      font-size: 1.4em;
+    }
+  </style>
 </head>
 
 <body>
@@ -25,7 +36,7 @@
     <button id="save" type="submit">Save</button>
   </div>
   <div>
-    <textarea id="text" style="max-width: 800px; width: 100%; font-size: 1.5em;" rows="10"></textarea>
+    <textarea id="text" rows="10"></textarea>
     <button id="btn-highlight">Highlight</button>
     <div id="highlighted"></div>
   </div>

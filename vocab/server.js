@@ -61,7 +61,7 @@ app.post("/api/highlight", async (req, res) => {
   const wordsToCheck = body.split(" ");
   let html = "";
   for (const word of wordsToCheck) {
-    const foundWord = findWordByBg(word);
+    const foundWord = findWordByBg(word.replace(/[,\.]/, ""));
     if (foundWord) {
       html += `<mark>${word}</mark>`
     } else {
