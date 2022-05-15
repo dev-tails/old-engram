@@ -1,3 +1,7 @@
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
+
 const bg = document.getElementById("bg");
 const en = document.getElementById("en");
 const pos = document.getElementById("pos");

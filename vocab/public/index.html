@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
   <title>Vocab</title>
   <script type="module" src="index.js" async defer></script>
   <style>
@@ -16,7 +20,10 @@
       max-width: 800px;
     }
 
-    input, textarea, select, button {
+    input,
+    textarea,
+    select,
+    button {
       width: 100%;
       font-size: 1.4em;
     }
@@ -29,8 +36,8 @@
 
 <body>
   <div>
-    <input id="bg" placeholder="bg" />
-    <input id="en" placeholder="en" />
+    <input id="bg" placeholder="bg" autocapitalize="off"/>
+    <input id="en" placeholder="en" autocapitalize="off"/>
     <select id="pos">
       <option value="-1">Unknown</option>
       <option value="0">Noun</option>
