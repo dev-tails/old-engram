@@ -2,18 +2,22 @@ const fs = require("fs");
 const express = require("express");
 
 const words = [];
-const csvFilename = "public/words.csv";
+const csvFilename = "data/words.csv";
 
-const wordsCsvContents = String(fs.readFileSync(csvFilename));
-const rows = wordsCsvContents.split("\n");
-for (const row of rows) {
-  const cols = row.split(",");
-  words.push({
-    id: Number(cols[0]),
-    en: cols[1],
-    bg: cols[2],
-    pos: Number(cols[3]),
-  });
+try {
+  const wordsCsvContents = String(fs.readFileSync(csvFilename));
+  const rows = wordsCsvContents.split("\n");
+  for (const row of rows) {
+    const cols = row.split(",");
+    words.push({
+      id: Number(cols[0]),
+      en: cols[1],
+      bg: cols[2],
+      pos: Number(cols[3]),
+    });
+  }
+} catch (err) {
+  console.error(err);
 }
 
 const app = express();
@@ -32,7 +36,7 @@ app.post("/api/vocab", (req, res) => {
   };
 
   const existingWordIndex = words.findIndex((word) => {
-    return word.en === newWord.en || word.bg === newWord.bg;
+    return word.en === newWord.en && word.bg === newWord.bg;
   });
   if (existingWordIndex >= 0) {
     return res.sendStatus(400);
@@ -46,8 +50,32 @@ app.post("/api/vocab", (req, res) => {
   res.sendStatus(200);
 });
 
+function findWordByBg(bg) {
+  return words.find((word) => {
+    return word.bg === bg;
+  })
+}
+
+app.post("/api/highlight", async (req, res) => {
+  const {body} = req.body;
+  const wordsToCheck = body.split(" ");
+  let html = "";
+  for (const word of wordsToCheck) {
+    const foundWord = findWordByBg(word);
+    if (foundWord) {
+      html += `<mark>${word}</mark>`
+    } else {
+      html += word;
+    }
+    html += "&nbsp;"
+  }
+  res.json({
+    html
+  })
+})
+
 app.use(express.static("public"));
 
-app.listen(1338, () => {
-  console.log("http://localhost:1338");
+app.listen(1339, () => {
+  console.log("http://localhost:1339");
 });

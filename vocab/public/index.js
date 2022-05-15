@@ -4,7 +4,6 @@ const pos = document.getElementById("pos");
 const save = document.getElementById("save");
 
 save.addEventListener("click", async () => {
-  console.log("click")
   await fetch("/api/vocab", {
     method: "POST",
     headers: {
@@ -19,3 +18,21 @@ save.addEventListener("click", async () => {
   bg.value = "";
   en.value = "";
 });
+
+const text = document.getElementById("text");
+const highlighted = document.getElementById("highlighted");
+const btnHighlight = document.getElementById("btn-highlight");
+
+btnHighlight.addEventListener("click", async () => {
+  const res = await fetch("/api/highlight", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      body: text.value
+    }),
+  });
+  const { html } = await res.json();
+  highlighted.innerHTML = html;
+})
