@@ -59,7 +59,7 @@ function findWordByBg(bg) {
 app.post("/api/highlight", async (req, res) => {
   const {body} = req.body;
   const wordsToCheck = body.split(" ");
-  let html = "";
+  let html = "<p>";
   for (const word of wordsToCheck) {
     const foundWord = findWordByBg(word.replace(/[,\.]/, ""));
     if (foundWord) {
@@ -69,6 +69,7 @@ app.post("/api/highlight", async (req, res) => {
     }
     html += "&nbsp;"
   }
+  html += "</p>"
   res.json({
     html
   })

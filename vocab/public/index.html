@@ -7,6 +7,10 @@
   <title>Vocab</title>
   <script type="module" src="index.js" async defer></script>
   <style>
+    html {
+      margin: 8px;
+    }
+
     body {
       margin: 0 auto;
       max-width: 800px;
@@ -16,6 +20,10 @@
       width: 100%;
       font-size: 1.4em;
     }
+
+    #highlighted {
+      word-wrap: break-word;
+    }
   </style>
 </head>
 
@@ -24,6 +32,7 @@
     <input id="bg" placeholder="bg" />
     <input id="en" placeholder="en" />
     <select id="pos">
+      <option value="-1">Unknown</option>
       <option value="0">Noun</option>
       <option value="1">Verb</option>
       <option value="2">Adjective</option>
@@ -38,8 +47,8 @@
   <div>
     <textarea id="text" rows="10"></textarea>
     <button id="btn-highlight">Highlight</button>
-    <div id="highlighted"></div>
   </div>
+  <div id="highlighted"></div>
 </body>
 
 </html>
