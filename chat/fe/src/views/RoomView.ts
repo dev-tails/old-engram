@@ -46,6 +46,7 @@ export function RoomView(props: RoomViewProps) {
     lastReadMessageId: string;
   } = null;
   let messageButtonActive = false;
+  let currentPage = 1;
 
   sideBarEnabled = localStorage.getItem('sidebar') === 'true';
 
@@ -359,26 +360,64 @@ export function RoomView(props: RoomViewProps) {
 
     });
 
+    // TODO: Implement FE pagination here
     async function init() {
+      const pageSize = 50;
+
       const messagesList = await getRoomMessages(props.roomId);
       messages = messagesList.messages;
-      userRoomConfig = messagesList.userRoomConfig;
+      userRoomConfig = messagesList.userRoomConfig
 
-      for (let i = 0; i < messages.length; i++) {
-        if (messages[i]._id === userRoomConfig.lastReadMessageId) {
-          el.append(NewRow());
-        }
-        el.appendChild(Message(messages[i]));
+      function messagePage(pageSize: number, pageNumber: number) {
+        const startIndex: number = (pageNumber - 1) * pageSize;
+        const endIndex: number = startIndex + pageSize;
 
-        const message = new Date(messages[i].createdAt).toLocaleDateString();
-        const nextMessage = messages[i + 1]
-          ? new Date(messages[i + 1].createdAt).toLocaleDateString()
-          : null;
+        let slicedMessages = messages.slice(startIndex, endIndex);
 
-        if (message !== nextMessage) {
-          el.append(DateDivider(messages[i].createdAt));
-        }
+          for (let i = 0; i < slicedMessages.length; i++) {
+            if (slicedMessages[i]._id === userRoomConfig.lastReadMessageId) {
+              el.append(NewRow());
+            }
+            el.appendChild(Message(slicedMessages[i]));
+    
+            const message = new Date(slicedMessages[i].createdAt).toLocaleDateString();
+            const nextMessage = slicedMessages[i + 1]
+              ? new Date(slicedMessages[i + 1].createdAt).toLocaleDateString()
+              : null;
+
+            if (message !== nextMessage) {
+              el.append(DateDivider(slicedMessages[i].createdAt));
+            }
+          }
       }
+      messagePage(pageSize, currentPage);
+
+      const loadMoreDiv = Div();
+      setStyle(loadMoreDiv, {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '20px',
+      })
+
+      const loadMoreButton = Button({
+        text: 'Load More Messages'
+      });
+      setStyle(loadMoreButton, {
+        width: '200px',
+      })
+
+      loadMoreDiv.appendChild(loadMoreButton);
+      el.appendChild(loadMoreDiv);
+
+    onClick(loadMoreButton, () => {
+      el.removeChild(loadMoreDiv);
+      currentPage += 1;
+      messagePage(pageSize, currentPage);
+      el.appendChild(loadMoreDiv);
+      el.scrollTo(0, (el.scrollHeight * -1));
+    })
+
     }
 
     init();
