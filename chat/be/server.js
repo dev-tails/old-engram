@@ -64,7 +64,7 @@ async function run() {
     const user = await User.findOne({ email, password });
 
     if (user) {
-      res.cookie('user', user._id);
+      res.cookie('user', user._id, { maxAge: 31556926000 });
       return res.sendStatus(200);
     }
 
