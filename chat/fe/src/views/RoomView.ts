@@ -360,7 +360,6 @@ export function RoomView(props: RoomViewProps) {
 
     });
 
-    // TODO: Implement FE pagination here
     async function init() {
       const pageSize = 50;
 
@@ -411,7 +410,6 @@ export function RoomView(props: RoomViewProps) {
       el.appendChild(loadMoreDiv);
 
     onClick(loadMoreButton, () => {
-      el.removeChild(loadMoreDiv);
       currentPage += 1;
       messagePage(pageSize, currentPage);
       el.appendChild(loadMoreDiv);
