@@ -10,6 +10,7 @@ import {
   onDeleteMessage,
   editRoomMessage,
   onEditMessage,
+  getRoomMessageByPage,
 } from '../apis/RoomApi';
 
 import { RoomList } from './RoomList';
@@ -45,6 +46,7 @@ export function RoomView(props: RoomViewProps) {
   let userRoomConfig: {
     lastReadMessageId: string;
   } = null;
+  let lastMessageId = '';
 
   let messageButtonActive = false;
   const mql = window.matchMedia('(max-width: 600px');
@@ -92,7 +94,7 @@ export function RoomView(props: RoomViewProps) {
 
     if (isLastMessageInList) {
       messageList.removeChild(messageList.firstChild);
-      const messagesList = await getRoomMessages(props.roomId);
+      const messagesList = await getRoomMessageByPage(props.roomId, '');
       messages = messagesList.messages;
     }
   });
@@ -362,25 +364,52 @@ export function RoomView(props: RoomViewProps) {
     });
 
     async function init() {
-      const messagesList = await getRoomMessages(props.roomId);
-      messages = messagesList.messages;
-      userRoomConfig = messagesList.userRoomConfig;
 
-      for (let i = 0; i < messages.length; i++) {
-        if (messages[i]._id === userRoomConfig.lastReadMessageId) {
-          el.append(NewRow());
+      const loadMoreDiv = Div();
+      setStyle(loadMoreDiv, {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '20px',
+      })
+
+      const loadMoreButton = Button({
+        text: 'Load More Messages'
+      });
+      setStyle(loadMoreButton, {
+        width: '200px',
+      })
+
+      async function messagePage(lastMessageIdParam: string) {
+        const messagesList = await getRoomMessageByPage(props.roomId, lastMessageIdParam);
+        messages = messagesList.messages;
+        userRoomConfig = messagesList.userRoomConfig
+        lastMessageId = messagesList.lastMessageId;
+
+        for (let i = 0; i < messages.length; i++) {
+          if (messages[i]._id === userRoomConfig.lastReadMessageId) {
+            el.append(NewRow());
+          }
+          el.appendChild(Message(messages[i]));
+
+          const message = new Date(messages[i].createdAt).toLocaleDateString();
+          const nextMessage = messages[i + 1]
+            ? new Date(messages[i + 1].createdAt).toLocaleDateString()
+            : null;
+
+          if (message !== nextMessage) {
+            el.append(DateDivider(messages[i].createdAt));
+          }
         }
-        el.appendChild(Message(messages[i]));
-
-        const message = new Date(messages[i].createdAt).toLocaleDateString();
-        const nextMessage = messages[i + 1]
-          ? new Date(messages[i + 1].createdAt).toLocaleDateString()
-          : null;
-
-        if (message !== nextMessage) {
-          el.append(DateDivider(messages[i].createdAt));
-        }
+        el.appendChild(loadMoreDiv);
+        loadMoreDiv.appendChild(loadMoreButton);
       }
+      await messagePage(lastMessageId);
+
+      onClick(loadMoreButton, async () => {
+        await messagePage(lastMessageId);
+        el.scrollTo(0, (el.scrollHeight * -1));
+      })
     }
 
     init();
