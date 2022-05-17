@@ -58,10 +58,11 @@ function findWordByBg(bg) {
 
 app.post("/api/highlight", async (req, res) => {
   const {body} = req.body;
-  const wordsToCheck = body.split(" ");
+  const wordsToCheck = body.replace(/[\s]/ig, " ").split(" ");
+  console.log(wordsToCheck)
   let html = "<p>";
   for (const word of wordsToCheck) {
-    const foundWord = findWordByBg(word.replace(/[,\.-]/, ""));
+    const foundWord = findWordByBg(word.replace(/[,\.-:]/ig, "").toLowerCase());
     if (foundWord) {
       html += `<mark>${word}</mark>`
     } else {

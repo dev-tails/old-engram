@@ -47,8 +47,9 @@ export function RoomView(props: RoomViewProps) {
     lastReadMessageId: string;
   } = null;
   let lastMessageId = 'null';
-  let messageButtonActive = false;
 
+  let messageButtonActive = false;
+  const mql = window.matchMedia('(max-width: 600px');
   sideBarEnabled = localStorage.getItem('sidebar') === 'true';
 
 
@@ -115,6 +116,7 @@ export function RoomView(props: RoomViewProps) {
       display: 'flex',
       margin: '4px 0px',
       overflowWrap: 'Anywhere',
+      padding: '0px 15px'
     });
 
     onMouseOver(el, (e) => {
@@ -489,13 +491,16 @@ export function RoomView(props: RoomViewProps) {
 
   function TextBox(props: { onSubmit: (text: string) => void }) {
     const el = Div({
-      class: 'textbox',
+      // class: 'textbox',
     });
     setStyle(el, {
       flexShrink: '0',
       maxHeight: '25%',
-      minHeight: '5%',
+      minHeight: '6%',
       marginTop: 'auto',
+      display: 'flex',
+      padding: '0 15px',
+      paddingBottom: '15px',
     });
 
     const originalHeight = el.style.height;
@@ -504,10 +509,25 @@ export function RoomView(props: RoomViewProps) {
     setStyle(input, {
       height: '100%',
       width: '100%',
-      maxWidth: '900px',
       boxSizing: 'border-box',
       resize: 'none',
       overflow: 'auto',
+      marginRight: '5px',
+      padding: '0',
+    })
+
+    const btnSubmit = Button({
+      text: '>',
+    })
+    setStyle(btnSubmit, {
+      maxHeight: '45px',
+      width: '30px',
+    })
+    onClick(btnSubmit, () => {
+      const inputText = input.value.trim();
+      props.onSubmit(inputText);
+      input.value = '';
+      el.style.height = originalHeight;
     })
 
     input.addEventListener('keydown', (e) => {
@@ -525,6 +545,18 @@ export function RoomView(props: RoomViewProps) {
     });
 
     el.appendChild(input);
+
+    if (mql.matches) {
+      el.appendChild(btnSubmit);
+    }
+
+    mql.addEventListener('change', (e) => {
+      if (e.matches) {
+        el.appendChild(btnSubmit);
+      } else {
+        el.removeChild(btnSubmit);
+      }
+    })
 
     setTimeout(() => {
       input.focus();
@@ -613,7 +645,6 @@ export function RoomView(props: RoomViewProps) {
 
     localStorage.setItem('sidebar', sideBarEnabled ? 'true' : 'false');
   }
-
 
   roomView.append(SideBar());
   roomView.append(messageView);

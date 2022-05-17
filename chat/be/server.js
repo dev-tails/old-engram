@@ -4,6 +4,7 @@ const mongodb = require('mongodb');
 const http = require('http');
 const cookieParser = require('cookie-parser');
 const { Server } = require('socket.io');
+const maxAgeInMilliseconds = 365 * 60 * 60 * 24 * 1000;
 
 dotenv.config();
 
@@ -64,7 +65,7 @@ async function run() {
     const user = await User.findOne({ email, password });
 
     if (user) {
-      res.cookie('user', user._id);
+      res.cookie('user', user._id, { maxAge: maxAgeInMilliseconds });
       return res.sendStatus(200);
     }
 
