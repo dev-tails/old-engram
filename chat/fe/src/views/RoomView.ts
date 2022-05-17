@@ -46,7 +46,7 @@ export function RoomView(props: RoomViewProps) {
   let userRoomConfig: {
     lastReadMessageId: string;
   } = null;
-  let lastMessageId = 'null';
+  let lastMessageId = '';
 
   let messageButtonActive = false;
   const mql = window.matchMedia('(max-width: 600px');
@@ -94,7 +94,7 @@ export function RoomView(props: RoomViewProps) {
 
     if (isLastMessageInList) {
       messageList.removeChild(messageList.firstChild);
-      const messagesList = await getRoomMessageByPage(props.roomId, 'null');
+      const messagesList = await getRoomMessageByPage(props.roomId, '');
       messages = messagesList.messages;
     }
   });
@@ -381,10 +381,6 @@ export function RoomView(props: RoomViewProps) {
       })
 
       async function messagePage(lastMessageIdParam: string) {
-        if (lastMessageId === 'finished') {
-          return;
-        }
-
         const messagesList = await getRoomMessageByPage(props.roomId, lastMessageIdParam);
         messages = messagesList.messages;
         userRoomConfig = messagesList.userRoomConfig

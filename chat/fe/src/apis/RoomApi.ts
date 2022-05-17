@@ -124,15 +124,15 @@ type GetRoomMessageByPageData = {
 
 export async function getRoomMessageByPage(roomId: string, lastMessageId: string) {
   const data = await httpGet<GetRoomMessageByPageData>(
-    `/api/rooms/${roomId}/messages/${lastMessageId}`
+    `/api/rooms/${roomId}/messages?lastmessageid=${lastMessageId}`
   );
   messagesByRoomID[roomId] = data.messages;
 
   return {
     messages: messagesByRoomID[roomId],
     userRoomConfig: data.userRoomConfig,
-    lastMessageId: data.lastMessageId,
-  };
+    lastMessageId: data.messages.length ? data.messages[data.messages.length - 1]._id : lastMessageId,
+  }
 }
 
 type SendRoomMessageParams = {

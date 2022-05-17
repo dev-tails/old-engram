@@ -121,48 +121,8 @@ async function run() {
   });
 
   app.get('/api/rooms/:id/messages', async (req, res, next) => {
-    const { id } = req.params;
-
-    const room = await Room.findOne({
-      _id: mongodb.ObjectId(id),
-      users: mongodb.ObjectId(req.user),
-    });
-    if (!room) {
-      return res.sendStatus(404);
-    }
-
-    const messages = await Message.find(
-      {
-        room: mongodb.ObjectId(id),
-      },
-      {
-        sort: {
-          _id: -1,
-        },
-      }
-    )
-      .map(function (msg) {
-        return { ...msg, createdAt: msg._id.getTimestamp() };
-      })
-      .toArray();
-
-    const userRoomConfig =
-      (await UserRoomConfig.findOne({
-        user: mongodb.ObjectId(req.user),
-        room: mongodb.ObjectId(id),
-      })) || {};
-
-    res.json({
-      data: {
-        messages,
-        userRoomConfig,
-      },
-    });
-  });
-
-  app.get('/api/rooms/:id/messages/:lastMessageId', async (req, res, next) => {
     const id = req.params.id;
-    const inputLastMessageId = req.params.lastMessageId
+    const inputLastMessageId = req.query.lastmessageid;
 
     const room = await Room.findOne({
       _id: mongodb.ObjectId(id),
@@ -172,7 +132,8 @@ async function run() {
       return res.sendStatus(404);
     }
     let messages = [];
-    if (inputLastMessageId === 'null') {
+
+    if (!inputLastMessageId) {
       messages = await Message.find(
         {
           room: mongodb.ObjectId(id),
@@ -213,14 +174,10 @@ async function run() {
         room: mongodb.ObjectId(id),
       })) || {};
 
-    let lastMessageId = '';
-    !messages.length ? lastMessageId = 'finished' : lastMessageId = messages[messages.length - 1]._id.toString();
-
     res.json({
       data: {
         messages,
         userRoomConfig,
-        lastMessageId,
       },
     });
   });
