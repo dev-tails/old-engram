@@ -94,7 +94,7 @@ export function RoomView(props: RoomViewProps) {
 
     if (isLastMessageInList) {
       messageList.removeChild(messageList.firstChild);
-      const messagesList = await getRoomMessages(props.roomId);
+      const messagesList = await getRoomMessageByPage(props.roomId, 'null');
       messages = messagesList.messages;
     }
   });

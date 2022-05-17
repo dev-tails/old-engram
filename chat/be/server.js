@@ -120,45 +120,45 @@ async function run() {
     res.sendStatus(200);
   });
 
-  // app.get('/api/rooms/:id/messages', async (req, res, next) => {
-  //   const { id } = req.params;
+  app.get('/api/rooms/:id/messages', async (req, res, next) => {
+    const { id } = req.params;
 
-  //   const room = await Room.findOne({
-  //     _id: mongodb.ObjectId(id),
-  //     users: mongodb.ObjectId(req.user),
-  //   });
-  //   if (!room) {
-  //     return res.sendStatus(404);
-  //   }
+    const room = await Room.findOne({
+      _id: mongodb.ObjectId(id),
+      users: mongodb.ObjectId(req.user),
+    });
+    if (!room) {
+      return res.sendStatus(404);
+    }
 
-  //   const messages = await Message.find(
-  //     {
-  //       room: mongodb.ObjectId(id),
-  //     },
-  //     {
-  //       sort: {
-  //         _id: -1,
-  //       },
-  //     }
-  //   )
-  //     .map(function (msg) {
-  //       return { ...msg, createdAt: msg._id.getTimestamp() };
-  //     })
-  //     .toArray();
+    const messages = await Message.find(
+      {
+        room: mongodb.ObjectId(id),
+      },
+      {
+        sort: {
+          _id: -1,
+        },
+      }
+    )
+      .map(function (msg) {
+        return { ...msg, createdAt: msg._id.getTimestamp() };
+      })
+      .toArray();
 
-  //   const userRoomConfig =
-  //     (await UserRoomConfig.findOne({
-  //       user: mongodb.ObjectId(req.user),
-  //       room: mongodb.ObjectId(id),
-  //     })) || {};
+    const userRoomConfig =
+      (await UserRoomConfig.findOne({
+        user: mongodb.ObjectId(req.user),
+        room: mongodb.ObjectId(id),
+      })) || {};
 
-  //   res.json({
-  //     data: {
-  //       messages,
-  //       userRoomConfig,
-  //     },
-  //   });
-  // });
+    res.json({
+      data: {
+        messages,
+        userRoomConfig,
+      },
+    });
+  });
 
   app.get('/api/rooms/:id/messages/:lastMessageId', async (req, res, next) => {
     const id = req.params.id;
