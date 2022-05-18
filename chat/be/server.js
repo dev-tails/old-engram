@@ -159,6 +159,7 @@ async function run() {
     });
   });
 
+
   app.post('/api/rooms/:id/messages', async (req, res, next) => {
     const { id } = req.params;
     const { insertedId } = await Message.insertOne({
@@ -195,7 +196,7 @@ async function run() {
           }
         });
 
-    const editedMessage = await Message.findOne({ _id: mongodb.ObjectId(messageId)});
+    const editedMessage = await Message.findOne({ _id: mongodb.ObjectId(messageId) });
     io.emit('edited-message', editedMessage)
     res.sendStatus(200);
   })
@@ -215,6 +216,23 @@ async function run() {
     });
     res.sendStatus(200);
   });
+
+  // TODO: handle subscription route
+
+  app.post('/subscriptions', async (req, res, next) => {
+    const currentUser = req.body.user._id;
+    const subscriptionInfo = req.body.subscription;
+    await db.collection('subscriptions').insertOne({
+      user: mongodb.ObjectId(currentUser),
+      subscription: subscriptionInfo,
+    })
+    // TODO: make database saving subscription here
+
+  })
+
+  app.delete('/subscriptions', (req, res, next) => {
+
+  })
 
   app.get('*', (req, res) => {
     res.sendFile(__dirname + '/public/index.html');

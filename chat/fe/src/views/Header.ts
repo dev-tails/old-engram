@@ -2,6 +2,7 @@ import { isLoggedIn } from '../apis/UserApi';
 import { Button } from '../components/Button';
 import { Div } from '../components/Div';
 import { areNotificationsEnabled, toggleNotificationsEnabled } from '../services/NotificationService';
+import { arePushNotificationsSubscribed, togglePushNotifications } from '../services/PushService';
 import { setStyle, setText } from '../utils/DomUtils';
 
 export function Header() {
@@ -45,6 +46,26 @@ export function Header() {
     toggleNotificationsEnabled();
     updateNotificationButtonText();
   });
+
+  // TODO: Separate button for push notifications
+  const btnPushNotifications = Button({
+    text: "push notifications"
+  });
+
+  updatePushNotificationButtonText();
+  async function updatePushNotificationButtonText() {
+    setText(btnPushNotifications, await arePushNotificationsSubscribed() ? "pause push notifications" : "enable push notifications");
+  }
+
+  headerActionsEl.append(btnPushNotifications);
+
+  btnPushNotifications.addEventListener('click', async function () {
+    console.log('push notifications button clicked');
+    togglePushNotifications();
+    await updateNotificationButtonText();
+  })
+
+  // --------------------------------------------
 
   if (!isLoggedIn()) {
     const btnLogin = Button({
