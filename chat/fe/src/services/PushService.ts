@@ -3,9 +3,10 @@
 // https://felixgerschau.com/web-push-notifications-tutorial/
 // https://ericfossas.medium.com/quick-tut-notifications-sse-socketio-push-api-d68080f218df
 
-import { saveSubscription } from "../apis/PushNotificationApi";
+import { saveSubscription, deleteSubscription } from "../apis/PushNotificationApi";
 import { initializeNotificationService } from "./NotificationService";
-const applicationServerPublicKey = "BLavcK_L2yrLCLCPH0tBeA_dljC6hMEG68imaJvs0DPd4G2R8SdEnkJ6LJeFCXq6T_JpfLsVOaHEXdXKh94Jpqo"
+export const applicationServerPublicKey = "BLavcK_L2yrLCLCPH0tBeA_dljC6hMEG68imaJvs0DPd4G2R8SdEnkJ6LJeFCXq6T_JpfLsVOaHEXdXKh94Jpqo"
+export const applicationServerPrivateKey = "2QQyhPuDNlcPFlt6UgNMOjrCZzMrm8vkei7tIOfLjZ4"
 let swRegistration = null;
 
 function urlB64ToUint8Array(base64String) {
@@ -35,33 +36,47 @@ export async function arePushNotificationsSubscribed() {
 }
 
 export async function togglePushNotifications() {
+    const serviceWorker = await navigator.serviceWorker.ready;
     if (!(await arePushNotificationsSubscribed())) { // activate push notifications
-        console.log('toggling push notifs');
-        const registration = await navigator.serviceWorker.ready;
-
-        const subscription = registration.pushManager.subscribe({
+        console.log('subscribing to push notifs');
+        const subscription = serviceWorker.pushManager.subscribe({
             userVisibleOnly: true,
             applicationServerKey: urlB64ToUint8Array(applicationServerPublicKey),
         }).then(async (subscription) => {
             if (subscription) {
-                await updateSubscriptionOnServer(subscription);
+                await saveSubscriptionOnServer(subscription);
             }
         })
             .catch((err) => {
                 console.log('Failed to subscribe user: ', err);
             })
-        console.log("subscription obj" , subscription);
-        
+
+        // console.log("subscription obj" , subscription);
+
     } else { // deactivate push notifications
-        console.log('TODO: implement unsubscribing from push notifs');
+        console.log('unsub from push notifs');
+        const unsubscription = serviceWorker.pushManager.getSubscription().then((subscription) => {
+            subscription.unsubscribe().then(async (successful) => {
+                if (successful) {
+                    await removeSubscriptionOnServer();
+                }
+            })
+                .catch((err) => {
+                    console.log('Failed unsubscribing user: ', err)
+                })
+        })
     }
 }
 
-async function updateSubscriptionOnServer(subscription) {
+async function saveSubscriptionOnServer(subscription) {
     console.log('sending subscription to server');
     await saveSubscription(subscription);
 }
 
+async function removeSubscriptionOnServer() {
+    console.log('removing subscription from server');
+    await deleteSubscription();
+}
 
 export function registerServiceWorker() {
     window.addEventListener('load', () => {

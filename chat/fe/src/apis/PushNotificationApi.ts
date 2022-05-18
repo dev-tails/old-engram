@@ -2,14 +2,15 @@
 
 import { getSelf } from "./UserApi";
 
-const currentUser = getSelf();
+
 
 export async function saveSubscription(subscription) {
+    const currentUser = getSelf();
     console.log('body:' , JSON.stringify({user: currentUser, subscription}));
     
 
     await fetch('/subscriptions', {
-        method: "POST",
+        method: 'POST',
         body: JSON.stringify({user: currentUser, subscription}),
         headers: {
             'content-type' : 'application/json',
@@ -18,6 +19,16 @@ export async function saveSubscription(subscription) {
 }
 
 // TODO: allow user to be able to unsubscribe from push notifications
-export async function deleteSubscription(subscription) {
-    
+export async function deleteSubscription() {
+    const currentUser = getSelf();
+
+    await fetch('/subscriptions', {
+        method: 'DELETE',
+        body: JSON.stringify({
+            user: currentUser,
+        }),
+        headers: {
+            'content-type' : 'application/json',
+        },
+    });
 }

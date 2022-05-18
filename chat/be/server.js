@@ -4,6 +4,7 @@ const mongodb = require('mongodb');
 const http = require('http');
 const cookieParser = require('cookie-parser');
 const { Server } = require('socket.io');
+const webpush = require('web-push');
 
 dotenv.config();
 
@@ -19,10 +20,17 @@ async function run() {
   const Message = db.collection('messages');
   const Room = db.collection('rooms');
   const UserRoomConfig = db.collection('userroomconfigs');
+  const Subscriptions = db.collection('subscriptions');
 
   const app = express();
   const server = http.createServer(app);
   const io = new Server(server);
+
+  webpush.setVapidDetails(
+    'mailto: test@test.org',
+    "BLavcK_L2yrLCLCPH0tBeA_dljC6hMEG68imaJvs0DPd4G2R8SdEnkJ6LJeFCXq6T_JpfLsVOaHEXdXKh94Jpqo",
+    "2QQyhPuDNlcPFlt6UgNMOjrCZzMrm8vkei7tIOfLjZ4"
+  )
 
   app.use(cookieParser());
   app.use(express.json());
@@ -158,8 +166,7 @@ async function run() {
       },
     });
   });
-
-
+  // TODO: re-do logic to send push notifications
   app.post('/api/rooms/:id/messages', async (req, res, next) => {
     const { id } = req.params;
     const { insertedId } = await Message.insertOne({
@@ -177,6 +184,7 @@ async function run() {
     );
 
     io.emit('message', newMessage);
+    // TODO:
 
     res.sendStatus(200);
   });
@@ -219,19 +227,26 @@ async function run() {
 
   // TODO: handle subscription route
 
+  // TODO:
   app.post('/subscriptions', async (req, res, next) => {
     const currentUser = req.body.user._id;
     const subscriptionInfo = req.body.subscription;
-    await db.collection('subscriptions').insertOne({
+    await Subscriptions.insertOne({
       user: mongodb.ObjectId(currentUser),
       subscription: subscriptionInfo,
     })
+
+    // webpush.sendNotification(subscriptionInfo); This does work
     // TODO: make database saving subscription here
 
   })
 
-  app.delete('/subscriptions', (req, res, next) => {
-
+  // TODO: add ability to delete subscription
+  app.delete('/subscriptions', async (req, res, next) => {
+    const currentUser = req.body.user._id;
+    await Subscriptions.deleteOne({
+      user: mongodb.ObjectId(currentUser), 
+    })
   })
 
   app.get('*', (req, res) => {
