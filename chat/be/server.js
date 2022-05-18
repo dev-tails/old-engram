@@ -184,7 +184,24 @@ async function run() {
     );
 
     io.emit('message', newMessage);
-    // TODO:
+
+    // TODO: clean this up
+    const roomUsers = await Room.findOne({
+      _id: mongodb.ObjectId(id)
+    });
+    console.log(roomUsers.users)
+
+    const subscriptions = await Subscriptions.find({user: { $in: roomUsers.users}}).toArray();
+    console.log(subscriptions);
+
+    const notifications = [];
+    subscriptions.forEach((subscriptionItem) => {
+      notifications.push(
+        webpush.sendNotification(subscriptionItem.subscription, JSON.stringify({title: req.user, body: req.body.body}))
+      );
+    });
+    await Promise.all(notifications);
+
 
     res.sendStatus(200);
   });
@@ -225,7 +242,6 @@ async function run() {
     res.sendStatus(200);
   });
 
-  // TODO: handle subscription route
 
   // TODO:
   app.post('/subscriptions', async (req, res, next) => {
@@ -236,9 +252,7 @@ async function run() {
       subscription: subscriptionInfo,
     })
 
-    // webpush.sendNotification(subscriptionInfo); This does work
-    // TODO: make database saving subscription here
-
+    // webpush.sendNotification(subscriptionInfo); // This does work
   })
 
   // TODO: add ability to delete subscription

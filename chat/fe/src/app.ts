@@ -9,7 +9,7 @@ import { Router } from './views/Router';
 async function run() {
   const root = document.getElementById("root");
 
-  await Promise.all([registerServiceWorker(), initializeRoomApi(), initializeUserApi()]);
+  await Promise.all([initializePushNotificationService(), initializeRoomApi(), initializeUserApi()]);
 
   root.append(Header())
 

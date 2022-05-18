@@ -80,7 +80,7 @@ async function removeSubscriptionOnServer() {
 
 export function registerServiceWorker() {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./service-worker.js').then((registration) => {
+        navigator.serviceWorker.register('./service-worker.js', { scope: '/' }).then((registration) => {
             console.log('Service worker is registered', registration);
 
             swRegistration = registration;

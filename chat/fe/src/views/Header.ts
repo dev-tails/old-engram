@@ -54,15 +54,16 @@ export function Header() {
 
   updatePushNotificationButtonText();
   async function updatePushNotificationButtonText() {
-    setText(btnPushNotifications, await arePushNotificationsSubscribed() ? "pause push notifications" : "enable push notifications");
+    const pushNotificationStatus = await arePushNotificationsSubscribed();
+    setText(btnPushNotifications, pushNotificationStatus ? "pause push notifications" : "enable push notifications");
   }
 
   headerActionsEl.append(btnPushNotifications);
 
   btnPushNotifications.addEventListener('click', async function () {
-    console.log('push notifications button clicked');
-    togglePushNotifications();
-    await updateNotificationButtonText();
+    // console.log('push notifications button clicked');
+    await togglePushNotifications();
+    updatePushNotificationButtonText();
   })
 
   // --------------------------------------------

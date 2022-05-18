@@ -13,8 +13,6 @@ function checkNotificationPromise() {
   return true;
 }
 
-
-// Check for notification support and then request notificaction permission
 export function initializeNotificationService() {
   notificationsEnabled = localStorage.getItem('notifications') === 'true';
 

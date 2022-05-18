@@ -1,13 +1,8 @@
-// Add a way to bind the subscription to the user
-
 import { getSelf } from "./UserApi";
-
-
 
 export async function saveSubscription(subscription) {
     const currentUser = getSelf();
     console.log('body:' , JSON.stringify({user: currentUser, subscription}));
-    
 
     await fetch('/subscriptions', {
         method: 'POST',
@@ -18,7 +13,6 @@ export async function saveSubscription(subscription) {
     });
 }
 
-// TODO: allow user to be able to unsubscribe from push notifications
 export async function deleteSubscription() {
     const currentUser = getSelf();
 
