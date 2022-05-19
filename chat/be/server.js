@@ -5,6 +5,7 @@ const http = require('http');
 const cookieParser = require('cookie-parser');
 const { Server } = require('socket.io');
 const webpush = require('web-push');
+const maxAgeInMilliseconds = 365 * 60 * 60 * 24 * 1000;
 
 dotenv.config();
 
@@ -72,7 +73,7 @@ async function run() {
     const user = await User.findOne({ email, password });
 
     if (user) {
-      res.cookie('user', user._id);
+      res.cookie('user', user._id, { maxAge: maxAgeInMilliseconds });
       return res.sendStatus(200);
     }
 
@@ -128,7 +129,8 @@ async function run() {
   });
 
   app.get('/api/rooms/:id/messages', async (req, res, next) => {
-    const { id } = req.params;
+    const id = req.params.id;
+    const inputLastMessageId = req.query.lastmessageid;
 
     const room = await Room.findOne({
       _id: mongodb.ObjectId(id),
@@ -137,21 +139,42 @@ async function run() {
     if (!room) {
       return res.sendStatus(404);
     }
+    let messages = [];
 
-    const messages = await Message.find(
-      {
-        room: mongodb.ObjectId(id),
-      },
-      {
-        sort: {
-          _id: -1,
+    if (!inputLastMessageId) {
+      messages = await Message.find(
+        {
+          room: mongodb.ObjectId(id),
         },
-      }
-    )
-      .map(function (msg) {
-        return { ...msg, createdAt: msg._id.getTimestamp() };
-      })
-      .toArray();
+        {
+          sort: {
+            _id: -1,
+          },
+        }
+      )
+        .limit(50)
+        .map(function (msg) {
+          return { ...msg, createdAt: msg._id.getTimestamp() };
+        })
+        .toArray();
+    } else {
+      messages = await Message.find(
+        {
+          _id: { $lt: mongodb.ObjectId(inputLastMessageId) },
+          room: mongodb.ObjectId(id),
+        },
+        {
+          sort: {
+            _id: -1,
+          },
+        }
+      )
+        .limit(50)
+        .map(function (msg) {
+          return { ...msg, createdAt: msg._id.getTimestamp() };
+        })
+        .toArray();
+    }
 
     const userRoomConfig =
       (await UserRoomConfig.findOne({

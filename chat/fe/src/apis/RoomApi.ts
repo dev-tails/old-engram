@@ -114,6 +114,27 @@ export async function getRoomMessages(roomId: string) {
   };
 }
 
+type GetRoomMessageByPageData = {
+  messages: MessageType[];
+  userRoomConfig: {
+    lastReadMessageId: string;
+  };
+  lastMessageId: string;
+}
+
+export async function getRoomMessageByPage(roomId: string, lastMessageId: string) {
+  const data = await httpGet<GetRoomMessageByPageData>(
+    `/api/rooms/${roomId}/messages?lastmessageid=${lastMessageId}`
+  );
+  messagesByRoomID[roomId] = data.messages;
+
+  return {
+    messages: messagesByRoomID[roomId],
+    userRoomConfig: data.userRoomConfig,
+    lastMessageId: data.messages.length ? data.messages[data.messages.length - 1]._id : lastMessageId,
+  }
+}
+
 type SendRoomMessageParams = {
   room: string;
   body: string;

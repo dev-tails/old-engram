@@ -10,6 +10,7 @@ import {
   onDeleteMessage,
   editRoomMessage,
   onEditMessage,
+  getRoomMessageByPage,
 } from '../apis/RoomApi';
 
 import { RoomList } from './RoomList';
@@ -45,8 +46,10 @@ export function RoomView(props: RoomViewProps) {
   let userRoomConfig: {
     lastReadMessageId: string;
   } = null;
-  let messageButtonActive = false;
+  let lastMessageId = '';
 
+  let messageButtonActive = false;
+  const mql = window.matchMedia('(max-width: 600px');
   sideBarEnabled = localStorage.getItem('sidebar') === 'true';
 
 
@@ -91,7 +94,7 @@ export function RoomView(props: RoomViewProps) {
 
     if (isLastMessageInList) {
       messageList.removeChild(messageList.firstChild);
-      const messagesList = await getRoomMessages(props.roomId);
+      const messagesList = await getRoomMessageByPage(props.roomId, '');
       messages = messagesList.messages;
     }
   });
@@ -113,6 +116,7 @@ export function RoomView(props: RoomViewProps) {
       display: 'flex',
       margin: '4px 0px',
       overflowWrap: 'Anywhere',
+      padding: '0px 15px'
     });
 
     onMouseOver(el, (e) => {
@@ -360,25 +364,52 @@ export function RoomView(props: RoomViewProps) {
     });
 
     async function init() {
-      const messagesList = await getRoomMessages(props.roomId);
-      messages = messagesList.messages;
-      userRoomConfig = messagesList.userRoomConfig;
 
-      for (let i = 0; i < messages.length; i++) {
-        if (messages[i]._id === userRoomConfig.lastReadMessageId) {
-          el.append(NewRow());
+      const loadMoreDiv = Div();
+      setStyle(loadMoreDiv, {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '20px',
+      })
+
+      const loadMoreButton = Button({
+        text: 'Load More Messages'
+      });
+      setStyle(loadMoreButton, {
+        width: '200px',
+      })
+
+      async function messagePage(lastMessageIdParam: string) {
+        const messagesList = await getRoomMessageByPage(props.roomId, lastMessageIdParam);
+        messages = messagesList.messages;
+        userRoomConfig = messagesList.userRoomConfig
+        lastMessageId = messagesList.lastMessageId;
+
+        for (let i = 0; i < messages.length; i++) {
+          if (messages[i]._id === userRoomConfig.lastReadMessageId) {
+            el.append(NewRow());
+          }
+          el.appendChild(Message(messages[i]));
+
+          const message = new Date(messages[i].createdAt).toLocaleDateString();
+          const nextMessage = messages[i + 1]
+            ? new Date(messages[i + 1].createdAt).toLocaleDateString()
+            : null;
+
+          if (message !== nextMessage) {
+            el.append(DateDivider(messages[i].createdAt));
+          }
         }
-        el.appendChild(Message(messages[i]));
-
-        const message = new Date(messages[i].createdAt).toLocaleDateString();
-        const nextMessage = messages[i + 1]
-          ? new Date(messages[i + 1].createdAt).toLocaleDateString()
-          : null;
-
-        if (message !== nextMessage) {
-          el.append(DateDivider(messages[i].createdAt));
-        }
+        el.appendChild(loadMoreDiv);
+        loadMoreDiv.appendChild(loadMoreButton);
       }
+      await messagePage(lastMessageId);
+
+      onClick(loadMoreButton, async () => {
+        await messagePage(lastMessageId);
+        el.scrollTo(0, (el.scrollHeight * -1));
+      })
     }
 
     init();
@@ -456,13 +487,16 @@ export function RoomView(props: RoomViewProps) {
 
   function TextBox(props: { onSubmit: (text: string) => void }) {
     const el = Div({
-      class: 'textbox',
+      // class: 'textbox',
     });
     setStyle(el, {
       flexShrink: '0',
       maxHeight: '25%',
-      minHeight: '5%',
+      minHeight: '6%',
       marginTop: 'auto',
+      display: 'flex',
+      padding: '0 15px',
+      paddingBottom: '15px',
     });
 
     const originalHeight = el.style.height;
@@ -471,10 +505,25 @@ export function RoomView(props: RoomViewProps) {
     setStyle(input, {
       height: '100%',
       width: '100%',
-      maxWidth: '900px',
       boxSizing: 'border-box',
       resize: 'none',
       overflow: 'auto',
+      marginRight: '5px',
+      padding: '0',
+    })
+
+    const btnSubmit = Button({
+      text: '>',
+    })
+    setStyle(btnSubmit, {
+      maxHeight: '45px',
+      width: '30px',
+    })
+    onClick(btnSubmit, () => {
+      const inputText = input.value.trim();
+      props.onSubmit(inputText);
+      input.value = '';
+      el.style.height = originalHeight;
     })
 
     input.addEventListener('keydown', (e) => {
@@ -492,6 +541,18 @@ export function RoomView(props: RoomViewProps) {
     });
 
     el.appendChild(input);
+
+    if (mql.matches) {
+      el.appendChild(btnSubmit);
+    }
+
+    mql.addEventListener('change', (e) => {
+      if (e.matches) {
+        el.appendChild(btnSubmit);
+      } else {
+        el.removeChild(btnSubmit);
+      }
+    })
 
     setTimeout(() => {
       input.focus();
@@ -580,7 +641,6 @@ export function RoomView(props: RoomViewProps) {
 
     localStorage.setItem('sidebar', sideBarEnabled ? 'true' : 'false');
   }
-
 
   roomView.append(SideBar());
   roomView.append(messageView);
