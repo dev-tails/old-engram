@@ -218,16 +218,21 @@ async function run() {
     });
     console.log(currentRoom);
 
-    const subscriptions = await Subscriptions.find({user: { $in: currentRoom.users, $ne: mongodb.ObjectId(req.user)}}).toArray();
+    const subscriptions = await Subscriptions.find({ user: { $in: currentRoom.users, $ne: mongodb.ObjectId(req.user) } }).toArray();
     console.log(subscriptions);
 
-    const userName = await User.findOne({_id: mongodb.ObjectId(req.user)});
+    const userName = await User.findOne({ _id: mongodb.ObjectId(req.user) });
     console.log(userName.name);
 
     const notifications = [];
     subscriptions.forEach((subscriber) => {
       notifications.push(
-        webpush.sendNotification(subscriber.subscription, JSON.stringify({title: userName.name, body: req.body.body}))
+        webpush.sendNotification(subscriber.subscription, JSON.stringify(
+          {
+            title: userName.name,
+            body: req.body.body,
+            room: req.params,
+          }))
       );
     });
     await Promise.all(notifications);
@@ -287,7 +292,7 @@ async function run() {
   app.delete('/subscriptions', async (req, res, next) => {
     const currentUser = req.body.user._id;
     await Subscriptions.deleteOne({
-      user: mongodb.ObjectId(currentUser), 
+      user: mongodb.ObjectId(currentUser),
     })
     console.log('delete subscription complete');
   })
