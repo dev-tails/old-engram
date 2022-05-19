@@ -49,21 +49,29 @@ export function Header() {
 
   // TODO: Separate button for push notifications
   const btnPushNotifications = Button({
-    text: "push notifications"
+    text: ""
   });
 
   updatePushNotificationButtonText();
+
   async function updatePushNotificationButtonText() {
+    // console.log('2', 'inside updatetext');
     const pushNotificationStatus = await arePushNotificationsSubscribed();
+    console.log('current sub status: ' , pushNotificationStatus);
+    // console.log('updating button text');
     setText(btnPushNotifications, pushNotificationStatus ? "pause push notifications" : "enable push notifications");
+    // console.log('button text updated');
   }
 
   headerActionsEl.append(btnPushNotifications);
 
   btnPushNotifications.addEventListener('click', async function () {
-    // console.log('push notifications button clicked');
+    console.log('start', await arePushNotificationsSubscribed());
     await togglePushNotifications();
-    updatePushNotificationButtonText();
+    console.log('calling update button');
+    await updatePushNotificationButtonText();
+    console.log('finish', await arePushNotificationsSubscribed());
+
   })
 
   // --------------------------------------------

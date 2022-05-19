@@ -6,6 +6,8 @@ const cookieParser = require('cookie-parser');
 const { Server } = require('socket.io');
 const webpush = require('web-push');
 const maxAgeInMilliseconds = 365 * 60 * 60 * 24 * 1000;
+const publicKey = 'BLavcK_L2yrLCLCPH0tBeA_dljC6hMEG68imaJvs0DPd4G2R8SdEnkJ6LJeFCXq6T_JpfLsVOaHEXdXKh94Jpqo';
+const privateKey = '2QQyhPuDNlcPFlt6UgNMOjrCZzMrm8vkei7tIOfLjZ4';
 
 dotenv.config();
 
@@ -28,9 +30,9 @@ async function run() {
   const io = new Server(server);
 
   webpush.setVapidDetails(
-    'mailto: test@test.org',
-    "BLavcK_L2yrLCLCPH0tBeA_dljC6hMEG68imaJvs0DPd4G2R8SdEnkJ6LJeFCXq6T_JpfLsVOaHEXdXKh94Jpqo",
-    "2QQyhPuDNlcPFlt6UgNMOjrCZzMrm8vkei7tIOfLjZ4"
+    'mailto: test@test.org', // change this?
+    publicKey,
+    privateKey
   )
 
   app.use(cookieParser());
@@ -189,8 +191,10 @@ async function run() {
       },
     });
   });
+
   // TODO: re-do logic to send push notifications
   app.post('/api/rooms/:id/messages', async (req, res, next) => {
+    console.log(req.user);
     const { id } = req.params;
     const { insertedId } = await Message.insertOne({
       room: new mongodb.ObjectId(id),
@@ -209,18 +213,21 @@ async function run() {
     io.emit('message', newMessage);
 
     // TODO: clean this up
-    const roomUsers = await Room.findOne({
+    const currentRoom = await Room.findOne({
       _id: mongodb.ObjectId(id)
     });
-    console.log(roomUsers.users)
+    console.log(currentRoom);
 
-    const subscriptions = await Subscriptions.find({user: { $in: roomUsers.users}}).toArray();
+    const subscriptions = await Subscriptions.find({user: { $in: currentRoom.users, $ne: mongodb.ObjectId(req.user)}}).toArray();
     console.log(subscriptions);
 
+    const userName = await User.findOne({_id: mongodb.ObjectId(req.user)});
+    console.log(userName.name);
+
     const notifications = [];
-    subscriptions.forEach((subscriptionItem) => {
+    subscriptions.forEach((subscriber) => {
       notifications.push(
-        webpush.sendNotification(subscriptionItem.subscription, JSON.stringify({title: req.user, body: req.body.body}))
+        webpush.sendNotification(subscriber.subscription, JSON.stringify({title: userName.name, body: req.body.body}))
       );
     });
     await Promise.all(notifications);
@@ -274,16 +281,15 @@ async function run() {
       user: mongodb.ObjectId(currentUser),
       subscription: subscriptionInfo,
     })
-
-    // webpush.sendNotification(subscriptionInfo); // This does work
+    console.log('insert subscription complete');
   })
 
-  // TODO: add ability to delete subscription
   app.delete('/subscriptions', async (req, res, next) => {
     const currentUser = req.body.user._id;
     await Subscriptions.deleteOne({
       user: mongodb.ObjectId(currentUser), 
     })
+    console.log('delete subscription complete');
   })
 
   app.get('*', (req, res) => {

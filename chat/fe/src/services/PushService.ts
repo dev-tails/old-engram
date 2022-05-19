@@ -29,58 +29,76 @@ function isPushNotificationSupported() {
 }
 
 export async function arePushNotificationsSubscribed() {
-    return await swRegistration.pushManager.getSubscription().then((subscription) => {
-        const isSubscribed = !(subscription === null);
-        return isSubscribed ? true : false;
-    })
+    console.log('checking notification subscription');
+    const serviceWorker = await navigator.serviceWorker.ready;
+    return await serviceWorker.pushManager.getSubscription() ? true : false;
+    // .then((subscription) => {
+    //     const isSubscribed = !(subscription === null);
+    //     return isSubscribed ? true : false;
+    // })
 }
 
 export async function togglePushNotifications() {
     const serviceWorker = await navigator.serviceWorker.ready;
+    const subStatus = await arePushNotificationsSubscribed();
+    console.log('service worker ready ', serviceWorker)
     if (!(await arePushNotificationsSubscribed())) { // activate push notifications
         console.log('subscribing to push notifs');
-        const subscription = serviceWorker.pushManager.subscribe({
+        const subscription = await serviceWorker.pushManager.subscribe({
             userVisibleOnly: true,
             applicationServerKey: urlB64ToUint8Array(applicationServerPublicKey),
-        }).then(async (subscription) => {
-            if (subscription) {
-                await saveSubscriptionOnServer(subscription);
-            }
         })
-            .catch((err) => {
-                console.log('Failed to subscribe user: ', err);
-            })
 
-        // console.log("subscription obj" , subscription);
-
+        if (subscription) {
+            console.log(subscription);
+            saveSubscriptionOnServer(subscription);
+        }
+        // }).then(async (subscription) => {
+        //     if (subscription) {
+        //         await saveSubscriptionOnServer(subscription);
+        //         console.log('saving subscription complete');
+        //         // isSubscribed = true
+        //     }
+        // })
+        //     .catch((err) => {
+        //         console.log('Failed to subscribe user: ', err);
+        //     })
     } else { // deactivate push notifications
         console.log('unsub from push notifs');
-        const unsubscription = serviceWorker.pushManager.getSubscription().then((subscription) => {
-            subscription.unsubscribe().then(async (successful) => {
-                if (successful) {
-                    await removeSubscriptionOnServer();
-                }
-            })
-                .catch((err) => {
-                    console.log('Failed unsubscribing user: ', err)
-                })
-        })
+        const unsubscription = (await serviceWorker.pushManager.getSubscription()).unsubscribe();
+        // .then((subscription) => {
+        //     subscription.unsubscribe()
+        //     .then(async (successful) => {
+        //         if (successful) {
+        //             await removeSubscriptionOnServer();
+        //             isSubscribed = false;
+        //         }
+        //     })
+        //         .catch((err) => {
+        //             console.log('Failed to unsubscribe user: ', err)
+        //         })
+        // })
+        if (unsubscription) {
+            // (await subscription).unsubscribe();
+            removeSubscriptionOnServer();
+        }
     }
+    console.log('toggle sub complete');
 }
 
 async function saveSubscriptionOnServer(subscription) {
     console.log('sending subscription to server');
-    await saveSubscription(subscription);
+    saveSubscription(subscription);
 }
 
 async function removeSubscriptionOnServer() {
     console.log('removing subscription from server');
-    await deleteSubscription();
+    deleteSubscription();
 }
 
 export function registerServiceWorker() {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./service-worker.js', { scope: '/' }).then((registration) => {
+        navigator.serviceWorker.register('/service-worker.js').then((registration) => {
             console.log('Service worker is registered', registration);
 
             swRegistration = registration;
@@ -98,6 +116,6 @@ export function initializePushNotificationService() {
         return;
     }
     registerServiceWorker();
-    // initializeNotificationService();
+    initializeNotificationService();
 }
 
