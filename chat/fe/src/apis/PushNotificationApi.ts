@@ -2,8 +2,6 @@ import { getSelf } from "./UserApi";
 
 export async function saveSubscription(subscription) {
     const currentUser = getSelf();
-    console.log('body:', JSON.stringify({ user: currentUser, subscription }));
-
     await fetch('/api/subscriptions', {
         method: 'POST',
         body: JSON.stringify({

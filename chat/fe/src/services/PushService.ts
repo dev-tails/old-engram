@@ -7,7 +7,6 @@ import { saveSubscription, deleteSubscription } from "../apis/PushNotificationAp
 import { initializeNotificationService } from "./NotificationService";
 export const applicationServerPublicKey = "BLavcK_L2yrLCLCPH0tBeA_dljC6hMEG68imaJvs0DPd4G2R8SdEnkJ6LJeFCXq6T_JpfLsVOaHEXdXKh94Jpqo"
 export const applicationServerPrivateKey = "2QQyhPuDNlcPFlt6UgNMOjrCZzMrm8vkei7tIOfLjZ4"
-let swRegistration = null;
 
 function urlB64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -29,14 +28,12 @@ function isPushNotificationSupported() {
 }
 
 export async function arePushNotificationsSubscribed() {
-    console.log('checking notification subscription');
     const serviceWorker = await navigator.serviceWorker.ready;
     return await serviceWorker.pushManager.getSubscription() ? true : false;
 }
 
 export async function togglePushNotifications() {
     const serviceWorker = await navigator.serviceWorker.ready;
-    console.log('service worker ready ', serviceWorker)
     if (!(await arePushNotificationsSubscribed())) {
         const subscribed = await serviceWorker.pushManager.subscribe({
             userVisibleOnly: true,
@@ -55,22 +52,17 @@ export async function togglePushNotifications() {
 }
 
 async function saveSubscriptionOnServer(subscription) {
-    console.log('sending subscription to server');
     saveSubscription(subscription);
 }
 
 async function removeSubscriptionOnServer(subscription) {
-    console.log('removing subscription from server');
     deleteSubscription(subscription);
 }
 
 export function registerServiceWorker() {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js').then((registration) => {
-            console.log('Service worker is registered', registration);
-
-            swRegistration = registration;
-        })
+        navigator.serviceWorker.register('/service-worker.js')
+            .then()
             .catch((error) => {
                 console.error('Service worker error', error);
             });
@@ -80,7 +72,7 @@ export function registerServiceWorker() {
 
 export function initializePushNotificationService() {
     if (!isPushNotificationSupported()) {
-        console.log('Push notifications are not supported');
+        console.error('Push notifications are not supported');
         return;
     }
     initializeNotificationService();

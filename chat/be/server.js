@@ -192,9 +192,7 @@ async function run() {
     });
   });
 
-  // TODO: re-do logic to send push notifications
   app.post('/api/rooms/:id/messages', async (req, res, next) => {
-    console.log(req.user);
     const { id } = req.params;
     const { insertedId } = await Message.insertOne({
       room: new mongodb.ObjectId(id),
@@ -209,20 +207,15 @@ async function run() {
       { room: mongodb.ObjectId(id), user: { $ne: mongodb.ObjectId(req.user) } },
       { $inc: { unreadCount: 1 } }
     );
+    
+    // Uncomment to enable socket based notifications
+    // io.emit('message', newMessage);
 
-    io.emit('message', newMessage);
-
-    // TODO: clean this up
     const currentRoom = await Room.findOne({
       _id: mongodb.ObjectId(id)
     });
-    console.log(currentRoom);
-
     const subscriptions = await Subscriptions.find({ user: { $in: currentRoom.users, $ne: mongodb.ObjectId(req.user) } }).toArray();
-    console.log(subscriptions);
-
     const userName = await User.findOne({ _id: mongodb.ObjectId(req.user) });
-    console.log(userName.name);
 
     const notifications = [];
     subscriptions.forEach((subscriber) => {
@@ -277,8 +270,6 @@ async function run() {
     res.sendStatus(200);
   });
 
-
-  // TODO:
   app.post('/api/subscriptions', async (req, res, next) => {
     const currentUser = req.body.user._id;
     const subscriptionInfo = req.body.subscription;
@@ -286,6 +277,7 @@ async function run() {
       user: mongodb.ObjectId(currentUser),
       subscription: subscriptionInfo,
     })
+    res.sendStatus(200);
   })
 
   app.delete('/api/subscriptions', async (req, res, next) => {
@@ -294,6 +286,7 @@ async function run() {
       user: mongodb.ObjectId(currentUser),
       subscription: req.body.subscription,
     })
+    res.sendStatus(200);
   })
 
   app.get('*', (req, res) => {

@@ -27,7 +27,7 @@ export function Header() {
   });
   roomTitle.innerText = "XYZ";
   el.append(roomTitle);
-  
+
   const headerActionsEl = Div();
   el.append(headerActionsEl);
 
@@ -40,6 +40,7 @@ export function Header() {
     setText(btnNotifications, areNotificationsEnabled() ? "pause notifications" : "enable notifications")
   }
 
+  // Uncomment to allow toggling local notifications
   // headerActionsEl.append(btnNotifications);
 
   btnNotifications.addEventListener("click", async function () {
@@ -47,26 +48,27 @@ export function Header() {
     updateNotificationButtonText();
   });
 
-  // TODO: Separate button for push notifications
-  const btnPushNotifications = Button({
-    text: ""
-  });
+  if (isLoggedIn()) {
+    const btnPushNotifications = Button({
+      text: ""
+    });
 
-  updatePushNotificationButtonText();
+    updatePushNotificationButtonText();
 
-  async function updatePushNotificationButtonText() {
-    const pushNotificationStatus = await arePushNotificationsSubscribed();
-    setText(btnPushNotifications, pushNotificationStatus ? "pause push notifications" : "enable push notifications");
+    async function updatePushNotificationButtonText() {
+      const pushNotificationStatus = await arePushNotificationsSubscribed();
+      setText(btnPushNotifications, pushNotificationStatus ? "pause push notifications" : "enable push notifications");
+    }
+
+    headerActionsEl.append(btnPushNotifications);
+
+    btnPushNotifications.addEventListener('click', async function () {
+      btnPushNotifications.disabled = true;
+      await togglePushNotifications();
+      await updatePushNotificationButtonText();
+      btnPushNotifications.disabled = false;
+    })
   }
-
-  headerActionsEl.append(btnPushNotifications);
-
-  btnPushNotifications.addEventListener('click', async function () {
-    btnPushNotifications.disabled = true;
-    await togglePushNotifications();
-    await updatePushNotificationButtonText();
-    btnPushNotifications.disabled = false;
-  })
 
   if (!isLoggedIn()) {
     const btnLogin = Button({
