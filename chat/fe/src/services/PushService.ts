@@ -1,12 +1,5 @@
-// https://developers.google.com/web/ilt/pwa/lab-integrating-web-push#1_get_set_up
-// https://developers.google.com/web/fundamentals/codelabs/push-notifications/
-// https://felixgerschau.com/web-push-notifications-tutorial/
-// https://ericfossas.medium.com/quick-tut-notifications-sse-socketio-push-api-d68080f218df
-
-import { saveSubscription, deleteSubscription } from "../apis/PushNotificationApi";
+import { saveSubscription, deleteSubscription, getPublicKey } from "../apis/PushNotificationApi";
 import { initializeNotificationService } from "./NotificationService";
-export const applicationServerPublicKey = "BLavcK_L2yrLCLCPH0tBeA_dljC6hMEG68imaJvs0DPd4G2R8SdEnkJ6LJeFCXq6T_JpfLsVOaHEXdXKh94Jpqo"
-export const applicationServerPrivateKey = "2QQyhPuDNlcPFlt6UgNMOjrCZzMrm8vkei7tIOfLjZ4"
 
 function urlB64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -37,26 +30,26 @@ export async function togglePushNotifications() {
     if (!(await arePushNotificationsSubscribed())) {
         const subscribed = await serviceWorker.pushManager.subscribe({
             userVisibleOnly: true,
-            applicationServerKey: urlB64ToUint8Array(applicationServerPublicKey),
+            applicationServerKey: urlB64ToUint8Array(await getPublicKey()),
         })
         if (subscribed) {
-            saveSubscriptionOnServer(subscribed);
+            await saveSubscriptionOnServer(subscribed);
         }
     } else {
         const currentSubscription = await serviceWorker.pushManager.getSubscription();
         const unsubscribed = (await serviceWorker.pushManager.getSubscription()).unsubscribe();
         if (unsubscribed) {
-            removeSubscriptionOnServer(currentSubscription);
+            await removeSubscriptionOnServer(currentSubscription);
         }
     }
 }
 
 async function saveSubscriptionOnServer(subscription) {
-    saveSubscription(subscription);
+    await saveSubscription(subscription);
 }
 
 async function removeSubscriptionOnServer(subscription) {
-    deleteSubscription(subscription);
+    await deleteSubscription(subscription);
 }
 
 export function registerServiceWorker() {

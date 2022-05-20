@@ -6,8 +6,6 @@ const cookieParser = require('cookie-parser');
 const { Server } = require('socket.io');
 const webpush = require('web-push');
 const maxAgeInMilliseconds = 365 * 60 * 60 * 24 * 1000;
-const publicKey = 'BLavcK_L2yrLCLCPH0tBeA_dljC6hMEG68imaJvs0DPd4G2R8SdEnkJ6LJeFCXq6T_JpfLsVOaHEXdXKh94Jpqo';
-const privateKey = '2QQyhPuDNlcPFlt6UgNMOjrCZzMrm8vkei7tIOfLjZ4';
 
 dotenv.config();
 
@@ -30,9 +28,9 @@ async function run() {
   const io = new Server(server);
 
   webpush.setVapidDetails(
-    'mailto: test@test.org', // email in case VAPID keys have been abused and browser vendor needs to contact
-    publicKey,
-    privateKey
+    process.env.WEB_PUSH_VAPID_MAIL_TO,
+    process.env.WEB_PUSH_VAPID_PUBLIC_KEY,
+    process.env.WEB_PUSH_VAPID_PRIVATE_KEY
   )
 
   app.use(cookieParser());
@@ -207,7 +205,7 @@ async function run() {
       { room: mongodb.ObjectId(id), user: { $ne: mongodb.ObjectId(req.user) } },
       { $inc: { unreadCount: 1 } }
     );
-    
+
     io.emit('message', newMessage);
 
     const currentRoom = await Room.findOne({
@@ -269,8 +267,14 @@ async function run() {
     res.sendStatus(200);
   });
 
+  app.get('/api/subscriptions/publickey', (req, res, next) => {
+    res.json({
+      publickey: process.env.WEB_PUSH_VAPID_PUBLIC_KEY,
+    });
+  })
+
   app.post('/api/subscriptions', async (req, res, next) => {
-    const currentUser = req.body.user._id;
+    const currentUser = req.user;
     const subscriptionInfo = req.body.subscription;
     await Subscriptions.insertOne({
       user: mongodb.ObjectId(currentUser),
@@ -280,7 +284,7 @@ async function run() {
   })
 
   app.delete('/api/subscriptions', async (req, res, next) => {
-    const currentUser = req.body.user._id;
+    const currentUser = req.user;
     await Subscriptions.deleteOne({
       user: mongodb.ObjectId(currentUser),
       subscription: req.body.subscription,

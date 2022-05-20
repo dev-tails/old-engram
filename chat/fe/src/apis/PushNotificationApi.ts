@@ -1,11 +1,7 @@
-import { getSelf } from "./UserApi";
-
 export async function saveSubscription(subscription) {
-    const currentUser = getSelf();
     await fetch('/api/subscriptions', {
         method: 'POST',
         body: JSON.stringify({
-            user: currentUser,
             subscription
         }),
         headers: {
@@ -15,15 +11,19 @@ export async function saveSubscription(subscription) {
 }
 
 export async function deleteSubscription(subscription) {
-    const currentUser = getSelf();
     await fetch('/api/subscriptions', {
         method: 'DELETE',
         body: JSON.stringify({
-            user: currentUser,
             subscription
         }),
         headers: {
             'content-type': 'application/json',
         },
     });
+}
+
+export async function getPublicKey() {
+    const data = await fetch('/api/subscriptions/publickey');
+    const jsonData = await data.json();
+    return jsonData.publickey;
 }
