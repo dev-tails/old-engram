@@ -66,7 +66,6 @@ export function Header() {
     await togglePushNotifications();
     await updatePushNotificationButtonText();
     btnPushNotifications.disabled = false;
-
   })
 
   if (!isLoggedIn()) {

@@ -38,7 +38,6 @@ export async function togglePushNotifications() {
     const serviceWorker = await navigator.serviceWorker.ready;
     console.log('service worker ready ', serviceWorker)
     if (!(await arePushNotificationsSubscribed())) {
-        console.log('subscribing to push notifs');
         const subscribed = await serviceWorker.pushManager.subscribe({
             userVisibleOnly: true,
             applicationServerKey: urlB64ToUint8Array(applicationServerPublicKey),
@@ -47,13 +46,12 @@ export async function togglePushNotifications() {
             saveSubscriptionOnServer(subscribed);
         }
     } else {
-        console.log('unsub from push notifs');
+        const currentSubscription = await serviceWorker.pushManager.getSubscription();
         const unsubscribed = (await serviceWorker.pushManager.getSubscription()).unsubscribe();
         if (unsubscribed) {
-            removeSubscriptionOnServer();
+            removeSubscriptionOnServer(currentSubscription);
         }
     }
-    console.log('toggle sub complete');
 }
 
 async function saveSubscriptionOnServer(subscription) {
@@ -61,9 +59,9 @@ async function saveSubscriptionOnServer(subscription) {
     saveSubscription(subscription);
 }
 
-async function removeSubscriptionOnServer() {
+async function removeSubscriptionOnServer(subscription) {
     console.log('removing subscription from server');
-    deleteSubscription();
+    deleteSubscription(subscription);
 }
 
 export function registerServiceWorker() {

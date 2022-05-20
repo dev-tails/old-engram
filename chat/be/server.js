@@ -292,6 +292,7 @@ async function run() {
     const currentUser = req.body.user._id;
     await Subscriptions.deleteOne({
       user: mongodb.ObjectId(currentUser),
+      subscription: req.body.subscription,
     })
   })
 
