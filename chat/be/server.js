@@ -208,8 +208,7 @@ async function run() {
       { $inc: { unreadCount: 1 } }
     );
     
-    // Uncomment to enable socket based notifications
-    // io.emit('message', newMessage);
+    io.emit('message', newMessage);
 
     const currentRoom = await Room.findOne({
       _id: mongodb.ObjectId(id)
