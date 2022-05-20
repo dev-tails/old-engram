@@ -53,6 +53,7 @@ export const RoomList = () => {
 
       roomEl.append(roomNameEl)
 
+      // TODO: unread count bubble div
       if (room.userRoomConfig?.unreadCount > 0) {
         const unreadCountEl = Div();
         setStyle(unreadCountEl, {

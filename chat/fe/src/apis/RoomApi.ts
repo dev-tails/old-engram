@@ -62,6 +62,11 @@ export async function initializeRoomApi() {
   socket.on('delete-message', ({ room, id }) => {
     deletingMessageListener[room](id);
   });
+
+  // TODO: add socket handling for unread count update
+  socket.on('unread', () => {
+    
+  });
 }
 
 const roomsById: { [key: string]: Room } = {};

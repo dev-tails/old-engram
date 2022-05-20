@@ -199,6 +199,7 @@ async function run() {
     );
 
     io.emit('message', newMessage);
+    // TODO: emit unread count
 
     res.sendStatus(200);
   });
