@@ -4,7 +4,7 @@ export async function saveSubscription(subscription) {
     const currentUser = getSelf();
     console.log('body:' , JSON.stringify({user: currentUser, subscription}));
 
-    await fetch('/subscriptions', {
+    await fetch('/api/subscriptions', {
         method: 'POST',
         body: JSON.stringify({user: currentUser, subscription}),
         headers: {
@@ -15,8 +15,7 @@ export async function saveSubscription(subscription) {
 
 export async function deleteSubscription() {
     const currentUser = getSelf();
-
-    await fetch('/subscriptions', {
+    await fetch('/api/subscriptions', {
         method: 'DELETE',
         body: JSON.stringify({
             user: currentUser,

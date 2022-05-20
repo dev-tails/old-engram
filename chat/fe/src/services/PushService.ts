@@ -32,54 +32,24 @@ export async function arePushNotificationsSubscribed() {
     console.log('checking notification subscription');
     const serviceWorker = await navigator.serviceWorker.ready;
     return await serviceWorker.pushManager.getSubscription() ? true : false;
-    // .then((subscription) => {
-    //     const isSubscribed = !(subscription === null);
-    //     return isSubscribed ? true : false;
-    // })
 }
 
 export async function togglePushNotifications() {
     const serviceWorker = await navigator.serviceWorker.ready;
-    const subStatus = await arePushNotificationsSubscribed();
     console.log('service worker ready ', serviceWorker)
-    if (!(await arePushNotificationsSubscribed())) { // activate push notifications
+    if (!(await arePushNotificationsSubscribed())) {
         console.log('subscribing to push notifs');
-        const subscription = await serviceWorker.pushManager.subscribe({
+        const subscribed = await serviceWorker.pushManager.subscribe({
             userVisibleOnly: true,
             applicationServerKey: urlB64ToUint8Array(applicationServerPublicKey),
         })
-
-        if (subscription) {
-            console.log(subscription);
-            saveSubscriptionOnServer(subscription);
+        if (subscribed) {
+            saveSubscriptionOnServer(subscribed);
         }
-        // }).then(async (subscription) => {
-        //     if (subscription) {
-        //         await saveSubscriptionOnServer(subscription);
-        //         console.log('saving subscription complete');
-        //         // isSubscribed = true
-        //     }
-        // })
-        //     .catch((err) => {
-        //         console.log('Failed to subscribe user: ', err);
-        //     })
-    } else { // deactivate push notifications
+    } else {
         console.log('unsub from push notifs');
-        const unsubscription = (await serviceWorker.pushManager.getSubscription()).unsubscribe();
-        // .then((subscription) => {
-        //     subscription.unsubscribe()
-        //     .then(async (successful) => {
-        //         if (successful) {
-        //             await removeSubscriptionOnServer();
-        //             isSubscribed = false;
-        //         }
-        //     })
-        //         .catch((err) => {
-        //             console.log('Failed to unsubscribe user: ', err)
-        //         })
-        // })
-        if (unsubscription) {
-            // (await subscription).unsubscribe();
+        const unsubscribed = (await serviceWorker.pushManager.getSubscription()).unsubscribe();
+        if (unsubscribed) {
             removeSubscriptionOnServer();
         }
     }
@@ -115,7 +85,7 @@ export function initializePushNotificationService() {
         console.log('Push notifications are not supported');
         return;
     }
-    registerServiceWorker();
     initializeNotificationService();
+    registerServiceWorker();
 }
 

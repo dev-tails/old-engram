@@ -279,22 +279,20 @@ async function run() {
 
 
   // TODO:
-  app.post('/subscriptions', async (req, res, next) => {
+  app.post('/api/subscriptions', async (req, res, next) => {
     const currentUser = req.body.user._id;
     const subscriptionInfo = req.body.subscription;
     await Subscriptions.insertOne({
       user: mongodb.ObjectId(currentUser),
       subscription: subscriptionInfo,
     })
-    console.log('insert subscription complete');
   })
 
-  app.delete('/subscriptions', async (req, res, next) => {
+  app.delete('/api/subscriptions', async (req, res, next) => {
     const currentUser = req.body.user._id;
     await Subscriptions.deleteOne({
       user: mongodb.ObjectId(currentUser),
     })
-    console.log('delete subscription complete');
   })
 
   app.get('*', (req, res) => {

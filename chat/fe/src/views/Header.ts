@@ -40,7 +40,7 @@ export function Header() {
     setText(btnNotifications, areNotificationsEnabled() ? "pause notifications" : "enable notifications")
   }
 
-  headerActionsEl.append(btnNotifications);
+  // headerActionsEl.append(btnNotifications);
 
   btnNotifications.addEventListener("click", async function () {
     toggleNotificationsEnabled();
@@ -55,26 +55,19 @@ export function Header() {
   updatePushNotificationButtonText();
 
   async function updatePushNotificationButtonText() {
-    // console.log('2', 'inside updatetext');
     const pushNotificationStatus = await arePushNotificationsSubscribed();
-    console.log('current sub status: ' , pushNotificationStatus);
-    // console.log('updating button text');
     setText(btnPushNotifications, pushNotificationStatus ? "pause push notifications" : "enable push notifications");
-    // console.log('button text updated');
   }
 
   headerActionsEl.append(btnPushNotifications);
 
   btnPushNotifications.addEventListener('click', async function () {
-    console.log('start', await arePushNotificationsSubscribed());
+    btnPushNotifications.disabled = true;
     await togglePushNotifications();
-    console.log('calling update button');
     await updatePushNotificationButtonText();
-    console.log('finish', await arePushNotificationsSubscribed());
+    btnPushNotifications.disabled = false;
 
   })
-
-  // --------------------------------------------
 
   if (!isLoggedIn()) {
     const btnLogin = Button({
