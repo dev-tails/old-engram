@@ -30,7 +30,7 @@ async function run() {
   const io = new Server(server);
 
   webpush.setVapidDetails(
-    'mailto: test@test.org', // change this?
+    'mailto: test@test.org', // email in case VAPID keys have been abused and browser vendor needs to contact
     publicKey,
     privateKey
   )
