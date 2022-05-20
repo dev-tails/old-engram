@@ -22,7 +22,7 @@ self.addEventListener('notificationclick', (e) => {
     e.notification.close();
     e.waitUntil(
         clients.matchAll({
-            includeUncontrolled: true,
+            // includeUncontrolled: true,
             type: 'window'
         })
             .then(clientList => {
@@ -34,19 +34,32 @@ self.addEventListener('notificationclick', (e) => {
 
                     console.log(client);
 
-                    if (roomUrl == url.pathname) {
-                        console.log('url match');
-                        // client.navigate(roomUrl);
-                        // client.navigate(roomUrl);
+                    if (client) {
+                        client.navigate(roomUrl);
                         client.focus();
-                        // client.navigate(roomUrl).then((client) => { client.focus()});
-                        windowMatchFound = true;
-                        break;
-                    } else {
-                        client.navigate(roomUrl).then((client) => { client.focus() });
                         windowMatchFound = true;
                         break;
                     }
+
+                    // if (roomUrl == url.pathname) {
+                    //     console.log('url match');
+                    //     // client.navigate(roomUrl);
+                    //     client.navigate(roomUrl);
+                    //     client.focus();
+                    //     // client.navigate(roomUrl).then((client) => { client.focus()});
+                    //     windowMatchFound = true;
+                    //     break;
+                    // } else {
+                    //     console.log('redirect url');
+                    //     client.navigate(roomUrl);
+                    //     client.focus();
+                    //     // .then((client) => {
+                    //     //     console.log('focusing on cliient');
+                    //     //     client.focus()
+                    //     // });
+                    //     windowMatchFound = true;
+                    //     break;
+                    // }
                 }
                 // https://stackoverflow.com/questions/39476963/service-worker-redirecting-a-user-to-different-url-when-he-clicks-the-notificat
                 if (!windowMatchFound) {
