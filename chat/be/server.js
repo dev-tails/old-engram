@@ -21,14 +21,14 @@ async function run() {
   const Message = db.collection('messages');
   const Room = db.collection('rooms');
   const UserRoomConfig = db.collection('userroomconfigs');
-  const Subscriptions = db.collection('subscriptions');
+  const PushNotification = db.collection('pushnotifications');
 
   const app = express();
   const server = http.createServer(app);
   const io = new Server(server);
 
   webpush.setVapidDetails(
-    process.env.WEB_PUSH_VAPID_MAIL_TO,
+    `mailto: ${process.env.WEB_PUSH_VAPID_MAIL_TO}`,
     process.env.WEB_PUSH_VAPID_PUBLIC_KEY,
     process.env.WEB_PUSH_VAPID_PRIVATE_KEY
   )
@@ -211,7 +211,7 @@ async function run() {
     const currentRoom = await Room.findOne({
       _id: mongodb.ObjectId(id)
     });
-    const subscriptions = await Subscriptions.find({ user: { $in: currentRoom.users, $ne: mongodb.ObjectId(req.user) } }).toArray();
+    const subscriptions = await PushNotification.find({ user: { $in: currentRoom.users, $ne: mongodb.ObjectId(req.user) } }).toArray();
     const userName = await User.findOne({ _id: mongodb.ObjectId(req.user) });
 
     const notifications = [];
@@ -276,7 +276,7 @@ async function run() {
   app.post('/api/subscriptions', async (req, res, next) => {
     const currentUser = req.user;
     const subscriptionInfo = req.body.subscription;
-    await Subscriptions.insertOne({
+    await PushNotification.insertOne({
       user: mongodb.ObjectId(currentUser),
       subscription: subscriptionInfo,
     })
@@ -285,7 +285,7 @@ async function run() {
 
   app.delete('/api/subscriptions', async (req, res, next) => {
     const currentUser = req.user;
-    await Subscriptions.deleteOne({
+    await PushNotification.deleteOne({
       user: mongodb.ObjectId(currentUser),
       subscription: req.body.subscription,
     })
