@@ -4,6 +4,7 @@ const mongodb = require('mongodb');
 const http = require('http');
 const cookieParser = require('cookie-parser');
 const { Server } = require('socket.io');
+const webpush = require('web-push');
 const maxAgeInMilliseconds = 365 * 60 * 60 * 24 * 1000;
 
 dotenv.config();
@@ -20,10 +21,17 @@ async function run() {
   const Message = db.collection('messages');
   const Room = db.collection('rooms');
   const UserRoomConfig = db.collection('userroomconfigs');
+  const PushNotification = db.collection('pushnotifications');
 
   const app = express();
   const server = http.createServer(app);
   const io = new Server(server);
+
+  webpush.setVapidDetails(
+    `mailto: ${process.env.WEB_PUSH_VAPID_MAIL_TO}`,
+    process.env.WEB_PUSH_VAPID_PUBLIC_KEY,
+    process.env.WEB_PUSH_VAPID_PRIVATE_KEY
+  )
 
   app.use(cookieParser());
   app.use(express.json());
@@ -200,6 +208,26 @@ async function run() {
 
     io.emit('message', newMessage);
 
+    const currentRoom = await Room.findOne({
+      _id: mongodb.ObjectId(id)
+    });
+    const subscriptions = await PushNotification.find({ user: { $in: currentRoom.users, $ne: mongodb.ObjectId(req.user) } }).toArray();
+    const userName = await User.findOne({ _id: mongodb.ObjectId(req.user) });
+
+    const notifications = [];
+    subscriptions.forEach((subscriber) => {
+      notifications.push(
+        webpush.sendNotification(subscriber.subscription, JSON.stringify(
+          {
+            title: userName.name,
+            body: req.body.body,
+            room: req.params,
+          }))
+      );
+    });
+    await Promise.all(notifications);
+
+
     res.sendStatus(200);
   });
 
@@ -238,6 +266,31 @@ async function run() {
     });
     res.sendStatus(200);
   });
+
+  app.get('/api/subscriptions/publickey', (req, res, next) => {
+    res.json({
+      publickey: process.env.WEB_PUSH_VAPID_PUBLIC_KEY,
+    });
+  })
+
+  app.post('/api/subscriptions', async (req, res, next) => {
+    const currentUser = req.user;
+    const subscriptionInfo = req.body.subscription;
+    await PushNotification.insertOne({
+      user: mongodb.ObjectId(currentUser),
+      subscription: subscriptionInfo,
+    })
+    res.sendStatus(200);
+  })
+
+  app.delete('/api/subscriptions', async (req, res, next) => {
+    const currentUser = req.user;
+    await PushNotification.deleteOne({
+      user: mongodb.ObjectId(currentUser),
+      subscription: req.body.subscription,
+    })
+    res.sendStatus(200);
+  })
 
   app.get('*', (req, res) => {
     res.sendFile(__dirname + '/public/index.html');

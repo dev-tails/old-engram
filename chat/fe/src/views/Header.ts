@@ -2,6 +2,7 @@ import { isLoggedIn } from '../apis/UserApi';
 import { Button } from '../components/Button';
 import { Div } from '../components/Div';
 import { areNotificationsEnabled, toggleNotificationsEnabled } from '../services/NotificationService';
+import { arePushNotificationsSubscribed, togglePushNotifications } from '../services/PushService';
 import { setStyle, setText } from '../utils/DomUtils';
 
 export function Header() {
@@ -26,7 +27,7 @@ export function Header() {
   });
   roomTitle.innerText = "XYZ";
   el.append(roomTitle);
-  
+
   const headerActionsEl = Div();
   el.append(headerActionsEl);
 
@@ -39,12 +40,35 @@ export function Header() {
     setText(btnNotifications, areNotificationsEnabled() ? "pause notifications" : "enable notifications")
   }
 
-  headerActionsEl.append(btnNotifications);
+  // Uncomment to allow toggling local notifications
+  // headerActionsEl.append(btnNotifications);
 
   btnNotifications.addEventListener("click", async function () {
     toggleNotificationsEnabled();
     updateNotificationButtonText();
   });
+
+  if (isLoggedIn()) {
+    const btnPushNotifications = Button({
+      text: ""
+    });
+
+    updatePushNotificationButtonText();
+
+    async function updatePushNotificationButtonText() {
+      const pushNotificationStatus = await arePushNotificationsSubscribed();
+      setText(btnPushNotifications, pushNotificationStatus ? "pause push notifications" : "enable push notifications");
+    }
+
+    headerActionsEl.append(btnPushNotifications);
+
+    btnPushNotifications.addEventListener('click', async function () {
+      btnPushNotifications.disabled = true;
+      await togglePushNotifications();
+      await updatePushNotificationButtonText();
+      btnPushNotifications.disabled = false;
+    })
+  }
 
   if (!isLoggedIn()) {
     const btnLogin = Button({
