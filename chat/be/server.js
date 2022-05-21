@@ -121,7 +121,8 @@ async function run() {
   });
 
   app.get('/api/rooms/:id/messages', async (req, res, next) => {
-    const { id } = req.params;
+    const id = req.params.id;
+    const inputLastMessageId = req.query.lastmessageid;
 
     const room = await Room.findOne({
       _id: mongodb.ObjectId(id),
@@ -130,21 +131,42 @@ async function run() {
     if (!room) {
       return res.sendStatus(404);
     }
+    let messages = [];
 
-    const messages = await Message.find(
-      {
-        room: mongodb.ObjectId(id),
-      },
-      {
-        sort: {
-          _id: -1,
+    if (!inputLastMessageId) {
+      messages = await Message.find(
+        {
+          room: mongodb.ObjectId(id),
         },
-      }
-    )
-      .map(function (msg) {
-        return { ...msg, createdAt: msg._id.getTimestamp() };
-      })
-      .toArray();
+        {
+          sort: {
+            _id: -1,
+          },
+        }
+      )
+        .limit(50)
+        .map(function (msg) {
+          return { ...msg, createdAt: msg._id.getTimestamp() };
+        })
+        .toArray();
+    } else {
+      messages = await Message.find(
+        {
+          _id: { $lt: mongodb.ObjectId(inputLastMessageId) },
+          room: mongodb.ObjectId(id),
+        },
+        {
+          sort: {
+            _id: -1,
+          },
+        }
+      )
+        .limit(50)
+        .map(function (msg) {
+          return { ...msg, createdAt: msg._id.getTimestamp() };
+        })
+        .toArray();
+    }
 
     const userRoomConfig =
       (await UserRoomConfig.findOne({
@@ -196,7 +218,7 @@ async function run() {
           }
         });
 
-    const editedMessage = await Message.findOne({ _id: mongodb.ObjectId(messageId)});
+    const editedMessage = await Message.findOne({ _id: mongodb.ObjectId(messageId) });
     io.emit('edited-message', editedMessage)
     res.sendStatus(200);
   })
