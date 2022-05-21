@@ -1,8 +1,6 @@
-# Resources
+# Push Notifications
 
-## Push Notifications
-
-### [VAPID](https://datatracker.ietf.org/doc/html/draft-ietf-webpush-vapid-01) - Voluntary Application Server Identification for Web Push
+## [VAPID](https://datatracker.ietf.org/doc/html/draft-ietf-webpush-vapid-01) - Voluntary Application Server Identification for Web Push
 In order to maintain security while using the Web Push Protocol, one can use the VAPID protocol. This application uses the node web-push library to sign and send push messages and it is necessary to set the VAPID details.
 
 Below is the method used to set the necessary information for the web-push library to properly sign and send messages and an explanation on how to generate each field:
@@ -46,7 +44,7 @@ Below is the method used to set the necessary information for the web-push libra
             // Please do not use these keys and generate new // ones
             ```
 
-### Push Notification Resources
+# Resources
 https://developers.google.com/web/ilt/pwa/lab-integrating-web-push#1_get_set_up
 https://developers.google.com/web/fundamentals/codelabs/push-notifications/
 https://felixgerschau.com/web-push-notifications-tutorial/
