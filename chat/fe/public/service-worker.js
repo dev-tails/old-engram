@@ -1,13 +1,45 @@
+self.addEventListener('activate', (e) => {
+    e.waitUntil(clients.claim());
+});
+
 self.addEventListener('push', (e) => {
     const message = e.data.json();
-    e.waitUntil(
-        self.registration.showNotification(message.title, {
+    const roomUrl = ('/rooms/' + message.room.id);
+
+    function checkMessageIsInActiveWindow() {
+        return clients
+            .matchAll({
+                type: 'window',
+                includeUncontrolled: true,
+            })
+            .then((clientList) => {
+                let activeWindow = false;
+
+                for (let i = 0; i < clientList.length; i++) {
+                    const client = clientList[i];
+                    const clientUrl = new URL(client.url);
+                    if (client.focused && clientUrl.pathname == roomUrl) {
+                        activeWindow = true;
+                        break;
+                    }
+                }
+
+                return activeWindow;
+            });
+    }
+
+    e.waitUntil(checkMessageIsInActiveWindow().then((messageInActiveWindow) => {
+        if (messageInActiveWindow) {
+            return;
+        }
+
+        return self.registration.showNotification(message.title, {
             body: message.body,
             data: {
                 roomId: message.room,
             }
-        })
-    );
+        });
+    }))
 })
 
 self.addEventListener('notificationclick', (e) => {
@@ -19,9 +51,9 @@ self.addEventListener('notificationclick', (e) => {
         })
             .then(clientList => {
                 let windowMatchFound = false;
+
                 for (let i = 0; i < clientList.length; i++) {
                     let client = clientList[i];
-                    const url = new URL(client.url);
                     if (client) {
                         client.navigate(roomUrl);
                         client.focus();
@@ -29,7 +61,7 @@ self.addEventListener('notificationclick', (e) => {
                         break;
                     }
                 }
-                
+
                 if (!windowMatchFound) {
                     return clients.openWindow(roomUrl);
 
