@@ -1,35 +1,46 @@
+self.addEventListener('activate', (e) => {
+    e.waitUntil(clients.claim());
+});
+
 self.addEventListener('push', (e) => {
     const message = e.data.json();
     const roomUrl = ('/rooms/' + message.room.id);
-    e.waitUntil(
-        clients.matchAll({
-            type: 'window'
-        })
-            .then(clientList => {
-                for (let i = 0; i < clientList.length; i++) {
-                    let client = clientList[i];
-                    if (!(client.focused) || !(client.url.includes(roomUrl))) {
-                        self.registration.showNotification(message.title, {
-                            body: message.body,
-                            data: {
-                                roomId: message.room,
-                            }
 
-                        })
+    function checkMessageIsInActiveWindow() {
+        return clients
+            .matchAll({
+                type: 'window',
+                includeUncontrolled: true,
+            })
+            .then((clientList) => {
+                let activeWindow = false;
+
+                for (let i = 0; i < clientList.length; i++) {
+                    const client = clientList[i];
+                    const clientUrl = new URL(client.url);
+                    if (client.focused && clientUrl.pathname == roomUrl) {
+                        activeWindow = true;
                         break;
                     }
                 }
-            })
 
-    );
+                return activeWindow;
+            });
+    }
+
+    e.waitUntil(checkMessageIsInActiveWindow().then((messageInActiveWindow) => {
+        if (messageInActiveWindow) {
+            return;
+        }
+
+        return self.registration.showNotification(message.title, {
+            body: message.body,
+            data: {
+                roomId: message.room,
+            }
+        });
+    }))
 })
-
-        // self.registration.showNotification(message.title, {
-        //     body: message.body,
-        //     data: {
-        //         roomId: message.room,
-        //     }
-        // })
 
 self.addEventListener('notificationclick', (e) => {
     const roomUrl = ('/rooms/' + e.notification.data.roomId.id);
@@ -40,9 +51,9 @@ self.addEventListener('notificationclick', (e) => {
         })
             .then(clientList => {
                 let windowMatchFound = false;
+
                 for (let i = 0; i < clientList.length; i++) {
                     let client = clientList[i];
-                    const url = new URL(client.url);
                     if (client) {
                         client.navigate(roomUrl);
                         client.focus();
