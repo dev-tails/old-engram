@@ -1,14 +1,35 @@
 self.addEventListener('push', (e) => {
     const message = e.data.json();
+    const roomUrl = ('/rooms/' + message.room.id);
     e.waitUntil(
-        self.registration.showNotification(message.title, {
-            body: message.body,
-            data: {
-                roomId: message.room,
-            }
+        clients.matchAll({
+            type: 'window'
         })
+            .then(clientList => {
+                for (let i = 0; i < clientList.length; i++) {
+                    let client = clientList[i];
+                    if (!(client.focused) || !(client.url.includes(roomUrl))) {
+                        self.registration.showNotification(message.title, {
+                            body: message.body,
+                            data: {
+                                roomId: message.room,
+                            }
+
+                        })
+                        break;
+                    }
+                }
+            })
+
     );
 })
+
+        // self.registration.showNotification(message.title, {
+        //     body: message.body,
+        //     data: {
+        //         roomId: message.room,
+        //     }
+        // })
 
 self.addEventListener('notificationclick', (e) => {
     const roomUrl = ('/rooms/' + e.notification.data.roomId.id);
@@ -29,7 +50,7 @@ self.addEventListener('notificationclick', (e) => {
                         break;
                     }
                 }
-                
+
                 if (!windowMatchFound) {
                     return clients.openWindow(roomUrl);
 
