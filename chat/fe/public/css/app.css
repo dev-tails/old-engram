@@ -9,12 +9,12 @@ body {
     height: 100%;
 }
 
-.message-list {
+/* .message-list {
     width: 100%;
     max-width: 900px;
     margin: 0 auto;
     flex-grow: 1;
-}
+} */
 
 .textbox {
     background-color: #424242;

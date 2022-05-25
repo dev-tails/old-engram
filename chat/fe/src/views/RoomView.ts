@@ -526,6 +526,9 @@ export function RoomView(props: RoomViewProps) {
       props.onSubmit(inputText);
       input.value = '';
       el.style.height = originalHeight;
+      document.getElementsByClassName('message-list')[0].scrollTo({
+        top: 0,
+      });
     })
 
     input.addEventListener('keydown', (e) => {
@@ -539,7 +542,9 @@ export function RoomView(props: RoomViewProps) {
         props.onSubmit(inputText);
         input.value = '';
         el.style.height = originalHeight;
-        // document.getElementsByClassName('message-list')[0].scrollTo(0, 0);
+        document.getElementsByClassName('message-list')[0].scrollTo({
+          top: 0,
+        });
       }
     });
 
