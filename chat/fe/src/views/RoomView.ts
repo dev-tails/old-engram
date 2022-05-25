@@ -352,7 +352,9 @@ export function RoomView(props: RoomViewProps) {
   }
 
   function MessageList() {
-    const el = Div();
+    const el = Div({
+      class: 'message-list',
+    });
 
     setStyle(el, {
       overflowY: 'auto',
@@ -537,6 +539,7 @@ export function RoomView(props: RoomViewProps) {
         props.onSubmit(inputText);
         input.value = '';
         el.style.height = originalHeight;
+        // document.getElementsByClassName('message-list')[0].scrollTo(0, 0);
       }
     });
 
