@@ -40,15 +40,14 @@ export const RoomList = () => {
       });
       // TODO: onUnreadUpdate
       onUnreadUpdate(room, (config: UserRoomConfig) => {
-        console.log('roomlist handler for room: ', config.room, ' called');
         const countToUpdate = byId(config.room);
-        console.log(countToUpdate);
-        if (countToUpdate) {
-          countToUpdate.innerHTML = String(config.unreadCount);
-        } else {
-          createUnreadBubble(config.room);
+        if (config.unreadCount > 0) {
+          if (countToUpdate) {
+            countToUpdate.innerHTML = String(config.unreadCount);
+          } else {
+            createUnreadBubble(config);
+          }
         }
-
       });
 
       onClick(roomEl, async () => {
@@ -70,10 +69,10 @@ export const RoomList = () => {
 
       roomEl.append(roomNameEl)
 
-      function createUnreadBubble (room: Room) {
+      function createUnreadBubble(config: UserRoomConfig) {
         const unreadCountEl = Div({
           class: 'unread-count',
-          id: room._id,
+          id: config.room,
         });
         setStyle(unreadCountEl, {
           marginLeft: "8px",
@@ -83,14 +82,15 @@ export const RoomList = () => {
           paddingRight: "8px",
           color: "white"
         });
-        unreadCountEl.innerText = String(room.userRoomConfig.unreadCount);
-        return unreadCountEl;
+        unreadCountEl.innerText = String(config.unreadCount);
+        roomEl.append(unreadCountEl)
+        // return unreadCountEl;
       }
 
       // TODO: unread count bubble div
       if (room.userRoomConfig?.unreadCount > 0) {
-        const unreadCountEl = createUnreadBubble(room);
-        roomEl.append(unreadCountEl)
+        createUnreadBubble(room.userRoomConfig);
+
       }
       roomListEl.appendChild(roomEl);
     }

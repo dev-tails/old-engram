@@ -67,39 +67,16 @@ export async function initializeRoomApi() {
   });
 
   // TODO: add socket handling for unread count update
-  // TODO: redo in order to get O(1) room/roomConfig access
-  socket.on('unread', (userRoomConfigs: UserRoomConfig[]) => {
-    console.log(userRoomConfigs);
-
-    const currentRoom = roomsById[userRoomConfigs[0].room];
-    if (!currentRoom) {
-      // User doesn't have access to the room
-      // TODO: make sure websocket only sends to relevant parties
+  socket.on('unread-message', (userRoomConfigs: UserRoomConfig[]) => {
+    const currentUser = getSelf();
+    const currentUserRoomConfig = userRoomConfigs[currentUser._id];
+    if (!currentUserRoomConfig) {
+      // User does not exist in userRoomConfig for this room
+      console.log('user isnt part of mailing list');
       return;
     }
-    const currentUser = getSelf();
-
-    function searchConfigForCurrentUser(userRoomConfigs, currentUser) {
-      let start = 0, end = userRoomConfigs.length - 1;
-      while (start <= end) {
-        let mid = Math.floor((start + end) / 2);
-
-        if (userRoomConfigs[mid].user === currentUser._id) {
-          return userRoomConfigs[mid];
-        } else if (userRoomConfigs[mid].user < currentUser._id) {
-          start = mid + 1;
-        } else {
-          end = mid - 1;
-        }
-      }
-      return 0;
-    }
-
-    const configForCurrentUser = searchConfigForCurrentUser(userRoomConfigs, currentUser);
-    console.log('config for current user: ', configForCurrentUser);
-    if (configForCurrentUser) {
-      roomListListenerByRoomId[currentRoom._id](configForCurrentUser);
-    }
+    const currentRoom = roomsById[currentUserRoomConfig.room];
+    roomListListenerByRoomId[currentRoom._id](currentUserRoomConfig);
   });
 }
 
