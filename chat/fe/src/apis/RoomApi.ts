@@ -7,6 +7,7 @@ import { getSelf, getUser } from './UserApi';
 import { UserRoomConfig } from './UserRoomConfigApi';
 
 type MessageListener = (message: MessageType) => any;
+type UserRoomConfigListener = (userRoomConfig: UserRoomConfig) => any;
 
 const messageListenerByRoomId: { [id: string]: MessageListener } = {};
 const deletingMessageListener: {
@@ -15,6 +16,8 @@ const deletingMessageListener: {
 const editMessageListener: {
   [id: string]: MessageListener
 } = {};
+
+const roomListListenerByRoomId: { [roomId: string]: UserRoomConfigListener } = {}
 
 export type Room = {
   _id: string;
@@ -37,15 +40,20 @@ export async function initializeRoomApi() {
 
     const currentUser = getSelf();
     const messageSender = getUser(message.user);
+    const roomId = message.room;
 
-    if (message.user !== currentUser._id)
+    if (message.user !== currentUser._id) {
+
+      room.userRoomConfig.unreadCount++;
+      roomListListenerByRoomId[roomId](room.userRoomConfig)
+
       sendNotification({
         title: room.name,
         body: `${messageSender.name}: ${TextUtils.truncate(message.body, 256)}`,
         roomId: message.room,
       });
+    }
 
-    const roomId = message.room;
     if (messagesByRoomID[roomId]) {
       messagesByRoomID[roomId].unshift(message);
 
@@ -208,4 +216,11 @@ export function onEditMessage(
   handler: (message: MessageType) => any
 ) {
   editMessageListener[roomId] = handler;
+}
+
+export function onUnreadUpdate(
+  room: Room,
+  handler: (userRoomConfig: UserRoomConfig) => any
+) {
+  roomListListenerByRoomId[room._id] = handler;
 }

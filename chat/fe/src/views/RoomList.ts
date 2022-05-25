@@ -1,7 +1,7 @@
-import { getRooms, Room } from '../apis/RoomApi';
-import { postUserRoomConfig } from '../apis/UserRoomConfigApi';
+import { getRooms, onUnreadUpdate, Room } from '../apis/RoomApi';
+import { postUserRoomConfig, UserRoomConfig } from '../apis/UserRoomConfigApi';
 import { Div } from '../components/Div';
-import { onClick, setStyle } from '../utils/DomUtils';
+import { onClick, setStyle, byId } from '../utils/DomUtils';
 import { setURL } from '../utils/HistoryUtils';
 
 export const RoomList = () => {
@@ -34,6 +34,17 @@ export const RoomList = () => {
         borderBottom: "1px solid black",
       });
 
+      onUnreadUpdate(room, (config: UserRoomConfig) => {
+        const countToUpdate = byId(config.room);
+        if (config.unreadCount > 0) {
+          if (countToUpdate) {
+            countToUpdate.innerHTML = String(config.unreadCount);
+          } else {
+            createUnreadBubble(config);
+          }
+        }
+      });
+
       onClick(roomEl, async () => {
         await postUserRoomConfig({
           ...room.userRoomConfig,
@@ -53,8 +64,11 @@ export const RoomList = () => {
 
       roomEl.append(roomNameEl)
 
-      if (room.userRoomConfig?.unreadCount > 0) {
-        const unreadCountEl = Div();
+      function createUnreadBubble(config: UserRoomConfig) {
+        const unreadCountEl = Div({
+          class: 'unread-count',
+          id: config.room,
+        });
         setStyle(unreadCountEl, {
           marginLeft: "8px",
           backgroundColor: "red",
@@ -63,8 +77,12 @@ export const RoomList = () => {
           paddingRight: "8px",
           color: "white"
         });
-        unreadCountEl.innerText = String(room.userRoomConfig.unreadCount);
+        unreadCountEl.innerText = String(config.unreadCount);
         roomEl.append(unreadCountEl)
+      }
+
+      if (room.userRoomConfig?.unreadCount > 0) {
+        createUnreadBubble(room.userRoomConfig);
       }
       roomListEl.appendChild(roomEl);
     }
@@ -75,3 +93,11 @@ export const RoomList = () => {
 
   return el;
 };
+
+export async function clearUnreadBubble(room: Room) {
+  const unreadBubble = byId(room._id);
+  if (unreadBubble){
+    unreadBubble.remove();
+    await getRooms();
+  }
+}

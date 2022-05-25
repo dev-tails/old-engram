@@ -205,7 +205,7 @@ async function run() {
       { room: mongodb.ObjectId(id), user: { $ne: mongodb.ObjectId(req.user) } },
       { $inc: { unreadCount: 1 } }
     );
-
+    
     io.emit('message', newMessage);
 
     const currentRoom = await Room.findOne({
@@ -213,7 +213,6 @@ async function run() {
     });
     const subscriptions = await PushNotification.find({ user: { $in: currentRoom.users, $ne: mongodb.ObjectId(req.user) } }).toArray();
     const userName = await User.findOne({ _id: mongodb.ObjectId(req.user) });
-
     const notifications = [];
     subscriptions.forEach((subscriber) => {
       notifications.push(
