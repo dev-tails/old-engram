@@ -94,9 +94,10 @@ export const RoomList = () => {
   return el;
 };
 
-export function clearUnreadBubble(room: Room) {
+export async function clearUnreadBubble(room: Room) {
   const unreadBubble = byId(room._id);
   if (unreadBubble){
     unreadBubble.remove();
+    await getRooms();
   }
 }

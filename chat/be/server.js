@@ -205,21 +205,8 @@ async function run() {
       { room: mongodb.ObjectId(id), user: { $ne: mongodb.ObjectId(req.user) } },
       { $inc: { unreadCount: 1 } }
     );
-
+    
     io.emit('message', newMessage);
-
-    const userRoomConfigs = await UserRoomConfig.find(
-      {
-        room: mongodb.ObjectId(id)
-      }
-    ).toArray();
-    const userRoomConfigByUser = {};
-    for (const config of userRoomConfigs) {
-      userRoomConfigByUser[config.user] = config;
-    }
-    if (Object.keys(userRoomConfigByUser).length != 0) {
-      io.emit('unread-message', userRoomConfigByUser);
-    }
 
     const currentRoom = await Room.findOne({
       _id: mongodb.ObjectId(id)

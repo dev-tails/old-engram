@@ -40,15 +40,20 @@ export async function initializeRoomApi() {
 
     const currentUser = getSelf();
     const messageSender = getUser(message.user);
+    const roomId = message.room;
 
-    if (message.user !== currentUser._id)
+    if (message.user !== currentUser._id) {
+
+      room.userRoomConfig.unreadCount++;
+      roomListListenerByRoomId[roomId](room.userRoomConfig)
+
       sendNotification({
         title: room.name,
         body: `${messageSender.name}: ${TextUtils.truncate(message.body, 256)}`,
         roomId: message.room,
       });
+    }
 
-    const roomId = message.room;
     if (messagesByRoomID[roomId]) {
       messagesByRoomID[roomId].unshift(message);
 
@@ -64,19 +69,6 @@ export async function initializeRoomApi() {
 
   socket.on('delete-message', ({ room, id }) => {
     deletingMessageListener[room](id);
-  });
-
-  socket.on('unread-message', (userRoomConfigs: UserRoomConfig[]) => {
-    const currentUser = getSelf();
-    const currentUserRoomConfig = userRoomConfigs[currentUser._id];
-    if (!currentUserRoomConfig) {
-      // User does not exist in UserRoomConfig for this room
-      // TODO: make sure websocket only sends to relevant parties
-      console.log('user isnt part of mailing list');
-      return;
-    }
-    const currentRoom = roomsById[currentUserRoomConfig.room];
-    roomListListenerByRoomId[currentRoom._id](currentUserRoomConfig);
   });
 }
 

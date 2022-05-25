@@ -86,7 +86,7 @@ export function RoomView(props: RoomViewProps) {
       room: room._id,
       unreadCount: 0
     })
-    clearUnreadBubble(room);
+    await clearUnreadBubble(room);
   })
 
   onRoomMessage(props.roomId, (message) => {
