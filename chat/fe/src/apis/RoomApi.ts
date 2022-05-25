@@ -66,12 +66,12 @@ export async function initializeRoomApi() {
     deletingMessageListener[room](id);
   });
 
-  // TODO: add socket handling for unread count update
   socket.on('unread-message', (userRoomConfigs: UserRoomConfig[]) => {
     const currentUser = getSelf();
     const currentUserRoomConfig = userRoomConfigs[currentUser._id];
     if (!currentUserRoomConfig) {
-      // User does not exist in userRoomConfig for this room
+      // User does not exist in UserRoomConfig for this room
+      // TODO: make sure websocket only sends to relevant parties
       console.log('user isnt part of mailing list');
       return;
     }

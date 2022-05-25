@@ -13,7 +13,9 @@ import {
   getRoomMessageByPage,
 } from '../apis/RoomApi';
 
-import { RoomList } from './RoomList';
+import { postUserRoomConfig } from '../apis/UserRoomConfigApi';
+
+import { clearUnreadBubble, RoomList } from './RoomList';
 
 import { getSelf, getUser } from '../apis/UserApi';
 import { Button } from '../components/Button';
@@ -77,6 +79,15 @@ export function RoomView(props: RoomViewProps) {
   });
 
   const room = getRoom(props.roomId);
+
+  onClick(messageView, async () => {
+    await postUserRoomConfig({
+      ...room.userRoomConfig,
+      room: room._id,
+      unreadCount: 0
+    })
+    clearUnreadBubble(room);
+  })
 
   onRoomMessage(props.roomId, (message) => {
     if (isLastMessageToday(messages[1], message)) {

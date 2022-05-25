@@ -14,11 +14,6 @@ export const RoomList = () => {
 
   let rooms: Room[] = [];
 
-
-  // TODO: make a handler function for incoming unread
-
-
-
   async function init() {
     const roomListEl = Div();
     setStyle(roomListEl, {
@@ -38,7 +33,7 @@ export const RoomList = () => {
         padding: "20px",
         borderBottom: "1px solid black",
       });
-      // TODO: onUnreadUpdate
+
       onUnreadUpdate(room, (config: UserRoomConfig) => {
         const countToUpdate = byId(config.room);
         if (config.unreadCount > 0) {
@@ -84,13 +79,10 @@ export const RoomList = () => {
         });
         unreadCountEl.innerText = String(config.unreadCount);
         roomEl.append(unreadCountEl)
-        // return unreadCountEl;
       }
 
-      // TODO: unread count bubble div
       if (room.userRoomConfig?.unreadCount > 0) {
         createUnreadBubble(room.userRoomConfig);
-
       }
       roomListEl.appendChild(roomEl);
     }
@@ -101,3 +93,10 @@ export const RoomList = () => {
 
   return el;
 };
+
+export function clearUnreadBubble(room: Room) {
+  const unreadBubble = byId(room._id);
+  if (unreadBubble){
+    unreadBubble.remove();
+  }
+}

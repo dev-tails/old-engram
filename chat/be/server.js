@@ -213,12 +213,10 @@ async function run() {
         room: mongodb.ObjectId(id)
       }
     ).toArray();
-
     const userRoomConfigByUser = {};
     for (const config of userRoomConfigs) {
       userRoomConfigByUser[config.user] = config;
     }
-
     if (Object.keys(userRoomConfigByUser).length != 0) {
       io.emit('unread-message', userRoomConfigByUser);
     }
@@ -228,7 +226,6 @@ async function run() {
     });
     const subscriptions = await PushNotification.find({ user: { $in: currentRoom.users, $ne: mongodb.ObjectId(req.user) } }).toArray();
     const userName = await User.findOne({ _id: mongodb.ObjectId(req.user) });
-
     const notifications = [];
     subscriptions.forEach((subscriber) => {
       notifications.push(
