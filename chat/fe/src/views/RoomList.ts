@@ -1,7 +1,7 @@
-import { getRooms, Room } from '../apis/RoomApi';
-import { postUserRoomConfig } from '../apis/UserRoomConfigApi';
+import { getRooms, onUnreadUpdate, Room } from '../apis/RoomApi';
+import { postUserRoomConfig, UserRoomConfig } from '../apis/UserRoomConfigApi';
 import { Div } from '../components/Div';
-import { onClick, setStyle } from '../utils/DomUtils';
+import { onClick, setStyle, byId } from '../utils/DomUtils';
 import { setURL } from '../utils/HistoryUtils';
 
 export const RoomList = () => {
@@ -13,6 +13,11 @@ export const RoomList = () => {
   })
 
   let rooms: Room[] = [];
+
+
+  // TODO: make a handler function for incoming unread
+
+
 
   async function init() {
     const roomListEl = Div();
@@ -32,6 +37,18 @@ export const RoomList = () => {
         display: "flex",
         padding: "20px",
         borderBottom: "1px solid black",
+      });
+      // TODO: onUnreadUpdate
+      onUnreadUpdate(room, (config: UserRoomConfig) => {
+        console.log('roomlist handler for room: ', config.room, ' called');
+        const countToUpdate = byId(config.room);
+        console.log(countToUpdate);
+        if (countToUpdate) {
+          countToUpdate.innerHTML = String(config.unreadCount);
+        } else {
+          createUnreadBubble(config.room);
+        }
+
       });
 
       onClick(roomEl, async () => {
@@ -53,9 +70,11 @@ export const RoomList = () => {
 
       roomEl.append(roomNameEl)
 
-      // TODO: unread count bubble div
-      if (room.userRoomConfig?.unreadCount > 0) {
-        const unreadCountEl = Div();
+      function createUnreadBubble (room: Room) {
+        const unreadCountEl = Div({
+          class: 'unread-count',
+          id: room._id,
+        });
         setStyle(unreadCountEl, {
           marginLeft: "8px",
           backgroundColor: "red",
@@ -65,6 +84,12 @@ export const RoomList = () => {
           color: "white"
         });
         unreadCountEl.innerText = String(room.userRoomConfig.unreadCount);
+        return unreadCountEl;
+      }
+
+      // TODO: unread count bubble div
+      if (room.userRoomConfig?.unreadCount > 0) {
+        const unreadCountEl = createUnreadBubble(room);
         roomEl.append(unreadCountEl)
       }
       roomListEl.appendChild(roomEl);

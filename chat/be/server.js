@@ -207,7 +207,29 @@ async function run() {
     );
 
     io.emit('message', newMessage);
+
+
     // TODO: emit unread count
+    // Should emit unread counts for the room the message came into
+    const userRoomConfig = await UserRoomConfig.find(
+      {
+        room: mongodb.ObjectId(id),
+        // user: { $ne: mongodb.ObjectId(req.user) },
+      }, 
+      {
+        sort: {
+          user: 1,
+        },
+      }
+    ).toArray();
+    console.log(userRoomConfig);
+    if (userRoomConfig.length != 0){
+      console.log('emitting unread message counts');
+      io.emit('unread', userRoomConfig);
+    }
+
+
+
 
     const currentRoom = await Room.findOne({
       _id: mongodb.ObjectId(id)

@@ -7,6 +7,7 @@ import { getSelf, getUser } from './UserApi';
 import { UserRoomConfig } from './UserRoomConfigApi';
 
 type MessageListener = (message: MessageType) => any;
+type UserRoomConfigListener = (userRoomConfig: UserRoomConfig) => any;
 
 const messageListenerByRoomId: { [id: string]: MessageListener } = {};
 const deletingMessageListener: {
@@ -15,6 +16,8 @@ const deletingMessageListener: {
 const editMessageListener: {
   [id: string]: MessageListener
 } = {};
+
+const roomListListenerByRoomId: { [roomId: string]: UserRoomConfigListener } = {}
 
 export type Room = {
   _id: string;
@@ -64,8 +67,39 @@ export async function initializeRoomApi() {
   });
 
   // TODO: add socket handling for unread count update
-  socket.on('unread', () => {
-    
+  // TODO: redo in order to get O(1) room/roomConfig access
+  socket.on('unread', (userRoomConfigs: UserRoomConfig[]) => {
+    console.log(userRoomConfigs);
+
+    const currentRoom = roomsById[userRoomConfigs[0].room];
+    if (!currentRoom) {
+      // User doesn't have access to the room
+      // TODO: make sure websocket only sends to relevant parties
+      return;
+    }
+    const currentUser = getSelf();
+
+    function searchConfigForCurrentUser(userRoomConfigs, currentUser) {
+      let start = 0, end = userRoomConfigs.length - 1;
+      while (start <= end) {
+        let mid = Math.floor((start + end) / 2);
+
+        if (userRoomConfigs[mid].user === currentUser._id) {
+          return userRoomConfigs[mid];
+        } else if (userRoomConfigs[mid].user < currentUser._id) {
+          start = mid + 1;
+        } else {
+          end = mid - 1;
+        }
+      }
+      return 0;
+    }
+
+    const configForCurrentUser = searchConfigForCurrentUser(userRoomConfigs, currentUser);
+    console.log('config for current user: ', configForCurrentUser);
+    if (configForCurrentUser) {
+      roomListListenerByRoomId[currentRoom._id](configForCurrentUser);
+    }
   });
 }
 
@@ -213,4 +247,11 @@ export function onEditMessage(
   handler: (message: MessageType) => any
 ) {
   editMessageListener[roomId] = handler;
+}
+
+export function onUnreadUpdate(
+  room: Room,
+  handler: (userRoomConfig: UserRoomConfig) => any
+) {
+  roomListListenerByRoomId[room._id] = handler;
 }
