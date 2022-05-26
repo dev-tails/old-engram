@@ -318,9 +318,24 @@ export function RoomView(props: RoomViewProps) {
           dropdown.style.border = '1px solid #909090bf';
         });
 
+        // TODO: move edit prompt to input text area
         onClick(edit_option, () => {
-          const editedMessage = prompt("Edit your message:");
-          handleEditMessage(props._id, editedMessage);
+          const textBox = byId('textbox');
+          const originalTextInput = byId('textinput');
+          console.log(originalTextInput);
+          if (textBox) {
+            textBox.remove();
+          }
+
+          const messageId = props._id;
+          const editTextBox = TextBox({onSubmit: handleEditMessage, messageId, originalTextInput} );
+          messageView.append(editTextBox);
+
+          // TODO: disable options when you edit a message
+          const editTextInput = <HTMLInputElement> byId('textinput');
+          editTextInput.focus();
+          editTextInput.placeholder = 'Edit your message';
+
           messageButtonActive = false;
         });
         onMouseOver(edit_option, () => {
@@ -498,9 +513,9 @@ export function RoomView(props: RoomViewProps) {
     return dateLastListMessage !== dateCurrentMessage;
   }
 
-  function TextBox(props: { onSubmit: (text: string) => void }) {
+  function TextBox(props: { onSubmit: (text: string, id?: string) => void, messageId?: string, originalTextInput?: HTMLElement } ) {
     const el = Div({
-      // class: 'textbox',
+      id: 'textbox',
     });
     setStyle(el, {
       flexShrink: '0',
@@ -515,6 +530,7 @@ export function RoomView(props: RoomViewProps) {
     const originalHeight = el.style.height;
 
     const input = TextArea();
+    input.id = 'textinput';
     setStyle(input, {
       height: '100%',
       width: '100%',
@@ -548,9 +564,21 @@ export function RoomView(props: RoomViewProps) {
         el.style.height = String(scrollHeight);
       }
       if (e.key === 'Enter' && !e.shiftKey) {
+        console.log('message submitted');
+        console.log(props.messageId);
         const inputText = input.value.trim();
         e.preventDefault();
-        props.onSubmit(inputText);
+        if (props.messageId) {
+          console.log('edit message path ', props.onSubmit);
+          console.log();
+          props.onSubmit(inputText, props.messageId)
+
+          input.remove();
+          // BUG: If you click edit then edit another message it won't end well...
+          el.appendChild(props.originalTextInput);
+        } else {
+          props.onSubmit(inputText);
+        }
         input.value = '';
         el.style.height = originalHeight;
         document.getElementsByClassName('message-list')[0].scrollTo({
@@ -683,7 +711,8 @@ export function RoomView(props: RoomViewProps) {
     });
   }
 
-  function handleEditMessage(id: string, newText: string) {
+  // NOTE: Display -> API call
+  function handleEditMessage(newText: string, id: string) {
     editRoomMessage({
       room: props.roomId,
       id: id,
