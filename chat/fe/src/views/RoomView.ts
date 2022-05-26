@@ -114,7 +114,17 @@ export function RoomView(props: RoomViewProps) {
 
   onEditMessage(props.roomId, async (message) => {
     const messageToEdit = byId(message._id);
-    messageToEdit.getElementsByClassName('body')[0].innerHTML = autolinker.link(message.body);
+
+    const messageContentEl = messageToEdit.getElementsByClassName('message-content-el')[0];
+    const messageBody = messageToEdit.getElementsByClassName('body')[0]
+    messageToEdit.classList.toggle('being-edited')
+    messageToEdit.style.backgroundColor = '';
+    messageBody.innerHTML = autolinker.link(message.body);
+
+    if (!messageToEdit.getElementsByClassName('edited-tag')[0]){
+      const editedTag = EditedTag();
+      messageContentEl.insertBefore(editedTag, messageBody);
+    }
   });
 
   // NOTE: Message function
@@ -128,9 +138,9 @@ export function RoomView(props: RoomViewProps) {
 
     setStyle(el, {
       display: 'flex',
-      margin: '4px 0px',
+      margin: '0px 0px',
       overflowWrap: 'Anywhere',
-      padding: '0px 15px',
+      padding: '4px 15px',
     });
 
     onMouseOver(el, (e) => {
@@ -219,6 +229,10 @@ export function RoomView(props: RoomViewProps) {
 
       messageTime.innerHTML = messageCreatedAt;
       messageContentEl.append(messageTime);
+
+      if (props.edited) {
+        messageContentEl.append(EditedTag());
+      }
 
       const bodyEl = Div();
       bodyEl.className = 'body';
@@ -348,7 +362,7 @@ export function RoomView(props: RoomViewProps) {
           editTextInput.focus();
 
           el.classList.toggle('being-edited');
-          // el.style.backgroundColor = '#d7d7d7'; // NOTE: change the highlight color here
+          el.style.backgroundColor = '#e6e6e6';
           messageOptions.style.display = 'none';
 
           messageButtonActive = false;
@@ -393,6 +407,19 @@ export function RoomView(props: RoomViewProps) {
     init();
 
     return el;
+  }
+
+  function EditedTag() {
+    const el = Span({
+      class: 'edited-tag'
+    });
+    setStyle(el, {
+      marginLeft: '8px',
+      fontSize: '12px',
+    })
+    el.innerHTML = 'edited';
+
+    return el
   }
 
   function MessageList() {
@@ -570,13 +597,13 @@ export function RoomView(props: RoomViewProps) {
       const inputText = input.value.trim();
       if (props.messageId) {
         const editedMessage = byId(props.messageId);
-          props.onSubmit(inputText, props.messageId)
-          editedMessage.classList.toggle('being-edited')
-          editedMessage.style.backgroundColor = '';
+        props.onSubmit(inputText, props.messageId)
+        editedMessage.classList.toggle('being-edited')
+        editedMessage.style.backgroundColor = '';
 
-          el.remove();
-          messageView.appendChild(textBox);
-          messageBeingEdited = false;
+        el.remove();
+        messageView.appendChild(textBox);
+        messageBeingEdited = false;
       } else {
         props.onSubmit(inputText);
       }
@@ -597,11 +624,7 @@ export function RoomView(props: RoomViewProps) {
         const inputText = input.value.trim();
         e.preventDefault();
         if (props.messageId) {
-          const editedMessage = byId(props.messageId);
           props.onSubmit(inputText, props.messageId)
-          editedMessage.classList.toggle('being-edited')
-          editedMessage.style.backgroundColor = '';
-
           el.remove();
           messageView.appendChild(textBox);
           messageBeingEdited = false;

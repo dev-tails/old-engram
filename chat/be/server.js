@@ -242,6 +242,7 @@ async function run() {
         {
           $set: {
             body: newBody,
+            edited: true,
           }
         });
 
