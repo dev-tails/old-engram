@@ -115,6 +115,7 @@ export function RoomView(props: RoomViewProps) {
     messageToEdit.getElementsByClassName('body')[0].innerHTML = autolinker.link(message.body);
   });
 
+  // NOTE: Message function
   function Message(props: MessageType) {
     let dropdownOpen = false;
 
@@ -127,7 +128,7 @@ export function RoomView(props: RoomViewProps) {
       display: 'flex',
       margin: '4px 0px',
       overflowWrap: 'Anywhere',
-      padding: '0px 15px'
+      padding: '0px 15px',
     });
 
     onMouseOver(el, (e) => {
@@ -320,13 +321,14 @@ export function RoomView(props: RoomViewProps) {
           dropdown.style.border = '1px solid #909090bf';
         });
 
+        // NOTE: Edit option onclick handler
         onClick(edit_option, () => {
           const textBox = byId('textbox');
           if (textBox) {
             textBox.remove();
           }
           const messageId = props._id;
-          const editTextBox = TextBox({ onSubmit: handleEditMessage, messageId});
+          const editTextBox = TextBox({ onSubmit: handleEditMessage, messageId });
           messageView.append(editTextBox);
 
           const editTextInput = <HTMLInputElement>byId('textinput');
@@ -514,7 +516,7 @@ export function RoomView(props: RoomViewProps) {
     return dateLastListMessage !== dateCurrentMessage;
   }
 
-  function TextBox(props: { onSubmit: (text: string, id?: string) => void, messageId?: string}) {
+  function TextBox(props: { onSubmit: (text: string, id?: string) => void, messageId?: string }) {
     const el = Div({
       id: 'textbox',
     });
@@ -551,7 +553,13 @@ export function RoomView(props: RoomViewProps) {
     })
     onClick(btnSubmit, () => {
       const inputText = input.value.trim();
-      props.onSubmit(inputText);
+      if (props.messageId) {
+        props.onSubmit(inputText, props.messageId)
+        el.remove();
+        messageView.appendChild(textBox);
+      } else {
+        props.onSubmit(inputText);
+      }
       input.value = '';
       el.style.height = originalHeight;
       document.getElementsByClassName('message-list')[0].scrollTo({
@@ -559,6 +567,7 @@ export function RoomView(props: RoomViewProps) {
       });
     })
 
+    // NOTE: Text input keydown listener
     input.addEventListener('keydown', (e) => {
       const scrollHeight = input.scrollHeight;
       if (scrollHeight > Number(originalHeight)) {
