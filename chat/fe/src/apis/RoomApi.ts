@@ -185,6 +185,9 @@ type EditRoomMessageParams = {
 }
 
 export async function editRoomMessage(params: EditRoomMessageParams) {
+  if (!params.body) {
+    return;
+  }
   fetch(`/api/rooms/${params.room}/messages`, {
     method: 'PUT',
     headers: {

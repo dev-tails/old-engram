@@ -568,7 +568,6 @@ export function RoomView(props: RoomViewProps) {
         const inputText = input.value.trim();
         e.preventDefault();
         if (props.messageId) {
-          // BUG: able to send empty input text while editing?
           props.onSubmit(inputText, props.messageId)
           el.remove();
           messageView.appendChild(textBox);
