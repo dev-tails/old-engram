@@ -51,6 +51,8 @@ export function RoomView(props: RoomViewProps) {
   let lastMessageId = '';
 
   let messageButtonActive = false;
+  let messageBeingEdited = false;
+
   const mql = window.matchMedia('(max-width: 600px');
   sideBarEnabled = localStorage.getItem('sidebar') === 'true';
 
@@ -136,12 +138,14 @@ export function RoomView(props: RoomViewProps) {
       if (messageButtonActive) {
         return;
       }
-
-      el.style.backgroundColor = '#f2f2f2';
-      const optionsButton = bySelector(el.lastElementChild, '.options-button');
-      if (optionsButton) {
-        optionsButton.style.display = 'block';
+      if (!el.classList.contains('being-edited')) {
+        el.style.backgroundColor = '#f2f2f2';
+        const optionsButton = bySelector(el.lastElementChild, '.options-button');
+        if (optionsButton && !messageBeingEdited) {
+          optionsButton.style.display = 'block';
+        }
       }
+
     });
 
     onMouseLeave(el, (e) => {
@@ -149,11 +153,14 @@ export function RoomView(props: RoomViewProps) {
       if (messageButtonActive) {
         return;
       }
-      el.style.backgroundColor = '';
-      const optionsButton = bySelector(el.lastElementChild, '.options-button');
-      if (optionsButton) {
-        optionsButton.style.display = dropdownOpen ? 'block' : 'none';
+      if (!el.classList.contains('being-edited')) {
+        el.style.backgroundColor = '';
+        const optionsButton = bySelector(el.lastElementChild, '.options-button');
+        if (optionsButton && !messageBeingEdited) {
+          optionsButton.style.display = dropdownOpen ? 'block' : 'none';
+        }
       }
+
     });
 
     const user = getUser(props.user);
@@ -182,7 +189,9 @@ export function RoomView(props: RoomViewProps) {
     userIcon.innerText = firstInitial + lastInitial;
     el.append(userIcon);
 
-    const messageContentEl = Div();
+    const messageContentEl = Div({
+      class: 'message-content-el',
+    });
     setStyle(messageContentEl, {
       width: '100%',
     });
@@ -337,7 +346,13 @@ export function RoomView(props: RoomViewProps) {
           editTextInput.innerHTML = props.body;
           editTextInput.setSelectionRange(messageBodyEnd, messageBodyEnd);
           editTextInput.focus();
+
+          el.classList.toggle('being-edited');
+          // el.style.backgroundColor = '#d7d7d7'; // NOTE: change the highlight color here
+          messageOptions.style.display = 'none';
+
           messageButtonActive = false;
+          messageBeingEdited = true;
         });
 
         onMouseOver(edit_option, () => {
@@ -554,9 +569,14 @@ export function RoomView(props: RoomViewProps) {
     onClick(btnSubmit, () => {
       const inputText = input.value.trim();
       if (props.messageId) {
-        props.onSubmit(inputText, props.messageId)
-        el.remove();
-        messageView.appendChild(textBox);
+        const editedMessage = byId(props.messageId);
+          props.onSubmit(inputText, props.messageId)
+          editedMessage.classList.toggle('being-edited')
+          editedMessage.style.backgroundColor = '';
+
+          el.remove();
+          messageView.appendChild(textBox);
+          messageBeingEdited = false;
       } else {
         props.onSubmit(inputText);
       }
@@ -577,9 +597,14 @@ export function RoomView(props: RoomViewProps) {
         const inputText = input.value.trim();
         e.preventDefault();
         if (props.messageId) {
+          const editedMessage = byId(props.messageId);
           props.onSubmit(inputText, props.messageId)
+          editedMessage.classList.toggle('being-edited')
+          editedMessage.style.backgroundColor = '';
+
           el.remove();
           messageView.appendChild(textBox);
+          messageBeingEdited = false;
         } else {
           props.onSubmit(inputText);
         }
