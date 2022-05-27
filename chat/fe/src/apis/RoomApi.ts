@@ -63,7 +63,6 @@ export async function initializeRoomApi() {
     }
   });
 
-  // TODO: may need to edit this since new property added in messagetype
   socket.on('edited-message', (message: MessageType) => {
     editMessageListener[message.room](message);
   })
@@ -101,7 +100,7 @@ export type MessageType = {
   body: string;
   room: string;
   createdAt: Date;
-  edited?: boolean; // NOTE: added this
+  edited?: boolean;
 };
 
 const messagesByRoomID: { [id: string]: MessageType[] } = {};
@@ -186,7 +185,6 @@ type EditRoomMessageParams = {
   body: string;
 }
 
-// TODO: make this able to attach edited tag onto message in database - need to change messageType type to include optional edited tag
 export async function editRoomMessage(params: EditRoomMessageParams) {
   if (!params.body) {
     return;

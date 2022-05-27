@@ -127,7 +127,6 @@ export function RoomView(props: RoomViewProps) {
     }
   });
 
-  // NOTE: Message function
   function Message(props: MessageType) {
     let dropdownOpen = false;
 
@@ -344,7 +343,6 @@ export function RoomView(props: RoomViewProps) {
           dropdown.style.border = '1px solid #909090bf';
         });
 
-        // NOTE: Edit option onclick handler
         onClick(edit_option, () => {
           const textBox = byId('textbox');
           if (textBox) {
@@ -614,7 +612,6 @@ export function RoomView(props: RoomViewProps) {
       });
     })
 
-    // NOTE: Text input keydown listener
     input.addEventListener('keydown', (e) => {
       const scrollHeight = input.scrollHeight;
       if (scrollHeight > Number(originalHeight)) {
