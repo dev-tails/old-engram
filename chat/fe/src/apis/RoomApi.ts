@@ -100,7 +100,7 @@ export type MessageType = {
   body: string;
   room: string;
   createdAt: Date;
-  edited?: boolean;
+  updatedAt?: Date;
 };
 
 const messagesByRoomID: { [id: string]: MessageType[] } = {};

@@ -226,7 +226,7 @@ export function RoomView(props: RoomViewProps) {
       messageTime.innerHTML = messageCreatedAt;
       messageContentEl.append(messageTime);
 
-      if (props.edited) {
+      if (props.updatedAt) {
         messageContentEl.append(EditedTag());
       }
 
