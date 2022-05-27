@@ -25,8 +25,18 @@ async function run() {
   const UserRoomConfig = db.collection('userroomconfigs');
   const PushNotification = db.collection('pushnotifications');
 
+  // TODO: change this to be able to format file name correctly in filesystem
+  const storageConfig = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, 'uploads/')
+    },
+    filename: (req, file, cb) => { // TODO: this function needs to add the extenstion onto the file
+      cb(null, file.originalname + '.jpg')
+    }
+  })
+
   const upload = multer({
-    dest: 'uploads/',
+    storage: storageConfig,
   })
 
   const app = express();
@@ -211,7 +221,7 @@ async function run() {
       { room: mongodb.ObjectId(id), user: { $ne: mongodb.ObjectId(req.user) } },
       { $inc: { unreadCount: 1 } }
     );
-    
+
     io.emit('message', newMessage);
 
     const currentRoom = await Room.findOne({
@@ -254,7 +264,7 @@ async function run() {
     const editedMessage = await Message.findOne({ _id: mongodb.ObjectId(messageId) });
     io.emit('edited-message', editedMessage)
     res.sendStatus(200);
-  })
+  });
 
   app.delete('/api/rooms/:id/messages', async (req, res, next) => {
     const roomId = req.params.id;
@@ -276,7 +286,7 @@ async function run() {
     res.json({
       publickey: process.env.WEB_PUSH_VAPID_PUBLIC_KEY,
     });
-  })
+  });
 
   app.post('/api/subscriptions', async (req, res, next) => {
     const currentUser = req.user;
@@ -286,7 +296,7 @@ async function run() {
       subscription: subscriptionInfo,
     })
     res.sendStatus(200);
-  })
+  });
 
   app.delete('/api/subscriptions', async (req, res, next) => {
     const currentUser = req.user;
@@ -295,6 +305,11 @@ async function run() {
       subscription: req.body.subscription,
     })
     res.sendStatus(200);
+  });
+
+
+  app.post('/api/files', upload.single('file'), (req, res, next) => {
+    console.log(req.file);
   })
 
   app.get('*', (req, res) => {

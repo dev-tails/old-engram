@@ -36,6 +36,7 @@ import {
   setText,
 } from '../utils/DomUtils';
 import { setURL } from '../utils/HistoryUtils';
+import { sendFile } from '../apis/FileUploadApi';
 
 type RoomViewProps = {
   roomId: string;
@@ -566,9 +567,17 @@ export function RoomView(props: RoomViewProps) {
     setStyle(uploadBtn, {
     });
     uploadBtn.type = 'file';
+    // uploadBtn.name = 'file';
+    uploadBtn.id = 'file' // NOTE: ID will be required and needs to match the field in server.js in order to correctly receive the file
 
-    uploadBtn.addEventListener('change', (e)=> {
-      console.log('file uploaded');
+    uploadBtn.addEventListener('change', (e) => {
+      // console.log('file uploaded');
+      // console.log(uploadBtn.files[0]);
+      const fileData = new FormData();
+      // uploadBtn.value
+      fileData.append('file', uploadBtn.files[0]);
+      // console.log(fileData.getAll('file'));
+      handleSubmitFile(fileData);
     });
 
     el.appendChild(input);
@@ -690,8 +699,15 @@ export function RoomView(props: RoomViewProps) {
     });
   }
 
-  function handleSubmitFile() {
-    
+  // type FileSubmitParams = {
+  //   fileToSubmit: File;
+  // }
+
+  function handleSubmitFile(fileToSubmit: FormData) {
+    sendFile({
+      fileData: fileToSubmit,
+      room: props.roomId,
+    })
   }
 
   function handleDeleteMessage(id: string) {
