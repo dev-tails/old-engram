@@ -559,6 +559,18 @@ export function RoomView(props: RoomViewProps) {
       }
     });
 
+
+    // TODO: change this to look nice
+    // TODO: add drag-and-drop functionality
+    const uploadBtn = Input();
+    setStyle(uploadBtn, {
+    });
+    uploadBtn.type = 'file';
+
+    uploadBtn.addEventListener('change', (e)=> {
+      console.log('file uploaded');
+    });
+
     el.appendChild(input);
 
     if (mql.matches) {
@@ -572,6 +584,8 @@ export function RoomView(props: RoomViewProps) {
         el.removeChild(btnSubmit);
       }
     })
+
+    el.appendChild(uploadBtn);
 
     setTimeout(() => {
       input.focus();
@@ -674,6 +688,10 @@ export function RoomView(props: RoomViewProps) {
       room: props.roomId,
       body: text,
     });
+  }
+
+  function handleSubmitFile() {
+    
   }
 
   function handleDeleteMessage(id: string) {

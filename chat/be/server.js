@@ -5,6 +5,8 @@ const http = require('http');
 const cookieParser = require('cookie-parser');
 const { Server } = require('socket.io');
 const webpush = require('web-push');
+const multer = require('multer');
+
 const maxAgeInMilliseconds = 365 * 60 * 60 * 24 * 1000;
 
 dotenv.config();
@@ -22,6 +24,10 @@ async function run() {
   const Room = db.collection('rooms');
   const UserRoomConfig = db.collection('userroomconfigs');
   const PushNotification = db.collection('pushnotifications');
+
+  const upload = multer({
+    dest: 'uploads/',
+  })
 
   const app = express();
   const server = http.createServer(app);
