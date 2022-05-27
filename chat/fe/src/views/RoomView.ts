@@ -114,11 +114,8 @@ export function RoomView(props: RoomViewProps) {
 
   onEditMessage(props.roomId, async (message) => {
     const messageToEdit = byId(message._id);
-
     const messageContentEl = messageToEdit.getElementsByClassName('message-content-el')[0];
     const messageBody = messageToEdit.getElementsByClassName('body')[0]
-    messageToEdit.classList.toggle('being-edited')
-    messageToEdit.style.backgroundColor = '';
     messageBody.innerHTML = autolinker.link(message.body);
 
     if (!messageToEdit.getElementsByClassName('edited-tag')[0]){
@@ -594,9 +591,10 @@ export function RoomView(props: RoomViewProps) {
     onClick(btnSubmit, () => {
       const inputText = input.value.trim();
       if (props.messageId) {
+        props.onSubmit(inputText, props.messageId);
+
         const editedMessage = byId(props.messageId);
-        props.onSubmit(inputText, props.messageId)
-        editedMessage.classList.toggle('being-edited')
+        editedMessage.classList.toggle('being-edited');
         editedMessage.style.backgroundColor = '';
 
         el.remove();
@@ -621,7 +619,12 @@ export function RoomView(props: RoomViewProps) {
         const inputText = input.value.trim();
         e.preventDefault();
         if (props.messageId) {
-          props.onSubmit(inputText, props.messageId)
+          props.onSubmit(inputText, props.messageId);
+
+          const editedMessage = byId(props.messageId);
+          editedMessage.classList.toggle('being-edited');
+          editedMessage.style.backgroundColor = '';
+  
           el.remove();
           messageView.appendChild(textBox);
           messageBeingEdited = false;
