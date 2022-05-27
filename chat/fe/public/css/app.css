@@ -16,7 +16,7 @@ body {
     flex-grow: 1;
 } */
 
-.textbox {
+/* .textbox {
     background-color: #424242;
     text-align: center;
 }
@@ -30,7 +30,7 @@ body {
     height: 50px;
     border: none;
     color: white;
-}
+} */
 
 .hover\:text-primary:hover {
     cursor: pointer;
