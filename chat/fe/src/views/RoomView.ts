@@ -118,7 +118,7 @@ export function RoomView(props: RoomViewProps) {
     const messageBody = messageToEdit.getElementsByClassName('body')[0]
     messageBody.innerHTML = autolinker.link(message.body);
 
-    if (!messageToEdit.getElementsByClassName('edited-tag')[0]){
+    if (!messageToEdit.getElementsByClassName('edited-tag')[0]) {
       const editedTag = EditedTag();
       messageContentEl.insertBefore(editedTag, messageBody);
     }
@@ -553,7 +553,7 @@ export function RoomView(props: RoomViewProps) {
     return dateLastListMessage !== dateCurrentMessage;
   }
 
-  function TextBox(props: { onSubmit: (text: string, id?: string) => void, messageId?: string }) {
+  function TextBox(props: { onSubmit: (params: SendMessageParams) => void, messageId?: string }) {
     const el = Div({
       id: 'textbox',
     });
@@ -591,7 +591,12 @@ export function RoomView(props: RoomViewProps) {
     onClick(btnSubmit, () => {
       const inputText = input.value.trim();
       if (props.messageId) {
-        props.onSubmit(inputText, props.messageId);
+        props.onSubmit(
+          {
+            text: inputText,
+            id: props.messageId,
+          }
+        );
 
         const editedMessage = byId(props.messageId);
         editedMessage.classList.toggle('being-edited');
@@ -601,7 +606,11 @@ export function RoomView(props: RoomViewProps) {
         messageView.appendChild(textBox);
         messageBeingEdited = false;
       } else {
-        props.onSubmit(inputText);
+        props.onSubmit(
+          {
+            text: inputText
+          }
+        );
       }
       input.value = '';
       el.style.height = originalHeight;
@@ -619,17 +628,26 @@ export function RoomView(props: RoomViewProps) {
         const inputText = input.value.trim();
         e.preventDefault();
         if (props.messageId) {
-          props.onSubmit(inputText, props.messageId);
+          props.onSubmit(
+            {
+              text: inputText,
+              id: props.messageId,
+            }
+          );
 
           const editedMessage = byId(props.messageId);
           editedMessage.classList.toggle('being-edited');
           editedMessage.style.backgroundColor = '';
-  
+
           el.remove();
           messageView.appendChild(textBox);
           messageBeingEdited = false;
         } else {
-          props.onSubmit(inputText);
+          props.onSubmit(
+            {
+              text: inputText
+            }
+          );
         }
         input.value = '';
         el.style.height = originalHeight;
@@ -749,10 +767,15 @@ export function RoomView(props: RoomViewProps) {
 
   const messageList = MessageList();
 
-  function handleSubmit(text: string) {
+  type SendMessageParams = {
+    text: string;
+    id?: string;
+  }
+
+  function handleSubmit(params: SendMessageParams) {
     sendRoomMessage({
       room: props.roomId,
-      body: text,
+      body: params.text,
     });
   }
 
@@ -763,11 +786,11 @@ export function RoomView(props: RoomViewProps) {
     });
   }
 
-  function handleEditMessage(newText: string, id: string) {
+  function handleEditMessage(params: SendMessageParams) {
     editRoomMessage({
       room: props.roomId,
-      id: id,
-      body: newText,
+      id: params.id,
+      body: params.text,
     })
   }
 
