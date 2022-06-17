@@ -571,12 +571,8 @@ export function RoomView(props: RoomViewProps) {
     uploadBtn.id = 'file' // NOTE: ID will be required and needs to match the field in server.js in order to correctly receive the file
 
     uploadBtn.addEventListener('change', (e) => {
-      // console.log('file uploaded');
-      // console.log(uploadBtn.files[0]);
       const fileData = new FormData();
-      // uploadBtn.value
       fileData.append('file', uploadBtn.files[0]);
-      // console.log(fileData.getAll('file'));
       handleSubmitFile(fileData);
     });
 
