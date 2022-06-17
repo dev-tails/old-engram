@@ -578,7 +578,8 @@ export function RoomView(props: RoomViewProps) {
       resize: 'none',
       overflow: 'auto',
       marginRight: '5px',
-      padding: '0',
+      padding: '5px',
+      font: 'inherit',
     })
 
     const btnSubmit = Button({
