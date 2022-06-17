@@ -100,6 +100,7 @@ export type MessageType = {
   body: string;
   room: string;
   createdAt: Date;
+  updatedAt?: Date;
 };
 
 const messagesByRoomID: { [id: string]: MessageType[] } = {};
@@ -185,6 +186,9 @@ type EditRoomMessageParams = {
 }
 
 export async function editRoomMessage(params: EditRoomMessageParams) {
+  if (!params.body) {
+    return;
+  }
   fetch(`/api/rooms/${params.room}/messages`, {
     method: 'PUT',
     headers: {

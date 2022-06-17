@@ -258,6 +258,7 @@ async function run() {
         {
           $set: {
             body: newBody,
+            updatedAt: new Date(),
           }
         });
 

@@ -52,6 +52,8 @@ export function RoomView(props: RoomViewProps) {
   let lastMessageId = '';
 
   let messageButtonActive = false;
+  let messageBeingEdited = false;
+
   const mql = window.matchMedia('(max-width: 600px');
   sideBarEnabled = localStorage.getItem('sidebar') === 'true';
 
@@ -113,7 +115,14 @@ export function RoomView(props: RoomViewProps) {
 
   onEditMessage(props.roomId, async (message) => {
     const messageToEdit = byId(message._id);
-    messageToEdit.getElementsByClassName('body')[0].innerHTML = autolinker.link(message.body);
+    const messageContentEl = messageToEdit.getElementsByClassName('message-content-el')[0];
+    const messageBody = messageToEdit.getElementsByClassName('body')[0]
+    messageBody.innerHTML = autolinker.link(message.body);
+
+    if (!messageToEdit.getElementsByClassName('edited-tag')[0]) {
+      const editedTag = EditedTag();
+      messageContentEl.insertBefore(editedTag, messageBody);
+    }
   });
 
   function Message(props: MessageType) {
@@ -126,9 +135,9 @@ export function RoomView(props: RoomViewProps) {
 
     setStyle(el, {
       display: 'flex',
-      margin: '4px 0px',
+      margin: '0px 0px',
       overflowWrap: 'Anywhere',
-      padding: '0px 15px'
+      padding: '4px 15px',
     });
 
     onMouseOver(el, (e) => {
@@ -136,12 +145,14 @@ export function RoomView(props: RoomViewProps) {
       if (messageButtonActive) {
         return;
       }
-
-      el.style.backgroundColor = '#f2f2f2';
-      const optionsButton = bySelector(el.lastElementChild, '.options-button');
-      if (optionsButton) {
-        optionsButton.style.display = 'block';
+      if (!el.classList.contains('being-edited')) {
+        el.style.backgroundColor = '#f2f2f2';
+        const optionsButton = bySelector(el.lastElementChild, '.options-button');
+        if (optionsButton && !messageBeingEdited) {
+          optionsButton.style.display = 'block';
+        }
       }
+
     });
 
     onMouseLeave(el, (e) => {
@@ -149,11 +160,14 @@ export function RoomView(props: RoomViewProps) {
       if (messageButtonActive) {
         return;
       }
-      el.style.backgroundColor = '';
-      const optionsButton = bySelector(el.lastElementChild, '.options-button');
-      if (optionsButton) {
-        optionsButton.style.display = dropdownOpen ? 'block' : 'none';
+      if (!el.classList.contains('being-edited')) {
+        el.style.backgroundColor = '';
+        const optionsButton = bySelector(el.lastElementChild, '.options-button');
+        if (optionsButton && !messageBeingEdited) {
+          optionsButton.style.display = dropdownOpen ? 'block' : 'none';
+        }
       }
+
     });
 
     const user = getUser(props.user);
@@ -182,7 +196,9 @@ export function RoomView(props: RoomViewProps) {
     userIcon.innerText = firstInitial + lastInitial;
     el.append(userIcon);
 
-    const messageContentEl = Div();
+    const messageContentEl = Div({
+      class: 'message-content-el',
+    });
     setStyle(messageContentEl, {
       width: '100%',
     });
@@ -210,6 +226,10 @@ export function RoomView(props: RoomViewProps) {
 
       messageTime.innerHTML = messageCreatedAt;
       messageContentEl.append(messageTime);
+
+      if (props.updatedAt) {
+        messageContentEl.append(EditedTag());
+      }
 
       const bodyEl = Div();
       bodyEl.className = 'body';
@@ -310,24 +330,46 @@ export function RoomView(props: RoomViewProps) {
           handleDeleteMessage(props._id);
           messageButtonActive = false;
         });
+
         onMouseOver(delete_option, () => {
           delete_option.style.backgroundColor = '#f2f2f2';
           dropdown.style.border = '1px solid #909090';
         });
+
         onMouseLeave(delete_option, () => {
           delete_option.style.backgroundColor = '';
           dropdown.style.border = '1px solid #909090bf';
         });
 
         onClick(edit_option, () => {
-          const editedMessage = prompt("Edit your message:");
-          handleEditMessage(props._id, editedMessage);
+          const textBox = byId('textbox');
+          if (textBox) {
+            textBox.remove();
+          }
+          const messageId = props._id;
+          const editTextBox = TextBox({ onSubmit: handleEditMessage, messageId });
+          messageView.append(editTextBox);
+
+          const editTextInput = <HTMLInputElement>byId('textinput');
+          const messageBodyEnd = props.body.length;
+          editTextInput.placeholder = 'Edit your message';
+          editTextInput.innerHTML = props.body;
+          editTextInput.setSelectionRange(messageBodyEnd, messageBodyEnd);
+          editTextInput.focus();
+
+          el.classList.toggle('being-edited');
+          el.style.backgroundColor = '#e6e6e6';
+          messageOptions.style.display = 'none';
+
           messageButtonActive = false;
+          messageBeingEdited = true;
         });
+
         onMouseOver(edit_option, () => {
           edit_option.style.backgroundColor = '#f2f2f2';
           dropdown.style.border = '1px solid #909090';
         });
+
         onMouseLeave(edit_option, () => {
           edit_option.style.backgroundColor = '';
           dropdown.style.border = '1px solid #909090bf';
@@ -361,6 +403,19 @@ export function RoomView(props: RoomViewProps) {
     init();
 
     return el;
+  }
+
+  function EditedTag() {
+    const el = Span({
+      class: 'edited-tag'
+    });
+    setStyle(el, {
+      marginLeft: '8px',
+      fontSize: '12px',
+    })
+    el.innerHTML = 'edited';
+
+    return el
   }
 
   function MessageList() {
@@ -499,9 +554,9 @@ export function RoomView(props: RoomViewProps) {
     return dateLastListMessage !== dateCurrentMessage;
   }
 
-  function TextBox(props: { onSubmit: (text: string) => void }) {
+  function TextBox(props: { onSubmit: (params: SendMessageParams) => void, messageId?: string }) {
     const el = Div({
-      // class: 'textbox',
+      id: 'textbox',
     });
     setStyle(el, {
       flexShrink: '0',
@@ -516,6 +571,7 @@ export function RoomView(props: RoomViewProps) {
     const originalHeight = el.style.height;
 
     const input = TextArea();
+    input.id = 'textinput';
     setStyle(input, {
       height: '100%',
       width: '100%',
@@ -523,7 +579,8 @@ export function RoomView(props: RoomViewProps) {
       resize: 'none',
       overflow: 'auto',
       marginRight: '5px',
-      padding: '0',
+      padding: '5px',
+      font: 'inherit',
     })
 
     const btnSubmit = Button({
@@ -535,7 +592,28 @@ export function RoomView(props: RoomViewProps) {
     })
     onClick(btnSubmit, () => {
       const inputText = input.value.trim();
-      props.onSubmit(inputText);
+      if (props.messageId) {
+        props.onSubmit(
+          {
+            text: inputText,
+            id: props.messageId,
+          }
+        );
+
+        const editedMessage = byId(props.messageId);
+        editedMessage.classList.toggle('being-edited');
+        editedMessage.style.backgroundColor = '';
+
+        el.remove();
+        messageView.appendChild(textBox);
+        messageBeingEdited = false;
+      } else {
+        props.onSubmit(
+          {
+            text: inputText
+          }
+        );
+      }
       input.value = '';
       el.style.height = originalHeight;
       document.getElementsByClassName('message-list')[0].scrollTo({
@@ -551,7 +629,28 @@ export function RoomView(props: RoomViewProps) {
       if (e.key === 'Enter' && !e.shiftKey) {
         const inputText = input.value.trim();
         e.preventDefault();
-        props.onSubmit(inputText);
+        if (props.messageId) {
+          props.onSubmit(
+            {
+              text: inputText,
+              id: props.messageId,
+            }
+          );
+
+          const editedMessage = byId(props.messageId);
+          editedMessage.classList.toggle('being-edited');
+          editedMessage.style.backgroundColor = '';
+
+          el.remove();
+          messageView.appendChild(textBox);
+          messageBeingEdited = false;
+        } else {
+          props.onSubmit(
+            {
+              text: inputText
+            }
+          );
+        }
         input.value = '';
         el.style.height = originalHeight;
         document.getElementsByClassName('message-list')[0].scrollTo({
@@ -688,10 +787,15 @@ export function RoomView(props: RoomViewProps) {
 
   const messageList = MessageList();
 
-  function handleSubmit(text: string) {
+  type SendMessageParams = {
+    text: string;
+    id?: string;
+  }
+
+  function handleSubmit(params: SendMessageParams) {
     sendRoomMessage({
       room: props.roomId,
-      body: text,
+      body: params.text,
     });
   }
 
@@ -713,11 +817,11 @@ export function RoomView(props: RoomViewProps) {
     });
   }
 
-  function handleEditMessage(id: string, newText: string) {
+  function handleEditMessage(params: SendMessageParams) {
     editRoomMessage({
       room: props.roomId,
-      id: id,
-      body: newText,
+      id: params.id,
+      body: params.text,
     })
   }
 
