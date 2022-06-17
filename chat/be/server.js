@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const { Server } = require('socket.io');
 const webpush = require('web-push');
 const multer = require('multer');
+const path = require("path");
 
 const maxAgeInMilliseconds = 365 * 60 * 60 * 24 * 1000;
 
@@ -24,16 +25,27 @@ async function run() {
   const Room = db.collection('rooms');
   const UserRoomConfig = db.collection('userroomconfigs');
   const PushNotification = db.collection('pushnotifications');
+  const Files = db.collection('files');
 
   // TODO: change this to be able to format file name correctly in filesystem
+  // const storageConfig = multer.diskStorage({
+  //   destination: (req, file, cb) => {
+  //     cb(null, 'uploads/')
+  //   },
+  //   filename: (req, file, cb) => { // TODO: this function needs to add the extenstion onto the file
+  //     cb(null, file.originalname + '.jpg')
+  //   }
+  // })
+
   const storageConfig = multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, 'uploads/')
+    destination: function (req, file, cb) {
+      cb(null, `uploads/`);
     },
-    filename: (req, file, cb) => { // TODO: this function needs to add the extenstion onto the file
-      cb(null, file.originalname + '.jpg')
-    }
-  })
+    filename: function (req, file, cb) {
+      const parsedFileName = path.parse(file.originalname);
+      cb(null, `${mongodb.ObjectId()}${parsedFileName.ext}`);
+    },
+  });
 
   const upload = multer({
     storage: storageConfig,
@@ -308,9 +320,15 @@ async function run() {
     res.sendStatus(200);
   });
 
+  app.post('/api/rooms/:id/files', upload.single('file'), async (req, res, next) => {
+    const uploadedFile = req.file;
+    const { insertedFileId } = await Files.insertOne({
+      _id: path.parse(uploadedFile.filename).name,
+      url: uploadedFile.path,
+      filename: uploadedFile.originalname,
+    });
 
-  app.post('/api/files', upload.single('file'), (req, res, next) => {
-    console.log(req.file);
+    res.sendStatus(200);
   })
 
   app.get('*', (req, res) => {
