@@ -92,6 +92,7 @@ export function RoomView(props: RoomViewProps) {
     await clearUnreadBubble(room);
   })
 
+  // TODO: function that handles when a message is received from socket.emit
   onRoomMessage(props.roomId, (message) => {
     if (isLastMessageToday(messages[1], message)) {
       messageList.prepend(DateDivider(message.createdAt));
@@ -125,6 +126,7 @@ export function RoomView(props: RoomViewProps) {
     }
   });
 
+  // TODO: handles rendering message
   function Message(props: MessageType) {
     let dropdownOpen = false;
 
@@ -238,7 +240,14 @@ export function RoomView(props: RoomViewProps) {
         whiteSpace: 'pre-wrap',
       });
 
-      bodyEl.innerHTML = autolinker.link(props.body);
+      //  NOTE: changes innerhtml of message body
+      // console.log(props.file); // Undefined currently, see server.js and RoomApi.ts for comments
+      if (props.body) {
+        bodyEl.innerHTML = autolinker.link(props.body);
+      } else {
+        bodyEl.innerHTML = props.file;
+      }
+      
 
       const currentUser = getSelf();
       if (props.user === currentUser._id) {

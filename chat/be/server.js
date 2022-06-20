@@ -27,16 +27,6 @@ async function run() {
   const PushNotification = db.collection('pushnotifications');
   const Files = db.collection('files');
 
-  // TODO: change this to be able to format file name correctly in filesystem
-  // const storageConfig = multer.diskStorage({
-  //   destination: (req, file, cb) => {
-  //     cb(null, 'uploads/')
-  //   },
-  //   filename: (req, file, cb) => { // TODO: this function needs to add the extenstion onto the file
-  //     cb(null, file.originalname + '.jpg')
-  //   }
-  // })
-
   const storageConfig = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, `uploads/`);
@@ -321,12 +311,50 @@ async function run() {
   });
 
   app.post('/api/rooms/:id/files', upload.single('file'), async (req, res, next) => {
+    const { id } = req.params;
     const uploadedFile = req.file;
-    const { insertedFileId } = await Files.insertOne({
-      _id: path.parse(uploadedFile.filename).name,
+    const fileId = path.parse(uploadedFile.filename).name;
+
+    await Files.insertOne({
+      _id: mongodb.ObjectId(fileId),
       url: uploadedFile.path,
       filename: uploadedFile.originalname,
     });
+
+    const { insertedId } = await Message.insertOne({
+      room: new mongodb.ObjectId(id),
+      file: fileId, // Currently stores the file._id instead of file url
+      user: mongodb.ObjectId(req.user),
+    });
+
+    const newMessage = await Message.findOne({ _id: insertedId });
+    newMessage.createdAt = newMessage._id.getTimestamp();
+
+    await UserRoomConfig.updateMany(
+      { room: mongodb.ObjectId(id), user: { $ne: mongodb.ObjectId(req.user) } },
+      { $inc: { unreadCount: 1 } }
+    );
+
+    /* 
+    current schema for message that is sent back in the io.emit below:
+    {
+    "_id" : ObjectId, 
+    "room" : ObjectId of room, 
+    "file" : string, ObjectId of the file, 
+    "user" : ObjectId of user
+    }
+
+    but the socket listener in RoomApi.ts uses the message type which doesn't include "file" which is sent below 
+
+    For display and downloading attachments we would need to send back the url,
+
+    QUESTION: since the fe needs the file url, how should the BE format the emitted newMessage with the file url included?
+
+    Some ideas that could work:
+    - store the file url as the body and still keep file as the file id then send newMessage as it is right now
+    - keep the schema the way it is and make a new object with message.body as the fileurl in RoomApi before io.emit
+    */
+    io.emit('message', newMessage);
 
     res.sendStatus(200);
   })
