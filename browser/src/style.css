@@ -1,8 +1,19 @@
+html {
+    background-color: white;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 1.4em;
+}
+
+body {
+    margin: 8px;
+}
+
 h1 {
-    font-size: 42px;
+    font-size: 2em;
     font-weight: bold;
+    margin-bottom: .67em;
 }
 
 p {
-    
+    margin-bottom: 1em;
 }
