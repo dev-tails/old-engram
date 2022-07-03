@@ -17,12 +17,12 @@ import { postUserRoomConfig } from '../apis/UserRoomConfigApi';
 
 import { clearUnreadBubble, RoomList } from './RoomList';
 
-import { getSelf, getUser } from '../apis/UserApi';
+import { getSelf, getUser, getUsers } from '../apis/UserApi';
 import { Button } from '../components/Button';
 import { Div } from '../components/Div';
 import { Span } from '../components/Span';
 import { Input } from '../components/Input';
-import { TextArea } from '../components/TextArea'
+import { TextArea } from '../components/TextArea';
 import { Routes } from '../routes/Routes';
 import { Borders } from '../theme/Borders';
 import {
@@ -36,6 +36,7 @@ import {
   setText,
 } from '../utils/DomUtils';
 import { setURL } from '../utils/HistoryUtils';
+import { UserIcon } from '../components/UserIcon';
 
 type RoomViewProps = {
   roomId: string;
@@ -44,6 +45,8 @@ type RoomViewProps = {
 let sideBarEnabled = false;
 
 export function RoomView(props: RoomViewProps) {
+  const currentUser = getSelf();
+
   let messages: MessageType[] = [];
   let userRoomConfig: {
     lastReadMessageId: string;
@@ -52,10 +55,9 @@ export function RoomView(props: RoomViewProps) {
 
   let messageButtonActive = false;
   let messageBeingEdited = false;
-
+  console.log('Room view');
   const mql = window.matchMedia('(max-width: 600px');
   sideBarEnabled = localStorage.getItem('sidebar') === 'true';
-
 
   const roomView = Div({
     class: 'room-view',
@@ -64,8 +66,7 @@ export function RoomView(props: RoomViewProps) {
     display: 'flex',
     flexGrow: '1',
     width: '100%',
-  })
-
+  });
 
   const messageView = Div({
     class: 'message-view',
@@ -86,10 +87,10 @@ export function RoomView(props: RoomViewProps) {
     await postUserRoomConfig({
       ...room.userRoomConfig,
       room: room._id,
-      unreadCount: 0
-    })
+      unreadCount: 0,
+    });
     await clearUnreadBubble(room);
-  })
+  });
 
   onRoomMessage(props.roomId, (message) => {
     if (isLastMessageToday(messages[1], message)) {
@@ -114,8 +115,9 @@ export function RoomView(props: RoomViewProps) {
 
   onEditMessage(props.roomId, async (message) => {
     const messageToEdit = byId(message._id);
-    const messageContentEl = messageToEdit.getElementsByClassName('message-content-el')[0];
-    const messageBody = messageToEdit.getElementsByClassName('body')[0]
+    const messageContentEl =
+      messageToEdit.getElementsByClassName('message-content-el')[0];
+    const messageBody = messageToEdit.getElementsByClassName('body')[0];
     messageBody.innerHTML = autolinker.link(message.body);
 
     if (!messageToEdit.getElementsByClassName('edited-tag')[0]) {
@@ -146,12 +148,14 @@ export function RoomView(props: RoomViewProps) {
       }
       if (!el.classList.contains('being-edited')) {
         el.style.backgroundColor = '#f2f2f2';
-        const optionsButton = bySelector(el.lastElementChild, '.options-button');
+        const optionsButton = bySelector(
+          el.lastElementChild,
+          '.options-button'
+        );
         if (optionsButton && !messageBeingEdited) {
           optionsButton.style.display = 'block';
         }
       }
-
     });
 
     onMouseLeave(el, (e) => {
@@ -161,38 +165,20 @@ export function RoomView(props: RoomViewProps) {
       }
       if (!el.classList.contains('being-edited')) {
         el.style.backgroundColor = '';
-        const optionsButton = bySelector(el.lastElementChild, '.options-button');
+        const optionsButton = bySelector(
+          el.lastElementChild,
+          '.options-button'
+        );
         if (optionsButton && !messageBeingEdited) {
           optionsButton.style.display = dropdownOpen ? 'block' : 'none';
         }
       }
-
     });
 
     const user = getUser(props.user);
 
-    const userIcon = Div();
-    setStyle(userIcon, {
-      display: 'flex',
-      flexShrink: '0',
-      justifyContent: 'center',
-      alignItems: 'center',
-      fontWeight: 'bold',
-      borderRadius: '999px',
-      height: '30px',
-      width: '30px',
-      backgroundColor: user.color || 'black',
-      color: 'white',
-      textAlign: 'center',
-      lineHeight: '30px',
-      marginRight: '10px',
-      fontSize: '12px',
-    });
+    const userIcon = UserIcon(user.name, user.color);
 
-    const firstInitial = user.name.charAt(0);
-    const lastInitial = user.name.split(' ')[1].charAt(0);
-
-    userIcon.innerText = firstInitial + lastInitial;
     el.append(userIcon);
 
     const messageContentEl = Div({
@@ -239,7 +225,6 @@ export function RoomView(props: RoomViewProps) {
 
       bodyEl.innerHTML = autolinker.link(props.body);
 
-      const currentUser = getSelf();
       if (props.user === currentUser._id) {
         const messageOptions = Div({
           class: 'options-button',
@@ -313,7 +298,6 @@ export function RoomView(props: RoomViewProps) {
         });
         delete_option.innerHTML = 'Delete';
 
-
         const edit_option = document.createElement('li');
         setStyle(edit_option, {
           margin: '0',
@@ -346,7 +330,10 @@ export function RoomView(props: RoomViewProps) {
             textBox.remove();
           }
           const messageId = props._id;
-          const editTextBox = TextBox({ onSubmit: handleEditMessage, messageId });
+          const editTextBox = TextBox({
+            onSubmit: handleEditMessage,
+            messageId,
+          });
           messageView.append(editTextBox);
 
           const editTextInput = <HTMLInputElement>byId('textinput');
@@ -406,15 +393,15 @@ export function RoomView(props: RoomViewProps) {
 
   function EditedTag() {
     const el = Span({
-      class: 'edited-tag'
+      class: 'edited-tag',
     });
     setStyle(el, {
       marginLeft: '8px',
       fontSize: '12px',
-    })
+    });
     el.innerHTML = 'edited';
 
-    return el
+    return el;
   }
 
   function MessageList() {
@@ -428,30 +415,31 @@ export function RoomView(props: RoomViewProps) {
       flexDirection: 'column-reverse',
       margin: '0',
       width: '100%',
-
     });
 
     async function init() {
-
       const loadMoreDiv = Div();
       setStyle(loadMoreDiv, {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         padding: '20px',
-      })
+      });
 
       const loadMoreButton = Button({
-        text: 'Load More Messages'
+        text: 'Load More Messages',
       });
       setStyle(loadMoreButton, {
         width: '200px',
-      })
+      });
 
       async function messagePage(lastMessageIdParam: string) {
-        const messagesList = await getRoomMessageByPage(props.roomId, lastMessageIdParam);
+        const messagesList = await getRoomMessageByPage(
+          props.roomId,
+          lastMessageIdParam
+        );
         messages = messagesList.messages;
-        userRoomConfig = messagesList.userRoomConfig
+        userRoomConfig = messagesList.userRoomConfig;
         lastMessageId = messagesList.lastMessageId;
 
         for (let i = 0; i < messages.length; i++) {
@@ -476,8 +464,8 @@ export function RoomView(props: RoomViewProps) {
 
       onClick(loadMoreButton, async () => {
         await messagePage(lastMessageId);
-        el.scrollTo(0, (el.scrollHeight * -1));
-      })
+        el.scrollTo(0, el.scrollHeight * -1);
+      });
     }
 
     init();
@@ -553,7 +541,10 @@ export function RoomView(props: RoomViewProps) {
     return dateLastListMessage !== dateCurrentMessage;
   }
 
-  function TextBox(props: { onSubmit: (params: SendMessageParams) => void, messageId?: string }) {
+  function TextBox(textBoxProps: {
+    onSubmit: (params: SendMessageParams) => void;
+    messageId?: string;
+  }) {
     const el = Div({
       id: 'textbox',
     });
@@ -565,6 +556,7 @@ export function RoomView(props: RoomViewProps) {
       display: 'flex',
       padding: '0 15px',
       paddingBottom: '15px',
+      position: 'relative',
     });
 
     const originalHeight = el.style.height;
@@ -580,26 +572,24 @@ export function RoomView(props: RoomViewProps) {
       marginRight: '5px',
       padding: '5px',
       font: 'inherit',
-    })
+    });
 
     const btnSubmit = Button({
       text: '>',
-    })
+    });
     setStyle(btnSubmit, {
       maxHeight: '45px',
       width: '30px',
-    })
+    });
     onClick(btnSubmit, () => {
       const inputText = input.value.trim();
-      if (props.messageId) {
-        props.onSubmit(
-          {
-            text: inputText,
-            id: props.messageId,
-          }
-        );
+      if (textBoxProps.messageId) {
+        textBoxProps.onSubmit({
+          text: inputText,
+          id: textBoxProps.messageId,
+        });
 
-        const editedMessage = byId(props.messageId);
+        const editedMessage = byId(textBoxProps.messageId);
         editedMessage.classList.toggle('being-edited');
         editedMessage.style.backgroundColor = '';
 
@@ -607,36 +597,82 @@ export function RoomView(props: RoomViewProps) {
         messageView.appendChild(textBox);
         messageBeingEdited = false;
       } else {
-        props.onSubmit(
-          {
-            text: inputText
-          }
-        );
+        textBoxProps.onSubmit({
+          text: inputText,
+        });
       }
       input.value = '';
       el.style.height = originalHeight;
       document.getElementsByClassName('message-list')[0].scrollTo({
         top: 0,
       });
-    })
+    });
 
-    input.addEventListener('keydown', (e) => {
+    input.addEventListener('keydown', async (e) => {
       const scrollHeight = input.scrollHeight;
       if (scrollHeight > Number(originalHeight)) {
         el.style.height = String(scrollHeight);
       }
+
+      if (e.key === '@') {
+        const { users } = room;
+        if (!users.length || users.length === 1) {
+          return;
+        }
+
+        //Not that I want so, but why it does not show on the network tab when typing @
+        const allUsers = await getUsers();
+        const roomUsers = allUsers.filter(
+          (user) => users.includes(user._id) && user._id !== currentUser._id
+        );
+
+        const dropdown = Div();
+        setStyle(dropdown, {
+          position: 'absolute',
+          bottom: '69px',
+          cursor: 'pointer',
+          border: '1px solid #909090',
+          color: '#333',
+          backgroundColor: '#fff',
+          borderRadius: '2px',
+        });
+
+        const options = document.createElement('ul');
+        setStyle(options, {
+          listStyleType: 'none',
+          padding: '0px',
+          margin: '0px',
+        });
+
+        roomUsers?.map((roomUser) => {
+          const roomUserOption = document.createElement('li');
+          setStyle(roomUserOption, {
+            margin: '0',
+            padding: '8px 12px',
+            overflowWrap: 'Normal',
+            display: 'flex',
+            alignItems: 'center',
+          });
+          roomUserOption.innerHTML = roomUser.name;
+          const userIcon = UserIcon(roomUser.name, roomUser.color);
+          roomUserOption.prepend(userIcon);
+          options.appendChild(roomUserOption);
+        });
+
+        dropdown.append(options);
+        el.append(dropdown);
+      }
+
       if (e.key === 'Enter' && !e.shiftKey) {
         const inputText = input.value.trim();
         e.preventDefault();
-        if (props.messageId) {
-          props.onSubmit(
-            {
-              text: inputText,
-              id: props.messageId,
-            }
-          );
+        if (textBoxProps.messageId) {
+          textBoxProps.onSubmit({
+            text: inputText,
+            id: textBoxProps.messageId,
+          });
 
-          const editedMessage = byId(props.messageId);
+          const editedMessage = byId(textBoxProps.messageId);
           editedMessage.classList.toggle('being-edited');
           editedMessage.style.backgroundColor = '';
 
@@ -644,11 +680,9 @@ export function RoomView(props: RoomViewProps) {
           messageView.appendChild(textBox);
           messageBeingEdited = false;
         } else {
-          props.onSubmit(
-            {
-              text: inputText
-            }
-          );
+          textBoxProps.onSubmit({
+            text: inputText,
+          });
         }
         input.value = '';
         el.style.height = originalHeight;
@@ -670,7 +704,7 @@ export function RoomView(props: RoomViewProps) {
       } else {
         el.removeChild(btnSubmit);
       }
-    })
+    });
 
     setTimeout(() => {
       input.focus();
@@ -681,7 +715,7 @@ export function RoomView(props: RoomViewProps) {
 
   function RoomHeader() {
     const el = Div({
-      class: 'room-header'
+      class: 'room-header',
     });
 
     setStyle(el, {
@@ -701,22 +735,22 @@ export function RoomView(props: RoomViewProps) {
     });
 
     const btnSidebar = Button({
-      text: 'Toggle Sidebar'
+      text: 'Toggle Sidebar',
     });
     setStyle(btnSidebar, {
       marginLeft: '10px',
-    })
+    });
     el.append(btnSidebar);
 
     onClick(btnSidebar, () => {
       toggleSidebar();
-      localStorage.getItem('sidebar') === 'true' ?
-        document.getElementById('sidebar').style.width = "200px" :
-        document.getElementById('sidebar').style.width = "0px";
-    })
+      localStorage.getItem('sidebar') === 'true'
+        ? (document.getElementById('sidebar').style.width = '200px')
+        : (document.getElementById('sidebar').style.width = '0px');
+    });
 
     const roomNameEl = Div({
-      class: 'room-name-el'
+      class: 'room-name-el',
     });
 
     setStyle(roomNameEl, {
@@ -734,14 +768,14 @@ export function RoomView(props: RoomViewProps) {
 
   function SideBar() {
     const el = Div({
-      id: 'sidebar'
+      id: 'sidebar',
     });
     setStyle(el, {
       flexShrink: '0',
       flexGrow: '0',
       width: '0px',
-      maxWidth: '33.33%'
-    })
+      maxWidth: '33.33%',
+    });
     if (localStorage.getItem('sidebar') === 'true') {
       el.style.width = '200px';
     }
@@ -749,7 +783,7 @@ export function RoomView(props: RoomViewProps) {
     const roomList = RoomList();
     setStyle(roomList, {
       flexShrink: '0',
-    })
+    });
     el.append(roomList);
     return el;
   }
@@ -771,7 +805,7 @@ export function RoomView(props: RoomViewProps) {
   type SendMessageParams = {
     text: string;
     id?: string;
-  }
+  };
 
   function handleSubmit(params: SendMessageParams) {
     sendRoomMessage({
@@ -792,7 +826,7 @@ export function RoomView(props: RoomViewProps) {
       room: props.roomId,
       id: params.id,
       body: params.text,
-    })
+    });
   }
 
   const textBox = TextBox({ onSubmit: handleSubmit });

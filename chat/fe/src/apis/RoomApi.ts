@@ -23,6 +23,7 @@ export type Room = {
   _id: string;
   name: string;
   userRoomConfig?: UserRoomConfig;
+  users: string[];
 };
 
 export async function initializeRoomApi() {
