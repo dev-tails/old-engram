@@ -55,6 +55,7 @@ export function RoomView(props: RoomViewProps) {
 
   let messageButtonActive = false;
   let messageBeingEdited = false;
+  let mentionsOpen = false;
   console.log('Room view');
   const mql = window.matchMedia('(max-width: 600px');
   sideBarEnabled = localStorage.getItem('sidebar') === 'true';
@@ -608,61 +609,89 @@ export function RoomView(props: RoomViewProps) {
       });
     });
 
-    input.addEventListener('keydown', async (e) => {
+    input.addEventListener('keyup', async (e) => {
+      const mentionsStart = input.value.indexOf('@');
+
+      //TODO: show dropdown again after deleting "@" symbol
+      //TODO: cancel dropdown on escape or if no input matches, and show dropdown again after second "@" symbol later in the input if there is a space
+
+      if (mentionsOpen && e.key !== 'Shift' && !e.shiftKey) {
+        const mentionsList = byId('my-dropdown');
+        const userNames = mentionsList.getElementsByTagName('li');
+
+        Array.from(userNames).forEach((userName) => {
+          const name = userName.textContent.slice(2).toLowerCase();
+          const inputAfterAtSymbol = input.value
+            .slice(mentionsStart + 1)
+            .toLowerCase();
+
+          if (name.indexOf(inputAfterAtSymbol) > -1) {
+            userName.style.display = 'flex';
+          } else {
+            userName.style.display = 'none';
+          }
+        });
+      }
+
       const scrollHeight = input.scrollHeight;
       if (scrollHeight > Number(originalHeight)) {
         el.style.height = String(scrollHeight);
       }
 
-      if (e.key === '@') {
+      if (mentionsStart !== -1) {
         const { users } = room;
-        if (!users.length || users.length === 1) {
-          return;
-        }
-
         //Not that I want so, but why it does not show on the network tab when typing @
         const allUsers = await getUsers();
         const roomUsers = allUsers.filter(
           (user) => users.includes(user._id) && user._id !== currentUser._id
         );
 
-        const dropdown = Div();
-        setStyle(dropdown, {
-          position: 'absolute',
-          bottom: '69px',
-          cursor: 'pointer',
-          border: '1px solid #909090',
-          color: '#333',
-          backgroundColor: '#fff',
-          borderRadius: '2px',
-        });
+        if (!mentionsOpen) {
+          if (!users.length || users.length === 1) {
+            return;
+          }
 
-        const options = document.createElement('ul');
-        setStyle(options, {
-          listStyleType: 'none',
-          padding: '0px',
-          margin: '0px',
-        });
-
-        roomUsers?.map((roomUser) => {
-          const roomUserOption = document.createElement('li');
-          setStyle(roomUserOption, {
-            margin: '0',
-            padding: '8px 12px',
-            overflowWrap: 'Normal',
-            display: 'flex',
-            alignItems: 'center',
+          const dropdown = Div();
+          setStyle(dropdown, {
+            position: 'absolute',
+            bottom: '69px',
+            cursor: 'pointer',
+            border: '1px solid #909090',
+            color: '#333',
+            backgroundColor: '#fff',
+            borderRadius: '2px',
           });
-          roomUserOption.innerHTML = roomUser.name;
-          const userIcon = UserIcon(roomUser.name, roomUser.color);
-          roomUserOption.prepend(userIcon);
-          options.appendChild(roomUserOption);
-        });
 
-        dropdown.append(options);
-        el.append(dropdown);
+          const options = document.createElement('ul');
+          options.setAttribute('id', 'my-dropdown');
+
+          setStyle(options, {
+            listStyleType: 'none',
+            padding: '0px',
+            margin: '0px',
+          });
+
+          roomUsers?.map((roomUser) => {
+            const roomUserOption = document.createElement('li');
+            setStyle(roomUserOption, {
+              margin: '0',
+              padding: '8px 12px',
+              overflowWrap: 'Normal',
+              display: 'flex',
+              alignItems: 'center',
+            });
+            roomUserOption.innerHTML = roomUser.name;
+            const userIcon = UserIcon(roomUser.name, roomUser.color);
+            roomUserOption.prepend(userIcon);
+            options.appendChild(roomUserOption);
+          });
+
+          dropdown.append(options);
+          el.append(dropdown);
+
+          mentionsOpen = true;
+        }
       }
-
       if (e.key === 'Enter' && !e.shiftKey) {
         const inputText = input.value.trim();
         e.preventDefault();
