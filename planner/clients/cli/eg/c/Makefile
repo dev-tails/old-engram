@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -Wall
+CFLAGS = -Wall -g
 TARGET = ceg
 
 ceg: main.c

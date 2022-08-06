@@ -5,6 +5,18 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "(lldb) Launch ceg",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/planner/clients/cli/eg/c/ceg",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}/planner/clients/cli/eg/c",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "lldb"
+    },
+    {
       "name": "Launch Chrome",
       "request": "launch",
       "type": "pwa-chrome",
