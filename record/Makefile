@@ -1,8 +1,8 @@
 CC = cc
-CFLAGS = -Wall -g -I /opt/homebrew/include
+CFLAGS = -Wall -I /opt/homebrew/include
 TARGET = main
 
-LDFLAGS = `pkg-config --libs SDL2 SDL2_ttf SDL2_mixer`
+LDFLAGS = `pkg-config --libs SDL2`
 
 main: main.c
 	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)

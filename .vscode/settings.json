@@ -5,5 +5,8 @@
     "**/node_modules": true
   },
   "typescriptHero.imports.organizeOnSave": true,
-  "python.formatting.provider": "black"
+  "python.formatting.provider": "black",
+  "files.associations": {
+    "cstddef": "c"
+  }
 }
