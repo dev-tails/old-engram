@@ -1,6 +1,7 @@
 #include <SDL2/SDL.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/stat.h>
 #include <time.h>
 
 const int SCREEN_WIDTH = 640;
@@ -73,9 +74,16 @@ void stop_recording()
   SDL_PauseAudioDevice(recordingDeviceId, SDL_TRUE);
 
   time_t seconds = time(NULL);
+  struct tm* current_time = localtime(&seconds);
+
+  char day_folder_name[64];
+  sprintf(day_folder_name, "data/%02d-%02d-%02d", current_time->tm_year + 1900, current_time->tm_mon + 1, current_time->tm_mday);
+
+  mkdir("data", 0777);
+  mkdir(day_folder_name, 0777);
 
   char recording_file_name[128];
-  sprintf(recording_file_name, "data/%ld.wav", seconds);
+  sprintf(recording_file_name, "%s/%02d:%02d:%02d-%ld.wav", day_folder_name, current_time->tm_hour, current_time->tm_min, current_time->tm_sec, seconds);
 
   wavh.flength = gBufferByteSize + 44;
   wavh.dlength = gBufferByteSize;
