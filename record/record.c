@@ -74,16 +74,27 @@ void stop_recording()
   SDL_PauseAudioDevice(recordingDeviceId, SDL_TRUE);
 
   time_t seconds = time(NULL);
-  struct tm* current_time = localtime(&seconds);
+  struct tm *current_time = localtime(&seconds);
+
+  const char *home_dir = getenv("HOME");
+  char engram_dir[128];
+
+  sprintf(engram_dir, "%s/%s", home_dir, ".engram");
 
   char day_folder_name[64];
-  sprintf(day_folder_name, "data/%02d-%02d-%02d", current_time->tm_year + 1900, current_time->tm_mon + 1, current_time->tm_mday);
+  sprintf(
+      day_folder_name,
+      "%s/%02d-%02d-%02d",
+      engram_dir,
+      current_time->tm_year + 1900,
+      current_time->tm_mon + 1,
+      current_time->tm_mday);
 
-  mkdir("data", 0777);
+  mkdir(engram_dir, 0777);
   mkdir(day_folder_name, 0777);
 
   char recording_file_name[128];
-  sprintf(recording_file_name, "%s/%02d:%02d:%02d-%ld.wav", day_folder_name, current_time->tm_hour, current_time->tm_min, current_time->tm_sec, seconds);
+  sprintf(recording_file_name, "%s/%02d_%02d_%02d-%ld.wav", day_folder_name, current_time->tm_hour, current_time->tm_min, current_time->tm_sec, seconds);
 
   wavh.flength = gBufferByteSize + 44;
   wavh.dlength = gBufferByteSize;
@@ -111,27 +122,18 @@ int main()
   wavh.srate = 16000;
   wavh.bits_per_samp = 16;
 
-  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
+  if (SDL_Init(SDL_INIT_AUDIO) < 0)
   {
     printf("SDL could not initialize! SDL Error: %s\n", SDL_GetError());
     return 1;
   }
   else
   {
-    gWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    gWindow = SDL_CreateWindow("Record", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     if (gWindow == NULL)
     {
       printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
       return 1;
-    }
-    else
-    {
-      gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-      if (gRenderer == NULL)
-      {
-        printf("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
-        return 1;
-      }
     }
   }
 
