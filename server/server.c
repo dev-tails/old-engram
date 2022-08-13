@@ -7,6 +7,7 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <arpa/inet.h>
 
 #define MAX 80
 #define PORT 8082
@@ -55,6 +56,10 @@ int main(void)
 
   // Accept the data packet from client and verification
   int connfd = accept(sockfd, (SA *)&cli, &len);
+  char *ip = inet_ntoa(cli.sin_addr);
+
+  printf("%s", ip);
+
   if (connfd < 0)
   {
     printf("server accept failed...\n");
