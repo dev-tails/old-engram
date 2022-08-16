@@ -140,12 +140,6 @@ int main(int argc, char *argv[])
   char notes_file_path[128];
   sprintf(notes_file_path, "%s/%s", engram_dir, "notes.txt");
 
-  FILE *fp = fopen(notes_file_path, "a");
-  if (fp == NULL)
-  {
-    return 1;
-  }
-
   char buffer[MAX_LINE_SIZE];
 
   do
@@ -163,15 +157,38 @@ int main(int argc, char *argv[])
         consecutive_newlines++;
         clrscr();
       }
+    } else if (buffer[0] == 'l') {
+      consecutive_newlines = 0;
+
+      const int MAX_LINES = 10000;
+      char lines[MAX_LINES][MAX_LINE_SIZE];
+      int index = 0;
+
+      FILE *notes_read_file_pointer = fopen(notes_file_path, "r");
+
+      while(fgets(lines[index], MAX_LINE_SIZE, notes_read_file_pointer) != NULL) {
+        index++;
+        if (index >= MAX_LINES) {
+          printf("Exceeded MAX_LINES\n");
+          break;
+        }
+      }
+
+      int start_index = 0;
+      if (index - 50 > 0) {
+        start_index = index - 50;
+      }
+
+      for (int i = start_index; i < index; i++) {
+        printf("%s", lines[i]);
+      }
     }
     else
     {
       consecutive_newlines = 0;
+      FILE *fp = fopen(notes_file_path, "a");
       fputs(buffer, fp);
-
-      buffer[strlen(buffer) - 1] = '\0';
-
-      post_to_engram(buffer);
+      fclose(fp);
     }
   } while (running);
 
