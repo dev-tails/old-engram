@@ -30,8 +30,6 @@ export async function initializeRoomApi() {
 
   const socket = io();
 
-
-  // TODO: currently doesn't do anything with message.file as sent in /api/rooms/:id/files
   socket.on('message', (message: MessageType) => {
     const room = roomsById[message.room];
     if (!room) {
@@ -99,11 +97,17 @@ export function getRoom(roomId) {
 export type MessageType = {
   _id: string;
   user: string;
-  body: string; // added both for now, but seems kinda questionable since the emitted message from be doesn't match this
-  // file: string;
+  body?: string;
   room: string;
   createdAt: Date;
   updatedAt?: Date;
+
+  type: string; // either "file" or "text"
+  file?: {
+    _id: string;
+    url: string;
+    fileName: string; // original file name
+  };
 };
 
 const messagesByRoomID: { [id: string]: MessageType[] } = {};

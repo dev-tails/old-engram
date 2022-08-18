@@ -242,10 +242,11 @@ export function RoomView(props: RoomViewProps) {
 
       //  NOTE: changes innerhtml of message body
       // console.log(props.file); // Undefined currently, see server.js and RoomApi.ts for comments
+      console.log(props);
       if (props.body) {
         bodyEl.innerHTML = autolinker.link(props.body);
       } else {
-        bodyEl.innerHTML = props.file;
+        // bodyEl.innerHTML = props.file;
       }
       
 

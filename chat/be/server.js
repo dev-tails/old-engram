@@ -25,7 +25,7 @@ async function run() {
   const Room = db.collection('rooms');
   const UserRoomConfig = db.collection('userroomconfigs');
   const PushNotification = db.collection('pushnotifications');
-  const Files = db.collection('files');
+  // const Files = db.collection('files');
 
   const storageConfig = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -214,6 +214,7 @@ async function run() {
       room: new mongodb.ObjectId(id),
       body: req.body.body,
       user: mongodb.ObjectId(req.user),
+      type: "text",
     });
 
     const newMessage = await Message.findOne({ _id: insertedId });
@@ -244,6 +245,48 @@ async function run() {
     });
     await Promise.all(notifications);
 
+
+    res.sendStatus(200);
+  });
+
+  // TODO: rename this route to be /api/rooms/:id/messages/file
+  app.post('/api/rooms/:id/files', upload.single('file'), async (req, res, next) => {
+    const { id } = req.params;
+    const uploadedFile = req.file;
+    const fileId = path.parse(uploadedFile.filename).name;
+
+    // await Files.insertOne({
+    //   _id: mongodb.ObjectId(fileId),
+    //   url: uploadedFile.path,
+    //   filename: uploadedFile.originalname,
+    // });
+
+    const { insertedId } = await Message.insertOne({
+      room: new mongodb.ObjectId(id),
+      file: {
+        id: mongodb.ObjectId(fileId),
+        url: uploadedFile.path,
+        filename: uploadedFile.originalname,
+      },
+      type: "file",
+      user: mongodb.ObjectId(req.user),
+    });
+
+    const newMessage = await Message.findOne({ _id: insertedId });
+    newMessage.createdAt = newMessage._id.getTimestamp();
+
+    await UserRoomConfig.updateMany(
+      { room: mongodb.ObjectId(id), user: { $ne: mongodb.ObjectId(req.user) } },
+      { $inc: { unreadCount: 1 } }
+    );
+
+      console.log(newMessage);
+
+    io.emit('message', newMessage);
+
+
+
+    // TODO: push notification
 
     res.sendStatus(200);
   });
@@ -310,54 +353,6 @@ async function run() {
     res.sendStatus(200);
   });
 
-  app.post('/api/rooms/:id/files', upload.single('file'), async (req, res, next) => {
-    const { id } = req.params;
-    const uploadedFile = req.file;
-    const fileId = path.parse(uploadedFile.filename).name;
-
-    await Files.insertOne({
-      _id: mongodb.ObjectId(fileId),
-      url: uploadedFile.path,
-      filename: uploadedFile.originalname,
-    });
-
-    const { insertedId } = await Message.insertOne({
-      room: new mongodb.ObjectId(id),
-      file: fileId, // Currently stores the file._id instead of file url
-      user: mongodb.ObjectId(req.user),
-    });
-
-    const newMessage = await Message.findOne({ _id: insertedId });
-    newMessage.createdAt = newMessage._id.getTimestamp();
-
-    await UserRoomConfig.updateMany(
-      { room: mongodb.ObjectId(id), user: { $ne: mongodb.ObjectId(req.user) } },
-      { $inc: { unreadCount: 1 } }
-    );
-
-    /* 
-    current schema for message that is sent back in the io.emit below:
-    {
-    "_id" : ObjectId, 
-    "room" : ObjectId of room, 
-    "file" : string, ObjectId of the file, 
-    "user" : ObjectId of user
-    }
-
-    but the socket listener in RoomApi.ts uses the message type which doesn't include "file" which is sent below 
-
-    For display and downloading attachments we would need to send back the url,
-
-    QUESTION: since the fe needs the file url, how should the BE format the emitted newMessage with the file url included?
-
-    Some ideas that could work:
-    - store the file url as the body and still keep file as the file id then send newMessage as it is right now
-    - keep the schema the way it is and make a new object with message.body as the fileurl in RoomApi before io.emit
-    */
-    io.emit('message', newMessage);
-
-    res.sendStatus(200);
-  })
 
   app.get('*', (req, res) => {
     res.sendFile(__dirname + '/public/index.html');
