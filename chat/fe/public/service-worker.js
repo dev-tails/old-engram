@@ -28,19 +28,52 @@ self.addEventListener('push', (e) => {
             });
     }
 
-    e.waitUntil(checkMessageIsInActiveWindow().then((messageInActiveWindow) => {
+
+    const promiseChain = checkMessageIsInActiveWindow().then((messageInActiveWindow) => {
+        if (messageInActiveWindow) {
+            return true;
+        } else {
+            return false;
+        }
+    }).then((messageInActiveWindow) => {
         if (messageInActiveWindow) {
             return;
         }
 
-        return self.registration.showNotification(message.title, {
-            body: message.body,
-            data: {
-                roomId: message.room,
+        return registration.getNotifications({ tag: message.room.id }).then((notifications) => {
+            return notifications[notifications.length - 1];
+        }).then((currentNotification) => {
+            let notificationTitle;
+            const options = {
+                tag: message.room.id,
+                renotify: true,
+                data: {
+                    roomId: message.room,
+                }
             }
+            if (currentNotification) {
+                const newNotificationCount = currentNotification.data.newNotificationCount + 1;
+                notificationTitle = `${newNotificationCount} new messages in ${message.roomName}`
+                options.data = {
+                    ...options.data,
+                    newNotificationCount: newNotificationCount,
+                }
+                currentNotification.close();
+            } else {
+                notificationTitle = message.title;
+                options.body = message.body,
+                    options.data = {
+                        ...options.data,
+                        newNotificationCount: 1,
+                    }
+
+            }
+            return self.registration.showNotification(notificationTitle, options);
         });
-    }))
-})
+    })
+
+    e.waitUntil(promiseChain);
+});
 
 self.addEventListener('notificationclick', (e) => {
     const roomUrl = ('/rooms/' + e.notification.data.roomId.id);
