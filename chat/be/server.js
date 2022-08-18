@@ -221,6 +221,7 @@ async function run() {
             title: userName.name,
             body: req.body.body,
             room: req.params,
+            roomName: currentRoom.name,
           }))
       );
     });
