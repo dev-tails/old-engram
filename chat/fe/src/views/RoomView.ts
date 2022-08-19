@@ -249,14 +249,12 @@ export function RoomView(props: RoomViewProps) {
         if (props.file) {
           if (isImage(props.file.url)) {
             const image = document.createElement("img");
-            // TODO: currently has url /room/uploads/...png ?
-            image.src = props.file.url;
+            image.src = "/" + props.file.url;
             bodyEl.append(image);
           } else {
             const downloadLink = document.createElement("a");
             downloadLink.download = props.file.filename;
-            // TODO: currently has url /room/uploads/...pdf ?
-            downloadLink.href = props.file.url;
+            downloadLink.href = "/" + props.file.url;
             downloadLink.innerHTML = props.file.filename;
             bodyEl.append(downloadLink);
           }

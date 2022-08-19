@@ -38,8 +38,6 @@ async function run() {
 
   const upload = multer({
     storage: storageConfig,
-    // TODO: what file size do we limit uploads?
-    // limits: { fileSize: 1e8 }, 
   })
 
   const app = express();
@@ -56,9 +54,7 @@ async function run() {
   app.use(express.json());
 
   app.use(express.static('../fe/public'));
-
-  // TODO: How to get images from /uploads?
-  app.use("/rooms/uploads", express.static("uploads"));
+  app.use("/uploads", express.static("uploads"));
 
 
   app.use((req, res, next) => {
