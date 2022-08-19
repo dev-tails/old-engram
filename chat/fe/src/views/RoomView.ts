@@ -92,7 +92,6 @@ export function RoomView(props: RoomViewProps) {
     await clearUnreadBubble(room);
   })
 
-  // TODO: function that handles when a message is received from socket.emit
   onRoomMessage(props.roomId, (message) => {
     if (isLastMessageToday(messages[1], message)) {
       messageList.prepend(DateDivider(message.createdAt));
@@ -126,7 +125,6 @@ export function RoomView(props: RoomViewProps) {
     }
   });
 
-  // TODO: handles rendering message
   function Message(props: MessageType) {
     let dropdownOpen = false;
 
@@ -240,15 +238,32 @@ export function RoomView(props: RoomViewProps) {
         whiteSpace: 'pre-wrap',
       });
 
-      //  NOTE: changes innerhtml of message body
-      // console.log(props.file); // Undefined currently, see server.js and RoomApi.ts for comments
-      console.log(props);
       if (props.body) {
         bodyEl.innerHTML = autolinker.link(props.body);
       } else {
-        // bodyEl.innerHTML = props.file;
+
+        function isImage(url) {
+          return /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(url);
+        }
+
+        if (props.file) {
+          if (isImage(props.file.url)) {
+            const image = document.createElement("img");
+            // TODO: currently has url /room/uploads/...png ?
+            image.src = props.file.url;
+            bodyEl.append(image);
+          } else {
+            const downloadLink = document.createElement("a");
+            downloadLink.download = props.file.filename;
+            // TODO: currently has url /room/uploads/...pdf ?
+            downloadLink.href = props.file.url;
+            downloadLink.innerHTML = props.file.filename;
+            bodyEl.append(downloadLink);
+          }
+        }
+
       }
-      
+
 
       const currentUser = getSelf();
       if (props.user === currentUser._id) {
@@ -593,6 +608,21 @@ export function RoomView(props: RoomViewProps) {
       font: 'inherit',
     })
 
+    input.addEventListener("dragover", (e) => {
+      e.preventDefault();
+    });
+
+    input.addEventListener("drop", (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      if (e.dataTransfer) {
+        const files = e.dataTransfer.files;
+        const fileData = new FormData();
+        fileData.append('file', files[0]);
+        handleSubmitFile(fileData);
+      }
+    })
+
     const btnSubmit = Button({
       text: '>',
     })
@@ -670,14 +700,31 @@ export function RoomView(props: RoomViewProps) {
     });
 
 
-    // TODO: change this to look nice
-    // TODO: add drag-and-drop functionality
+    const uploadDiv = Div();
+    setStyle(uploadDiv, {
+      height: "100%",
+      cursor: "pointer",
+      width: "30px",
+      maxHeight: '45px',
+      border: "1px solid black",
+      marginRight: "10px",
+      position: "relative",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: "3px",
+    })
+
     const uploadBtn = Input();
     setStyle(uploadBtn, {
+      opacity: "0",
+      cursor: "pointer",
+      height: "100%",
+      width: "100%",
+      position: "absolute",
     });
     uploadBtn.type = 'file';
-    // uploadBtn.name = 'file';
-    uploadBtn.id = 'file' // NOTE: ID will be required and needs to match the field in server.js in order to correctly receive the file
+    uploadBtn.id = 'file';
 
     uploadBtn.addEventListener('change', (e) => {
       const fileData = new FormData();
@@ -685,8 +732,20 @@ export function RoomView(props: RoomViewProps) {
       handleSubmitFile(fileData);
     });
 
-    el.appendChild(input);
+    const uploadText = Span();
+    setStyle(uploadText, {
 
+    });
+    uploadText.innerHTML = "+";
+
+    uploadDiv.appendChild(uploadBtn);
+    uploadDiv.appendChild(uploadText);
+
+    // Add upload button
+    el.appendChild(uploadDiv);
+    // Add text area
+    el.appendChild(input);
+    // Add submit button on small screens
     if (mql.matches) {
       el.appendChild(btnSubmit);
     }
@@ -699,7 +758,7 @@ export function RoomView(props: RoomViewProps) {
       }
     })
 
-    el.appendChild(uploadBtn);
+
 
     setTimeout(() => {
       input.focus();
@@ -809,15 +868,15 @@ export function RoomView(props: RoomViewProps) {
     });
   }
 
-  // type FileSubmitParams = {
-  //   fileToSubmit: File;
-  // }
-
   function handleSubmitFile(fileToSubmit: FormData) {
     sendFile({
       fileData: fileToSubmit,
       room: props.roomId,
     })
+  }
+
+  function handleFileDrop(e) {
+
   }
 
   function handleDeleteMessage(id: string) {

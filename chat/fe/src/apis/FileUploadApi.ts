@@ -5,7 +5,7 @@ type SendFileParams = {
 
 
 export async function sendFile(params: SendFileParams) {
-    await fetch(`/api/rooms/${params.room}/files`, {
+    await fetch(`/api/rooms/${params.room}/messages/file`, {
         method: 'POST',
         body: params.fileData,
     })

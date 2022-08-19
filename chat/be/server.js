@@ -25,7 +25,6 @@ async function run() {
   const Room = db.collection('rooms');
   const UserRoomConfig = db.collection('userroomconfigs');
   const PushNotification = db.collection('pushnotifications');
-  // const Files = db.collection('files');
 
   const storageConfig = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -39,6 +38,8 @@ async function run() {
 
   const upload = multer({
     storage: storageConfig,
+    // TODO: what file size do we limit uploads?
+    // limits: { fileSize: 1e8 }, 
   })
 
   const app = express();
@@ -55,6 +56,10 @@ async function run() {
   app.use(express.json());
 
   app.use(express.static('../fe/public'));
+
+  // TODO: How to get images from /uploads?
+  app.use("/rooms/uploads", express.static("uploads"));
+
 
   app.use((req, res, next) => {
     req.user = req.cookies['user'];
@@ -249,17 +254,10 @@ async function run() {
     res.sendStatus(200);
   });
 
-  // TODO: rename this route to be /api/rooms/:id/messages/file
-  app.post('/api/rooms/:id/files', upload.single('file'), async (req, res, next) => {
+  app.post('/api/rooms/:id/messages/file', upload.single('file'), async (req, res, next) => {
     const { id } = req.params;
     const uploadedFile = req.file;
     const fileId = path.parse(uploadedFile.filename).name;
-
-    // await Files.insertOne({
-    //   _id: mongodb.ObjectId(fileId),
-    //   url: uploadedFile.path,
-    //   filename: uploadedFile.originalname,
-    // });
 
     const { insertedId } = await Message.insertOne({
       room: new mongodb.ObjectId(id),
@@ -280,13 +278,25 @@ async function run() {
       { $inc: { unreadCount: 1 } }
     );
 
-      console.log(newMessage);
-
     io.emit('message', newMessage);
 
-
-
-    // TODO: push notification
+    const currentRoom = await Room.findOne({
+      _id: mongodb.ObjectId(id)
+    });
+    const subscriptions = await PushNotification.find({ user: { $in: currentRoom.users, $ne: mongodb.ObjectId(req.user) } }).toArray();
+    const userName = await User.findOne({ _id: mongodb.ObjectId(req.user) });
+    const notifications = [];
+    subscriptions.forEach((subscriber) => {
+      notifications.push(
+        webpush.sendNotification(subscriber.subscription, JSON.stringify(
+          {
+            title: userName.name,
+            body: userName.name + " uploaded a file: " + newMessage.file.filename,
+            room: req.params,
+          }))
+      );
+    });
+    await Promise.all(notifications);
 
     res.sendStatus(200);
   });
@@ -352,7 +362,6 @@ async function run() {
     })
     res.sendStatus(200);
   });
-
 
   app.get('*', (req, res) => {
     res.sendFile(__dirname + '/public/index.html');

@@ -49,7 +49,7 @@ export async function initializeRoomApi() {
 
       sendNotification({
         title: room.name,
-        body: `${messageSender.name}: ${TextUtils.truncate(message.body, 256)}`,
+        body: `${messageSender.name}: ${message.body ? TextUtils.truncate(message.body, 256) : " uploaded a file"}`,
         roomId: message.room,
       });
     }
@@ -102,11 +102,11 @@ export type MessageType = {
   createdAt: Date;
   updatedAt?: Date;
 
-  type: string; // either "file" or "text"
+  type: "file" | "text";
   file?: {
     _id: string;
     url: string;
-    fileName: string; // original file name
+    filename: string;
   };
 };
 
