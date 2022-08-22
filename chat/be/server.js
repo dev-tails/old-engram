@@ -5,6 +5,9 @@ const http = require('http');
 const cookieParser = require('cookie-parser');
 const { Server } = require('socket.io');
 const webpush = require('web-push');
+const multer = require('multer');
+const path = require("path");
+
 const maxAgeInMilliseconds = 365 * 60 * 60 * 24 * 1000;
 
 dotenv.config();
@@ -23,6 +26,20 @@ async function run() {
   const UserRoomConfig = db.collection('userroomconfigs');
   const PushNotification = db.collection('pushnotifications');
 
+  const storageConfig = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, `uploads/`);
+    },
+    filename: function (req, file, cb) {
+      const parsedFileName = path.parse(file.originalname);
+      cb(null, `${mongodb.ObjectId()}${parsedFileName.ext}`);
+    },
+  });
+
+  const upload = multer({
+    storage: storageConfig,
+  })
+
   const app = express();
   const server = http.createServer(app);
   const io = new Server(server);
@@ -37,6 +54,8 @@ async function run() {
   app.use(express.json());
 
   app.use(express.static('../fe/public'));
+  app.use("/uploads", express.static("uploads"));
+
 
   app.use((req, res, next) => {
     req.user = req.cookies['user'];
@@ -196,6 +215,7 @@ async function run() {
       room: new mongodb.ObjectId(id),
       body: req.body.body,
       user: mongodb.ObjectId(req.user),
+      type: "text",
     });
 
     const newMessage = await Message.findOne({ _id: insertedId });
@@ -205,7 +225,7 @@ async function run() {
       { room: mongodb.ObjectId(id), user: { $ne: mongodb.ObjectId(req.user) } },
       { $inc: { unreadCount: 1 } }
     );
-    
+
     io.emit('message', newMessage);
 
     const currentRoom = await Room.findOne({
@@ -231,6 +251,53 @@ async function run() {
     res.sendStatus(200);
   });
 
+  app.post('/api/rooms/:id/messages/file', upload.single('file'), async (req, res, next) => {
+    const { id } = req.params;
+    const uploadedFile = req.file;
+    const fileId = path.parse(uploadedFile.filename).name;
+
+    const { insertedId } = await Message.insertOne({
+      room: new mongodb.ObjectId(id),
+      file: {
+        id: mongodb.ObjectId(fileId),
+        url: uploadedFile.path,
+        filename: uploadedFile.originalname,
+      },
+      type: "file",
+      user: mongodb.ObjectId(req.user),
+    });
+
+    const newMessage = await Message.findOne({ _id: insertedId });
+    newMessage.createdAt = newMessage._id.getTimestamp();
+
+    await UserRoomConfig.updateMany(
+      { room: mongodb.ObjectId(id), user: { $ne: mongodb.ObjectId(req.user) } },
+      { $inc: { unreadCount: 1 } }
+    );
+
+    io.emit('message', newMessage);
+
+    const currentRoom = await Room.findOne({
+      _id: mongodb.ObjectId(id)
+    });
+    const subscriptions = await PushNotification.find({ user: { $in: currentRoom.users, $ne: mongodb.ObjectId(req.user) } }).toArray();
+    const userName = await User.findOne({ _id: mongodb.ObjectId(req.user) });
+    const notifications = [];
+    subscriptions.forEach((subscriber) => {
+      notifications.push(
+        webpush.sendNotification(subscriber.subscription, JSON.stringify(
+          {
+            title: userName.name,
+            body: userName.name + " uploaded a file: " + newMessage.file.filename,
+            room: req.params,
+          }))
+      );
+    });
+    await Promise.all(notifications);
+
+    res.sendStatus(200);
+  });
+
   app.put('/api/rooms/:id/messages', async (req, res, next) => {
     const messageId = req.body.id;
     const newBody = req.body.body;
@@ -250,7 +317,7 @@ async function run() {
     const editedMessage = await Message.findOne({ _id: mongodb.ObjectId(messageId) });
     io.emit('edited-message', editedMessage)
     res.sendStatus(200);
-  })
+  });
 
   app.delete('/api/rooms/:id/messages', async (req, res, next) => {
     const roomId = req.params.id;
@@ -272,7 +339,7 @@ async function run() {
     res.json({
       publickey: process.env.WEB_PUSH_VAPID_PUBLIC_KEY,
     });
-  })
+  });
 
   app.post('/api/subscriptions', async (req, res, next) => {
     const currentUser = req.user;
@@ -282,7 +349,7 @@ async function run() {
       subscription: subscriptionInfo,
     })
     res.sendStatus(200);
-  })
+  });
 
   app.delete('/api/subscriptions', async (req, res, next) => {
     const currentUser = req.user;
@@ -291,7 +358,7 @@ async function run() {
       subscription: req.body.subscription,
     })
     res.sendStatus(200);
-  })
+  });
 
   app.get('*', (req, res) => {
     res.sendFile(__dirname + '/public/index.html');
