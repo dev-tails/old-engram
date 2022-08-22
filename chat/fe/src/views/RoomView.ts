@@ -250,6 +250,9 @@ export function RoomView(props: RoomViewProps) {
           if (isImage(props.file.url)) {
             const image = document.createElement("img");
             image.src = "/" + props.file.url;
+            setStyle(image, {
+              maxWidth: "100%",
+            })
             bodyEl.append(image);
           } else {
             const downloadLink = document.createElement("a");
