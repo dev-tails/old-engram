@@ -251,7 +251,12 @@ export function RoomView(props: RoomViewProps) {
             const image = document.createElement("img");
             image.src = "/" + props.file.url;
             setStyle(image, {
-              maxWidth: "100%",
+              maxWidth: "300px",
+              maxHeight: "300px",
+              cursor: "pointer"
+            })
+            image.addEventListener('click', () => {
+              window.open("/" + props.file?.url);
             })
             bodyEl.append(image);
           } else {
@@ -620,6 +625,9 @@ export function RoomView(props: RoomViewProps) {
         const files = e.dataTransfer.files;
         const fileData = new FormData();
         fileData.append('file', files[0]);
+        document.getElementsByClassName('message-list')[0].scrollTo({
+          top: 0,
+        });
         handleSubmitFile(fileData);
       }
     })
@@ -730,6 +738,9 @@ export function RoomView(props: RoomViewProps) {
     uploadBtn.addEventListener('change', (e) => {
       const fileData = new FormData();
       fileData.append('file', uploadBtn.files[0]);
+      document.getElementsByClassName('message-list')[0].scrollTo({
+        top: 0,
+      });
       handleSubmitFile(fileData);
     });
 
