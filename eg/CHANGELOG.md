@@ -1,3 +1,9 @@
+## 0.0.2
+
+### eg
+
+- Convert to SDL application
+
 ## 0.0.1
 
 ### eg
