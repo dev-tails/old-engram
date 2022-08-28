@@ -117,6 +117,18 @@ static int SDLCALL event_filter(void *userdata, SDL_Event *event)
     else if (event->key.keysym.sym == SDLK_ESCAPE)
     {
     }
+    else if( event->key.keysym.sym == SDLK_v && SDL_GetModState() & (KMOD_CTRL | KMOD_LGUI) )
+    {
+        char* clipboard_text = SDL_GetClipboardText();
+        const int current_length = strlen(lines[line_index]);
+
+        const int max_characters_to_copy = MAX_LINE_SIZE - current_length;
+
+        strncpy(lines[line_index] + current_length, clipboard_text, max_characters_to_copy);
+        SDL_free(clipboard_text);
+
+        render();
+    }
   }
   else if (event->type == SDL_TEXTINPUT)
   {
