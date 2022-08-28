@@ -13,59 +13,6 @@ int points_in_segment[MAX_SEGMENTS];
 
 int drawing = 0;
 
-typedef struct DB {
-  unsigned int version;
-  unsigned int current_drawing;
-  unsigned int num_drawings;
-} DB;
-
-typedef struct ShortPoint {
-  unsigned short int x;
-  unsigned short int y;
-} ShortPoint;
-
-void save() {
-  char *pref_path = SDL_GetPrefPath("xyzdigital", "engram");
-  char db_filename_buffer[128];
-  sprintf(db_filename_buffer, "%spaper/%s", pref_path, "paper.db");
-
-  DB db = {};
-  SDL_RWops *db_read_file = SDL_RWFromFile(db_filename_buffer, "r");
-  if (db_read_file == NULL) {
-    printf("Failed to open db\n");
-    return;
-  } else {
-    SDL_RWread(db_read_file, &db, sizeof(DB), 1);
-    if (db.version == 0) {
-      db.version = 1;
-      db.num_drawings = 0;
-      db.current_drawing = 0;
-    }
-  }
-
-  db.current_drawing++;
-
-  char drawing_filename_buffer[128];
-  sprintf(drawing_filename_buffer, "%spaper/drawings/%d.paper", pref_path, db.current_drawing);
-  SDL_RWops *drawing_file = SDL_RWFromFile(drawing_filename_buffer, "w+");
-  
-  ShortPoint points_for_save[MAX_POINTS_IN_SEGMENT];
-  for (int i = 0; i < current_segment + 1; i++) {
-    int num_points_in_segment = points_in_segment[i];
-    for (int point_index = 0; point_index < num_points_in_segment; point_index++) {
-      points_for_save[point_index].x = points[i][point_index].x;
-      points_for_save[point_index].y = points[i][point_index].y;
-    }
-    SDL_RWwrite(drawing_file, &points_for_save, sizeof(short int), num_points_in_segment);
-  }
-  SDL_RWclose(drawing_file);
-  SDL_free(pref_path);
-
-  SDL_RWops *db_write_file = SDL_RWFromFile(db_filename_buffer, "w+");
-  SDL_RWwrite(db_write_file, &db, sizeof(DB), 1);
-  SDL_RWclose(db_write_file);
-}
-
 void render()
 {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
@@ -77,6 +24,48 @@ void render()
   }
 
   SDL_RenderPresent(renderer);
+}
+
+void load_drawing(int id) {
+  char *pref_path = SDL_GetPrefPath("xyzdigital", "engram");
+  char drawing_filename_buffer[128];
+  sprintf(drawing_filename_buffer, "%spaper/drawings/%d.paper", pref_path, id);
+
+  SDL_RWops *drawing_file = SDL_RWFromFile(drawing_filename_buffer, "r");
+  if (drawing_file == NULL) {
+    printf("drawing %d does not exist", id);
+    return;
+  }
+
+  SDL_RWread(drawing_file, &current_segment, sizeof(current_segment), 1);
+  for (int i = 0; i < current_segment; i++) {
+    SDL_RWread(drawing_file, &points_in_segment[i], sizeof(int), 1);
+    SDL_RWread(drawing_file, points[i], sizeof(SDL_Point), points_in_segment[i]);
+  }
+
+  SDL_RWclose(drawing_file);
+
+  SDL_free(pref_path);
+
+  render();
+}
+
+void save() {
+  char *pref_path = SDL_GetPrefPath("xyzdigital", "engram");
+
+  char drawing_filename_buffer[128];
+  sprintf(drawing_filename_buffer, "%spaper/drawings/%d.paper", pref_path, drawing);
+  SDL_RWops *drawing_file = SDL_RWFromFile(drawing_filename_buffer, "w+");
+  
+  int num_segments = current_segment + 1;
+  SDL_RWwrite(drawing_file, &num_segments, sizeof(int), 1);
+  for (int i = 0; i < num_segments; i++) {
+    int num_points_in_segment = points_in_segment[i];
+    SDL_RWwrite(drawing_file, &num_points_in_segment, sizeof(int), 1);
+    SDL_RWwrite(drawing_file, &points[i], sizeof(SDL_Point), num_points_in_segment);
+  }
+  SDL_RWclose(drawing_file);
+  SDL_free(pref_path);
 }
 
 static int SDLCALL event_filter(void *userdata, SDL_Event *event)
@@ -117,6 +106,8 @@ static int SDLCALL event_filter(void *userdata, SDL_Event *event)
       render();
     } else if (event->key.keysym.sym == SDLK_s) {
       save();
+    } else if (event->key.keysym.sym == SDLK_l) {
+      load_drawing(0);
     }
   }
 
