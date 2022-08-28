@@ -1,3 +1,8 @@
+## 0.0.3
+
+- ctrl/super + v to paste
+- ctrl/super + Backspace to clear line
+
 ## 0.0.2
 
 ### eg
