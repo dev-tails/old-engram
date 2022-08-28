@@ -1,8 +1,8 @@
 CC = cc
-CFLAGS = -Wall -I /opt/homebrew/include
+CFLAGS = -Wall -g -I /opt/homebrew/include
 TARGET = paper
 
-LDFLAGS = `pkg-config --libs --static SDL2`
+LDFLAGS = `pkg-config --libs SDL2`
 
 
 paper: paper.c
