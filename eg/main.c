@@ -111,7 +111,11 @@ static int SDLCALL event_filter(void *userdata, SDL_Event *event)
     }
     else if (event->key.keysym.sym == SDLK_BACKSPACE)
     {
-      lines[line_index][strlen(lines[line_index]) - 1] = 0;
+      if (SDL_GetModState() & (KMOD_CTRL | KMOD_LGUI)) {
+        lines[line_index][0] = 0;
+      } else {
+        lines[line_index][strlen(lines[line_index]) - 1] = 0;
+      }
       render();
     }
     else if (event->key.keysym.sym == SDLK_ESCAPE)
