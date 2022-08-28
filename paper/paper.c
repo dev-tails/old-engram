@@ -121,6 +121,8 @@ static int SDLCALL event_filter(void *userdata, SDL_Event *event)
     const SDL_MouseButtonEvent *mouse_down_event = (SDL_MouseButtonEvent *)event;
 
     if (is_collision_with_rect(mouse_down_event->x * 2, mouse_down_event->y * 2, btn_new_rect)) {
+      save();
+
       current_drawing_id++;
       clear_current_points();
     } else {
