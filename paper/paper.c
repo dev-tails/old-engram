@@ -15,6 +15,8 @@ int is_drawing = 0;
 int current_drawing_id = 0;
 
 SDL_Rect btn_new_rect;
+SDL_Rect btn_left_rect;
+SDL_Rect btn_right_rect;
 
 void render()
 {
@@ -24,6 +26,8 @@ void render()
   SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
 
   SDL_RenderDrawRect(renderer, &btn_new_rect);
+  SDL_RenderDrawRect(renderer, &btn_left_rect);
+  SDL_RenderDrawRect(renderer, &btn_right_rect);
 
   for (int i = 0; i < current_segment + 1; i++)
   {
@@ -185,10 +189,22 @@ void init_sdl()
 
 void init_app()
 {
+  int padding = 8;
+
   btn_new_rect.x = 50;
   btn_new_rect.y = 0;
   btn_new_rect.w = 36;
   btn_new_rect.h = 36;
+
+  btn_left_rect.x = btn_new_rect.x + btn_new_rect.w + padding;
+  btn_left_rect.y = 0;
+  btn_left_rect.w = 36;
+  btn_left_rect.h = 36;
+
+  btn_right_rect.x = btn_left_rect.x + btn_left_rect.w + padding;
+  btn_right_rect.y = 0;
+  btn_right_rect.w = 36;
+  btn_right_rect.h = 36;
 }
 
 int main(int argc, char *argv[])
