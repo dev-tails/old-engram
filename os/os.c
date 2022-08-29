@@ -144,7 +144,11 @@ static int SDLCALL event_filter(void *userdata, SDL_Event *event)
   }
   else if (event->type == SDL_KEYDOWN)
   {
-    if (event->key.keysym.sym == SDLK_LEFT) {
+    if (event->key.keysym.sym == SDLK_RETURN) {
+      if (highlight_index >= 0) {
+        update_state(app_icons[highlight_index].state);
+      }
+    } else if (event->key.keysym.sym == SDLK_LEFT) {
       if (highlight_index > 0) {
         highlight_index--;
       }
@@ -158,6 +162,8 @@ static int SDLCALL event_filter(void *userdata, SDL_Event *event)
         search_text[len - 1] = 0;
       }
       update_default_highlight_index();
+    } else if (event->key.keysym.sym == SDLK_ESCAPE) {
+      update_state(STATE_APP_SELECT);
     }
     render();
   } else if (event->type == SDL_TEXTINPUT) {
