@@ -1,3 +1,6 @@
+#include <dirent.h>
+#include <time.h>
+
 #include <SDL2/SDL.h>
 
 #define MAX_SEGMENTS 1024
@@ -5,6 +8,12 @@
 
 SDL_Window *window;
 SDL_Renderer *renderer;
+
+#define MAX_DRAWINGS 1024
+#define MAX_DRAWING_FILENAME_SIZE 16
+int num_drawings = 0;
+int current_drawing_index = -1;
+char drawing_filenames[MAX_DRAWINGS][MAX_DRAWING_FILENAME_SIZE];
 
 int point = 0;
 int current_segment = -1;
@@ -37,16 +46,20 @@ void render()
   SDL_RenderPresent(renderer);
 }
 
-void load_drawing(int id)
+void load_drawing(int index)
 {
+  if (index < 0 || index > num_drawings) {
+    return;
+  }
+
   char *pref_path = SDL_GetPrefPath("xyzdigital", "engram");
   char drawing_filename_buffer[128];
-  sprintf(drawing_filename_buffer, "%spaper/drawings/%d.paper", pref_path, id);
+  sprintf(drawing_filename_buffer, "%spaper/drawings/%s", pref_path, drawing_filenames[index]);
 
   SDL_RWops *drawing_file = SDL_RWFromFile(drawing_filename_buffer, "r");
   if (drawing_file == NULL)
   {
-    printf("drawing %d does not exist", id);
+    printf("drawing %d does not exist", index);
     return;
   }
 
@@ -61,8 +74,6 @@ void load_drawing(int id)
 
   SDL_free(pref_path);
 
-  current_drawing_id = id;
-
   render();
 }
 
@@ -70,8 +81,21 @@ void save()
 {
   char *pref_path = SDL_GetPrefPath("xyzdigital", "engram");
 
+  time_t seconds = time(NULL);
+  struct tm *current_time = localtime(&seconds);
+
   char drawing_filename_buffer[128];
-  sprintf(drawing_filename_buffer, "%spaper/drawings/%d.paper", pref_path, current_drawing_id);
+  sprintf(
+    drawing_filename_buffer,
+    "%spaper/drawings/%02d-%02d-%02d-%02d_%02d_%02d.paper", 
+    pref_path,
+    current_time->tm_year + 1900,
+    current_time->tm_mon + 1,
+    current_time->tm_mday,
+    current_time->tm_hour,
+    current_time->tm_min,
+    current_time->tm_sec
+  );
   SDL_RWops *drawing_file = SDL_RWFromFile(drawing_filename_buffer, "w+");
 
   int num_segments = current_segment + 1;
@@ -129,6 +153,13 @@ static int SDLCALL event_filter(void *userdata, SDL_Event *event)
 
       current_drawing_id++;
       clear_current_points();
+    } else if (is_collision_with_rect(mouse_down_event->x * 2, mouse_down_event->y * 2, btn_left_rect)) {
+      if (current_drawing_index == -1) {
+        current_drawing_index = num_drawings - 1;
+      } else if (current_drawing_index > 0) {
+        current_drawing_index--;
+      }
+      load_drawing(current_drawing_index);
     } else {
       current_segment++;
       is_drawing = 1;
@@ -189,6 +220,27 @@ void init_sdl()
 
 void init_app()
 {
+  char *pref_path = SDL_GetPrefPath("xyzdigital", "engram");
+  char drawings_folder_path[128];
+  sprintf(drawings_folder_path, "%spaper/drawings", pref_path);
+
+  DIR *d;
+  struct dirent *dir;
+  d = opendir(drawings_folder_path);
+
+  int current_filename_index = 0;
+  if (d) {
+    while((dir = readdir(d)) != NULL) {
+      if (dir->d_type == DT_REG) {
+        strncpy(drawing_filenames[current_filename_index], dir->d_name, MAX_DRAWING_FILENAME_SIZE);
+        printf("%s\n", drawing_filenames[current_filename_index]);
+        current_filename_index++;
+        num_drawings++;
+      }
+    }
+    closedir(d);
+  }
+
   int padding = 8;
 
   btn_new_rect.x = 50;
