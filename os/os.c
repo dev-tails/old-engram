@@ -26,17 +26,24 @@ State state = STATE_APP_SELECT;
 
 AppIcon app_icons[NUM_APPS];
 
+int highlight_index = 0;
+
 void render()
 {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
   SDL_RenderClear(renderer);
 
   if (state == STATE_APP_SELECT) {
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
-
     for (int i = 0; i < NUM_APPS; i++) {
+      if (i == highlight_index) {
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+      } else {
+        SDL_SetRenderDrawColor(renderer, 128, 128, 128, SDL_ALPHA_OPAQUE);
+      }
+    
+
       const AppIcon *icon = &app_icons[i];
-      SDL_RenderDrawRect(renderer, &icon->rect);
+      SDL_RenderFillRect(renderer, &icon->rect);
 
       SDL_Color color = { 255, 255, 255 };
       SDL_Surface * surface = TTF_RenderText_Solid(font, icon->name, color);
@@ -55,9 +62,29 @@ void render()
       SDL_DestroyTexture(texture);
       SDL_FreeSurface(surface);
     }
+  } else if(state == STATE_APP_LOG) {
+    SDL_Color color = { 255, 255, 255 };
+    SDL_Surface * surface = TTF_RenderText_Solid(font, "log", color);
+
+    SDL_Texture * texture = SDL_CreateTextureFromSurface(renderer, surface);
+
+    int texW = 0;
+    int texH = 0;
+    SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
+
+    SDL_Rect dstrect = { 0, 0, texW, texH };
+
+    SDL_RenderCopy(renderer, texture, NULL, &dstrect);
+    SDL_DestroyTexture(texture);
+    SDL_FreeSurface(surface);
   }
 
   SDL_RenderPresent(renderer);
+}
+
+void update_state(State new_state) {
+  state = new_state;
+  render();
 }
 
 int is_collision_with_rect(int x, int y, const SDL_Rect *rect) {
@@ -81,12 +108,22 @@ static int SDLCALL event_filter(void *userdata, SDL_Event *event)
     for (int i = 0; i < NUM_APPS; i++) {
       const AppIcon *icon = &app_icons[i];
       if (is_collision_with_rect(mouse_down_event->x * 2, mouse_down_event->y * 2, &icon->rect)) {
-
+        update_state(icon->state);
       }
     }
   }
   else if (event->type == SDL_KEYDOWN)
   {
+    if (event->key.keysym.sym == SDLK_LEFT) {
+      if (highlight_index > 0) {
+        highlight_index--;
+      }
+    } else if (event->key.keysym.sym == SDLK_RIGHT) {
+      if (highlight_index < NUM_APPS - 1) {
+        highlight_index++;
+      }
+    }
+    render();
   }
 
   return 0;
@@ -119,7 +156,9 @@ int main(int argc, char *argv[])
   init_sdl();
 
   strcpy(app_icons[0].name, "log");
+  app_icons[0].state = STATE_APP_LOG;
   strcpy(app_icons[1].name, "paper");
+  app_icons[1].state = STATE_APP_PAPER;
 
   int x = 0;
   int padding = 16;
