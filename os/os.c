@@ -1,19 +1,26 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 #define NUM_APPS 2
+
+typedef enum State {
+  STATE_APP_SELECT = 0,
+  STATE_APP_LOG,
+  STATE_APP_PAPER,
+  STATE_NUM
+} State;
 
 typedef struct AppIcon {
   SDL_Rect rect;
   char name[32];
+  State state;
 } AppIcon;
-
-typedef enum State {
-  STATE_APP_SELECT = 0,
-  STATE_NUM
-} State;
 
 SDL_Window *window;
 SDL_Renderer *renderer;
+TTF_Font *font = NULL;
+
+const int font_size = 28;
 
 State state = STATE_APP_SELECT;
 
@@ -30,6 +37,23 @@ void render()
     for (int i = 0; i < NUM_APPS; i++) {
       const AppIcon *icon = &app_icons[i];
       SDL_RenderDrawRect(renderer, &icon->rect);
+
+      SDL_Color color = { 255, 255, 255 };
+      SDL_Surface * surface = TTF_RenderText_Solid(font, icon->name, color);
+
+      SDL_Texture * texture = SDL_CreateTextureFromSurface(renderer, surface);
+
+      int texW = 0;
+      int texH = 0;
+      SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
+
+      int half_icon_width = icon->rect.w * 0.5;
+
+      SDL_Rect dstrect = { icon->rect.x + half_icon_width - texW * 0.5, icon->rect.y + icon->rect.h, texW, texH };
+
+      SDL_RenderCopy(renderer, texture, NULL, &dstrect);
+      SDL_DestroyTexture(texture);
+      SDL_FreeSurface(surface);
     }
   }
 
@@ -57,7 +81,7 @@ static int SDLCALL event_filter(void *userdata, SDL_Event *event)
     for (int i = 0; i < NUM_APPS; i++) {
       const AppIcon *icon = &app_icons[i];
       if (is_collision_with_rect(mouse_down_event->x * 2, mouse_down_event->y * 2, &icon->rect)) {
-        printf("%s\n", icon->name);
+
       }
     }
   }
@@ -71,6 +95,9 @@ static int SDLCALL event_filter(void *userdata, SDL_Event *event)
 void init_sdl()
 {
   SDL_Init(SDL_INIT_VIDEO);
+
+  TTF_Init();	
+  font = TTF_OpenFont("arial.ttf", font_size);
 
   SDL_DisplayMode DM;
   SDL_GetCurrentDisplayMode(0, &DM);
