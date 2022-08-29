@@ -2,6 +2,7 @@
 #include <SDL2/SDL_ttf.h>
 
 #define NUM_APPS 2
+#define MAX_APP_NAME_SIZE 32
 
 typedef enum State {
   STATE_APP_SELECT = 0,
@@ -12,7 +13,7 @@ typedef enum State {
 
 typedef struct AppIcon {
   SDL_Rect rect;
-  char name[32];
+  char name[MAX_APP_NAME_SIZE];
   State state;
 } AppIcon;
 
@@ -26,7 +27,26 @@ State state = STATE_APP_SELECT;
 
 AppIcon app_icons[NUM_APPS];
 
+char search_text[MAX_APP_NAME_SIZE];
+
 int highlight_index = 0;
+
+void render_text(const char* str, int x, int y) {
+  SDL_Color color = { 255, 255, 255 };
+  SDL_Surface * surface = TTF_RenderText_Solid(font, str, color);
+
+  SDL_Texture * texture = SDL_CreateTextureFromSurface(renderer, surface);
+
+  int texW = 0;
+  int texH = 0;
+  SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
+
+  SDL_Rect dstrect = { 0, 0, texW, texH };
+
+  SDL_RenderCopy(renderer, texture, NULL, &dstrect);
+  SDL_DestroyTexture(texture);
+  SDL_FreeSurface(surface);
+}
 
 void render()
 {
@@ -34,13 +54,16 @@ void render()
   SDL_RenderClear(renderer);
 
   if (state == STATE_APP_SELECT) {
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+
+    render_text(search_text, 0, 0);
+
     for (int i = 0; i < NUM_APPS; i++) {
       if (i == highlight_index) {
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
       } else {
         SDL_SetRenderDrawColor(renderer, 128, 128, 128, SDL_ALPHA_OPAQUE);
       }
-    
 
       const AppIcon *icon = &app_icons[i];
       SDL_RenderFillRect(renderer, &icon->rect);
@@ -63,20 +86,7 @@ void render()
       SDL_FreeSurface(surface);
     }
   } else if(state == STATE_APP_LOG) {
-    SDL_Color color = { 255, 255, 255 };
-    SDL_Surface * surface = TTF_RenderText_Solid(font, "log", color);
-
-    SDL_Texture * texture = SDL_CreateTextureFromSurface(renderer, surface);
-
-    int texW = 0;
-    int texH = 0;
-    SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
-
-    SDL_Rect dstrect = { 0, 0, texW, texH };
-
-    SDL_RenderCopy(renderer, texture, NULL, &dstrect);
-    SDL_DestroyTexture(texture);
-    SDL_FreeSurface(surface);
+    render_text("log", 0, 0);
   }
 
   SDL_RenderPresent(renderer);
@@ -122,7 +132,15 @@ static int SDLCALL event_filter(void *userdata, SDL_Event *event)
       if (highlight_index < NUM_APPS - 1) {
         highlight_index++;
       }
+    } else if (event->key.keysym.sym == SDLK_BACKSPACE) {
+      int len = strlen(search_text);
+      if (len > 0) {
+        search_text[len - 1] = 0;
+      }
     }
+    render();
+  } else if (event->type == SDL_TEXTINPUT) {
+    strcat(search_text, event->text.text);
     render();
   }
 
@@ -165,6 +183,7 @@ int main(int argc, char *argv[])
   for (int i = 0; i < NUM_APPS; i++) {
       AppIcon *icon = &app_icons[i];
       icon->rect.x = x;
+      icon->rect.y = 64;
       icon->rect.w = 200;
       icon->rect.h = 200;
       x += icon->rect.w + padding;
