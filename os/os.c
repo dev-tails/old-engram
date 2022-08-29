@@ -110,6 +110,21 @@ int is_collision_with_rect(int x, int y, const SDL_Rect *rect) {
   }
 }
 
+void update_default_highlight_index() {
+  if (strlen(search_text) == 0) {
+    highlight_index = 0;
+    return;
+  }
+  highlight_index = -1;
+  for (int i = 0; i < NUM_APPS; i++) {
+    const AppIcon *icon = &app_icons[i];
+    if (strlen(search_text) > 0 && strstr(icon->name, search_text) != 0) {
+      highlight_index = i;
+      break;
+    }
+  }
+}
+
 static int SDLCALL event_filter(void *userdata, SDL_Event *event)
 {
   if (event->type == SDL_QUIT)
@@ -142,10 +157,13 @@ static int SDLCALL event_filter(void *userdata, SDL_Event *event)
       if (len > 0) {
         search_text[len - 1] = 0;
       }
+      update_default_highlight_index();
     }
     render();
   } else if (event->type == SDL_TEXTINPUT) {
     strcat(search_text, event->text.text);
+
+    update_default_highlight_index();
 
     render();
   }
