@@ -1,26 +1,43 @@
 #include <SDL2/SDL.h>
 
+#define NUM_APPS 2
+
+typedef struct AppIcon {
+  SDL_Rect rect;
+  char name[32];
+} AppIcon;
+
+typedef enum State {
+  STATE_APP_SELECT = 0,
+  STATE_NUM
+} State;
+
 SDL_Window *window;
 SDL_Renderer *renderer;
 
-SDL_Rect btn_new_rect;
-SDL_Rect btn_left_rect;
+State state = STATE_APP_SELECT;
+
+AppIcon app_icons[NUM_APPS];
 
 void render()
 {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
   SDL_RenderClear(renderer);
 
-  SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+  if (state == STATE_APP_SELECT) {
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
 
-  SDL_RenderDrawRect(renderer, &btn_new_rect);
-  SDL_RenderDrawRect(renderer, &btn_left_rect);
+    for (int i = 0; i < NUM_APPS; i++) {
+      const AppIcon *icon = &app_icons[i];
+      SDL_RenderDrawRect(renderer, &icon->rect);
+    }
+  }
 
   SDL_RenderPresent(renderer);
 }
 
-int is_collision_with_rect(int x, int y, SDL_Rect rect) {
-  if (x >= rect.x && x <= rect.x + rect.w && y >= rect.y && y < rect.y + rect.h) {
+int is_collision_with_rect(int x, int y, const SDL_Rect *rect) {
+  if (x >= rect->x && x <= rect->x + rect->w && y >= rect->y && y < rect->y + rect->h) {
     return 1;
   } else {
     return 0;
@@ -37,8 +54,11 @@ static int SDLCALL event_filter(void *userdata, SDL_Event *event)
   {
     const SDL_MouseButtonEvent *mouse_down_event = (SDL_MouseButtonEvent *)event;
 
-    if (is_collision_with_rect(mouse_down_event->x * 2, mouse_down_event->y * 2, btn_new_rect)) {
-    
+    for (int i = 0; i < NUM_APPS; i++) {
+      const AppIcon *icon = &app_icons[i];
+      if (is_collision_with_rect(mouse_down_event->x * 2, mouse_down_event->y * 2, &icon->rect)) {
+        printf("%s\n", icon->name);
+      }
     }
   }
   else if (event->type == SDL_KEYDOWN)
@@ -70,6 +90,19 @@ void init_sdl()
 int main(int argc, char *argv[])
 {
   init_sdl();
+
+  strcpy(app_icons[0].name, "log");
+  strcpy(app_icons[1].name, "paper");
+
+  int x = 0;
+  int padding = 16;
+  for (int i = 0; i < NUM_APPS; i++) {
+      AppIcon *icon = &app_icons[i];
+      icon->rect.x = x;
+      icon->rect.w = 200;
+      icon->rect.h = 200;
+      x += icon->rect.w + padding;
+  }
 
   render();
 
