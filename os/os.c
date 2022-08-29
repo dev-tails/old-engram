@@ -59,13 +59,18 @@ void render()
     render_text(search_text, 0, 0);
 
     for (int i = 0; i < NUM_APPS; i++) {
+      const AppIcon *icon = &app_icons[i];
+
+      if (strlen(search_text) > 0 && strstr(icon->name, search_text) == 0) {
+        continue;
+      }
+
       if (i == highlight_index) {
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
       } else {
         SDL_SetRenderDrawColor(renderer, 128, 128, 128, SDL_ALPHA_OPAQUE);
       }
 
-      const AppIcon *icon = &app_icons[i];
       SDL_RenderFillRect(renderer, &icon->rect);
 
       SDL_Color color = { 255, 255, 255 };
@@ -141,6 +146,7 @@ static int SDLCALL event_filter(void *userdata, SDL_Event *event)
     render();
   } else if (event->type == SDL_TEXTINPUT) {
     strcat(search_text, event->text.text);
+
     render();
   }
 
