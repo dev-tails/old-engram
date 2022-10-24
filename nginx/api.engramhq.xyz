@@ -1,0 +1,12 @@
+upstream api {
+  server api:3939;
+}
+
+server {
+  listen 80;
+  server_name auth.engramhq.xyz;
+
+  location / {
+    proxy_pass http://api;
+  }
+}
