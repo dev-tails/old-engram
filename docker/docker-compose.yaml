@@ -1,5 +1,11 @@
 version: '3'
 services:
+  nginx:
+    image: 'engramapp/nginx'
+    ports:
+      - "80:80"
+    depends_on:
+      - api
   api:
     environment:
       - SESSION_SECRET
@@ -9,10 +15,6 @@ services:
       - mongodb
     ports:
       - "3939:3939"
-  auth:
-    image: 'engramapp/auth'
-    ports:
-      - "80:80"
   mongodb:
     image: mongo
     ports:
