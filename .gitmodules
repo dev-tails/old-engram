@@ -10,3 +10,6 @@
 [submodule "paper"]
 	path = paper
 	url = https://github.com/engramhq/paper
+[submodule "database"]
+	path = database
+	url = https://github.com/engramhq/database
