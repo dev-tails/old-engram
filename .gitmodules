@@ -13,3 +13,6 @@
 [submodule "database"]
 	path = database
 	url = https://github.com/engramhq/database
+[submodule "planner"]
+	path = planner
+	url = git@github.com:engramhq/planner.git
