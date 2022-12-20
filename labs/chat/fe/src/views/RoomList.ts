@@ -1,4 +1,5 @@
 import { createRoom, getRooms, onUnreadUpdate, Room } from '../apis/RoomApi';
+import { getUsers } from '../apis/UserApi';
 import { postUserRoomConfig, UserRoomConfig } from '../apis/UserRoomConfigApi';
 import { Button } from '../components/Button';
 import { Div } from '../components/Div';
@@ -171,15 +172,36 @@ export const RoomList = () => {
     const createRoomModalLabel = Span();
     createRoomModalLabel.textContent = 'Room Name: ';
 
-    createRoomModal.appendChild(createRoomModalLabel);
-    createRoomModal.appendChild(createRoomModalNameInput);
+    
+    createRoomModal.append(createRoomModalLabel, createRoomModalNameInput)
+
+    const users = await getUsers();
+
+    const AddUsersHeader = Div()
+    AddUsersHeader.textContent = 'Add Users:';
+    createRoomModal.appendChild(AddUsersHeader);
+
+    const createRoomModalUserChecklist = Div()
+    users.forEach((user) => {
+      const checkbox = Input();
+      checkbox.type = 'checkbox';
+      checkbox.id = user._id;
+      checkbox.name = user.name;
+
+      const label = Span();
+      label.textContent = user.name;
+
+      createRoomModalUserChecklist.append(checkbox, label);
+    })
+
+    createRoomModal.appendChild(createRoomModalUserChecklist);
 
     const createRoomModalSubmitButton = Button({text: 'submit'});
     setStyle(createRoomModalSubmitButton, {
       marginLeft: '20px',
     });
     createRoomModalSubmitButton.addEventListener('click', async (e) => {
-      await createRoom({name: createRoomModalNameInput.value});
+      await createRoom({name: createRoomModalNameInput.value, users: users.map((user) => user._id)});
       window.location.reload();
     });
     createRoomModal.appendChild(createRoomModalSubmitButton);

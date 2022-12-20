@@ -96,6 +96,7 @@ export function getRoom(roomId) {
 
 export type createRoomParamsData = {
   name: string;
+  users: string[]; //objectID
 }
 
 export async function createRoom(params: createRoomParamsData) {
@@ -107,7 +108,7 @@ export async function createRoom(params: createRoomParamsData) {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({name: params.name}),
+    body: JSON.stringify({name: params.name, users: params.users}),
   })
   return room;
 }
