@@ -126,6 +126,18 @@ async function run() {
     });
   });
 
+  //Create new room
+  app.post('/api/rooms', async (req,res) => {
+    const user = req.user;
+    if (!req.body.name) {
+      return res.sendStatus(404);
+    }
+    userId = mongodb.ObjectId(user)
+    const name = req.body.name;
+    const room = await Room.insertOne({name: name, users: [userId]});
+    return res.sendStatus(200);
+  })
+
   app.post('/api/userroomconfigs', async (req, res) => {
     const { _id } = req.body;
     if (_id) {
