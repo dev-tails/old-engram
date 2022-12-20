@@ -1,6 +1,7 @@
 import { createRoom, getRooms, onUnreadUpdate, Room } from '../apis/RoomApi';
 import { getUsers } from '../apis/UserApi';
 import { postUserRoomConfig, UserRoomConfig } from '../apis/UserRoomConfigApi';
+import { Br } from '../components/Br';
 import { Button } from '../components/Button';
 import { Div } from '../components/Div';
 import { Input } from '../components/Input';
@@ -141,11 +142,17 @@ export const RoomList = () => {
 
     const createRoomModal = Div();
     setStyle(createRoomModal, {
-      height: '20vh',
-      width: '40vw',
+      width: window.innerWidth <= 480 ? '70vw' : '20vw',
       padding: '20px',
       zIndex: '1',
       backgroundColor: 'white',
+    });
+  
+    //Closes createRoomModal when clicked outside
+    document.addEventListener('click', (e) => {
+      if (!createRoomModal.contains(e.target as Node) && !createRoomDiv.contains(e.target as Node)) {
+        overlay.style.display = "none";
+      }
     });
 
     const createRoomModalHeader = Div();
@@ -179,10 +186,21 @@ export const RoomList = () => {
 
     const AddUsersHeader = Div()
     AddUsersHeader.textContent = 'Add Users:';
+    setStyle(AddUsersHeader, {
+      paddingTop: '10px',
+    })
     createRoomModal.appendChild(AddUsersHeader);
 
-    const createRoomModalUserChecklist = Div()
+    const createRoomModalUserChecklist = Div();
+    const createRoomModalSelectAllCheckbox = Input();
+    createRoomModalSelectAllCheckbox.type = 'checkbox';
+    const createRoomModalSelectAllCheckboxLabel = Span();
+    createRoomModalSelectAllCheckboxLabel.textContent = 'Select All';
+
+    createRoomModal.append(createRoomModalSelectAllCheckbox, createRoomModalSelectAllCheckboxLabel);
+
     users.forEach((user) => {
+      const entry = Div();
       const checkbox = Input();
       checkbox.type = 'checkbox';
       checkbox.id = user._id;
@@ -191,20 +209,66 @@ export const RoomList = () => {
       const label = Span();
       label.textContent = user.name;
 
-      createRoomModalUserChecklist.append(checkbox, label);
-    })
+      entry.append(checkbox, label, Br())
+      createRoomModalUserChecklist.append(entry);
+    });
 
     createRoomModal.appendChild(createRoomModalUserChecklist);
+
+    createRoomModalSelectAllCheckbox.addEventListener('change', (e) => {
+      const checkboxes = createRoomModalUserChecklist.children;
+      const selectAllCheckbox = e.target as HTMLInputElement;
+      const selectAllIsChecked = selectAllCheckbox.checked;
+
+      for(let i=0; i<checkboxes.length; i++) {
+        const checkbox = checkboxes.item(i)?.firstChild as HTMLInputElement;
+        if(selectAllIsChecked) {
+          checkbox.checked = true;
+        }
+        else {
+          checkbox.checked = false;
+        }
+      }
+    });
+
+    const createRoomModalSubmitButtonWrapper = Div();
+    setStyle(createRoomModalSubmitButtonWrapper, {
+      display: 'flex',
+      justifyContent: 'flex-end',
+    });
 
     const createRoomModalSubmitButton = Button({text: 'submit'});
     setStyle(createRoomModalSubmitButton, {
       marginLeft: '20px',
     });
     createRoomModalSubmitButton.addEventListener('click', async (e) => {
-      await createRoom({name: createRoomModalNameInput.value, users: users.map((user) => user._id)});
-      window.location.reload();
+      if (createRoomModal.lastChild?.textContent == 'Name cannot be empty') {
+        //do nothing since error is already present
+      }
+      else if (createRoomModalNameInput.value === '') {
+        const createRoomModalNameInputError = Div()
+        createRoomModalNameInputError.textContent = 'Name cannot be empty'
+        setStyle(createRoomModalNameInputError, {
+          color: 'red',
+        });
+        createRoomModal.appendChild(createRoomModalNameInputError);
+      }
+      else {
+        const checklist = createRoomModalUserChecklist.children;
+        let users: string[] = []; //_id's
+        for(let i=0; i<checklist.length; i++) {
+          const item = checklist.item(i)?.firstChild as HTMLInputElement
+          if(item.checked) {
+            users.push(item.id)
+          };
+        }
+  
+        await createRoom({name: createRoomModalNameInput.value, users: users});
+        window.location.reload();
+      }
     });
-    createRoomModal.appendChild(createRoomModalSubmitButton);
+    createRoomModalSubmitButtonWrapper.appendChild(createRoomModalSubmitButton);
+    createRoomModal.appendChild(createRoomModalSubmitButtonWrapper);
 
     overlay.appendChild(createRoomModal);
 
