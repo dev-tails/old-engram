@@ -1,8 +1,6 @@
-import { createRoom, getRooms, onUnreadUpdate, Room } from '../apis/RoomApi';
-import { getUsers } from '../apis/UserApi';
+import { getRooms, onUnreadUpdate, Room } from '../apis/RoomApi';
 import { postUserRoomConfig, UserRoomConfig } from '../apis/UserRoomConfigApi';
-import { Br } from '../components/Br';
-import { Button } from '../components/Button';
+import CreateRoomModal from '../components/CreateRoomModal';
 import { Div } from '../components/Div';
 import { Input } from '../components/Input';
 import { Span } from '../components/Span';
@@ -117,160 +115,15 @@ export const RoomList = () => {
       position: "absolute",
     });
 
+    const createRoomModal = CreateRoomModal(createRoomDiv);
+
     createRoomBtn.addEventListener('click', async (e) => {
-      overlay.style.display = 'flex';
+      (await createRoomModal).style.display = 'flex';
     });
 
     const createRoomText = Span();
     setStyle(createRoomText, {});
     createRoomText.innerHTML = "+";
-
-
-    //Add room modal
-    const overlay = Div();
-    setStyle(overlay, {
-      backgroundColor: 'rgba(0, 0, 0, 0.8)',
-      position: 'absolute',
-      left: '0',
-      top: '0',
-      width: '100%',
-      height: '100%',
-      display: 'none',
-      alignItems: 'center',
-      justifyContent: 'center',
-    });
-
-    const createRoomModal = Div();
-    setStyle(createRoomModal, {
-      width: window.innerWidth <= 480 ? '70vw' : '20vw',
-      padding: '20px',
-      zIndex: '1',
-      backgroundColor: 'white',
-    });
-  
-    //Closes createRoomModal when clicked outside
-    document.addEventListener('click', (e) => {
-      if (!createRoomModal.contains(e.target as Node) && !createRoomDiv.contains(e.target as Node)) {
-        overlay.style.display = "none";
-      }
-    });
-
-    const createRoomModalHeader = Div();
-    setStyle(createRoomModalHeader, {
-      display: 'flex',
-      justifyContent: 'space-between',
-    });
-
-    const closeCreateRoomModal = Button({text: 'X'})
-    closeCreateRoomModal.addEventListener('click', (e) => {
-      overlay.style.display = 'none';
-    })
-    createRoomModalHeader.append(Div().innerText = 'Create Room');
-    createRoomModalHeader.append(closeCreateRoomModal);
-
-    setStyle(createRoomModalHeader, {
-      fontSize: '30px',
-      paddingBottom: '20px',
-    })
-    createRoomModal.appendChild(createRoomModalHeader);
-
-    const createRoomModalNameInput = Input();
-    createRoomModalNameInput.type = 'text';
-    const createRoomModalLabel = Span();
-    createRoomModalLabel.textContent = 'Room Name: ';
-
-    
-    createRoomModal.append(createRoomModalLabel, createRoomModalNameInput)
-
-    const users = await getUsers();
-
-    const AddUsersHeader = Div()
-    AddUsersHeader.textContent = 'Add Users:';
-    setStyle(AddUsersHeader, {
-      paddingTop: '10px',
-    })
-    createRoomModal.appendChild(AddUsersHeader);
-
-    const createRoomModalUserChecklist = Div();
-    const createRoomModalSelectAllCheckbox = Input();
-    createRoomModalSelectAllCheckbox.type = 'checkbox';
-    const createRoomModalSelectAllCheckboxLabel = Span();
-    createRoomModalSelectAllCheckboxLabel.textContent = 'Select All';
-
-    createRoomModal.append(createRoomModalSelectAllCheckbox, createRoomModalSelectAllCheckboxLabel);
-
-    users.forEach((user) => {
-      const entry = Div();
-      const checkbox = Input();
-      checkbox.type = 'checkbox';
-      checkbox.id = user._id;
-      checkbox.name = user.name;
-
-      const label = Span();
-      label.textContent = user.name;
-
-      entry.append(checkbox, label, Br())
-      createRoomModalUserChecklist.append(entry);
-    });
-
-    createRoomModal.appendChild(createRoomModalUserChecklist);
-
-    createRoomModalSelectAllCheckbox.addEventListener('change', (e) => {
-      const checkboxes = createRoomModalUserChecklist.children;
-      const selectAllCheckbox = e.target as HTMLInputElement;
-      const selectAllIsChecked = selectAllCheckbox.checked;
-
-      for(let i=0; i<checkboxes.length; i++) {
-        const checkbox = checkboxes.item(i)?.firstChild as HTMLInputElement;
-        if(selectAllIsChecked) {
-          checkbox.checked = true;
-        }
-        else {
-          checkbox.checked = false;
-        }
-      }
-    });
-
-    const createRoomModalSubmitButtonWrapper = Div();
-    setStyle(createRoomModalSubmitButtonWrapper, {
-      display: 'flex',
-      justifyContent: 'flex-end',
-    });
-
-    const createRoomModalSubmitButton = Button({text: 'submit'});
-    setStyle(createRoomModalSubmitButton, {
-      marginLeft: '20px',
-    });
-    createRoomModalSubmitButton.addEventListener('click', async (e) => {
-      if (createRoomModal.lastChild?.textContent == 'Name cannot be empty') {
-        //do nothing since error is already present
-      }
-      else if (createRoomModalNameInput.value === '') {
-        const createRoomModalNameInputError = Div()
-        createRoomModalNameInputError.textContent = 'Name cannot be empty'
-        setStyle(createRoomModalNameInputError, {
-          color: 'red',
-        });
-        createRoomModal.appendChild(createRoomModalNameInputError);
-      }
-      else {
-        const checklist = createRoomModalUserChecklist.children;
-        let users: string[] = []; //_id's
-        for(let i=0; i<checklist.length; i++) {
-          const item = checklist.item(i)?.firstChild as HTMLInputElement
-          if(item.checked) {
-            users.push(item.id)
-          };
-        }
-  
-        await createRoom({name: createRoomModalNameInput.value, users: users});
-        window.location.reload();
-      }
-    });
-    createRoomModalSubmitButtonWrapper.appendChild(createRoomModalSubmitButton);
-    createRoomModal.appendChild(createRoomModalSubmitButtonWrapper);
-
-    overlay.appendChild(createRoomModal);
 
     createRoomDiv.appendChild(createRoomBtn);
     createRoomDiv.appendChild(createRoomText);
@@ -278,7 +131,7 @@ export const RoomList = () => {
     roomListEl.append(createRoomDiv);
 
     el.append(roomListEl);
-    el.append(overlay);
+    el.append(await createRoomModal);
   }
 
   init();
