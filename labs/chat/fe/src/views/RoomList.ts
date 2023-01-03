@@ -1,4 +1,5 @@
 import { getRooms, onUnreadUpdate, Room } from '../apis/RoomApi';
+import { isLoggedIn } from '../apis/UserApi';
 import { postUserRoomConfig, UserRoomConfig } from '../apis/UserRoomConfigApi';
 import CreateRoomModal from '../components/CreateRoomModal';
 import { Div } from '../components/Div';
@@ -92,7 +93,7 @@ export const RoomList = () => {
     el.append(roomListEl);
 
     //Add Room Button
-    if(rooms.length !== 0) {
+    if(isLoggedIn()) {
       const createRoomDiv = Div();
       setStyle(createRoomDiv, {
         height: "100%",
