@@ -89,49 +89,51 @@ export const RoomList = () => {
       }
       roomListEl.appendChild(roomEl);
     }
+    el.append(roomListEl);
 
     //Add Room Button
-    const createRoomDiv = Div();
-    setStyle(createRoomDiv, {
-      height: "100%",
-      cursor: "pointer",
-      width: "30px",
-      maxHeight: '45px',
-      border: "1px solid black",
-      margin: "10px",
-      position: "relative",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      borderRadius: "3px",
-    })
+    if(rooms.length !== 0) {
+      const createRoomDiv = Div();
+      setStyle(createRoomDiv, {
+        height: "100%",
+        cursor: "pointer",
+        width: "30px",
+        maxHeight: '45px',
+        border: "1px solid black",
+        margin: "10px",
+        position: "relative",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: "3px",
+      })
 
-    const createRoomBtn = Input();
-    setStyle(createRoomBtn, {
-      opacity: "0",
-      cursor: "pointer",
-      height: "100%",
-      width: "100%",
-      position: "absolute",
-    });
+      const createRoomBtn = Input();
+      setStyle(createRoomBtn, {
+        opacity: "0",
+        cursor: "pointer",
+        height: "100%",
+        width: "100%",
+        position: "absolute",
+      });
 
-    const createRoomModal = CreateRoomModal(createRoomDiv);
+      const createRoomModal = CreateRoomModal(createRoomDiv);
 
-    createRoomBtn.addEventListener('click', async (e) => {
-      (await createRoomModal).style.display = 'flex';
-    });
+      createRoomBtn.addEventListener('click', async (e) => {
+        (await createRoomModal).style.display = 'flex';
+      });
 
-    const createRoomText = Span();
-    setStyle(createRoomText, {});
-    createRoomText.innerHTML = "+";
+      const createRoomText = Span();
+      setStyle(createRoomText, {});
+      createRoomText.innerHTML = "+";
 
-    createRoomDiv.appendChild(createRoomBtn);
-    createRoomDiv.appendChild(createRoomText);
-    
-    roomListEl.append(createRoomDiv);
+      createRoomDiv.appendChild(createRoomBtn);
+      createRoomDiv.appendChild(createRoomText);
+      
+      roomListEl.append(createRoomDiv);
 
-    el.append(roomListEl);
-    el.append(await createRoomModal);
+      el.append(await createRoomModal);
+    }
   }
 
   init();
