@@ -1,6 +1,10 @@
 import { getRooms, onUnreadUpdate, Room } from '../apis/RoomApi';
+import { isLoggedIn } from '../apis/UserApi';
 import { postUserRoomConfig, UserRoomConfig } from '../apis/UserRoomConfigApi';
+import CreateRoomModal from '../components/CreateRoomModal';
 import { Div } from '../components/Div';
+import { Input } from '../components/Input';
+import { Span } from '../components/Span';
 import { onClick, setStyle, byId } from '../utils/DomUtils';
 import { setURL } from '../utils/HistoryUtils';
 
@@ -87,6 +91,50 @@ export const RoomList = () => {
       roomListEl.appendChild(roomEl);
     }
     el.append(roomListEl);
+
+    //Add Room Button
+    if(isLoggedIn()) {
+      const createRoomDiv = Div();
+      setStyle(createRoomDiv, {
+        height: "100%",
+        cursor: "pointer",
+        width: "30px",
+        maxHeight: '45px',
+        border: "1px solid black",
+        margin: "10px",
+        position: "relative",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: "3px",
+      })
+
+      const createRoomBtn = Input();
+      setStyle(createRoomBtn, {
+        opacity: "0",
+        cursor: "pointer",
+        height: "100%",
+        width: "100%",
+        position: "absolute",
+      });
+
+      const createRoomModal = CreateRoomModal(createRoomDiv);
+
+      createRoomBtn.addEventListener('click', async (e) => {
+        (await createRoomModal).style.display = 'flex';
+      });
+
+      const createRoomText = Span();
+      setStyle(createRoomText, {});
+      createRoomText.innerHTML = "+";
+
+      createRoomDiv.appendChild(createRoomBtn);
+      createRoomDiv.appendChild(createRoomText);
+      
+      roomListEl.append(createRoomDiv);
+
+      el.append(await createRoomModal);
+    }
   }
 
   init();

@@ -94,6 +94,25 @@ export function getRoom(roomId) {
   return roomsById[roomId];
 }
 
+export type createRoomParamsData = {
+  name: string;
+  users: string[]; //objectID
+}
+
+export async function createRoom(params: createRoomParamsData) {
+  if (!params.name) {
+    return;
+  }
+  const room = await fetch('/api/rooms', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({name: params.name, users: params.users}),
+  })
+  return room;
+}
+
 export type MessageType = {
   _id: string;
   user: string;
