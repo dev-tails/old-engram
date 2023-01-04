@@ -37,12 +37,14 @@ import {
 } from '../utils/DomUtils';
 import { setURL } from '../utils/HistoryUtils';
 import { sendFile } from '../apis/FileUploadApi';
+import { emojiList } from '../theme/Emojis'
 
 type RoomViewProps = {
   roomId: string;
 };
 
 let sideBarEnabled = false;
+const isMobile = window.innerWidth <= 768 ? true : false
 
 export function RoomView(props: RoomViewProps) {
   let messages: MessageType[] = [];
@@ -750,13 +752,82 @@ export function RoomView(props: RoomViewProps) {
     });
     uploadText.innerHTML = "+";
 
+
+    const emojiBtn = Div()
+
+    if (!isMobile) {
+        setStyle(emojiBtn, {
+        height: "100%",
+        cursor: "pointer",
+        width: "30px",
+        maxHeight: "45px",
+        border: "1px solid black",
+        marginRight: "10px",
+        position: "relative",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: "3px",
+      });
+
+      emojiBtn.textContent = "😊"
+
+      const emojiContainer = Div();
+      setStyle(emojiContainer, {
+        flexWrap: "wrap",
+        alignContent: "flex-start",
+        gap: "2px",
+        position: "absolute",
+        left: "0",
+        right: "45px",
+        bottom: "45px",
+        backgroundColor: "WhiteSmoke",
+        border: " 1px solid black",
+        borderRadius: "3px",
+        height: "200px",
+        width: "200px",
+        overflow: "auto",
+        userSelect: "none",
+        display: "none"
+      })
+
+      emojiList.forEach((emoji) => {
+        const emojiFlexChild = Div();
+        emojiFlexChild.textContent = emoji;
+        emojiFlexChild.addEventListener('click', (e) => {
+          input.value += emoji;
+        })
+        emojiContainer.appendChild(emojiFlexChild)
+      })
+
+      emojiBtn.appendChild(emojiContainer);
+
+      emojiBtn.addEventListener('click', function(e) { 
+        if(this === e.target) {
+          emojiContainer.style.display === "none" ? emojiContainer.style.display = "flex" : emojiContainer.style.display = "none"
+        }
+      })
+
+      //Closes emoji container when clicked outside
+      document.addEventListener('click', (e) => {
+        if (!emojiBtn.contains(e.target as Node)) {
+          emojiContainer.style.display = "none";
+        }
+      })
+    }
+
     uploadDiv.appendChild(uploadBtn);
     uploadDiv.appendChild(uploadText);
 
     // Add upload button
     el.appendChild(uploadDiv);
+
+    //Add emoji button
+    !isMobile ? el.appendChild(emojiBtn) : null;
+
     // Add text area
     el.appendChild(input);
+
     // Add submit button on small screens
     if (mql.matches) {
       el.appendChild(btnSubmit);
