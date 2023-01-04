@@ -1,8 +1,8 @@
 import { httpGet } from './Api';
 
 const defaultUser = {
-  _id: "-1",
-  name: "MissigNo.",
+  _id: '-1',
+  name: 'MissigNo.',
 };
 
 type User = {
@@ -12,7 +12,7 @@ type User = {
 };
 
 let self: User | null = null;
-let users: User[] = [];
+export let users: User[] = [];
 
 export async function initializeUserApi() {
   self = await fetchSelf();
@@ -30,7 +30,7 @@ let userGetAllPromise = null;
 export async function getUsers(): Promise<User[]> {
   try {
     if (!userGetAllPromise) {
-      userGetAllPromise = httpGet("/api/users");
+      userGetAllPromise = httpGet('/api/users');
     }
 
     const users = await userGetAllPromise;
@@ -55,7 +55,7 @@ export function getUser(id: string) {
 
 export async function fetchSelf() {
   try {
-    const user = await httpGet<User>("/api/users/self");
+    const user = await httpGet<User>('/api/users/self');
     return user;
   } catch (err) {
     return null;

@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 const { Server } = require('socket.io');
 const webpush = require('web-push');
 const multer = require('multer');
-const path = require("path");
+const path = require('path');
 
 const maxAgeInMilliseconds = 365 * 60 * 60 * 24 * 1000;
 
@@ -38,7 +38,7 @@ async function run() {
 
   const upload = multer({
     storage: storageConfig,
-  })
+  });
 
   const app = express();
   const server = http.createServer(app);
@@ -48,14 +48,13 @@ async function run() {
     `mailto: ${process.env.WEB_PUSH_VAPID_MAIL_TO}`,
     process.env.WEB_PUSH_VAPID_PUBLIC_KEY,
     process.env.WEB_PUSH_VAPID_PRIVATE_KEY
-  )
+  );
 
   app.use(cookieParser());
   app.use(express.json());
 
   app.use(express.static('../fe/public'));
-  app.use("/uploads", express.static("uploads"));
-
+  app.use('/uploads', express.static('uploads'));
 
   app.use((req, res, next) => {
     req.user = req.cookies['user'];
@@ -127,12 +126,12 @@ async function run() {
   });
 
   //Create new room
-  app.post('/api/rooms', async (req,res) => {
+  app.post('/api/rooms', async (req, res) => {
     if (!req.body.name || !req.body.users) {
       return res.sendStatus(400);
     }
     const users = req.body.users.map((user) => mongodb.ObjectId(user));
-    const room = await Room.insertOne({name: req.body.name, users: users});
+    const room = await Room.insertOne({ name: req.body.name, users: users });
     return res.sendStatus(200);
   });
 
@@ -225,7 +224,7 @@ async function run() {
       room: new mongodb.ObjectId(id),
       body: req.body.body,
       user: mongodb.ObjectId(req.user),
-      type: "text",
+      type: 'text',
     });
 
     const newMessage = await Message.findOne({ _id: insertedId });
@@ -239,93 +238,110 @@ async function run() {
     io.emit('message', newMessage);
 
     const currentRoom = await Room.findOne({
-      _id: mongodb.ObjectId(id)
+      _id: mongodb.ObjectId(id),
     });
-    const subscriptions = await PushNotification.find({ user: { $in: currentRoom.users, $ne: mongodb.ObjectId(req.user) } }).toArray();
+    const subscriptions = await PushNotification.find({
+      user: { $in: currentRoom.users, $ne: mongodb.ObjectId(req.user) },
+    }).toArray();
     const userName = await User.findOne({ _id: mongodb.ObjectId(req.user) });
     const notifications = [];
     subscriptions.forEach((subscriber) => {
       notifications.push(
-        webpush.sendNotification(subscriber.subscription, JSON.stringify(
-          {
+        webpush.sendNotification(
+          subscriber.subscription,
+          JSON.stringify({
             title: userName.name,
             body: req.body.body,
             room: req.params,
             roomName: currentRoom.name,
-          }))
-      );
-    });
-    await Promise.all(notifications);
-
-
-    res.sendStatus(200);
-  });
-
-  app.post('/api/rooms/:id/messages/file', upload.single('file'), async (req, res, next) => {
-    const { id } = req.params;
-    const uploadedFile = req.file;
-    const fileId = path.parse(uploadedFile.filename).name;
-
-    const { insertedId } = await Message.insertOne({
-      room: new mongodb.ObjectId(id),
-      file: {
-        id: mongodb.ObjectId(fileId),
-        url: uploadedFile.path,
-        filename: uploadedFile.originalname,
-      },
-      type: "file",
-      user: mongodb.ObjectId(req.user),
-    });
-
-    const newMessage = await Message.findOne({ _id: insertedId });
-    newMessage.createdAt = newMessage._id.getTimestamp();
-
-    await UserRoomConfig.updateMany(
-      { room: mongodb.ObjectId(id), user: { $ne: mongodb.ObjectId(req.user) } },
-      { $inc: { unreadCount: 1 } }
-    );
-
-    io.emit('message', newMessage);
-
-    const currentRoom = await Room.findOne({
-      _id: mongodb.ObjectId(id)
-    });
-    const subscriptions = await PushNotification.find({ user: { $in: currentRoom.users, $ne: mongodb.ObjectId(req.user) } }).toArray();
-    const userName = await User.findOne({ _id: mongodb.ObjectId(req.user) });
-    const notifications = [];
-    subscriptions.forEach((subscriber) => {
-      notifications.push(
-        webpush.sendNotification(subscriber.subscription, JSON.stringify(
-          {
-            title: userName.name,
-            body: userName.name + " uploaded a file: " + newMessage.file.filename,
-            room: req.params,
-          }))
+          })
+        )
       );
     });
     await Promise.all(notifications);
 
     res.sendStatus(200);
   });
+
+  app.post(
+    '/api/rooms/:id/messages/file',
+    upload.single('file'),
+    async (req, res, next) => {
+      const { id } = req.params;
+      const uploadedFile = req.file;
+      const fileId = path.parse(uploadedFile.filename).name;
+
+      const { insertedId } = await Message.insertOne({
+        room: new mongodb.ObjectId(id),
+        file: {
+          id: mongodb.ObjectId(fileId),
+          url: uploadedFile.path,
+          filename: uploadedFile.originalname,
+        },
+        type: 'file',
+        user: mongodb.ObjectId(req.user),
+      });
+
+      const newMessage = await Message.findOne({ _id: insertedId });
+      newMessage.createdAt = newMessage._id.getTimestamp();
+
+      await UserRoomConfig.updateMany(
+        {
+          room: mongodb.ObjectId(id),
+          user: { $ne: mongodb.ObjectId(req.user) },
+        },
+        { $inc: { unreadCount: 1 } }
+      );
+
+      io.emit('message', newMessage);
+
+      const currentRoom = await Room.findOne({
+        _id: mongodb.ObjectId(id),
+      });
+      const subscriptions = await PushNotification.find({
+        user: { $in: currentRoom.users, $ne: mongodb.ObjectId(req.user) },
+      }).toArray();
+      const userName = await User.findOne({ _id: mongodb.ObjectId(req.user) });
+      const notifications = [];
+      subscriptions.forEach((subscriber) => {
+        notifications.push(
+          webpush.sendNotification(
+            subscriber.subscription,
+            JSON.stringify({
+              title: userName.name,
+              body:
+                userName.name + ' uploaded a file: ' + newMessage.file.filename,
+              room: req.params,
+            })
+          )
+        );
+      });
+      await Promise.all(notifications);
+
+      res.sendStatus(200);
+    }
+  );
 
   app.put('/api/rooms/:id/messages', async (req, res, next) => {
     const messageId = req.body.id;
     const newBody = req.body.body;
 
-    await Message
-      .updateOne(
-        {
-          _id: mongodb.ObjectId(messageId)
+    await Message.updateOne(
+      {
+        _id: mongodb.ObjectId(messageId),
+      },
+      {
+        $set: {
+          body: newBody,
+          updatedAt: new Date(),
         },
-        {
-          $set: {
-            body: newBody,
-            updatedAt: new Date(),
-          }
-        });
+      }
+    );
 
-    const editedMessage = await Message.findOne({ _id: mongodb.ObjectId(messageId) });
-    io.emit('edited-message', editedMessage)
+    const editedMessage = await Message.findOne({
+      _id: mongodb.ObjectId(messageId),
+    });
+    io.emit('edited-message', editedMessage);
     res.sendStatus(200);
   });
 
@@ -357,7 +373,7 @@ async function run() {
     await PushNotification.insertOne({
       user: mongodb.ObjectId(currentUser),
       subscription: subscriptionInfo,
-    })
+    });
     res.sendStatus(200);
   });
 
@@ -366,7 +382,7 @@ async function run() {
     await PushNotification.deleteOne({
       user: mongodb.ObjectId(currentUser),
       subscription: req.body.subscription,
-    })
+    });
     res.sendStatus(200);
   });
 

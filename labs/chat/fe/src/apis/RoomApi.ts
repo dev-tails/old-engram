@@ -14,14 +14,16 @@ const deletingMessageListener: {
   [id: string]: (messageId: string) => any;
 } = {};
 const editMessageListener: {
-  [id: string]: MessageListener
+  [id: string]: MessageListener;
 } = {};
 
-const roomListListenerByRoomId: { [roomId: string]: UserRoomConfigListener } = {}
+const roomListListenerByRoomId: { [roomId: string]: UserRoomConfigListener } =
+  {};
 
 export type Room = {
   _id: string;
   name: string;
+  users: string[];
   userRoomConfig?: UserRoomConfig;
 };
 
@@ -43,13 +45,16 @@ export async function initializeRoomApi() {
     const roomId = message.room;
 
     if (message.user !== currentUser._id) {
-
       room.userRoomConfig.unreadCount++;
-      roomListListenerByRoomId[roomId](room.userRoomConfig)
+      roomListListenerByRoomId[roomId](room.userRoomConfig);
 
       sendNotification({
         title: room.name,
-        body: `${messageSender.name}: ${message.body ? TextUtils.truncate(message.body, 256) : " uploaded a file"}`,
+        body: `${messageSender.name}: ${
+          message.body
+            ? TextUtils.truncate(message.body, 256)
+            : ' uploaded a file'
+        }`,
         roomId: message.room,
       });
     }
@@ -65,14 +70,14 @@ export async function initializeRoomApi() {
 
   socket.on('edited-message', (message: MessageType) => {
     editMessageListener[message.room](message);
-  })
+  });
 
   socket.on('delete-message', ({ room, id }) => {
     deletingMessageListener[room](id);
   });
 }
 
-const roomsById: { [key: string]: Room } = {};
+export const roomsById: { [key: string]: Room } = {};
 
 type GetRoomsResponse = {
   data: Room[];
@@ -97,7 +102,7 @@ export function getRoom(roomId) {
 export type createRoomParamsData = {
   name: string;
   users: string[]; //objectID
-}
+};
 
 export async function createRoom(params: createRoomParamsData) {
   if (!params.name) {
@@ -108,9 +113,20 @@ export async function createRoom(params: createRoomParamsData) {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({name: params.name, users: params.users}),
-  })
+    body: JSON.stringify({ name: params.name, users: params.users }),
+  });
   return room;
+}
+
+export async function getRoomMembers(roomId: string) {
+  const data = await httpGet<GetRoomMessagesData>(
+    `/api/rooms/${roomId}/messages`
+  );
+  messagesByRoomID[roomId] = data.messages;
+  return {
+    messages: messagesByRoomID[roomId],
+    userRoomConfig: data.userRoomConfig,
+  };
 }
 
 export type MessageType = {
@@ -121,7 +137,7 @@ export type MessageType = {
   createdAt: Date;
   updatedAt?: Date;
 
-  type: "file" | "text";
+  type: 'file' | 'text';
   file?: {
     _id: string;
     url: string;
@@ -155,9 +171,12 @@ type GetRoomMessageByPageData = {
     lastReadMessageId: string;
   };
   lastMessageId: string;
-}
+};
 
-export async function getRoomMessageByPage(roomId: string, lastMessageId: string) {
+export async function getRoomMessageByPage(
+  roomId: string,
+  lastMessageId: string
+) {
   const data = await httpGet<GetRoomMessageByPageData>(
     `/api/rooms/${roomId}/messages?lastmessageid=${lastMessageId}`
   );
@@ -166,8 +185,10 @@ export async function getRoomMessageByPage(roomId: string, lastMessageId: string
   return {
     messages: messagesByRoomID[roomId],
     userRoomConfig: data.userRoomConfig,
-    lastMessageId: data.messages.length ? data.messages[data.messages.length - 1]._id : lastMessageId,
-  }
+    lastMessageId: data.messages.length
+      ? data.messages[data.messages.length - 1]._id
+      : lastMessageId,
+  };
 }
 
 type SendRoomMessageParams = {
@@ -209,7 +230,7 @@ type EditRoomMessageParams = {
   room: string;
   id: string;
   body: string;
-}
+};
 
 export async function editRoomMessage(params: EditRoomMessageParams) {
   if (!params.body) {
@@ -223,8 +244,8 @@ export async function editRoomMessage(params: EditRoomMessageParams) {
     body: JSON.stringify({
       id: params.id,
       body: params.body,
-    })
-  })
+    }),
+  });
 }
 
 export async function onRoomMessage(
