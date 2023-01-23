@@ -4,6 +4,7 @@ import { Div } from '../../../ui/components/Div';
 const socket = io();
 
 const getUserMedia =
+  navigator.mediaDevices.getUserMedia ||
   (navigator as any).getUserMedia ||
   (navigator as any).webkitGetUserMedia ||
   (navigator as any).mozGetUserMedia;
