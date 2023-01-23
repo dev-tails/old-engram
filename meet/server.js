@@ -24,9 +24,8 @@ app.get('/', (req, res) => {
 
 // whenever we connect to socket io we will listen for when sb joins a room and pass the room id and user id then
 io.on('connection', (socket) => {
-  console.log('joining rooooom');
   socket.on('join-room', (roomId, userId) => {
-    console.log(roomId, userId);
+    console.log('joining rooooom', roomId, userId);
     socket.join(roomId);
 
     //send message to room we are currently in

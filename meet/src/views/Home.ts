@@ -1,5 +1,4 @@
 // import Peer from 'peerjs';
-import { io } from 'socket.io-client';
 import { Button } from '../../../ui/components/Button';
 import { Div } from '../../../ui/components/Div';
 import { Input } from '../../../ui/components/Input';
@@ -7,15 +6,6 @@ import { byId } from '../../../ui/utils/DomUtils';
 import { v4 as uuidV4 } from 'uuid';
 
 export function Home() {
-  const roomId = window.location.pathname;
-  const socket = io();
-
-  socket.emit('join-room', 'ROOM_ID', roomId);
-
-  socket.on('user-connected', (userId) => {
-    console.log('User conncted ', userId);
-  });
-
   const el = Div();
 
   const container = Div();
