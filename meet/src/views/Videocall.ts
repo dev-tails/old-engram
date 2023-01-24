@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client';
 import Peer from 'peerjs';
-import { Div } from '../../../ui/components/Div';
-import { Video } from '../../../ui/components/Video';
+import { Div } from '../../../labs/ui/components/Div';
+import { Video } from '../../../labs/ui/components/Video';
 const socket = io();
 
 const getUserMedia =

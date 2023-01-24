@@ -1,8 +1,8 @@
 // import Peer from 'peerjs';
-import { Button } from '../../../ui/components/Button';
-import { Div } from '../../../ui/components/Div';
-import { Input } from '../../../ui/components/Input';
-import { byId } from '../../../ui/utils/DomUtils';
+import { Button } from '../../../labs/ui/components/Button';
+import { Div } from '../../../labs/ui/components/Div';
+import { Input } from '../../../labs/ui/components/Input';
+import { byId } from '../../../labs/ui/utils/DomUtils';
 import { v4 as uuidV4 } from 'uuid';
 
 export function Home() {

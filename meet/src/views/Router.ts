@@ -1,4 +1,4 @@
-import { Div } from '../../../ui/components/Div';
+import { Div } from '../../../labs/ui/components/Div';
 import { Home } from './Home';
 import { Videocall } from './Videocall';
 
