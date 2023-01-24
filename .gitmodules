@@ -1,0 +1,18 @@
+[submodule "api"]
+	path = api
+	url = https://github.com/engramhq/api
+[submodule "auth"]
+	path = auth
+	url = https://github.com/engramhq/auth
+[submodule "notes"]
+	path = notes
+	url = https://github.com/engramhq/notes
+[submodule "paper"]
+	path = paper
+	url = https://github.com/engramhq/paper
+[submodule "database"]
+	path = database
+	url = https://github.com/engramhq/database
+[submodule "planner"]
+	path = planner
+	url = git@github.com:engramhq/planner.git
