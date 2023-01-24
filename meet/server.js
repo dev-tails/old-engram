@@ -4,21 +4,18 @@ const cookieParser = require('cookie-parser');
 
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
-const { v4: uuidV4 } = require('uuid');
+
 app.use(cookieParser());
 app.use(express.json());
 
 app.use(express.static('public'));
 
-// create brand new room and redirect user to that page
 app.get('/:room', (req, res, next) => {
   console.log('req.params.room', req.params);
-  // res.render('room', { roomId: req.params.room });
   return res.sendFile(__dirname + '/public/index.html');
 });
 
 app.get('/', (req, res) => {
-  console.log('sending');
   return res.sendFile(__dirname + '/public/index.html');
 });
 
@@ -30,6 +27,9 @@ io.on('connection', (socket) => {
 
     //send message to room we are currently in
     socket.broadcast.to(roomId).emit('user-connected', userId);
+    socket.on('disconnect', () => {
+      socket.broadcast.to(roomId).emit('user-disconnected', userId);
+    });
   });
 });
 

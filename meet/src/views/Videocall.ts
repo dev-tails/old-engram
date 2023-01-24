@@ -13,7 +13,9 @@ const getUserMedia =
 export function Videocall() {
   const roomId = window.location.pathname.split('/')[1];
 
+  const peers = {};
   const myPeer = new Peer();
+
   myPeer.on('open', (id) => {
     socket.emit('join-room', roomId, id);
     console.log('id', id);
@@ -21,6 +23,12 @@ export function Videocall() {
 
   socket.on('user-connected', (userId) => {
     console.log('User conncted ', userId);
+  });
+
+  socket.on('user-disconnected', (userId) => {
+    if (peers[userId]) {
+      peers[userId].close();
+    }
   });
 
   const el = Div({
@@ -95,6 +103,7 @@ export function Videocall() {
     call.on('close', () => {
       otherUserVideo.remove();
     });
+    peers[userId] = call;
   }
 
   return el;
