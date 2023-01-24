@@ -1,9 +1,9 @@
 import { Div } from '../../../ui/components/Div';
 import { Home } from './Home';
-import { Video } from './Video';
+import { Videocall } from './Videocall';
 
 export function Router() {
-  const router = Div({ styles: { height: '100%' } });
+  const router = Div({ styles: { height: '100%', overflow: 'hidden' } });
 
   function init() {
     handleRouteUpdated();
@@ -26,7 +26,7 @@ export function Router() {
         router.append(Home());
         break;
       case roomId:
-        router.append(Video());
+        router.append(Videocall());
         break;
       default:
         break;
