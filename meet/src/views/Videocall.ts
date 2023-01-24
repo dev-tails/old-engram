@@ -18,25 +18,11 @@ export function Videocall() {
 
   myPeer.on('open', (id) => {
     socket.emit('join-room', roomId, id);
-    console.log('id', id);
-  });
-
-  socket.on('user-connected', (userId) => {
-    console.log('User conncted ', userId);
-  });
-
-  socket.on('user-disconnected', (userId) => {
-    if (peers[userId]) {
-      peers[userId].close();
-    }
   });
 
   const el = Div({
     styles: {
       height: '100vh',
-      // display: 'grid',
-      // gridTemplateColumns: 'repeat(auto-fit, minmax(50%, 1fr))',
-      // gridTemplateRows: 'repeat(auto-fit, minmax(50%, 1fr))',
       display: 'flex',
       flexWrap: 'wrap',
       alignItems: 'center',
@@ -77,6 +63,12 @@ export function Videocall() {
     socket.on('user-connected', (userId) => {
       connectToNewUser(userId, stream);
     });
+  });
+
+  socket.on('user-disconnected', (userId) => {
+    if (peers[userId]) {
+      peers[userId].close();
+    }
   });
 
   function addVideoStream(video, stream) {
